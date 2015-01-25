@@ -4,6 +4,7 @@
 **
 ** Copyright (C) 2008,2009 Jos De Laender <jos.de_laender@telenet.be>
 ** Copyright (C) 2009,2010 Michael Munzert <mail@mm-log.com>
+** Copyright (C) 2015 Bernd Schoeler <brjohn@brother-john.net>
 **
 ** This file is part of Photivo.
 **
@@ -24,11 +25,13 @@
 #ifndef DLDEFINES_H
 #define DLDEFINES_H
 
+#include <array>
+#include <memory>
+#include <vector>
+
 // pulls in INT32_MAX etc.
 #define __STDC_LIMIT_MACROS
-#include <stdint.h>
-
-#include <memory>
+#include <cstdint>
 
 // disable the file manager
 // #define PT_WITHOUT_FILEMGR
@@ -44,7 +47,7 @@ inline void DelAndNull(T*& p) {
 //==============================================================================
 // Calculate the square
 template <typename T>
-inline T ptSqr(const T a) { return a*a; }
+inline T ptSqr(const T& a) { return a*a; }
 
 //==============================================================================
 
@@ -54,17 +57,39 @@ std::unique_ptr<T> make_unique(Args&& ...args) {
   return std::unique_ptr<T>(new T(std::forward<Args>(args)... ));
 }
 
-//==============================================================================
+// -----------------------------------------------------------------------------
+/*!
+ * TMatrix ist a 2-dimensional std::array with the same declaration syntax as a
+ * C-style array, i.e. first dimension for rows, second dimension for columns.
+ */
+template <typename T, size_t rows, size_t columns>
+using TMatrix = std::array<std::array<T, columns>, rows>;
 
-/*! Returns `true` if `AValue` lies between `ALowBound` and `AHighBound`, `false` otherwise.
-    Lower boundary is included in the range, higher boundary is not. */
-template<typename T>
-inline bool isBetween(const T &AValue, const T &ALowBound, const T &AHighBound) {
-  return AValue >= ALowBound && AValue < AHighBound;
+namespace pt {
+  /*!
+   * A template to deep copy a two-dimensional C-style array to a TMatrix. Note that you
+   * must specifiy the template parameters excplicitely, i.e. call this functions like this:
+   * int int_array[23][42] {};
+   * auto matrix = arrayToMatrix<int, 23, 42>(int_array);
+   */
+  template<typename T, size_t rows, size_t columns>
+  TMatrix<T, rows, columns> arrayToMatrix(T array[rows][columns]) {
+    TMatrix<T, rows, columns> result;
+    memcpy(result.data(), array, rows*columns);
+    return result;
+  }
 }
 
-//==============================================================================
+// -----------------------------------------------------------------------------
 
+typedef std::array<uint16_t, 3> TPixel16;
+typedef std::array<uint8_t,  4> TPixel8;
+typedef std::vector<TPixel16>   TImage16Data;
+typedef std::vector<TPixel8>    TImage8Data;
+typedef std::vector<uint8_t>    TImage8RawData;
+using TChannelMatrix = TMatrix<float,3,3>;
+
+//==============================================================================
 // Some macro's (most cannot go efficiently in functions).
 
 #ifndef SQR

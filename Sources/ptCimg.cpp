@@ -21,6 +21,14 @@
 **
 *******************************************************************************/
 
+#define cimg_use_openmp 1
+
+#include "ptCimg.h"
+#include "ptImage.h"
+#include "ptError.h"
+#include "ptCalloc.h"
+#include "ptCurve.h"
+
 #include <QString>
 #include <QObject>
 #include <QMessageBox>
@@ -29,13 +37,7 @@
   #include <omp.h>
 #endif
 
-#define cimg_use_openmp 1
-
-#include "ptCimg.h"
-#include "ptImage.h"
-#include "ptError.h"
-#include "ptCalloc.h"
-#include "ptCurve.h"
+#include <cassert>
 
 // Lut
 extern float ToFloatTable[0x10000];
@@ -171,9 +173,9 @@ void ptGreycStorationLab(ptImage* Image,
                          float    pt,
                          float    da,
                          float    GaussPrecision,
-                         int      Interpolation,
-                         short    Fast,
-                         short    MaskType,
+                         TGreyCInterpol Interpolation,
+                         bool Fast,
+                         TGreyCDenoiseMask MaskType,
                          double   Opacity) {
 
   GreycCount = new ptGreycCount(Image,da,ReportProgress);
@@ -200,13 +202,13 @@ void ptGreycStorationLab(ptImage* Image,
                             pt,
                             da,
                             GaussPrecision,
-                            Interpolation,
+                            static_cast<int>(Interpolation),
                             Fast);
   }
 
   float (*Mask) = NULL;
   switch (MaskType) {
-    case ptDenoiseMask_All:
+    case TGreyCDenoiseMask::All:
 #pragma omp parallel for default(shared) schedule(static)
       for (uint16_t Row=0; Row<Image->m_Height; Row++) {
   for (uint16_t Col=0; Col<Image->m_Width; Col++) {
@@ -215,31 +217,31 @@ void ptGreycStorationLab(ptImage* Image,
       }
       break;
 
-  case ptDenoiseMask_Shadows1:
-      Mask=Image->GetMask(ptMaskType_Shadows, 0.0, 0.5, 0.0);
+  case TGreyCDenoiseMask::Shadows1:
+      Mask=Image->GetMask(TMaskType::Shadows, 0.0, 0.5, 0.0);
     break;
 
-  case ptDenoiseMask_Shadows2:
-      Mask=Image->GetMask(ptMaskType_Shadows, 0.1, 0.6, 0.0);
+  case TGreyCDenoiseMask::Shadows2:
+      Mask=Image->GetMask(TMaskType::Shadows, 0.1, 0.6, 0.0);
     break;
 
-  case ptDenoiseMask_Shadows3:
-      Mask=Image->GetMask(ptMaskType_Shadows, 0.2, 0.7, 0.0);
+  case TGreyCDenoiseMask::Shadows3:
+      Mask=Image->GetMask(TMaskType::Shadows, 0.2, 0.7, 0.0);
     break;
 
-  case ptDenoiseMask_Shadows4:
-      Mask=Image->GetMask(ptMaskType_Shadows, 0.3, 0.8, 0.0);
+  case TGreyCDenoiseMask::Shadows4:
+      Mask=Image->GetMask(TMaskType::Shadows, 0.3, 0.8, 0.0);
     break;
 
-  case ptDenoiseMask_Shadows5:
-      Mask=Image->GetMask(ptMaskType_Shadows, 0.4, 0.9, 0.0);
+  case TGreyCDenoiseMask::Shadows5:
+      Mask=Image->GetMask(TMaskType::Shadows, 0.4, 0.9, 0.0);
     break;
 
   default:
-    break;
+    assert("Unknown denoise mask type");
   }
 
-  if (MaskType != ptDenoiseMask_All) {
+  if (MaskType != TGreyCDenoiseMask::All) {
 #pragma omp parallel for default(shared) schedule(static)
     for (uint16_t Row=0; Row<Image->m_Height; Row++) {
       for (uint16_t Col=0; Col<Image->m_Width; Col++) {
@@ -261,41 +263,41 @@ void ptCimgEdgeTensors(ptImage* Image,
                        const double    Alpha,
                        const double    Sigma,
                        const double    Blur,
-                       const short     MaskType) {
+                       const TGreyCDenoiseMask MaskType) {
 
-  int NumberOfThreads = 1;
+  constexpr int NumberOfThreads = 1;
 
   uint16_t FullWidth  = Image->m_Width;
   uint16_t Width  = (int) ((double)Image->m_Width/(double)NumberOfThreads+0.5);
   uint16_t Height = Image->m_Height;
 
-  float (*Mask) = NULL;
+  float (*Mask) = nullptr;
   switch (MaskType) {
-  case ptDenoiseMask_All:
+  case TGreyCDenoiseMask::All:
     break;
 
-  case ptDenoiseMask_Shadows1:
-      Mask=Image->GetMask(ptMaskType_Shadows, 0.0, 0.5, 0.0);
+  case TGreyCDenoiseMask::Shadows1:
+      Mask=Image->GetMask(TMaskType::Shadows, 0.0, 0.5, 0.0);
     break;
 
-  case ptDenoiseMask_Shadows2:
-      Mask=Image->GetMask(ptMaskType_Shadows, 0.1, 0.6, 0.0);
+  case TGreyCDenoiseMask::Shadows2:
+      Mask=Image->GetMask(TMaskType::Shadows, 0.1, 0.6, 0.0);
     break;
 
-  case ptDenoiseMask_Shadows3:
-      Mask=Image->GetMask(ptMaskType_Shadows, 0.2, 0.7, 0.0);
+  case TGreyCDenoiseMask::Shadows3:
+      Mask=Image->GetMask(TMaskType::Shadows, 0.2, 0.7, 0.0);
     break;
 
-  case ptDenoiseMask_Shadows4:
-      Mask=Image->GetMask(ptMaskType_Shadows, 0.3, 0.8, 0.0);
+  case TGreyCDenoiseMask::Shadows4:
+      Mask=Image->GetMask(TMaskType::Shadows, 0.3, 0.8, 0.0);
     break;
 
-  case ptDenoiseMask_Shadows5:
-      Mask=Image->GetMask(ptMaskType_Shadows, 0.4, 0.9, 0.0);
+  case TGreyCDenoiseMask::Shadows5:
+      Mask=Image->GetMask(TMaskType::Shadows, 0.4, 0.9, 0.0);
     break;
 
   default:
-    break;
+    assert("Unknown denoise mask type");
   }
 
   CImg <float> CImage[NumberOfThreads];
@@ -327,7 +329,7 @@ void ptCimgEdgeTensors(ptImage* Image,
 #pragma omp parallel for schedule(static)
   for (short Threads=0; Threads < NumberOfThreads; Threads++) {
 
-    if (MaskType != ptDenoiseMask_All) {
+    if (MaskType != TGreyCDenoiseMask::All) {
       for (uint16_t Col=0; Col<PrivateWidth[Threads]; Col++) {
         for (uint16_t Row=0; Row<Image->m_Height; Row++) {
           Image->m_Image[Row*FullWidth+Col+Threads*Width][0] =

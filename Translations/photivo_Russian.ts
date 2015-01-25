@@ -22,42 +22,42 @@
 <context>
     <name>Global Strings</name>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="170"/>
+        <location filename="../Sources/ptMain.cpp" line="181"/>
         <source>Photivo channelmixer file (*.ptm);;All files (*.*)</source>
         <translation>Файлы микшера каналов Photivo (*.ptm);;Все файлы (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="172"/>
+        <location filename="../Sources/ptMain.cpp" line="183"/>
         <source>Photivo curve file (*.ptc);;All files (*.*)</source>
         <translation>Файлы кривых Photivo (*.ptc);;Все файлы (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="174"/>
+        <location filename="../Sources/ptMain.cpp" line="185"/>
         <source>Photivo job file (*.ptj);;All files (*.*)</source>
         <translation>Файлы заданий Photivo (*.ptj);;Все файлы (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="176"/>
+        <location filename="../Sources/ptMain.cpp" line="187"/>
         <source>Photivo settings file (*.pts);;All files (*.*)</source>
         <translation>Файлы настроек Photivo (*.pts);;Все файлы (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="178"/>
+        <location filename="../Sources/ptMain.cpp" line="189"/>
         <source>ICC colour profiles (*.icc *.icm);;All files (*.*)</source>
         <translation>Цветовые профили ICC (*.icc *.icm);;Все файлы (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="182"/>
-        <source>Raw files (*.arw *.ARW *.Arw *.bay *.BAY *.Bay *.bmq *.BMQ *.Bmq *.cr2 *.CR2 *.Cr2 *.crw *.CRW *.Crw *.cs1 *.CS1 *.Cs1 *.dc2 *.DC2 *.Dc2 *.dcr *.DCR *.Dcr *.dng *.DNG *.Dng *.erf *.ERF *.Erf *.fff *.FFF *.Fff *.hdr *.HDR *.Hdr *.ia  *.IA *.Ia *.k25 *.K25 *.kc2 *.KC2 *.Kc2 *.kdc *.KDC *.Kdc *.mdc *.MDC *.Mdc *.mef *.MEF *.Mef *.mos *.MOS *.Mos *.mrw *.MRW *.Mrw *.nef *.NEF *.Nef *.orf *.ORF *.Orf *.pef *.PEF *.Pef *.pxn *.PXN *.Pxn *.qtk *.QTK *.Qtk *.raf *.RAF *.Raf *.raw *.RAW *.Raw *.rdc *.RDC *.Rdc *.rw2 *.RW2 *.Rw2 *.sr2 *.SR2 *.Sr2 *.srf *.SRF *.Srf *.srw *.SRW *.Srw *.sti *.STI *.Sti *.tif *.TIF *.Tif *.x3f *.X3F *.X3f);;Bitmaps (*.jpeg *.JPEG *.Jpeg *.jpg *.JPG *.Jpg *.tiff *.TIFF *.Tiff *.tif *.TIF *.Tif *.bmp *.BMP *.Bmp *.png *.PNG *.Png *.ppm *.PPm *.Ppm ;;All files (*.*)</source>
-        <translation>RAW файлы (*.arw *.ARW *.Arw *.bay *.BAY *.Bay *.bmq *.BMQ *.Bmq *.cr2 *.CR2 *.Cr2 *.crw *.CRW *.Crw *.cs1 *.CS1 *.Cs1 *.dc2 *.DC2 *.Dc2 *.dcr *.DCR *.Dcr *.dng *.DNG *.Dng *.erf *.ERF *.Erf *.fff *.FFF *.Fff *.hdr *.HDR *.Hdr *.ia  *.IA *.Ia *.k25 *.K25 *.kc2 *.KC2 *.Kc2 *.kdc *.KDC *.Kdc *.mdc *.MDC *.Mdc *.mef *.MEF *.Mef *.mos *.MOS *.Mos *.mrw *.MRW *.Mrw *.nef *.NEF *.Nef *.orf *.ORF *.Orf *.pef *.PEF *.Pef *.pxn *.PXN *.Pxn *.qtk *.QTK *.Qtk *.raf *.RAF *.Raf *.raw *.RAW *.Raw *.rdc *.RDC *.Rdc *.rw2 *.RW2 *.Rw2 *.sr2 *.SR2 *.Sr2 *.srf *.SRF *.Srf *.srw *.SRW *.Srw *.sti *.STI *.Sti *.tif *.TIF *.Tif *.x3f *.X3F *.X3f);;Bitmaps (*.jpeg *.JPEG *.Jpeg *.jpg *.JPG *.Jpg *.tiff *.TIFF *.Tiff *.tif *.TIF *.Tif *.bmp *.BMP *.Bmp *.png *.PNG *.Png *.ppm *.PPm *.Ppm ;;All files (*.*)</translation>
+        <location filename="../Sources/ptMain.cpp" line="193"/>
+        <source>Raw files (*.arw *.ARW *.Arw *.bay *.BAY *.Bay *.bmq *.BMQ *.Bmq *.cr2 *.CR2 *.Cr2 *.crw *.CRW *.Crw *.cs1 *.CS1 *.Cs1 *.dc2 *.DC2 *.Dc2 *.dcr *.DCR *.Dcr *.dng *.DNG *.Dng *.erf *.ERF *.Erf *.fff *.FFF *.Fff *.hdr *.HDR *.Hdr *.ia  *.IA *.Ia *.k25 *.K25 *.kc2 *.KC2 *.Kc2 *.kdc *.KDC *.Kdc *.mdc *.MDC *.Mdc *.mef *.MEF *.Mef *.mos *.MOS *.Mos *.mrw *.MRW *.Mrw *.nef *.NEF *.Nef *.nrw *.NRW *.Nrw *.orf *.ORF *.Orf *.pef *.PEF *.Pef *.pxn *.PXN *.Pxn *.qtk *.QTK *.Qtk *.raf *.RAF *.Raf *.raw *.RAW *.Raw *.rdc *.RDC *.Rdc *.rw2 *.RW2 *.Rw2 *.sr2 *.SR2 *.Sr2 *.srf *.SRF *.Srf *.srw *.SRW *.Srw *.sti *.STI *.Sti *.tif *.TIF *.Tif *.x3f *.X3F *.X3f);;Bitmaps (*.jpeg *.JPEG *.Jpeg *.jpg *.JPG *.Jpg *.tiff *.TIFF *.Tiff *.tif *.TIF *.Tif *.bmp *.BMP *.Bmp *.png *.PNG *.Png *.ppm *.PPm *.Ppm);;All files (*.*)</source>
+        <translation>RAW файлы (*.arw *.ARW *.Arw *.bay *.BAY *.Bay *.bmq *.BMQ *.Bmq *.cr2 *.CR2 *.Cr2 *.crw *.CRW *.Crw *.cs1 *.CS1 *.Cs1 *.dc2 *.DC2 *.Dc2 *.dcr *.DCR *.Dcr *.dng *.DNG *.Dng *.erf *.ERF *.Erf *.fff *.FFF *.Fff *.hdr *.HDR *.Hdr *.ia  *.IA *.Ia *.k25 *.K25 *.kc2 *.KC2 *.Kc2 *.kdc *.KDC *.Kdc *.mdc *.MDC *.Mdc *.mef *.MEF *.Mef *.mos *.MOS *.Mos *.mrw *.MRW *.Mrw *.nef *.NEF *.Nef *.nrw *.NRW *.Nrw *.orf *.ORF *.Orf *.pef *.PEF *.Pef *.pxn *.PXN *.Pxn *.qtk *.QTK *.Qtk *.raf *.RAF *.Raf *.raw *.RAW *.Raw *.rdc *.RDC *.Rdc *.rw2 *.RW2 *.Rw2 *.sr2 *.SR2 *.Sr2 *.srf *.SRF *.Srf *.srw *.SRW *.Srw *.sti *.STI *.Sti *.tif *.TIF *.Tif *.x3f *.X3F *.X3f);;Растровые изображения (*.jpeg *.JPEG *.Jpeg *.jpg *.JPG *.Jpg *.tiff *.TIFF *.Tiff *.tif *.TIF *.Tif *.bmp *.BMP *.Bmp *.png *.PNG *.Png *.ppm *.PPm *.Ppm);;Все файлы (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="229"/>
+        <location filename="../Sources/ptMain.cpp" line="241"/>
         <source>Bitmaps (*.jpeg *.JPEG *.Jpeg *.jpg *.JPG *.Jpg *.tiff *.TIFF *.Tiff *.tif *.TIF *.Tif *.bmp *.BMP *.Bmp *.png *.PNG *.Png *.ppm *.PPm *.Ppm ;;All files (*.*)</source>
         <translation>Растровые изображения (*.jpeg *.JPEG *.Jpeg *.jpg *.JPG *.Jpg *.tiff *.TIFF *.Tiff *.tif *.TIF *.Tif *.bmp *.BMP *.Bmp *.png *.PNG *.Png *.ppm *.PPm *.Ppm ;;All files (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="240"/>
+        <location filename="../Sources/ptMain.cpp" line="252"/>
         <source>Jpeg (*.jpg);;Tiff (*.tiff);;Png (*.png);;All files (*.*)</source>
         <translation>JPEG (*.jpg);;TIFF (*.tiff);;PNG (*.png);;Все файлы (*.*)</translation>
     </message>
@@ -65,7 +65,7 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../Sources/ptCimg.cpp" line="93"/>
+        <location filename="../Sources/ptCimg.cpp" line="95"/>
         <source>GreycStoration iteration </source>
         <translation>Итерация GreyCStoration</translation>
     </message>
@@ -144,12 +144,12 @@
         <location filename="../Sources/ptGuiOptions.cpp" line="164"/>
         <location filename="../Sources/ptGuiOptions.cpp" line="177"/>
         <location filename="../Sources/ptGuiOptions.cpp" line="193"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="282"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="341"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="488"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="501"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="554"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="559"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="290"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="349"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="498"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="511"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="565"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="570"/>
         <source>None</source>
         <translation>Нет</translation>
     </message>
@@ -200,8 +200,8 @@
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="122"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="402"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="452"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="410"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="460"/>
         <source>Normal</source>
         <translation>Нормальный</translation>
     </message>
@@ -232,19 +232,19 @@
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="131"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="347"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="355"/>
         <source>Blue</source>
         <translation>Синий</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="132"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="346"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="354"/>
         <source>Green</source>
         <translation>Зелёный</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="133"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="343"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="351"/>
         <source>Orange</source>
         <translation>Оранжевый</translation>
     </message>
@@ -320,19 +320,19 @@
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="199"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="221"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="229"/>
         <source>Box filter</source>
         <translation>Ступенчатый</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="200"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="222"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="230"/>
         <source>Triangle filter</source>
         <translation>Треугольный</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="201"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="228"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="236"/>
         <source>Quadratic filter</source>
         <translation>Квадратичный</translation>
     </message>
@@ -353,13 +353,13 @@
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="205"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="232"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="240"/>
         <source>Lanczos3 filter</source>
         <translation>Ланцош3</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="206"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="231"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="239"/>
         <source>Mitchell filter</source>
         <translation>Митчел</translation>
     </message>
@@ -380,42 +380,42 @@
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="210"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="223"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="231"/>
         <source>Hermite filter</source>
         <translation>Эрмит</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="220"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="228"/>
         <source>Point filter</source>
         <translation>Точечный</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="224"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="232"/>
         <source>Hanning filter</source>
         <translation>Хэннинг</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="225"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="233"/>
         <source>Hamming filter</source>
         <translation>Хэмминг</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="226"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="234"/>
         <source>Blackman filter</source>
         <translation>Блэкмэн</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="227"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="235"/>
         <source>Gaussian filter</source>
         <translation>Гауссиана</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="229"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="237"/>
         <source>Cubic filter</source>
         <translation>Кубический</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="230"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="238"/>
         <source>Catmull-Rom filter</source>
         <translation>Катмул-Ром</translation>
     </message>
@@ -440,220 +440,220 @@
         <translation>Эквидистантная</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="253"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="261"/>
         <source>Camera</source>
         <translation>ББ камеры</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="254"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="262"/>
         <source>Automatic</source>
         <translation>Автоматический ББ</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="255"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="263"/>
         <source>Spot</source>
         <translation>ББ по области</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="256"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="497"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="502"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="264"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="507"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="512"/>
         <source>Manual</source>
         <translation>Другой</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="260"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="268"/>
         <source>No CA correction</source>
         <translation>Не исправлять ХА</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="261"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="269"/>
         <source>Automatic CA cor.</source>
         <translation>Автоматическая корр. ХА</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="262"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="270"/>
         <source>Manual CA cor.</source>
         <translation>Ручная корр. ХА</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="266"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="274"/>
         <source>Bilinear</source>
         <translation>Билинейный</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="267"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="275"/>
         <source>VNG</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="268"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="276"/>
         <source>VNG 4 color</source>
         <translation>VNG 4 цвета</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="269"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="277"/>
         <source>PPG</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="270"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="278"/>
         <source>AHD</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="271"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="279"/>
         <source>AHD modified</source>
         <translation>AHD модиф.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="272"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="280"/>
         <source>AMaZE</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="273"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="281"/>
         <source>DCB</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="274"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="282"/>
         <source>DCB soft</source>
         <translation>DCB мягкий</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="275"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="283"/>
         <source>DCB sharp</source>
         <translation>DCB резкий</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="276"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="284"/>
         <source>VCD</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="277"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="285"/>
         <source>LMMSE</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="278"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="286"/>
         <source>Bayer pattern</source>
         <translation>Байеровский</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="283"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="291"/>
         <source>FBDD 1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="284"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="292"/>
         <source>FBDD 2</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="289"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="297"/>
         <source>Clip</source>
         <translation>Вырезать</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="290"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="298"/>
         <source>No clipping</source>
         <translation>Не вырезать</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="291"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="299"/>
         <source>Restore in Lab</source>
         <translation>Восстановление в Lab</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="292"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="300"/>
         <source>Restore in HSV</source>
         <translation>Восстановление в HSV</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="293"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="301"/>
         <source>Blend in Lab</source>
         <translation>Смешивание в Lab</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="294"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="302"/>
         <source>Rebuild</source>
         <translation>Реконструкция цвета</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="238"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="298"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="374"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="386"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="246"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="306"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="382"/>
         <location filename="../Sources/ptGuiOptions.cpp" line="394"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="409"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="430"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="440"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="402"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="417"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="438"/>
         <location filename="../Sources/ptGuiOptions.cpp" line="448"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="458"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="464"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="456"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="466"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="472"/>
         <source>Disabled</source>
         <translation>Запрещено</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="299"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="375"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="387"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="307"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="383"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="395"/>
         <source>Shadows</source>
         <translation>Тени</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="300"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="376"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="388"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="308"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="384"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="396"/>
         <source>Midtones</source>
         <translation>Полутона</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="301"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="377"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="389"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="309"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="385"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="397"/>
         <source>Highlights</source>
         <translation>Света</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="302"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="319"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="378"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="390"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="310"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="327"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="386"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="398"/>
         <source>All values</source>
         <translation>Все значения</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="306"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="314"/>
         <source>Regular L*</source>
         <translation>Обычный L*</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="307"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="315"/>
         <source>R -&gt; L*</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="308"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="316"/>
         <source>G -&gt; L*</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="309"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="317"/>
         <source>B -&gt; L*</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="313"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="321"/>
         <source>Nearest Neighbour</source>
         <translation>По соседним элементам</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="159"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="314"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="352"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="322"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="360"/>
         <source>Linear</source>
         <translation>Линейный</translation>
     </message>
@@ -805,643 +805,656 @@
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="214"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="221"/>
         <source>Longer edge</source>
         <translation>Длинная сторона</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="215"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="222"/>
         <source>Width</source>
         <translation>Ширина</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="216"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="223"/>
         <source>Height</source>
         <translation>Высота</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="239"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="217"/>
+        <source>Width x Height</source>
+        <translation>Ширина x Высота</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptGuiOptions.cpp" line="247"/>
         <source>Directional grad brightness</source>
         <translation>Градиент яркости по направлению</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="240"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="248"/>
         <source>Average grad brightness</source>
         <translation>Средний градиент яркости</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="241"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="249"/>
         <source>Norm brightness</source>
         <translation>Норма градиента яркости</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="242"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="250"/>
         <source>Directional grad luminance</source>
         <translation>Градиент светлоты по направлению</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="243"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="251"/>
         <source>Average grad luminance</source>
         <translation>Средний градиент светлоты</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="244"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="252"/>
         <source>Norm luminance</source>
         <translation>Норма градиента светлоты</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="248"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="256"/>
         <source>Relative</source>
         <translation>Относительное</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="249"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="257"/>
         <source>Absolute</source>
         <translation>Абсолютное</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="315"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="323"/>
         <source>Runge-Kutta</source>
         <translation>Рунге-Кутта</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="320"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="328"/>
         <source>Shadows 1</source>
         <translation>Тени 1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="321"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="329"/>
         <source>Shadows 2</source>
         <translation>Тени 2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="322"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="330"/>
         <source>Shadows 3</source>
         <translation>Тени 3</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="323"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="331"/>
         <source>Shadows 4</source>
         <translation>Тени 4</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="324"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="332"/>
         <source>Shadows 5</source>
         <translation>Тени 5</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="328"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="336"/>
         <source>Low sensitivity</source>
         <translation>Низкая чувствительность</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="329"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="337"/>
         <source>High sensitivity</source>
         <translation>Высокая чувствительность</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="330"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="338"/>
         <source>Hyperpanchromatic</source>
         <translation>Гиперпанхроматическая</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="331"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="339"/>
         <source>Orthochromatic</source>
         <translation>Ортохроматическая</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="332"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="340"/>
         <source>Normal contrast</source>
         <translation>Нормальный контраст</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="333"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="341"/>
         <source>High contrast</source>
         <translation>Высокий контраст</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="334"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="342"/>
         <source>Luminance</source>
         <translation>Яркость</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="335"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="343"/>
         <source>Landscape</source>
         <translation>Пейзаж</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="336"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="344"/>
         <source>Face in interior</source>
         <translation>Портрет в помещении</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="337"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="345"/>
         <source>Channelmixer</source>
         <translation>Микшер каналов</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="342"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="350"/>
         <source>Red</source>
         <translation>Красный</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="344"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="352"/>
         <source>Yellow</source>
         <translation>Жёлтый</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="345"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="353"/>
         <source>Lime</source>
         <translation>Лайм</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="353"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="361"/>
         <source>Round</source>
         <translation>Круговой</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="354"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="362"/>
         <source>Linear mask</source>
         <translation>Линейная маска</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="355"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="363"/>
         <source>Round mask</source>
         <translation>Круговая маска</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="359"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="367"/>
         <source>No flip</source>
         <translation>Без отражения</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="360"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="368"/>
         <source>Horizontal flip</source>
         <translation>Горизонтальное отражение</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="361"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="369"/>
         <source>Vertical flip</source>
         <translation>Вертикальное отражение</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="365"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="373"/>
         <source>Soft gaussian</source>
         <translation>Мягкая гауссиана</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="366"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="374"/>
         <source>Soft uniform</source>
         <translation>Мягкий равномерный</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="367"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="375"/>
         <source>Soft salt&apos;n pepper</source>
         <translation>Мягкий salt&apos;n pepper</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="368"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="376"/>
         <source>Hard gaussian</source>
         <translation>Резкая гауссиана</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="369"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="377"/>
         <source>Hard uniform</source>
         <translation>Резкий равномерный</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="370"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="378"/>
         <source>Hard salt&apos;n pepper</source>
         <translation>Резкий salt&apos;n pepper</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="379"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="387"/>
         <source>Midtones - Screen</source>
         <translation>Полутона - Экран</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="380"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="388"/>
         <source>Midtones - Multiply</source>
         <translation>Полутона - Умножение</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="381"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="389"/>
         <source>Midtones - Gamma bright</source>
         <translation>Полутона - Яркая гамма</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="382"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="390"/>
         <source>Midtones - Gamma dark</source>
         <translation>Полутона - Тёмная гамма</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="395"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="410"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="403"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="418"/>
         <source>SoftLight</source>
         <translation>Мягкий свет</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="396"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="411"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="404"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="419"/>
         <source>Multiply</source>
         <translation>Умножение</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="397"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="412"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="450"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="405"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="420"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="458"/>
         <source>Screen</source>
         <translation>Экран</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="398"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="413"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="406"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="421"/>
         <source>Gamma dark</source>
         <translation>Тёмная гамма</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="399"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="414"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="407"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="422"/>
         <source>Gamma bright</source>
         <translation>Яркая гамма</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="400"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="415"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="408"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="423"/>
         <source>Color burn</source>
         <translation>Затемнение</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="401"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="416"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="409"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="424"/>
         <source>Color dodge</source>
         <translation>Осветление</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="403"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="411"/>
         <source>Replace</source>
         <translation>Заменить</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="405"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="444"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="413"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="452"/>
         <source>Show Mask</source>
         <translation>Показать маску</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="417"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="425"/>
         <source>Darken only</source>
         <translation>Только тёмное</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="418"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="426"/>
         <source>Lighten only</source>
         <translation>Только светлое</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="419"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="427"/>
         <source>Show outlines</source>
         <translation>Показать контур</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="424"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="432"/>
         <source>Full image</source>
         <translation>Всё изображение</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="425"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="433"/>
         <source>Vignette</source>
         <translation>Виньетирование</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="426"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="434"/>
         <source>Inv vignette</source>
         <translation>Обр. виньетирование</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="431"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="439"/>
         <source>Green - yellow</source>
         <translation>Зелёный - Жёлтый</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="432"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="440"/>
         <source>Green - cyan</source>
         <translation>Зелёный - Голубой</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="433"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="441"/>
         <source>Red - yellow</source>
         <translation>Красный - Жёлтый</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="434"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="442"/>
         <source>Red - magenta</source>
         <translation>Красный - Пурпурный</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="435"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="443"/>
         <source>Blue - cyan</source>
         <translation>Синий - Голубой</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="436"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="444"/>
         <source>Blue - magenta</source>
         <translation>Синий - Пурпурный</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="441"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="449"/>
         <source>Soft</source>
         <translation>Мягкий</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="442"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="450"/>
         <source>Hard</source>
         <translation>Резкий</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="443"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="451"/>
         <source>Fancy</source>
         <translation>Фантастический</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="449"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="457"/>
         <source>Lighten</source>
         <translation>Осветлить</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="451"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="459"/>
         <source>Softlight</source>
         <translation>Мягкий свет</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="453"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="461"/>
         <source>Orton screen</source>
         <translation>Экран Ортона</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="454"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="462"/>
         <source>Orton softlight</source>
         <translation>Мягкий свет Ортона</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="459"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="465"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="467"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="473"/>
         <source>Only final run</source>
         <translation>При конечной обработке</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="460"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="466"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="468"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="474"/>
         <source>With Preview</source>
         <translation>С просмотром</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="467"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="475"/>
         <source>Show mask</source>
         <translation>Показать маску</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="489"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="499"/>
         <source>Ratio</source>
         <translation>Пропорция</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="490"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="500"/>
         <source>Film curve</source>
         <translation>Плёночного типа</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="494"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="504"/>
         <source>Auto</source>
         <translation>Авто</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="495"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="505"/>
         <source>Like UFRaw</source>
         <translation>Как UFRaw</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="496"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="506"/>
         <source>Null</source>
         <translation>Нуль</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="506"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="516"/>
         <source>RGB</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="507"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="517"/>
         <source>Structure</source>
         <translation>Структура</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="508"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="518"/>
         <source>L*</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="509"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="519"/>
         <source>a*</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="510"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="520"/>
         <source>b*</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="511"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="521"/>
         <source>Gradient</source>
         <translation>Градиент</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="515"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="525"/>
         <source>LAB</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="516"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="526"/>
         <source>L</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="517"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="527"/>
         <source>Structure on L</source>
         <translation>Структура в L</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="518"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="528"/>
         <source>A</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="519"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="529"/>
         <source>B</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="520"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="530"/>
         <source>C</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="521"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="531"/>
         <source>H</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="525"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="535"/>
         <source>PPM 8-bit</source>
         <translation>PPM 8-бит</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="526"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="536"/>
         <source>PPM 16-bit</source>
         <translation>PPM 16-бит</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="527"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="537"/>
         <source>TIFF 8-bit</source>
         <translation>TIFF 8-бит</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="528"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="538"/>
         <source>TIFF 16-bit</source>
         <translation>TIFF 16-бит</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="529"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="539"/>
         <source>JPEG</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="530"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="540"/>
         <source>PNG 8-bit</source>
         <translation>PNG 8-бит</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="531"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="541"/>
         <source>PNG 16-bit</source>
         <translation>PNG 16-бит</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="535"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="545"/>
         <source>4:4:4</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="536"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="546"/>
         <source>4:2:2</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="540"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="550"/>
         <source>Full size</source>
         <translation>Полный размер</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="541"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="551"/>
         <source>Pipe size</source>
         <translation>Текущий размер</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="542"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="552"/>
         <source>Only jobfile</source>
         <translation>Только файл задания</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="543"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="553"/>
         <source>Only settings</source>
         <translation>Только файл настроек</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="547"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="554"/>
+        <source>Send to batch</source>
+        <translation>В очередь обработки</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptGuiOptions.cpp" line="558"/>
         <source>Neutral reset</source>
         <translation>Нейтральный сброс</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="548"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="559"/>
         <source>User reset</source>
         <translation>Пользовательский сброс</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="549"/>
-        <location filename="../Sources/ptMain.cpp" line="3839"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="560"/>
+        <location filename="../Sources/ptMain.cpp" line="4009"/>
         <source>Open preset</source>
         <translation>Открыть пресет</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="550"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="561"/>
         <source>Open settings</source>
         <translation>Открыть настройки</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="555"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="560"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="566"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="571"/>
         <source>Load one</source>
         <translation>Загрузить</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="564"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="575"/>
         <source>Clone</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="565"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="576"/>
         <source>Heal (Dummy)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1160"/>
-        <location filename="../Sources/ptMain.cpp" line="1310"/>
-        <location filename="../Sources/ptMain.cpp" line="1472"/>
-        <location filename="../Sources/ptMain.cpp" line="1510"/>
-        <location filename="../Sources/ptMain.cpp" line="1737"/>
-        <location filename="../Sources/ptMain.cpp" line="2066"/>
-        <location filename="../Sources/ptMain.cpp" line="2406"/>
-        <location filename="../Sources/ptMain.cpp" line="3064"/>
+        <location filename="../Sources/ptMain.cpp" line="1223"/>
+        <location filename="../Sources/ptMain.cpp" line="1373"/>
+        <location filename="../Sources/ptMain.cpp" line="1535"/>
+        <location filename="../Sources/ptMain.cpp" line="1573"/>
+        <location filename="../Sources/ptMain.cpp" line="1802"/>
+        <location filename="../Sources/ptMain.cpp" line="2131"/>
+        <location filename="../Sources/ptMain.cpp" line="2476"/>
+        <location filename="../Sources/ptMain.cpp" line="3160"/>
         <source>Ready</source>
         <translation>Готово</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1111"/>
+        <location filename="../Sources/ptMain.cpp" line="1174"/>
         <source>Loading channelmixers</source>
         <translation>Загрузка микшера каналов</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1121"/>
-        <location filename="../Sources/ptMain.cpp" line="2108"/>
-        <location filename="../Sources/ptMain.cpp" line="4886"/>
+        <location filename="../Sources/ptMain.cpp" line="1184"/>
+        <location filename="../Sources/ptMain.cpp" line="2173"/>
+        <location filename="../Sources/ptMain.cpp" line="5081"/>
         <source>Cannot read channelmixer </source>
         <translation>Невозможно прочитать микшер каналов </translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1127"/>
-        <location filename="../Sources/ptMain.cpp" line="2107"/>
-        <location filename="../Sources/ptMain.cpp" line="4891"/>
+        <location filename="../Sources/ptMain.cpp" line="1190"/>
+        <location filename="../Sources/ptMain.cpp" line="2172"/>
+        <location filename="../Sources/ptMain.cpp" line="5086"/>
         <source>Channelmixer read error</source>
         <translation>Ошибка чтения микшера каналов</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4626"/>
+        <location filename="../Sources/ptMain.cpp" line="4805"/>
         <source>Crop too small</source>
         <translation>Область кадрирования слишком мала</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1470"/>
-        <location filename="../Sources/ptMain.cpp" line="1508"/>
-        <location filename="../Sources/ptMain.cpp" line="1826"/>
-        <location filename="../Sources/ptMain.cpp" line="1898"/>
+        <location filename="../Sources/ptMain.cpp" line="1533"/>
+        <location filename="../Sources/ptMain.cpp" line="1571"/>
+        <location filename="../Sources/ptMain.cpp" line="1891"/>
+        <location filename="../Sources/ptMain.cpp" line="1963"/>
         <source>Updating histogram</source>
         <translation>Обновление гистограммы</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="481"/>
+        <location filename="../Sources/ptMain.cpp" line="526"/>
         <source>Photivo crashed</source>
         <translation>Сбой Photivo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="482"/>
+        <location filename="../Sources/ptMain.cpp" line="527"/>
         <source>Photivo crashed. You can get help on our flickr forum at
 &lt;a href=&quot;http://www.flickr.com/groups/photivo/discuss/&quot;&gt;http://www.flickr.com/groups/photivo/discuss/&lt;/a&gt;
 When you post there make sure to describe your last actions before the crash occurred.</source>
@@ -1450,9 +1463,210 @@ When you post there make sure to describe your last actions before the crash occ
 Обращаясь туда, не забудьте описать Ваши последние действия перед сбоем Photivo.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="506"/>
-        <source>Syntax: photivo [inputfile | -i imagefile | -j jobfile | -g imagefile]
-                [-h] [--new-instance]
+        <location filename="../Sources/ptMain.cpp" line="594"/>
+        <location filename="../Sources/ptMain.cpp" line="908"/>
+        <source>Photivo</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMain.cpp" line="1602"/>
+        <location filename="../Sources/ptMain.cpp" line="1658"/>
+        <source>WebResizing</source>
+        <translation>Масштабирование для веб</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMain.cpp" line="1616"/>
+        <source>Applying base curve</source>
+        <translation>Базовая кривая</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMain.cpp" line="1622"/>
+        <source>Applying gamma compensation</source>
+        <translation>Компенсация гаммы</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMain.cpp" line="1643"/>
+        <source>Applying RGB Contrast</source>
+        <translation>RGB контраст</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMain.cpp" line="1650"/>
+        <source>Applying after gamma curve</source>
+        <translation>Кривая после гаммы</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMain.cpp" line="1669"/>
+        <source>Wiener Filter</source>
+        <translation>Фильтр Винера</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMain.cpp" line="1807"/>
+        <source>Updating preview image</source>
+        <translation>Обновление изображения</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMain.cpp" line="1928"/>
+        <source>Indicating exposure</source>
+        <translation>Индикация экспозиции</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMain.cpp" line="1970"/>
+        <location filename="../Sources/ptMain.cpp" line="2402"/>
+        <location filename="../Sources/ptMain.cpp" line="3036"/>
+        <source>Converting to output space</source>
+        <translation>Преобразование к профилю вывода</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMain.cpp" line="2041"/>
+        <source>Converting to screen space</source>
+        <translation>Преобразование к профилю экрана</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMain.cpp" line="2328"/>
+        <source>Memory error, no conversion for file:</source>
+        <translation>Ошибка памяти, невозможна обработка файла:</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMain.cpp" line="2430"/>
+        <source>Writing output</source>
+        <translation>Запись результата</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMain.cpp" line="2444"/>
+        <source>Writing output (exif)</source>
+        <translation>Запись результата (EXIF)</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMain.cpp" line="2460"/>
+        <source>Writing output (settings)</source>
+        <translation>Запись результата (настройки)</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMain.cpp" line="2498"/>
+        <location filename="../Sources/ptMain.cpp" line="2866"/>
+        <source>Jpg images (*.jpg *.jpeg);;All files (*.*)</source>
+        <translation>Изображения JPEG (*.jpg *.jpeg);;Все файлы (*.*)</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMain.cpp" line="2503"/>
+        <location filename="../Sources/ptMain.cpp" line="2871"/>
+        <source>PNG images(*.png);;All files (*.*)</source>
+        <translation>Изображения PNG (*.png);;Все файлы (*.*)</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMain.cpp" line="2508"/>
+        <location filename="../Sources/ptMain.cpp" line="2876"/>
+        <source>Tiff images (*.tif *.tiff);;All files (*.*)</source>
+        <translation>Изображения TIFF (*.tif *.tiff);;Все файлы (*.*)</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMain.cpp" line="2512"/>
+        <location filename="../Sources/ptMain.cpp" line="2880"/>
+        <source>Ppm images (*.ppm);;All files (*.*)</source>
+        <translation>Изображения PPM (*.ppm);;Все файлы (*.*)</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="523"/>
+        <location filename="../Sources/ptMain.cpp" line="2519"/>
+        <location filename="../Sources/ptMain.cpp" line="2887"/>
+        <source>Save File</source>
+        <translation>Сохранить файл</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="515"/>
+        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="532"/>
+        <source>Error</source>
+        <translation>Ошибка</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="515"/>
+        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="532"/>
+        <source>Thumbnail could not be saved.</source>
+        <translation>Невозможно сохранить миниатюру.</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="536"/>
+        <source>Exif error</source>
+        <translation>Ошибка EXIF</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="536"/>
+        <source>Exif data could not be written.</source>
+        <translation>Невозможно записать EXIF.</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMain.cpp" line="2690"/>
+        <source>Open Raw</source>
+        <translation>Открыть RAW</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMain.cpp" line="2702"/>
+        <source>Input file does not exist.</source>
+        <translation>Входной файл не существует.</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMain.cpp" line="2715"/>
+        <source>Reading file</source>
+        <translation>Чтение файла</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMain.cpp" line="3941"/>
+        <source>Save and send to batch manager</source>
+        <translation>Сохранить настройки и отправить в очередь обработки</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMain.cpp" line="4756"/>
+        <source>No crop possible</source>
+        <translation>Кадрирование невозможно</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMain.cpp" line="4806"/>
+        <source>Crop rectangle needs to be at least 4x4 pixels in size.
+No crop, try again.</source>
+        <translation>Размер области кадрирования должен быть не менее 4x4 пикселей.
+Кадрирование невозможно, попробуйте ещё раз.</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMain.cpp" line="4864"/>
+        <source>No previous crop found</source>
+        <translation>Предыдущая область кадрирования не найдена</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMain.cpp" line="5130"/>
+        <source>Give a description</source>
+        <translation>Дайте описание</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMain.cpp" line="6347"/>
+        <location filename="../Sources/ptMain.cpp" line="6421"/>
+        <source>Get texture bitmap file</source>
+        <translation>Загрузить растровую текстуру</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMain.cpp" line="2248"/>
+        <location filename="../Sources/ptMain.cpp" line="2728"/>
+        <source>Cannot decode</source>
+        <translation>Невозможно декодировать</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMain.cpp" line="540"/>
+        <source>Fatal error: Wrong GraphicsMagick quantum depth!
+Found quantum depth %1. Photivo needs at least %2.
+</source>
+        <translation>Критическая ошибка: GraphicsMagick не поддерживает необходимую глубину цвета!
+Обнаружена глубина цвета %1. Photivo требует по крайней мере %2.
+</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMain.cpp" line="545"/>
+        <source>Photivo: Fatal Error</source>
+        <translation>Photivo: Критическая ошибка</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMain.cpp" line="551"/>
+        <source>Syntax: photivo [inputfile | -i imagefile | -j jobfile |
+                 --load-and-delete imagefile]
+                [--pts ptsfile] [--sidecar sidecarfile] [-h] [--new-instance]
 Options:
 inputfile
       Specify the image or settings file to load. Works like -i for image files
@@ -1469,6 +1683,8 @@ inputfile
 --pts ptsfile
       Specify settings file to load with the image. Must be used together
       with -i.
+--sidecar sidecarfile
+      Specify sidecar file to load with the image.
 --new-instance
       Allow opening another Photivo instance instead of using a currently
       running Photivo. Job files are always opened in a new instance.
@@ -1479,8 +1695,9 @@ inputfile
 
 For more documentation visit the wiki: http://photivo.org/photivo/start
 </source>
-        <translation>Использование: photivo [inputfile | -i imagefile | -j jobfile | -g imagefile]
-                [-h] [--new-instance]
+        <translation type="unfinished">Использование: photivo [inputfile | -i imagefile | -j jobfile |
+                 --load-and-delete imagefile]
+                [--pts ptsfile] [--sidecar sidecarfile] [-h] [--new-instance]
 Опции:
 inputfile
       Задать изображение или файл настроек для загрузки. Работает как
@@ -1497,6 +1714,8 @@ inputfile
       ОСТОРОЖНО! Эта опция удаляет исходное изображение!
 --pts ptsfile
       Задать файл настроек для изображения. Нужно использовать вместе с -i.
+--sidecar sidecarfile
+      Определить сторонний файл для загрузки вместе с изображением.
 --new-instance
       Разрешить запуск нового экземпляра Photivo вместо использования
       уже работающего. Для обработки файлов заданий всегда запускается
@@ -1511,568 +1730,322 @@ http://photivo.org/photivo/start
 </translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="546"/>
-        <location filename="../Sources/ptMain.cpp" line="850"/>
-        <source>Photivo</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMain.cpp" line="1539"/>
-        <location filename="../Sources/ptMain.cpp" line="1594"/>
-        <source>WebResizing</source>
-        <translation>Масштабирование для веб</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMain.cpp" line="1552"/>
-        <source>Applying base curve</source>
-        <translation>Базовая кривая</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMain.cpp" line="1558"/>
-        <source>Applying gamma compensation</source>
-        <translation>Компенсация гаммы</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMain.cpp" line="1579"/>
-        <source>Applying RGB Contrast</source>
-        <translation>RGB контраст</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMain.cpp" line="1586"/>
-        <source>Applying after gamma curve</source>
-        <translation>Кривая после гаммы</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMain.cpp" line="1604"/>
-        <source>Wiener Filter</source>
-        <translation>Фильтр Винера</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMain.cpp" line="1742"/>
-        <source>Updating preview image</source>
-        <translation>Обновление изображения</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMain.cpp" line="1863"/>
-        <source>Indicating exposure</source>
-        <translation>Индикация экспозиции</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMain.cpp" line="1905"/>
-        <location filename="../Sources/ptMain.cpp" line="2334"/>
-        <location filename="../Sources/ptMain.cpp" line="2944"/>
-        <source>Converting to output space</source>
-        <translation>Преобразование к профилю вывода</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMain.cpp" line="1976"/>
-        <source>Converting to screen space</source>
-        <translation>Преобразование к профилю экрана</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMain.cpp" line="2260"/>
-        <source>Memory error, no conversion for file:</source>
-        <translation>Ошибка памяти, невозможна обработка файла:</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMain.cpp" line="2362"/>
-        <source>Writing output</source>
-        <translation>Запись результата</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMain.cpp" line="2376"/>
-        <source>Writing output (exif)</source>
-        <translation>Запись результата (EXIF)</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMain.cpp" line="2390"/>
-        <source>Writing output (settings)</source>
-        <translation>Запись результата (настройки)</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMain.cpp" line="2428"/>
-        <location filename="../Sources/ptMain.cpp" line="2774"/>
-        <source>Jpg images (*.jpg *.jpeg);;All files (*.*)</source>
-        <translation>Изображения JPEG (*.jpg *.jpeg);;Все файлы (*.*)</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMain.cpp" line="2433"/>
-        <location filename="../Sources/ptMain.cpp" line="2779"/>
-        <source>PNG images(*.png);;All files (*.*)</source>
-        <translation>Изображения PNG (*.png);;Все файлы (*.*)</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMain.cpp" line="2438"/>
-        <location filename="../Sources/ptMain.cpp" line="2784"/>
-        <source>Tiff images (*.tif *.tiff);;All files (*.*)</source>
-        <translation>Изображения TIFF (*.tif *.tiff);;Все файлы (*.*)</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMain.cpp" line="2442"/>
-        <location filename="../Sources/ptMain.cpp" line="2788"/>
-        <source>Ppm images (*.ppm);;All files (*.*)</source>
-        <translation>Изображения PPM (*.ppm);;Все файлы (*.*)</translation>
-    </message>
-    <message>
-        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="516"/>
-        <location filename="../Sources/ptMain.cpp" line="2449"/>
-        <location filename="../Sources/ptMain.cpp" line="2795"/>
-        <source>Save File</source>
-        <translation>Сохранить файл</translation>
-    </message>
-    <message>
-        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="522"/>
-        <source>Error</source>
-        <translation>Ошибка</translation>
-    </message>
-    <message>
-        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="522"/>
-        <source>Thumbnail could not be saved.</source>
-        <translation>Невозможно сохранить миниатюру.</translation>
-    </message>
-    <message>
-        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="526"/>
-        <source>Exif error</source>
-        <translation>Ошибка EXIF</translation>
-    </message>
-    <message>
-        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="526"/>
-        <source>Exif data could not be written.</source>
-        <translation>Невозможно записать EXIF.</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMain.cpp" line="2619"/>
-        <source>Open Raw</source>
-        <translation>Открыть RAW</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMain.cpp" line="2631"/>
-        <source>Input file does not exist.</source>
-        <translation>Входной файл не существует.</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMain.cpp" line="2644"/>
-        <source>Reading file</source>
-        <translation>Чтение файла</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMain.cpp" line="4577"/>
-        <source>No crop possible</source>
-        <translation>Кадрирование невозможно</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMain.cpp" line="4627"/>
-        <source>Crop rectangle needs to be at least 4x4 pixels in size.
-No crop, try again.</source>
-        <translation>Размер области кадрирования должен быть не менее 4x4 пикселей.
-Кадрирование невозможно, попробуйте ещё раз.</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMain.cpp" line="4685"/>
-        <source>No previous crop found</source>
-        <translation>Предыдущая область кадрирования не найдена</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMain.cpp" line="4935"/>
-        <source>Give a description</source>
-        <translation>Дайте описание</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMain.cpp" line="6286"/>
-        <location filename="../Sources/ptMain.cpp" line="6360"/>
-        <source>Get texture bitmap file</source>
-        <translation>Загрузить растровую текстуру</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMain.cpp" line="2183"/>
-        <location filename="../Sources/ptMain.cpp" line="2657"/>
-        <source>Cannot decode</source>
-        <translation>Невозможно декодировать</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMain.cpp" line="495"/>
-        <source>Fatal error: Wrong GraphicsMagick quantum depth!
-Found quantum depth %1. Photivo needs at least %2.
-</source>
-        <translation>Критическая ошибка: GraphicsMagick не поддерживает необходимую глубину цвета!
-Обнаружена глубина цвета %1. Photivo требует по крайней мере %2.
-</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMain.cpp" line="500"/>
-        <source>Photivo: Fatal Error</source>
-        <translation>Photivo: Критическая ошибка</translation>
-    </message>
-    <message>
-        <source>Syntax: photivo [inputfile | -i imagefile | -j jobfile | -g imagefile]
-                [-h] [--new-instance]
-Options:
-inputfile
-      Specify the image or settings file to load. Works like -i for image files
-      and like --pts for settings files.
--i imagefile
-      Specify image file to load.
--j jobfile
-      Specify jobfile for batch processing. Job files are created
- in Photivo
-      and then executed with this option.
---load-and-delete imagefile
-      Specify temporary file used for Gimp-to-Photivo export. Internal option,
-      not intended for general use. BEWARE! This option deletes imagefile!
---pts ptsfile
-      Specify settings file to load with the image. Must be used together
-      with -i.
---new-instance
-      Allow opening another Photivo instance instead of using a currently
-      running Photivo. Job files are always opened in a new instance.
---no-filemgr
-      Prevent auto-open file manager when Photivo starts.
--h
-      Display this usage information.
-
-For more documentation visit the wiki: http://photivo.org/photivo/start
-</source>
-        <translation type="obsolete">Использование: photivo [inputfile | -i imagefile | -j jobfile | -g imagefile]
-                [-h] [--new-instance]
-Опции:
-inputfile
-                  Задать изображение или файл настроек для загрузки. Работает как
-                  -i для изображения и --pts для файла настроек.
--i imagefile      Задать открываемое изображение.
-                  Запуск Photivo с указанием только имени файла работает также.
--j jobfile        Задать файл задания для пакетной обработки. Файлы заданий
-                  создаются в Photivo и затем выполняются с этой опцией.
---load-and-delete imagefile
-                  Задать временный файл, используемый для экспорта из GIMP в Photivo.
-                  Внутренняя опция, не предназначенная для общего использования.
-                  ОСТОРОЖНО! Эта опция удаляет исходное изображение!
---pts ptsfile     Задать файл настроек для изображения. Нужно использовать вместе с -i.
---new-instance    Разрешить запуск нового экземпляра Photivo вместо использования
-                  уже работающего. Для обработки файлов заданий всегда запускается
-                  новый экземпляр.
---no-filemgr      Не открывать файловый менеджер при запуске Photivo.
--h                Показать эту справку.
-
-Более подробная документация на сайте:
-http://photivo.org/photivo/start
-</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMain.cpp" line="1000"/>
+        <location filename="../Sources/ptMain.cpp" line="1058"/>
         <source>Clean up input file</source>
         <translation>Удаление исходного файла</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1466"/>
+        <location filename="../Sources/ptMain.cpp" line="1529"/>
         <source>Selection</source>
         <translation>По выделению</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1499"/>
+        <location filename="../Sources/ptMain.cpp" line="1562"/>
         <source>Selection too small</source>
         <translation>Область выделения слишком мала</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1500"/>
+        <location filename="../Sources/ptMain.cpp" line="1563"/>
         <source>Selection rectangle needs to be at least 50x50 pixels in size.
 No crop, try again.</source>
         <translation>Размер области выделения должен быть не менее 50x50 пикселей.
 Кадрирование невозможно, попробуйте ещё раз.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1839"/>
-        <location filename="../Sources/ptMain.cpp" line="1958"/>
+        <location filename="../Sources/ptMain.cpp" line="1904"/>
         <location filename="../Sources/ptMain.cpp" line="2023"/>
+        <location filename="../Sources/ptMain.cpp" line="2088"/>
         <source>Histogram selection outside the image</source>
         <translation>Выделение гистограммы вне изображения</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1840"/>
-        <location filename="../Sources/ptMain.cpp" line="1959"/>
+        <location filename="../Sources/ptMain.cpp" line="1905"/>
         <location filename="../Sources/ptMain.cpp" line="2024"/>
+        <location filename="../Sources/ptMain.cpp" line="2089"/>
         <source>Histogram selection rectangle too large.
 No crop, try again.</source>
         <translation>Область выделения гистограммы слишком велика.
 Кадрирование невозможно, попробуйте снова.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2374"/>
+        <location filename="../Sources/ptMain.cpp" line="2442"/>
         <source>GraphicsMagick Error</source>
         <translation>Ошибка GraphicsMagick</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2374"/>
+        <location filename="../Sources/ptMain.cpp" line="2442"/>
         <source>No output file written.</source>
         <translation>Файл не записан.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2381"/>
+        <location filename="../Sources/ptMain.cpp" line="2451"/>
         <source>Exif Error</source>
         <translation>Ошибка EXIF</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2381"/>
+        <location filename="../Sources/ptMain.cpp" line="2451"/>
         <source>No exif data written.</source>
         <translation>EXIF не записан.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2401"/>
+        <location filename="../Sources/ptMain.cpp" line="2471"/>
         <source>Written %L1 bytes (%L2 MByte)</source>
         <translation>Записано %L1 байт (%L2 MB)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2630"/>
+        <location filename="../Sources/ptMain.cpp" line="2701"/>
         <source>File not found</source>
         <translation>Файл не найден</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilterDM.cpp" line="365"/>
+        <location filename="../Sources/filters/ptFilterDM.cpp" line="369"/>
         <source>Append settings file</source>
         <translation>Добавить к файлу настроек</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilterDM.cpp" line="395"/>
+        <location filename="../Sources/filters/ptFilterDM.cpp" line="399"/>
         <source>Select input file(s)</source>
         <translation>Выберите входные файлы</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilterDM.cpp" line="407"/>
+        <location filename="../Sources/filters/ptFilterDM.cpp" line="411"/>
         <source>Select output directory</source>
         <translation>Выберите директорию вывода</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilterDM.cpp" line="421"/>
+        <location filename="../Sources/filters/ptFilterDM.cpp" line="426"/>
         <source>Select job file</source>
         <translation>Выберите файл задания</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2912"/>
+        <location filename="../Sources/ptMain.cpp" line="3004"/>
         <source>Writing tmp image for gimp</source>
         <translation>Запись временного изображения для GIMP</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2983"/>
+        <location filename="../Sources/ptMain.cpp" line="3076"/>
         <source>Writing tmp exif for gimp</source>
         <translation>Запись временного EXIF для GIMP</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2996"/>
+        <location filename="../Sources/ptMain.cpp" line="3090"/>
         <source>Writing tmp icc for gimp</source>
         <translation>Запись временного ICC для GIMP</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3028"/>
+        <location filename="../Sources/ptMain.cpp" line="3123"/>
         <source>Writing gimp interface file</source>
         <translation>Запись файла интерфейса GIMP</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3138"/>
+        <location filename="../Sources/ptMain.cpp" line="3294"/>
         <source>Not yet implemented</source>
         <translation>Ещё не реализовано</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3139"/>
+        <location filename="../Sources/ptMain.cpp" line="3295"/>
         <source>Not yet implemented. Reverting to Adobe.</source>
         <translation>Ещё не реализовано. Возврат к профилю Adobe.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3149"/>
-        <location filename="../Sources/ptMain.cpp" line="3192"/>
-        <location filename="../Sources/ptMain.cpp" line="3232"/>
+        <location filename="../Sources/ptMain.cpp" line="3305"/>
+        <location filename="../Sources/ptMain.cpp" line="3348"/>
+        <location filename="../Sources/ptMain.cpp" line="3388"/>
         <source>Open Profile</source>
         <translation>Открыть профиль</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3338"/>
+        <location filename="../Sources/ptMain.cpp" line="3494"/>
         <source>Open Image</source>
         <translation>Открыть изображение</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3340"/>
+        <location filename="../Sources/ptMain.cpp" line="3496"/>
         <source>CSS files (*.css *.qss);;All files(*.*)</source>
         <translation>CSS файлы (*.css *.qss);;Все файлы (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3374"/>
+        <location filename="../Sources/ptMain.cpp" line="3535"/>
         <source>Are you sure?</source>
         <translation>Вы уверены?</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3375"/>
+        <location filename="../Sources/ptMain.cpp" line="3536"/>
         <source>If you don&apos;t stop me, I will waste %1 MB of memory.</source>
         <translation>Если Вы не остановите процесс, будет потрачено %1 Мб памяти.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3399"/>
-        <location filename="../Sources/ptMain.cpp" line="3436"/>
+        <location filename="../Sources/ptMain.cpp" line="3560"/>
+        <location filename="../Sources/ptMain.cpp" line="3597"/>
         <source>Detail view</source>
         <translation>Просмотр деталей</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3568"/>
-        <location filename="../Sources/ptMain.cpp" line="3583"/>
+        <location filename="../Sources/ptMain.cpp" line="3729"/>
+        <location filename="../Sources/ptMain.cpp" line="3744"/>
         <source>Reset?</source>
         <translation>Сбросить?</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3569"/>
+        <location filename="../Sources/ptMain.cpp" line="3730"/>
         <source>Reset to neutral values?
 </source>
         <translation>Вернуться к нейтральным настройкам?
 </translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3584"/>
+        <location filename="../Sources/ptMain.cpp" line="3745"/>
         <source>Reset to start up settings?
 </source>
         <translation>Вернуться к начальным настройкам?
 </translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3644"/>
+        <location filename="../Sources/ptMain.cpp" line="3805"/>
         <source>Get preset file</source>
         <translation>Загрузить файл настроек</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3772"/>
+        <location filename="../Sources/ptMain.cpp" line="3933"/>
         <source>Save full size image</source>
         <translation>Сохранить полный размер</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3774"/>
+        <location filename="../Sources/ptMain.cpp" line="3935"/>
         <source>Save current pipe</source>
         <translation>Сохранить текущий размер</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3776"/>
+        <location filename="../Sources/ptMain.cpp" line="3937"/>
         <source>Save job file</source>
         <translation>Сохранить файл задания</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilterDM.cpp" line="366"/>
-        <location filename="../Sources/ptMain.cpp" line="3778"/>
+        <location filename="../Sources/filters/ptFilterDM.cpp" line="370"/>
+        <location filename="../Sources/filters/ptFilterDM.cpp" line="445"/>
+        <location filename="../Sources/ptMain.cpp" line="3939"/>
         <source>Save settings file</source>
         <translation>Сохранить файл настроек</translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptBatchWindow.cpp" line="106"/>
-        <location filename="../Sources/ptMain.cpp" line="3824"/>
-        <location filename="../Sources/ptMain.cpp" line="3836"/>
-        <source>Settings files (*.pts *.ptj);;All files (*.*)</source>
-        <translation>Файлы настроек (*.pts *.ptj);;Все файлы (*.*)</translation>
+        <location filename="../Sources/batch/ptBatchWindow.cpp" line="129"/>
+        <location filename="../Sources/ptMain.cpp" line="3992"/>
+        <location filename="../Sources/ptMain.cpp" line="4006"/>
+        <source>All supported files (*.pts *ptj);;Settings files (*.pts);;Job files (*.ptj);;All files (*.*)</source>
+        <translation>Все поддерживаемые файлы (*.pts *ptj);;Файлы настроек (*.pts);;Файлы заданий (*.ptj);;Все файлы (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptBatchWindow.cpp" line="109"/>
+        <location filename="../Sources/batch/ptBatchWindow.cpp" line="132"/>
         <source>Open setting files</source>
         <translation>Открыть файлы настроек</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3827"/>
+        <location filename="../Sources/ptMain.cpp" line="3995"/>
         <source>Open setting file</source>
         <translation>Открыть файл настроек</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3853"/>
+        <location filename="../Sources/ptMain.cpp" line="4032"/>
         <source>Open &apos;bad pixels&apos; file</source>
         <translation>Открыть файл с &quot;битыми пикселями&quot;</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3877"/>
+        <location filename="../Sources/ptMain.cpp" line="4056"/>
         <source>Open &apos;dark frame&apos; file</source>
         <translation>Открыть файл с &quot;тёмным кадром&quot;</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3925"/>
-        <location filename="../Sources/ptMain.cpp" line="3926"/>
+        <location filename="../Sources/ptMain.cpp" line="4104"/>
+        <location filename="../Sources/ptMain.cpp" line="4105"/>
         <source>Spot WB</source>
         <translation>ББ по области</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4379"/>
-        <location filename="../Sources/ptMain.cpp" line="4578"/>
+        <location filename="../Sources/ptMain.cpp" line="4558"/>
+        <location filename="../Sources/ptMain.cpp" line="4757"/>
         <source>Open an image first.</source>
         <translation>Сначала откройте изображение.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3129"/>
-        <location filename="../Sources/ptMain.cpp" line="3130"/>
+        <location filename="../Sources/ptMain.cpp" line="3285"/>
+        <location filename="../Sources/ptMain.cpp" line="3286"/>
         <source>Please load a profile first</source>
         <translation>Пожалуйста, сначала загрузите профиль</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3396"/>
+        <location filename="../Sources/ptMain.cpp" line="3557"/>
         <source>Really switch to 1:1 pipe?</source>
         <translation>Действительно переключиться в режим 1:1?</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3397"/>
+        <location filename="../Sources/ptMain.cpp" line="3558"/>
         <source>Switching to 1:1 pipe will increase memory usage and processing time greatly.
 Are you sure?</source>
         <translation>Переключение в режим 1:1 существенно увеличит использование памяти и время обработки.
 Вы уверены?</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3613"/>
+        <location filename="../Sources/ptMain.cpp" line="3774"/>
         <source>Get Gimp command</source>
         <translation>Укажите комманду GIMP</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4378"/>
+        <location filename="../Sources/ptMain.cpp" line="4557"/>
         <source>No selection</source>
         <translation>Нет выделения</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4391"/>
-        <location filename="../Sources/ptMain.cpp" line="4392"/>
+        <location filename="../Sources/ptMain.cpp" line="4570"/>
+        <location filename="../Sources/ptMain.cpp" line="4571"/>
         <source>Get angle</source>
         <translation>Задайте угол</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="189"/>
-        <location filename="../Sources/ptMain.cpp" line="4582"/>
+        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="201"/>
+        <location filename="../Sources/ptMain.cpp" line="4761"/>
         <source>Prepare</source>
         <translation>Подготовка</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="190"/>
+        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="202"/>
         <source>Prepare for local adjust</source>
         <translation>Подготовка к локальной коррекции</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="195"/>
-        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="196"/>
+        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="207"/>
+        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="208"/>
         <source>Local adjust</source>
         <translation>Локальная коррекция</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4583"/>
+        <location filename="../Sources/ptMain.cpp" line="4762"/>
         <source>Prepare for cropping</source>
         <translation>Подготовка к кадрированию</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4591"/>
-        <location filename="../Sources/ptMain.cpp" line="4592"/>
+        <location filename="../Sources/ptMain.cpp" line="4770"/>
+        <location filename="../Sources/ptMain.cpp" line="4771"/>
         <source>Crop</source>
         <translation>Кадрирование</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4686"/>
+        <location filename="../Sources/ptMain.cpp" line="4865"/>
         <source>Set a crop rectangle now.</source>
         <translation>Выделите прямоугольник для кадрирования.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4872"/>
+        <location filename="../Sources/ptMain.cpp" line="5067"/>
         <source>Open Channelmixer</source>
         <translation>Открыть микшер каналов</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4919"/>
-        <location filename="../Sources/ptMain.cpp" line="4934"/>
+        <location filename="../Sources/ptMain.cpp" line="5114"/>
+        <location filename="../Sources/ptMain.cpp" line="5129"/>
         <source>Save Channelmixer</source>
         <translation>Сохранить микшер каналов</translation>
     </message>
     <message>
-        <location filename="../Sources/ptCurveWindow.cpp" line="188"/>
+        <location filename="../Sources/ptCurveWindow.cpp" line="176"/>
         <source>Open Curve</source>
         <translation>Открыть кривую</translation>
     </message>
@@ -5037,109 +5010,109 @@ Are you sure?</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="468"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="471"/>
         <source>Done</source>
         <translation>Готово</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="474"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="477"/>
         <source>Updating</source>
         <translation>Обновление</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="480"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="483"/>
         <source>Processing</source>
         <translation>Обработка</translation>
     </message>
     <message>
-        <location filename="../Sources/ptConfirmRequest.cpp" line="46"/>
+        <location filename="../Sources/ptConfirmRequest.cpp" line="48"/>
         <source>Photivo: Load configuration</source>
         <translation>Photivo: Загрузить настройки</translation>
     </message>
     <message>
-        <location filename="../Sources/ptConfirmRequest.cpp" line="50"/>
+        <location filename="../Sources/ptConfirmRequest.cpp" line="52"/>
         <source>Discard current configuration and load new settings?</source>
         <translation>Отказаться от текущих параметров и загрузить новые настройки?</translation>
     </message>
     <message>
-        <location filename="../Sources/ptConfirmRequest.cpp" line="58"/>
+        <location filename="../Sources/ptConfirmRequest.cpp" line="60"/>
         <source>Discard current configuration and reset to startup preset?
 </source>
         <translation>Отказаться от текущих параметров и вернуться к начальным настройкам?</translation>
     </message>
     <message>
-        <location filename="../Sources/ptConfirmRequest.cpp" line="63"/>
+        <location filename="../Sources/ptConfirmRequest.cpp" line="65"/>
         <source>Discard current configuration and reset to neutral preset?</source>
         <translation>Отказаться от текущих параметров и вернуться к нейтральным настройкам?</translation>
     </message>
     <message>
-        <location filename="../Sources/ptConfirmRequest.cpp" line="67"/>
+        <location filename="../Sources/ptConfirmRequest.cpp" line="69"/>
         <source>Discard current configuration and load preset file?
 </source>
         <translation>Отказаться от текущих параметров и загрузить новый пресет?
 </translation>
     </message>
     <message>
-        <location filename="../Sources/ptConfirmRequest.cpp" line="76"/>
+        <location filename="../Sources/ptConfirmRequest.cpp" line="78"/>
         <source>Discard current configuration and load settings file?
 </source>
         <translation>Отказаться от текущих параметров и загрузить файл настроек?
 </translation>
     </message>
     <message>
-        <location filename="../Sources/ptConfirmRequest.cpp" line="117"/>
+        <location filename="../Sources/ptConfirmRequest.cpp" line="127"/>
         <source>Photivo: Save image</source>
         <translation>Photivo: Сохранить изображение</translation>
     </message>
     <message>
-        <location filename="../Sources/ptConfirmRequest.cpp" line="118"/>
-        <location filename="../Sources/ptConfirmRequest.cpp" line="130"/>
+        <location filename="../Sources/ptConfirmRequest.cpp" line="128"/>
+        <location filename="../Sources/ptConfirmRequest.cpp" line="140"/>
         <source>Do you want to save the current image?</source>
         <translation>Вы хотите сохранить текущее изображение?</translation>
     </message>
     <message>
-        <location filename="../Sources/ptConfirmRequest.cpp" line="122"/>
+        <location filename="../Sources/ptConfirmRequest.cpp" line="132"/>
         <source>Photivo: Open image</source>
         <translation>Photivo: Открыть изображение</translation>
     </message>
     <message>
-        <location filename="../Sources/ptConfirmRequest.cpp" line="123"/>
+        <location filename="../Sources/ptConfirmRequest.cpp" line="133"/>
         <source>Before opening the image:
 </source>
         <translation>Перед открытием изображения:
 </translation>
     </message>
     <message>
-        <location filename="../Sources/filemgmt/ptImageView.cpp" line="377"/>
+        <location filename="../Sources/filemgmt/ptImageView.cpp" line="146"/>
         <source>Loading</source>
         <translation>Загрузка</translation>
     </message>
     <message>
-        <location filename="../Sources/ptCurve.cpp" line="305"/>
+        <location filename="../Sources/ptCurve.cpp" line="453"/>
         <source>Failed to load curve file %1.</source>
         <translation>Не удалось загрузить файл кривой %1.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptCurve.cpp" line="306"/>
+        <location filename="../Sources/ptCurve.cpp" line="455"/>
         <source>
 The error occurred in line %1.</source>
         <translation>
 Возникла ошибка в строке %1.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptCurve.cpp" line="307"/>
+        <location filename="../Sources/ptCurve.cpp" line="456"/>
         <source>Load curve file</source>
         <translation>Загрузка файла кривой</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/imagespot/ptSpotListWidget.cpp" line="152"/>
-        <location filename="../Sources/filters/imagespot/ptSpotListWidget.cpp" line="183"/>
+        <location filename="../Sources/filters/imagespot/ptSpotListWidget.cpp" line="151"/>
+        <location filename="../Sources/filters/imagespot/ptSpotListWidget.cpp" line="182"/>
         <source>No image opened</source>
         <translation>Изображение не открыто</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/imagespot/ptSpotListWidget.cpp" line="153"/>
-        <location filename="../Sources/filters/imagespot/ptSpotListWidget.cpp" line="184"/>
+        <location filename="../Sources/filters/imagespot/ptSpotListWidget.cpp" line="152"/>
+        <location filename="../Sources/filters/imagespot/ptSpotListWidget.cpp" line="183"/>
         <source>Open an image before editing spots.</source>
         <translation>Откройте изображение перед редактированием точек.</translation>
     </message>
@@ -5211,57 +5184,67 @@ The error occurred in line %1.</source>
     </message>
     <message>
         <location filename="../Sources/batch/ptBatchWindow.ui" line="162"/>
+        <source>Reset status</source>
+        <translation>Сбросить статус</translation>
+    </message>
+    <message>
+        <location filename="../Sources/batch/ptBatchWindow.ui" line="165"/>
+        <source>Reset</source>
+        <translation>Сбросить</translation>
+    </message>
+    <message>
+        <location filename="../Sources/batch/ptBatchWindow.ui" line="204"/>
         <source>Save job list to file</source>
         <translation>Сохранить список заданий в файл</translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptBatchWindow.ui" line="165"/>
+        <location filename="../Sources/batch/ptBatchWindow.ui" line="207"/>
         <source>Save...</source>
         <translation>Сохранить...</translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptBatchWindow.ui" line="188"/>
+        <location filename="../Sources/batch/ptBatchWindow.ui" line="230"/>
         <source>Open job list from files</source>
         <translation>Открыть список заданий из файлов</translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptBatchWindow.ui" line="191"/>
+        <location filename="../Sources/batch/ptBatchWindow.ui" line="233"/>
         <source>Open...</source>
         <translation>Открыть...</translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptBatchWindow.ui" line="227"/>
+        <location filename="../Sources/batch/ptBatchWindow.ui" line="269"/>
         <source>Show processing log</source>
         <translation>Показать журнал обработки</translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptBatchWindow.ui" line="230"/>
+        <location filename="../Sources/batch/ptBatchWindow.ui" line="272"/>
         <source>Show log</source>
         <translation>Журнал</translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptBatchWindow.ui" line="272"/>
+        <location filename="../Sources/batch/ptBatchWindow.ui" line="314"/>
         <source>Close batch manager</source>
         <translation>Закрыть менеджер пакетной обработки</translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptBatchWindow.ui" line="275"/>
+        <location filename="../Sources/batch/ptBatchWindow.ui" line="317"/>
         <source>Close</source>
         <translation>Закрыть</translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptBatchWindow.cpp" line="169"/>
-        <location filename="../Sources/batch/ptBatchWindow.cpp" line="184"/>
+        <location filename="../Sources/batch/ptBatchWindow.cpp" line="196"/>
+        <location filename="../Sources/batch/ptBatchWindow.cpp" line="211"/>
         <source>Job list files (*.ptb);;All files (*.*)</source>
         <translation>Файлы списков заданий (*.ptb);;Все файлы (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptBatchWindow.cpp" line="172"/>
+        <location filename="../Sources/batch/ptBatchWindow.cpp" line="199"/>
         <source>Save job list file</source>
         <translation>Сохранить список заданий</translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptBatchWindow.cpp" line="187"/>
+        <location filename="../Sources/batch/ptBatchWindow.cpp" line="214"/>
         <source>Open job list files</source>
         <translation>Открыть список заданий</translation>
     </message>
@@ -5269,52 +5252,52 @@ The error occurred in line %1.</source>
 <context>
     <name>ptCurveWindow</name>
     <message>
-        <location filename="../Sources/ptCurveWindow.cpp" line="671"/>
+        <location filename="../Sources/ptCurveWindow.cpp" line="650"/>
         <source>L&amp;uminance mask</source>
         <translation>&amp;Яркостная маска</translation>
     </message>
     <message>
-        <location filename="../Sources/ptCurveWindow.cpp" line="675"/>
+        <location filename="../Sources/ptCurveWindow.cpp" line="654"/>
         <source>C&amp;olor mask</source>
         <translation>&amp;Цветовая маска</translation>
     </message>
     <message>
-        <location filename="../Sources/ptCurveWindow.cpp" line="684"/>
+        <location filename="../Sources/ptCurveWindow.cpp" line="663"/>
         <source>&amp;Linear</source>
         <translation>&amp;Линейная</translation>
     </message>
     <message>
-        <location filename="../Sources/ptCurveWindow.cpp" line="685"/>
+        <location filename="../Sources/ptCurveWindow.cpp" line="664"/>
         <source>Linear interpolation</source>
         <translation>Линейная интерполяция</translation>
     </message>
     <message>
-        <location filename="../Sources/ptCurveWindow.cpp" line="689"/>
+        <location filename="../Sources/ptCurveWindow.cpp" line="668"/>
         <source>&amp;Spline</source>
         <translation>&amp;Сплайн</translation>
     </message>
     <message>
-        <location filename="../Sources/ptCurveWindow.cpp" line="690"/>
+        <location filename="../Sources/ptCurveWindow.cpp" line="669"/>
         <source>Spline interpolation</source>
         <translation>Интерполяция сплайном</translation>
     </message>
     <message>
-        <location filename="../Sources/ptCurveWindow.cpp" line="694"/>
+        <location filename="../Sources/ptCurveWindow.cpp" line="673"/>
         <source>&amp;Cosine</source>
         <translation>&amp;Косинусы</translation>
     </message>
     <message>
-        <location filename="../Sources/ptCurveWindow.cpp" line="695"/>
+        <location filename="../Sources/ptCurveWindow.cpp" line="674"/>
         <source>Cosine interpolation</source>
         <translation>Интерполяция косинусами</translation>
     </message>
     <message>
-        <location filename="../Sources/ptCurveWindow.cpp" line="704"/>
+        <location filename="../Sources/ptCurveWindow.cpp" line="683"/>
         <source>Open &amp;file</source>
         <translation>&amp;Открыть файл</translation>
     </message>
     <message>
-        <location filename="../Sources/ptCurveWindow.cpp" line="705"/>
+        <location filename="../Sources/ptCurveWindow.cpp" line="684"/>
         <source>Open anchor curve file</source>
         <translation>Открыть кривой из файла</translation>
     </message>
@@ -5323,7 +5306,7 @@ The error occurred in line %1.</source>
     <name>ptFileMgrWindow</name>
     <message>
         <location filename="../Sources/filemgmt/ptFileMgrWindow.ui" line="119"/>
-        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="110"/>
+        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="114"/>
         <source>Bookmarks</source>
         <translation>Закладки</translation>
     </message>
@@ -5333,22 +5316,22 @@ The error occurred in line %1.</source>
         <translation>Открыть список закладок</translation>
     </message>
     <message>
-        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="78"/>
+        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="82"/>
         <source>Folders</source>
         <translation>Папки</translation>
     </message>
     <message>
-        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="80"/>
+        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="84"/>
         <source>Directories</source>
         <translation>Директории</translation>
     </message>
     <message>
-        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="87"/>
+        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="91"/>
         <source>Bookmark current folder (Ctrl+B)</source>
         <translation>Добавить текущую папку в закладки (Ctrl+B)</translation>
     </message>
     <message>
-        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="89"/>
+        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="93"/>
         <source>Bookmark current directory (Ctrl+B)</source>
         <translation>Добавить текущую директорию в закладки (Ctrl+B)</translation>
     </message>
@@ -5428,7 +5411,17 @@ The error occurred in line %1.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="708"/>
+        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="701"/>
+        <source>Show RAWs</source>
+        <translation>Показывать RAW файлы</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="705"/>
+        <source>Show bitmaps</source>
+        <translation>Показывать растровые изображения</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="715"/>
         <source>Thumbnail &amp;view</source>
         <translation>&amp;Вид миниатюр</translation>
     </message>
@@ -5436,7 +5429,7 @@ The error occurred in line %1.</source>
 <context>
     <name>ptFilter_ABCurves</name>
     <message>
-        <location filename="../Sources/filters/ptFilter_ABCurves.cpp" line="48"/>
+        <location filename="../Sources/filters/ptFilter_ABCurves.cpp" line="45"/>
         <source>a* b* curves</source>
         <translation>Кривые a* b*</translation>
     </message>
@@ -5444,37 +5437,37 @@ The error occurred in line %1.</source>
 <context>
     <name>ptFilter_Brightness</name>
     <message>
-        <location filename="../Sources/filters/ptFilter_Brightness.cpp" line="49"/>
+        <location filename="../Sources/filters/ptFilter_Brightness.cpp" line="48"/>
         <source>Brightness</source>
         <translation>Яркость</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_Brightness.cpp" line="58"/>
+        <location filename="../Sources/filters/ptFilter_Brightness.cpp" line="57"/>
         <source>Catch white</source>
         <translation>Ограничение белого</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_Brightness.cpp" line="58"/>
+        <location filename="../Sources/filters/ptFilter_Brightness.cpp" line="57"/>
         <source>Darken the bright parts</source>
         <translation>Затемнить яркие участки</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_Brightness.cpp" line="59"/>
+        <location filename="../Sources/filters/ptFilter_Brightness.cpp" line="58"/>
         <source>Catch black</source>
         <translation>Ограничение чёрного</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_Brightness.cpp" line="59"/>
+        <location filename="../Sources/filters/ptFilter_Brightness.cpp" line="58"/>
         <source>Brighten the dark parts</source>
         <translation>Осветлить тёмные участки</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_Brightness.cpp" line="60"/>
+        <location filename="../Sources/filters/ptFilter_Brightness.cpp" line="59"/>
         <source>Gain</source>
         <translation>Усиление</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_Brightness.cpp" line="60"/>
+        <location filename="../Sources/filters/ptFilter_Brightness.cpp" line="59"/>
         <source>Exposure gain</source>
         <translation>Усиление экспозиции</translation>
     </message>
@@ -5674,6 +5667,24 @@ The error occurred in line %1.</source>
     </message>
 </context>
 <context>
+    <name>ptFilter_ImpulseNR</name>
+    <message>
+        <location filename="../Sources/filters/ptFilter_ImpulseNR.cpp" line="47"/>
+        <source>Impulse noise reduction</source>
+        <translation>Подавление импульсного шума</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_ImpulseNR.cpp" line="56"/>
+        <source>Lightness threshold</source>
+        <translation>Порог по яркости</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_ImpulseNR.cpp" line="57"/>
+        <source>Color threshold</source>
+        <translation>Порог по цвету</translation>
+    </message>
+</context>
+<context>
     <name>ptFilter_LMHRecovery</name>
     <message>
         <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="61"/>
@@ -5787,6 +5798,108 @@ The error occurred in line %1.</source>
         <location filename="../Sources/filters/ptFilter_Levels.cpp" line="69"/>
         <source>Whitepoint</source>
         <translation>Белая точка</translation>
+    </message>
+</context>
+<context>
+    <name>ptFilter_LocalContrast</name>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LocalContrast.cpp" line="63"/>
+        <location filename="../Sources/filters/ptFilter_LocalContrast.cpp" line="72"/>
+        <source>Local contrast</source>
+        <translation>Локальный контраст</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LocalContrast.cpp" line="86"/>
+        <source>Disabled</source>
+        <translation>Запрещено</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LocalContrast.cpp" line="87"/>
+        <source>Shadows</source>
+        <translation>Тени</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LocalContrast.cpp" line="88"/>
+        <source>Midtones</source>
+        <translation>Полутона</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LocalContrast.cpp" line="89"/>
+        <source>Highlights</source>
+        <translation>Света</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LocalContrast.cpp" line="90"/>
+        <source>All values</source>
+        <translation>Все значения</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LocalContrast.cpp" line="120"/>
+        <source>Mask type</source>
+        <translation>Тип маски</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LocalContrast.cpp" line="121"/>
+        <source>Radius</source>
+        <translation>Радиус</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LocalContrast.cpp" line="122"/>
+        <source>Strength</source>
+        <translation>Сила</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LocalContrast.cpp" line="123"/>
+        <source>Opacity</source>
+        <translation>Непрозрачность</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LocalContrast.cpp" line="124"/>
+        <source>Halo control</source>
+        <translation>Контроль ореолов</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LocalContrast.cpp" line="125"/>
+        <source>Lower limit</source>
+        <translation>Нижняя граница</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LocalContrast.cpp" line="126"/>
+        <source>Upper limit</source>
+        <translation>Верхняя граница</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LocalContrast.cpp" line="127"/>
+        <source>Softness</source>
+        <translation>Плавность</translation>
+    </message>
+</context>
+<context>
+    <name>ptFilter_LocalContrastStretch</name>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LocalContrastStretch.cpp" line="58"/>
+        <source>Local contrast stretch</source>
+        <translation>Растяжение локального контраста</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LocalContrastStretch.cpp" line="84"/>
+        <source>Radius</source>
+        <translation>Радиус</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LocalContrastStretch.cpp" line="85"/>
+        <source>Feather</source>
+        <translation>Размытие</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LocalContrastStretch.cpp" line="86"/>
+        <source>Opacity</source>
+        <translation>Непрозрачность</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LocalContrastStretch.cpp" line="87"/>
+        <source>Masking</source>
+        <translation>Маска</translation>
     </message>
 </context>
 <context>
@@ -6124,64 +6237,64 @@ The error occurred in line %1.</source>
         <translation>Точечная коррекция</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="79"/>
+        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="84"/>
         <source>Use maximum radius</source>
         <translation>Использовать максимальный радиус</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="80"/>
+        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="85"/>
         <source>Maximum radius</source>
         <translation>Максимальный радиус</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="80"/>
+        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="85"/>
         <source>Pixels outside this radius will never be included in the mask.</source>
         <translation>Пикселы вне этого радиуса не будут включены в маску.</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="81"/>
+        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="86"/>
         <source>Brightness/color ratio</source>
         <translation>Соотношение яркость/цвет</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="81"/>
+        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="86"/>
         <source>Defines how brightness and color affect the threshold.
 0.0: ignore color, 1.0: ignore brightness, 0.5: equal weight for both</source>
         <translation>Определяет, как яркость и цвет влияют на порог.
 0.0: игнорировать цвет, 1.0: игнорировать яркость, 0.5: равный вес обоих</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="82"/>
+        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="87"/>
         <source>Threshold</source>
         <translation>Порог</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="82"/>
+        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="87"/>
         <source>Maximum amount a pixel may differ from the spot&apos;s source pixel to get included in the mask.</source>
         <translation>Максимальное отличие от исходной точки, при котором пиксел будет включён в маску.</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="87"/>
+        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="88"/>
         <source>Saturation</source>
         <translation>Насыщенность</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="88"/>
+        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="89"/>
         <source>Adaptive saturation</source>
         <translation>Адаптивное насыщение</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="88"/>
+        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="89"/>
         <source>Prevent clipping when adjusting saturation</source>
         <translation>Предотвратить обрезание при настройке насыщенности </translation>
     </message>
     <message>
-        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="89"/>
+        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="90"/>
         <source>Color shift</source>
         <translation>Цветовой сдвиг</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="118"/>
+        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="129"/>
         <source>Luminance curve</source>
         <translation>Кривая яркости</translation>
     </message>
@@ -6189,49 +6302,88 @@ The error occurred in line %1.</source>
 <context>
     <name>ptFilter_StdCurve</name>
     <message>
-        <location filename="../Sources/filters/ptFilter_StdCurve.cpp" line="122"/>
+        <location filename="../Sources/filters/ptFilter_StdCurve.cpp" line="125"/>
         <source>RGB curve</source>
         <translation>Кривая RGB</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_StdCurve.cpp" line="135"/>
+        <location filename="../Sources/filters/ptFilter_StdCurve.cpp" line="138"/>
         <source>Texture curve</source>
         <translation>Текстурная кривая</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_StdCurve.cpp" line="148"/>
+        <location filename="../Sources/filters/ptFilter_StdCurve.cpp" line="151"/>
         <source>Luminance by hue curve</source>
         <translation>Кривая яркости по тону</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_StdCurve.cpp" line="161"/>
+        <location filename="../Sources/filters/ptFilter_StdCurve.cpp" line="164"/>
         <source>Hue curve</source>
         <translation>Тоновая кривая</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_StdCurve.cpp" line="174"/>
+        <location filename="../Sources/filters/ptFilter_StdCurve.cpp" line="177"/>
         <source>L* curve</source>
         <translation>Кривая L*</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_StdCurve.cpp" line="187"/>
+        <location filename="../Sources/filters/ptFilter_StdCurve.cpp" line="190"/>
         <source>R tone curve</source>
         <translation>Тоновая кривая R</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_StdCurve.cpp" line="200"/>
+        <location filename="../Sources/filters/ptFilter_StdCurve.cpp" line="203"/>
         <source>G tone curve</source>
         <translation>Тоновая кривая G</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_StdCurve.cpp" line="213"/>
+        <location filename="../Sources/filters/ptFilter_StdCurve.cpp" line="216"/>
         <source>B tone curve</source>
         <translation>Тоновая кривая B</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_StdCurve.cpp" line="226"/>
+        <location filename="../Sources/filters/ptFilter_StdCurve.cpp" line="229"/>
         <source>After gamma curve</source>
         <translation>Кривая после гаммы</translation>
+    </message>
+</context>
+<context>
+    <name>ptFilter_TextureContrast</name>
+    <message>
+        <location filename="../Sources/filters/ptFilter_TextureContrast.cpp" line="60"/>
+        <location filename="../Sources/filters/ptFilter_TextureContrast.cpp" line="69"/>
+        <source>Texture contrast</source>
+        <translation>Текстурный контраст</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_TextureContrast.cpp" line="82"/>
+        <source>Strength</source>
+        <translation>Сила</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_TextureContrast.cpp" line="83"/>
+        <source>Scale</source>
+        <translation>Масштаб</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_TextureContrast.cpp" line="84"/>
+        <source>Threshold</source>
+        <translation>Порог</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_TextureContrast.cpp" line="85"/>
+        <source>Opacity</source>
+        <translation>Непрозрачность</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_TextureContrast.cpp" line="86"/>
+        <source>Denoise</source>
+        <translation>Подавление шума</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_TextureContrast.cpp" line="87"/>
+        <source>Masking</source>
+        <translation>Маска</translation>
     </message>
 </context>
 <context>
@@ -6380,61 +6532,61 @@ The error occurred in line %1.</source>
 <context>
     <name>ptGroupBox</name>
     <message>
-        <location filename="../Sources/ptGroupBox.cpp" line="78"/>
+        <location filename="../Sources/ptGroupBox.cpp" line="79"/>
         <source>Complex filter. Might be slow.</source>
         <translation>Сложный фильтр. Может работать медленно.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGroupBox.cpp" line="92"/>
+        <location filename="../Sources/ptGroupBox.cpp" line="93"/>
         <source>Open help page in web browser.</source>
         <translation>Открыть справку в браузере.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGroupBox.cpp" line="130"/>
+        <location filename="../Sources/ptGroupBox.cpp" line="131"/>
         <source>&amp;Hide</source>
         <translation>С&amp;крыть</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGroupBox.cpp" line="487"/>
+        <location filename="../Sources/ptGroupBox.cpp" line="488"/>
         <source>Bl&amp;ock</source>
         <translation>За&amp;блокировать</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGroupBox.cpp" line="140"/>
+        <location filename="../Sources/ptGroupBox.cpp" line="141"/>
         <source>&amp;Reset</source>
         <translation>&amp;Сбросить</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGroupBox.cpp" line="145"/>
+        <location filename="../Sources/ptGroupBox.cpp" line="146"/>
         <source>&amp;Save preset</source>
         <translation>Сохранить &amp;пресет</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGroupBox.cpp" line="150"/>
+        <location filename="../Sources/ptGroupBox.cpp" line="151"/>
         <source>&amp;Append preset</source>
         <translation>&amp;Добавить пресет</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGroupBox.cpp" line="331"/>
+        <location filename="../Sources/ptGroupBox.cpp" line="332"/>
         <source>Settings File</source>
         <translation>Файл настроек</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGroupBox.cpp" line="484"/>
+        <location filename="../Sources/ptGroupBox.cpp" line="485"/>
         <source>All&amp;ow</source>
         <translation>&amp;Разрешить</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGroupBox.cpp" line="502"/>
-        <location filename="../Sources/ptGroupBox.cpp" line="524"/>
-        <location filename="../Sources/ptGroupBox.cpp" line="539"/>
+        <location filename="../Sources/ptGroupBox.cpp" line="503"/>
+        <location filename="../Sources/ptGroupBox.cpp" line="525"/>
+        <location filename="../Sources/ptGroupBox.cpp" line="540"/>
         <source>Add to &amp;favourites</source>
         <translation>Добавить в &amp;избранные</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGroupBox.cpp" line="505"/>
-        <location filename="../Sources/ptGroupBox.cpp" line="527"/>
-        <location filename="../Sources/ptGroupBox.cpp" line="542"/>
+        <location filename="../Sources/ptGroupBox.cpp" line="506"/>
+        <location filename="../Sources/ptGroupBox.cpp" line="528"/>
+        <location filename="../Sources/ptGroupBox.cpp" line="543"/>
         <source>Remove from &amp;favourites</source>
         <translation>&amp;Удалить из избранных</translation>
     </message>
@@ -6442,98 +6594,103 @@ The error occurred in line %1.</source>
 <context>
     <name>ptHistogramWindow</name>
     <message>
-        <location filename="../Sources/ptHistogramWindow.cpp" line="87"/>
+        <location filename="../Sources/ptHistogramWindow.cpp" line="92"/>
         <source>Logarithmic &amp;X axis</source>
         <translation>Логарифмический масштаб по оси &amp;X</translation>
     </message>
     <message>
-        <location filename="../Sources/ptHistogramWindow.cpp" line="92"/>
+        <location filename="../Sources/ptHistogramWindow.cpp" line="97"/>
         <source>Logarithmic &amp;Y axis</source>
         <translation>Логарифмический масштаб по оси &amp;Y</translation>
     </message>
     <message>
-        <location filename="../Sources/ptHistogramWindow.cpp" line="97"/>
+        <location filename="../Sources/ptHistogramWindow.cpp" line="102"/>
         <source>&amp;Selection</source>
         <translation>По &amp;выделению</translation>
     </message>
     <message>
-        <location filename="../Sources/ptHistogramWindow.cpp" line="98"/>
+        <location filename="../Sources/ptHistogramWindow.cpp" line="103"/>
         <source>Histogram only on a part of the image</source>
         <translation>Гистограмма по части изображения</translation>
     </message>
     <message>
-        <location filename="../Sources/ptHistogramWindow.cpp" line="106"/>
+        <location filename="../Sources/ptHistogramWindow.cpp" line="111"/>
         <source>&amp;Linear</source>
         <translation>&amp;Линейный</translation>
     </message>
     <message>
-        <location filename="../Sources/ptHistogramWindow.cpp" line="107"/>
+        <location filename="../Sources/ptHistogramWindow.cpp" line="112"/>
         <source>Use data from linear pipe</source>
         <translation>Использовать данные с линейным профилем</translation>
     </message>
     <message>
-        <location filename="../Sources/ptHistogramWindow.cpp" line="111"/>
+        <location filename="../Sources/ptHistogramWindow.cpp" line="116"/>
         <source>&amp;Preview</source>
         <translation>&amp;Просмотр</translation>
     </message>
     <message>
-        <location filename="../Sources/ptHistogramWindow.cpp" line="112"/>
+        <location filename="../Sources/ptHistogramWindow.cpp" line="117"/>
         <source>Use data with preview profile</source>
         <translation>Использовать данные с профилем просмотра</translation>
     </message>
     <message>
-        <location filename="../Sources/ptHistogramWindow.cpp" line="116"/>
+        <location filename="../Sources/ptHistogramWindow.cpp" line="121"/>
         <source>&amp;Output</source>
         <translation>&amp;Вывод</translation>
     </message>
     <message>
-        <location filename="../Sources/ptHistogramWindow.cpp" line="117"/>
+        <location filename="../Sources/ptHistogramWindow.cpp" line="122"/>
         <source>Use data with output profile</source>
         <translation>Использовать данные с профилем вывода</translation>
     </message>
     <message>
-        <location filename="../Sources/ptHistogramWindow.cpp" line="133"/>
-        <location filename="../Sources/ptHistogramWindow.cpp" line="134"/>
+        <location filename="../Sources/ptHistogramWindow.cpp" line="138"/>
+        <location filename="../Sources/ptHistogramWindow.cpp" line="139"/>
         <source>RGB</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptHistogramWindow.cpp" line="138"/>
+        <location filename="../Sources/ptHistogramWindow.cpp" line="143"/>
         <source>&amp;R</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptHistogramWindow.cpp" line="139"/>
+        <location filename="../Sources/ptHistogramWindow.cpp" line="144"/>
         <source>R</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptHistogramWindow.cpp" line="143"/>
+        <location filename="../Sources/ptHistogramWindow.cpp" line="148"/>
         <source>&amp;G</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptHistogramWindow.cpp" line="144"/>
+        <location filename="../Sources/ptHistogramWindow.cpp" line="149"/>
         <source>G</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptHistogramWindow.cpp" line="148"/>
+        <location filename="../Sources/ptHistogramWindow.cpp" line="153"/>
         <source>&amp;B</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptHistogramWindow.cpp" line="149"/>
+        <location filename="../Sources/ptHistogramWindow.cpp" line="154"/>
         <source>B</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptHistogramWindow.cpp" line="534"/>
+        <location filename="../Sources/ptHistogramWindow.cpp" line="493"/>
+        <source>RAW thumbnail is used</source>
+        <translation>Используется миниатюра из RAW</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptHistogramWindow.cpp" line="559"/>
         <source>Display &amp;channels</source>
         <translation>&amp;Канал</translation>
     </message>
     <message>
-        <location filename="../Sources/ptHistogramWindow.cpp" line="541"/>
+        <location filename="../Sources/ptHistogramWindow.cpp" line="566"/>
         <source>Display &amp;mode</source>
         <translation>&amp;Режим</translation>
     </message>
@@ -6559,47 +6716,47 @@ x=%2, y=%3 (При масштабе 1:1)</translation>
 <context>
     <name>ptImageView</name>
     <message>
-        <location filename="../Sources/filemgmt/ptImageView.cpp" line="115"/>
+        <location filename="../Sources/filemgmt/ptImageView.cpp" line="105"/>
         <source>Zoom &amp;in</source>
         <translation>У&amp;величить</translation>
     </message>
     <message>
-        <location filename="../Sources/filemgmt/ptImageView.cpp" line="115"/>
+        <location filename="../Sources/filemgmt/ptImageView.cpp" line="105"/>
         <source>1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/filemgmt/ptImageView.cpp" line="119"/>
+        <location filename="../Sources/filemgmt/ptImageView.cpp" line="109"/>
         <source>Zoom &amp;100%</source>
         <translation>Увеличить до &amp;100%</translation>
     </message>
     <message>
-        <location filename="../Sources/filemgmt/ptImageView.cpp" line="119"/>
+        <location filename="../Sources/filemgmt/ptImageView.cpp" line="109"/>
         <source>2</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/filemgmt/ptImageView.cpp" line="123"/>
+        <location filename="../Sources/filemgmt/ptImageView.cpp" line="113"/>
         <source>Zoom &amp;out</source>
         <translation>У&amp;меньшить</translation>
     </message>
     <message>
-        <location filename="../Sources/filemgmt/ptImageView.cpp" line="123"/>
+        <location filename="../Sources/filemgmt/ptImageView.cpp" line="113"/>
         <source>3</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/filemgmt/ptImageView.cpp" line="127"/>
+        <location filename="../Sources/filemgmt/ptImageView.cpp" line="117"/>
         <source>Zoom &amp;fit</source>
         <translation>Уместить в &amp;окне</translation>
     </message>
     <message>
-        <location filename="../Sources/filemgmt/ptImageView.cpp" line="127"/>
+        <location filename="../Sources/filemgmt/ptImageView.cpp" line="117"/>
         <source>4</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/filemgmt/ptImageView.cpp" line="317"/>
+        <location filename="../Sources/filemgmt/ptImageView.cpp" line="318"/>
         <source>Fit</source>
         <translation>Уместить</translation>
     </message>
@@ -6607,1285 +6764,1294 @@ x=%2, y=%3 (При масштабе 1:1)</translation>
 <context>
     <name>ptJobListModel</name>
     <message>
-        <location filename="../Sources/batch/ptJobListModel.cpp" line="87"/>
+        <location filename="../Sources/batch/ptJobListModel.cpp" line="88"/>
         <source>Waiting</source>
         <translation>В ожидании</translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptJobListModel.cpp" line="88"/>
+        <location filename="../Sources/batch/ptJobListModel.cpp" line="89"/>
         <source>Processing</source>
         <translation>Обработка</translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptJobListModel.cpp" line="89"/>
+        <location filename="../Sources/batch/ptJobListModel.cpp" line="90"/>
         <source>Finished</source>
         <translation>Завершено</translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptJobListModel.cpp" line="90"/>
+        <location filename="../Sources/batch/ptJobListModel.cpp" line="91"/>
         <source>Skipped</source>
         <translation>Пропущено</translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptJobListModel.cpp" line="91"/>
-        <location filename="../Sources/batch/ptJobListModel.cpp" line="208"/>
-        <location filename="../Sources/batch/ptJobListModel.cpp" line="224"/>
-        <location filename="../Sources/batch/ptJobListModel.cpp" line="228"/>
+        <location filename="../Sources/batch/ptJobListModel.cpp" line="92"/>
+        <location filename="../Sources/batch/ptJobListModel.cpp" line="264"/>
+        <location filename="../Sources/batch/ptJobListModel.cpp" line="280"/>
+        <location filename="../Sources/batch/ptJobListModel.cpp" line="284"/>
         <source>Error</source>
         <translation>Ошибка</translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptJobListModel.cpp" line="92"/>
+        <location filename="../Sources/batch/ptJobListModel.cpp" line="93"/>
         <source>Aborted</source>
         <translation>Прервано</translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptJobListModel.cpp" line="117"/>
+        <location filename="../Sources/batch/ptJobListModel.cpp" line="118"/>
         <source>File name</source>
         <translation>Имя файла</translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptJobListModel.cpp" line="118"/>
+        <location filename="../Sources/batch/ptJobListModel.cpp" line="119"/>
         <source>Output path</source>
         <translation>Путь вывода</translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptJobListModel.cpp" line="119"/>
+        <location filename="../Sources/batch/ptJobListModel.cpp" line="120"/>
         <source>Output suffix</source>
         <translation>Суффикс выходного файла</translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptJobListModel.cpp" line="120"/>
+        <location filename="../Sources/batch/ptJobListModel.cpp" line="121"/>
         <source>Input files</source>
         <translation>Входные файлы</translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptJobListModel.cpp" line="121"/>
+        <location filename="../Sources/batch/ptJobListModel.cpp" line="122"/>
         <source>Status</source>
         <translation>Статус</translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptJobListModel.cpp" line="147"/>
+        <location filename="../Sources/batch/ptJobListModel.cpp" line="198"/>
+        <location filename="../Sources/batch/ptJobListModel.cpp" line="314"/>
         <source>Invalid settings file</source>
         <translation>Неверный файл настроек</translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptJobListModel.cpp" line="148"/>
+        <location filename="../Sources/batch/ptJobListModel.cpp" line="199"/>
         <source>
 is not a Photivo settings file.</source>
         <translation>
 не является файлом настроек Photivo.</translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptJobListModel.cpp" line="178"/>
+        <location filename="../Sources/batch/ptJobListModel.cpp" line="234"/>
         <source>Remove this job?</source>
         <translation>Удалить задание?</translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptJobListModel.cpp" line="179"/>
+        <location filename="../Sources/batch/ptJobListModel.cpp" line="235"/>
         <source>
 job is being processed. Do you want to abort processing and remove it from the list?</source>
         <translation>
 задание обрабатывается. Вы хотите прервать обработку и удалить его из списка?</translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptJobListModel.cpp" line="208"/>
+        <location filename="../Sources/batch/ptJobListModel.cpp" line="264"/>
         <source>Error writing job list file
 </source>
         <translation>Ошибка записи списка заданий</translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptJobListModel.cpp" line="224"/>
+        <location filename="../Sources/batch/ptJobListModel.cpp" line="280"/>
         <source>Error reading job list file
 </source>
         <translation>Ошибка чтения списка заданий</translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptJobListModel.cpp" line="228"/>
+        <location filename="../Sources/batch/ptJobListModel.cpp" line="284"/>
         <source>
 is not a job list file.</source>
         <translation>
 не является списком заданий.</translation>
     </message>
+    <message>
+        <location filename="../Sources/batch/ptJobListModel.cpp" line="315"/>
+        <source>
+doesn&apos;t exist.</source>
+        <translation>
+не существует.</translation>
+    </message>
 </context>
 <context>
     <name>ptMainWindow</name>
     <message>
-        <source>photivo</source>
-        <translation type="obsolete">Photivo</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMainWindow.ui" line="360"/>
-        <location filename="../Sources/ptMainWindow.ui" line="1302"/>
-        <location filename="../Sources/ptMainWindow.ui" line="7723"/>
+        <location filename="../Sources/ptMainWindow.ui" line="391"/>
+        <location filename="../Sources/ptMainWindow.ui" line="1486"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8014"/>
         <source>Camera</source>
         <translation>Камера</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="399"/>
+        <location filename="../Sources/ptMainWindow.ui" line="430"/>
         <source>Input</source>
         <translation>Вход</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="434"/>
+        <location filename="../Sources/ptMainWindow.ui" line="506"/>
         <source>Open file</source>
         <translation>Открыть файл</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="466"/>
-        <location filename="../Sources/ptMainWindow.ui" line="483"/>
-        <location filename="../Sources/ptMainWindow.ui" line="515"/>
+        <location filename="../Sources/ptMainWindow.ui" line="534"/>
+        <location filename="../Sources/ptMainWindow.ui" line="579"/>
+        <location filename="../Sources/ptMainWindow.ui" line="596"/>
         <source>Open settings file</source>
         <translation>Открыть файл настроек</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="532"/>
-        <location filename="../Sources/ptMainWindow.cpp" line="568"/>
+        <location filename="../Sources/ptMainWindow.ui" line="551"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="584"/>
         <source>Open preset</source>
         <translation>Открыть пресет</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="580"/>
+        <location filename="../Sources/ptMainWindow.ui" line="683"/>
         <source>Camera color space</source>
         <translation>Цветовой профиль камеры</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="600"/>
-        <location filename="../Sources/ptMainWindow.ui" line="8477"/>
-        <location filename="../Sources/ptMainWindow.ui" line="8629"/>
+        <location filename="../Sources/ptMainWindow.ui" line="703"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8813"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8965"/>
         <source>Load a camera profile</source>
         <translation>Загрузить профиль камеры</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5671"/>
-        <location filename="../Sources/ptMainWindow.ui" line="5838"/>
-        <location filename="../Sources/ptMainWindow.ui" line="6689"/>
-        <location filename="../Sources/ptMainWindow.ui" line="8266"/>
-        <location filename="../Sources/ptMainWindow.ui" line="8360"/>
-        <location filename="../Sources/ptMainWindow.ui" line="8480"/>
-        <location filename="../Sources/ptMainWindow.ui" line="8632"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5800"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5985"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6881"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8602"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8696"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8816"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8968"/>
         <source>Load</source>
         <translation>Загрузить</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="679"/>
+        <location filename="../Sources/ptMainWindow.ui" line="782"/>
         <source>Generic Corrections</source>
         <translation>Общие коррекции</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="780"/>
+        <location filename="../Sources/ptMainWindow.ui" line="901"/>
         <source>White Balance</source>
         <translation>Баланс белого</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="807"/>
+        <location filename="../Sources/ptMainWindow.ui" line="937"/>
         <source>Spot white balance</source>
         <translation>Баланс белого по области</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1001"/>
+        <location filename="../Sources/ptMainWindow.ui" line="1167"/>
         <source>Demosaicing</source>
         <translation>Дебайеризация</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1149"/>
+        <location filename="../Sources/ptMainWindow.ui" line="1324"/>
         <source>Highlight recovery</source>
         <translation>Восстановление пересветов</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1248"/>
+        <location filename="../Sources/ptMainWindow.ui" line="1423"/>
         <source>Geometry</source>
         <translation>Геометрия</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1903"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2231"/>
         <source>Rotate left</source>
         <translation>Повернуть налево</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1920"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2248"/>
         <source>Rotate right</source>
         <translation>Повернуть направо</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1953"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2281"/>
         <source>Get rotate angle</source>
         <translation>Задать угол поворота</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2124"/>
-        <location filename="../Sources/ptMainWindow.ui" line="8779"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2461"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9118"/>
         <source>Crop</source>
         <translation>Кадрирование</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2340"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2695"/>
         <source>H </source>
         <translation>В</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2161"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2507"/>
         <source>Make a crop</source>
         <translation>Кадрировать</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="191"/>
+        <location filename="../Sources/ptMainWindow.ui" line="222"/>
         <source>Tool search</source>
         <translation>Поиск инструмента</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="247"/>
-        <location filename="../Sources/ptMainWindow.cpp" line="1882"/>
+        <location filename="../Sources/ptMainWindow.ui" line="278"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1941"/>
         <source>Favourite tools</source>
         <translation>Избранные инструменты</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="267"/>
+        <location filename="../Sources/ptMainWindow.ui" line="298"/>
         <source>All visible tools</source>
         <translation>Все видимые инструменты</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="287"/>
+        <location filename="../Sources/ptMainWindow.ui" line="318"/>
         <source>Active tools</source>
         <translation>Активные инструменты</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2181"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2527"/>
         <source>Confirm crop</source>
         <translation>Подтвердить кадрирование</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2198"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2544"/>
         <source>Cancel crop</source>
         <translation>Отменить кадрирование</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2308"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2663"/>
         <source>W</source>
         <translation>Ш</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2231"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2577"/>
         <source>Switch crop between portrait/landscape</source>
         <translation>Переключить ориентацию между портретной/пейзажной</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="697"/>
+        <location filename="../Sources/ptMainWindow.ui" line="809"/>
         <source>Darkframe image</source>
         <translation>Темновое изображение</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="729"/>
+        <location filename="../Sources/ptMainWindow.ui" line="850"/>
         <source>DcRaw bad pixel file</source>
         <translation>Файл DcRaw с битыми пикселями</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2242"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2588"/>
         <source>Center horizontally</source>
         <translation>Центрировать по горизонтали</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2253"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2599"/>
         <source>Center vertically</source>
         <translation>Центрировать по вертикали</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2374"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2738"/>
         <source>Guidelines</source>
         <translation>Направляющие</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2384"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2748"/>
         <source>Lights Out</source>
         <translation>Затемнение</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2437"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2801"/>
         <source>Seam carving (*)</source>
         <translation>Вырезание по шву (*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2458"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2831"/>
         <source>Scaling</source>
         <translation>Масштабирование</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2565"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2947"/>
         <source>Resize</source>
         <translation>Изменить размер</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2640"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3037"/>
         <source>Flip</source>
         <translation>Отражение</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2677"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3074"/>
         <source>Block</source>
         <translation>Заблокировать</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2714"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3111"/>
         <source>RGB</source>
         <translation>RGB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2756"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3153"/>
         <source>Channel  Mixer</source>
         <translation>Микшер каналов</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2773"/>
-        <location filename="../Sources/ptMainWindow.ui" line="10468"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3170"/>
+        <location filename="../Sources/ptMainWindow.ui" line="11062"/>
         <source>Open</source>
         <translation>Открыть</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2790"/>
-        <location filename="../Sources/ptMainWindow.ui" line="8380"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3187"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8716"/>
         <source>Save</source>
         <translation>Сохранить</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2985"/>
-        <location filename="../Sources/ptMainWindow.ui" line="7663"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3382"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7954"/>
         <source>Exposure</source>
         <translation>Экспозиция</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3152"/>
         <source>Texture Contrast</source>
         <translation>Текстурный контраст</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3204"/>
-        <location filename="../Sources/ptMainWindow.ui" line="3574"/>
         <source>Local Contrast I</source>
         <translation>Локальный контраст I</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3262"/>
-        <location filename="../Sources/ptMainWindow.ui" line="3619"/>
         <source>Local Contrast II</source>
         <translation>Локальный контраст II</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3361"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3641"/>
         <source>Lab Color/Contrast</source>
         <translation>Цвет/Контраст в Lab</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3470"/>
         <source>Texture Contrast I</source>
         <translation>Текстурный контраст I</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3522"/>
         <source>Texture Contrast II</source>
         <translation>Текстурный контраст II</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3677"/>
         <source>Local Contrast Stretch I (*)</source>
         <translation>Растяжение локального контраста I (*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3723"/>
         <source>Local Contrast Stretch II (*)</source>
         <translation>Растяжение локального контраста II (*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3772"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3837"/>
         <source>Increase contrast on L by a sigmoidal curve</source>
         <translation>Увеличить яркостный контраст сигмоидальной кривой</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3789"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3854"/>
         <source>Increase saturation by a sigmoidal curve</source>
         <translation>Увеличить насыщенность сигмоидальной кривой</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3831"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3896"/>
         <source>Lab Sharpen/Noise</source>
         <translation>Резкость/Шум в Lab</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3870"/>
         <source>Impulse noise reduction</source>
         <translation>Подавление импульсного шума</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3910"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3949"/>
         <source>Edge avoiding wavelets</source>
         <translation>Избегающие краёв вейвлеты</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3981"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4020"/>
         <source>GreyCStoration on L (*)</source>
         <translation>GreyCStoration в L (*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4082"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4130"/>
         <source>Defringe</source>
         <translation>Подавление ореолов</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4174"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4222"/>
         <source>Wavelet Denoising</source>
         <translation>Вейвлетное подавление шума</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4254"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4302"/>
         <source>Luminance Denoising (*)</source>
         <translation>Подавление яркостного шума (*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4327"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4375"/>
         <source>Pyramid Denoising</source>
         <translation>Пирамидальное подавление шума</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4373"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4421"/>
         <source>Color Denoising (*)</source>
         <translation>Подавление цветового шума (*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4433"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4481"/>
         <source>Gradient Sharpen</source>
         <translation>Градиентная резкость</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4531"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4579"/>
         <source>Inverse Diffusion Sharpen</source>
         <translation>Обратная диффузия (Резкость)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4602"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4659"/>
         <source>Unsharp Mask (USM)</source>
         <translation>Нерезкая маска (USM)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4648"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4705"/>
         <source>Highpass Sharpen</source>
         <translation>Высокочастотное повышение резкости</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4694"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4751"/>
         <source>Film grain simulation</source>
         <translation>Имитация плёночного зерна</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4836"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4911"/>
         <source>View LAB</source>
         <translation>Просмотр LAB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4873"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4948"/>
         <source>Lab EyeCandy</source>
         <translation>Постобработка в Lab</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5083"/>
-        <location filename="../Sources/ptMainWindow.ui" line="6133"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5158"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6298"/>
         <source>Vignette</source>
         <translation>Виньетирование</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5169"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5253"/>
         <source>EyeCandy</source>
         <translation>Постобработка</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5208"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5292"/>
         <source>Black and White</source>
         <translation>Чёрный и Белый</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5285"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5378"/>
         <source>Simple tone</source>
         <translation>Простое тонирование</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5328"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5421"/>
         <source>Tone I</source>
         <translation>Тонирование I</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5364"/>
         <location filename="../Sources/ptMainWindow.ui" line="5466"/>
-        <location filename="../Sources/ptMainWindow.ui" line="5959"/>
-        <location filename="../Sources/ptMainWindow.ui" line="6064"/>
-        <location filename="../Sources/ptMainWindow.ui" line="9026"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5577"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6115"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6229"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9383"/>
         <source>Color</source>
         <translation>Цвет</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5430"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5532"/>
         <source>Tone II</source>
         <translation>Тонирование II</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5532"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5643"/>
         <source>Cross processing</source>
         <translation>Кросс-процесс</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9715"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10169"/>
         <source>Load template</source>
         <translation>Загрузить шаблон</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9735"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10189"/>
         <source>Save image</source>
         <translation>Сохранение изображение</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9755"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10209"/>
         <source>Send image to external editor</source>
         <translation>Отправить изображение во внешний редактор</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9849"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10312"/>
         <source>Processing pane</source>
         <translation>Обработка</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9872"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10335"/>
         <source>Info pane</source>
         <translation>Информация</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9895"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10358"/>
         <source>Photivo settings</source>
         <translation>Настройки Photivo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5635"/>
-        <location filename="../Sources/ptMainWindow.ui" line="5802"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5764"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5949"/>
         <source>Clear image</source>
         <translation>Очистить изображение</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5638"/>
-        <location filename="../Sources/ptMainWindow.ui" line="5805"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5767"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5952"/>
         <source>Clear</source>
         <translation>Очистить</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="417"/>
-        <location filename="../Sources/ptMainWindow.ui" line="5668"/>
-        <location filename="../Sources/ptMainWindow.ui" line="5835"/>
+        <location filename="../Sources/ptMainWindow.ui" line="489"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5797"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5982"/>
         <source>Load image</source>
         <translation>Загрузить изображение</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5923"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6070"/>
         <source>Gradual overlay I</source>
         <translation>Наложение градиента I</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="6028"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6184"/>
         <source>Gradual overlay II</source>
         <translation>Наложение градиента II</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="6219"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6393"/>
         <source>Gradual Blur I (*)</source>
         <translation>Градиентное размытие I (*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="6324"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6507"/>
         <source>Gradual Blur II (*)</source>
         <translation>Градиентное размытие II (*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="6429"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6621"/>
         <source>Softglow / Orton</source>
         <translation>Мягкий свет / Ортон</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="6534"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6726"/>
         <source>Output</source>
         <translation>Вывод</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="6590"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6782"/>
         <source>sRGB gamma compensation</source>
         <translation>Компенсация sRGB гаммы</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="6633"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6825"/>
         <source>Output Colorspace</source>
         <translation>Профиль вывода</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="6653"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6845"/>
         <source>Reset profile</source>
         <translation>Сбросить профиль</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="6656"/>
-        <location filename="../Sources/ptMainWindow.ui" line="10331"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6848"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10857"/>
         <source>Full</source>
         <translation>Полный</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="6676"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6868"/>
         <source>Embedded profile</source>
         <translation>Встроенный профиль</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="6686"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6878"/>
         <source>Load icc profile</source>
         <translation>Заргузить ICC профиль</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="6777"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6969"/>
         <source>Resize for web</source>
         <translation>Масштабирование для веб</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="6893"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7103"/>
         <source>Output Parameters</source>
         <translation>Параметры вывода</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7122"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7368"/>
         <source>Title</source>
         <translation>Заголовок</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7273"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7537"/>
         <source>Tags</source>
         <translation>Теги</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7317"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7581"/>
         <source>Tags for the photo (IPTC and XMP)</source>
         <translation>Теги изображения (IPTC и XMP)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7389"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7653"/>
         <source>About Photivo</source>
         <translation>О Photivo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7464"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7737"/>
         <source>Photivo photo processor</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7474"/>
-        <location filename="../Sources/ptMainWindow.ui" line="10135"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7747"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10643"/>
         <source>Rev:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7484"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7757"/>
         <source>&lt;a href=&quot;http://www.photivo.org&quot;&gt;www.photivo.org&lt;/a&gt;</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7538"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7811"/>
         <source>File info</source>
         <translation>Информация о файле</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7565"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7847"/>
         <source>File name:</source>
         <translation>Имя файла:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7572"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7854"/>
         <source>File name of the currently loaded image</source>
         <translation>Имя текущего файла</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7603"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7894"/>
         <source>Path:</source>
         <translation>Путь:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7610"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7901"/>
         <source>Path of the currently loaded image</source>
         <translation>Путь к текущему файлу</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7648"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7939"/>
         <source>Exif info</source>
         <translation>EXIF</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7694"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7985"/>
         <source>Focal length</source>
         <translation>Фокусное расстояние</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1325"/>
-        <location filename="../Sources/ptMainWindow.ui" line="7772"/>
+        <location filename="../Sources/ptMainWindow.ui" line="1518"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8072"/>
         <source>Lens</source>
         <translation>Объектив</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="22"/>
+        <location filename="../Sources/ptMainWindow.ui" line="20"/>
         <source>Photivo</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1195"/>
+        <location filename="../Sources/ptMainWindow.ui" line="1370"/>
         <source>Local Edit</source>
         <translation>Локальное редактирование</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1287"/>
+        <location filename="../Sources/ptMainWindow.ui" line="1462"/>
         <source>Lens Parameters (Lensfun)</source>
         <translation>Параметры объектива (Lensfun)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1429"/>
+        <location filename="../Sources/ptMainWindow.ui" line="1640"/>
         <source>Chromatic Aberration (Lensfun)</source>
         <translation>Хроматические аберрации (Lensfun)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1444"/>
-        <location filename="../Sources/ptMainWindow.ui" line="1552"/>
-        <location filename="../Sources/ptMainWindow.ui" line="1636"/>
+        <location filename="../Sources/ptMainWindow.ui" line="1664"/>
+        <location filename="../Sources/ptMainWindow.ui" line="1799"/>
+        <location filename="../Sources/ptMainWindow.ui" line="1901"/>
         <source>Model</source>
         <translation>Модель</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1537"/>
+        <location filename="../Sources/ptMainWindow.ui" line="1775"/>
         <source>Vignetting (Lensfun)</source>
         <translation>Виньетирование (Lensfun)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1621"/>
+        <location filename="../Sources/ptMainWindow.ui" line="1877"/>
         <source>Lens Distortion (Lensfun)</source>
         <translation>Дисторсия (Lensfun)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1744"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2045"/>
         <source>Geometry Conversion (Lensfun)</source>
         <translation>Преобразование геометрии (Lensfun)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1759"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2069"/>
         <source>Source geometry</source>
         <translation>Геометрия объектива</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1791"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2110"/>
         <source>Target geometry</source>
         <translation>Целевая геометрия</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1842"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2161"/>
         <source>Defish</source>
         <translation>Исправление рыбьего глаза</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1888"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2207"/>
         <source>Rotation and Perspective</source>
         <translation>Вращение и Перспектива</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5589"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5700"/>
         <source>Texture overlay I</source>
         <translation>Наложение текстуры I</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5756"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5885"/>
         <source>Texture overlay II</source>
         <translation>Наложение текстуры II</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7036"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7273"/>
         <source>Suffix</source>
         <translation>Суффикс</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7058"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7295"/>
         <source>Suffix to be added to the end of the output file name</source>
         <translation>Суффикс, добавляемый в конец имени выходного файла</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7199"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7454"/>
         <source>Copyright</source>
         <translation>Авторские права</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7803"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8103"/>
         <source>Time of original</source>
         <translation>Время оригинала</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7831"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8131"/>
         <source>Flash</source>
         <translation>Вспышка</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7859"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8159"/>
         <source>Whitebalance</source>
         <translation>Баланс белого</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7887"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8187"/>
         <source>dcraw info</source>
         <translation>dcraw</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7934"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8234"/>
         <source>Size info</source>
         <translation>Размер</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7961"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8270"/>
         <source>Input:</source>
         <translation>Вход:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7973"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8282"/>
         <source>Size of the image at the beginning</source>
         <translation>Размер начального изображения</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8004"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8322"/>
         <source>1:1 pipe:</source>
         <translation>Режим 1:1:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8016"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8334"/>
         <source>Size of the image at the end of the full pipe (without webresize)</source>
         <translation>Размер изображения при сохранении в полном размере (без масштабирования для веб)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8047"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8374"/>
         <source>Current:</source>
         <translation>Текущий:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8059"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8386"/>
         <source>Size of the image at the end of the current pipe (without webresize)</source>
         <translation>Размер изображения при сохранении в текущем размере (без масштабирования для веб)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8122"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8449"/>
         <source>TextLabel</source>
         <translation>Текстовая метка</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8202"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8529"/>
         <source>Work Colorspace</source>
         <translation>Рабочее цветовое пространство</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8239"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8566"/>
         <source>Preview Colorspace</source>
         <translation>Цветовое пространство просмотра</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8263"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8599"/>
         <source>Load an icc profile</source>
         <translation>Загрузить ICC профиль</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8346"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8682"/>
         <source>UI settings</source>
         <translation>Настройка интерфейса</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8357"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8693"/>
         <source>Load UI settings from file</source>
         <translation>Загрузить настройки интерфейса из файла</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8377"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8713"/>
         <source>Save UI settings to file</source>
         <translation>Сохранить настройки интерфейса в файл</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8410"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8746"/>
         <source>Discard all changes</source>
         <translation>Отменить все изменения</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8413"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8749"/>
         <source>Discard</source>
         <translation>Отменить</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8556"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8892"/>
         <source>Remember settings</source>
         <translation>Запомнить настройки</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8593"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8929"/>
         <source>Startup settings</source>
         <translation>Начальные настройки</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8689"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9025"/>
         <source>Tool pane mode</source>
         <translation>Режим панели инструментов</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8719"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9055"/>
         <source>Pipe size</source>
         <translation>Размер обработки</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8794"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9142"/>
         <source>Initial zoom</source>
         <translation>Начальный масштаб</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8845"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9193"/>
         <source>Inputs</source>
         <translation>Входы</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8882"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9230"/>
         <source>ToolBoxes</source>
         <translation>Панели инструментов</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8919"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9267"/>
         <source>Tab status indicator</source>
         <translation>Индикатор статуса вкладок</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8956"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9304"/>
         <source>Preview</source>
         <translation>Просмотр</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8993"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9341"/>
         <source>Theming</source>
         <translation>Тема</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9067"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9433"/>
         <source>Set new CSS style</source>
         <translation>Установить новый CSS стиль</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9070"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9436"/>
         <source>CSS</source>
         <translation>CSS</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9137"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9503"/>
         <source>Button modes</source>
         <translation>Режимы кнопок</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9176"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9551"/>
         <source>Save button:</source>
         <translation>Сохранение:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9219"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9603"/>
         <source>Reset button:</source>
         <translation>Сброс:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9257"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9641"/>
         <source>Searchbar</source>
         <translation>Панель поиска</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9294"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9678"/>
         <source>Show confirmation dialogs</source>
         <translation>Показывать диалоги подтверждения</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9337"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9744"/>
         <source>Backup settings</source>
         <translation>Резервирование настроек</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9374"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9781"/>
         <source>Translation</source>
         <translation>Перевод</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9392"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9808"/>
         <source>Switch Photivo&apos;s language</source>
         <translation>Переключить язык Photivo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9453"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9869"/>
         <source>Memory test</source>
         <translation>Проверка памяти</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9490"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9906"/>
         <source>File Manager</source>
         <translation>Файловый менеджер</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9551"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9978"/>
         <source>Batch Manager</source>
         <translation>Менеджер пакетной обработки</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9618"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10063"/>
         <source>Change preview mode</source>
         <translation>Изменить режим просмотра</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9676"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10130"/>
         <source>Run pipe</source>
         <translation>Запустить конвейер</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="214"/>
+        <location filename="../Sources/ptMainWindow.ui" line="245"/>
         <source>Reset</source>
         <translation>Сбросить</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8460"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8796"/>
         <source>Export command</source>
         <translation>Комманда экспорта</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9823"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10286"/>
         <source>Status</source>
         <translation>Статус</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10087"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10595"/>
         <source>Open image</source>
         <translation>Открыть изображение</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10125"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10633"/>
         <source>&lt;p align=&quot;center&quot;&gt;Photivo photo processor&lt;/p&gt;</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10145"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10653"/>
         <source>&lt;p align=&quot;center&quot;&gt;&lt;a href=&quot;http://www.photivo.org&quot;&gt;www.photivo.org&lt;/a&gt;&lt;/p&gt;</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10158"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10666"/>
         <source>&lt;p align=&quot;center&quot;&gt;&lt;a href=&quot;http://www.flickr.com/groups/photivo/discuss/&quot;&gt;Forum&lt;/a&gt; &lt;a href=&quot;http://code.google.com/p/photivo/issues/list&quot;&gt;Issues&lt;/a&gt;&lt;/p&gt;</source>
         <translation>&lt;p align=&quot;center&quot;&gt;&lt;a href=&quot;http://www.flickr.com/groups/photivo/discuss/&quot;&gt;Форум&lt;/a&gt; &lt;a href=&quot;http://code.google.com/p/photivo/issues/list&quot;&gt;Сообщить об ошибке&lt;/a&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10262"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10779"/>
         <source>Zoom in</source>
         <translation>Увеличить</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10279"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10796"/>
         <source>Zoom out</source>
         <translation>Уменьшить</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10308"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10834"/>
         <source>Zoom fit</source>
         <translation>Уместить в окне</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10328"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10854"/>
         <source>Zoom Full</source>
         <translation>Полный размер</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10370"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10896"/>
+        <source>Open previous image</source>
+        <translation>Открыть предыдущее изображение</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMainWindow.ui" line="10913"/>
+        <source>Open next image</source>
+        <translation>Открыть следующее изображение</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMainWindow.ui" line="10946"/>
         <source>Batch job processing</source>
         <translation>Пакетная обработка</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10387"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10963"/>
         <source>File manager</source>
         <translation>Файловый менеджер</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10404"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10980"/>
         <source>Fullscreen</source>
         <translation>Полноэкранный режим</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10473"/>
+        <location filename="../Sources/ptMainWindow.ui" line="11067"/>
         <source>Exit</source>
         <translation>Выход</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10481"/>
+        <location filename="../Sources/ptMainWindow.ui" line="11075"/>
         <source>TabMode</source>
         <translation>Режим вкладок</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10486"/>
+        <location filename="../Sources/ptMainWindow.ui" line="11080"/>
         <source>Save Output</source>
         <translation>Сохранить вывод</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10491"/>
+        <location filename="../Sources/ptMainWindow.ui" line="11085"/>
         <source>Write Job</source>
         <translation>Записать задание</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10499"/>
+        <location filename="../Sources/ptMainWindow.ui" line="11093"/>
         <source>Enabled</source>
         <translation>Разрешено</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10510"/>
+        <location filename="../Sources/ptMainWindow.ui" line="11104"/>
         <source>Add power law</source>
         <translation>Добавить степенной закон</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="548"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="562"/>
         <source>Save current pipe</source>
         <translation>Сохранить текущий размер</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="550"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="564"/>
         <source>Save full size</source>
         <translation>Сохранить полный размер</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="552"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="566"/>
         <source>Save settings file</source>
         <translation>Сохранить файл настроек</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="554"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="568"/>
         <source>Save job file</source>
         <translation>Сохранить файл задания</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="558"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="570"/>
+        <source>Send to batch</source>
+        <translation>В очередь обработки</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMainWindow.cpp" line="574"/>
         <source>Export current pipe</source>
         <translation>Экспортировать текущий размер</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="560"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="576"/>
         <source>Export full size</source>
         <translation>Экспортировать полный размер</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="564"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="580"/>
         <source>Neutral reset</source>
         <translation>Нейтральный сброс</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="566"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="582"/>
         <source>User reset</source>
         <translation>Пользовательский сброс</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="570"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="586"/>
         <source>Open settings</source>
         <translation>Открыть настройки</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="574"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="590"/>
         <source>&amp;Show hidden tools</source>
         <translation>&amp;Показать скрытые инструменты</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="587"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="603"/>
         <source>Search</source>
         <translation>Поиск</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="669"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="687"/>
         <source>English (Default)</source>
         <translation>English (По умолчанию)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="678"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="696"/>
         <source>Restart Photivo to change the language.</source>
         <translation>Перезапустите Photivo для изменения языка.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1714"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1752"/>
         <source>No tools hidden!</source>
         <translation>Нет скрытых инструментов!</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1715"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1753"/>
         <source>Hidden tools</source>
         <translation>Скрытые инструменты</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1733"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1771"/>
         <source>No tools blocked!</source>
         <translation>Нет заблокированных инструментов!</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1734"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1772"/>
         <source>Blocked tools</source>
         <translation>Заблокированные инструменты</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1810"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1869"/>
         <source>Search results:</source>
         <translation>Результаты поиска:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1832"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1891"/>
         <source>No tools active!</source>
         <translation>Нет активных инструментов!</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1834"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1893"/>
         <source>Active tools:</source>
         <translation>Активные инструменты:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1857"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1916"/>
         <source>No tools visible!</source>
         <translation>Нет видимых инструментов!</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1859"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1918"/>
         <source>All visible tools:</source>
         <translation>Все видимые инструменты:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1882"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1941"/>
         <source>No favourite tools!</source>
         <translation>Нет избранных инструментов!</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1886"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1945"/>
         <source>Favourite tools:</source>
         <translation>Избранные инструменты:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="2499"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="2561"/>
         <source> at </source>
         <translation> при </translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="2518"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="2580"/>
         <source> with ISO </source>
         <translation> с ISO </translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="2559"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="2621"/>
         <source> (35mm equiv.: </source>
         <translation> (35мм эквив.: </translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="2959"/>
-        <location filename="../Sources/ptMainWindow.cpp" line="2983"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="3021"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="3045"/>
         <source>Photivo UI file (*.ptu);;All files (*.*)</source>
         <translation>Файл интерфейса Photivo (*.ptu);;Все файлы (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="2961"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="3023"/>
         <source>Open UI</source>
         <translation>Открыть интерфейс</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="2985"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="3047"/>
         <source>Save UI</source>
         <translation>Сохранить иинтерфейс</translation>
     </message>
@@ -7893,400 +8059,389 @@ is not a job list file.</source>
 <context>
     <name>ptProcessor</name>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="269"/>
+        <location filename="../Sources/ptProcessor.cpp" line="282"/>
         <source>Reading RAW file</source>
         <translation>Чтение RAW файла</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="255"/>
-        <location filename="../Sources/ptProcessor.cpp" line="286"/>
+        <location filename="../Sources/ptProcessor.cpp" line="268"/>
+        <location filename="../Sources/ptProcessor.cpp" line="299"/>
         <source>Reading exif info</source>
         <translation>Чтение EXIF</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="297"/>
+        <location filename="../Sources/ptProcessor.cpp" line="310"/>
         <source>Demosaicing</source>
         <translation>Дебайеризация</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="307"/>
+        <location filename="../Sources/ptProcessor.cpp" line="320"/>
         <source>Recovering highlights</source>
         <translation>Восстановление пересветов</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="342"/>
-        <location filename="../Sources/ptProcessor.cpp" line="354"/>
+        <location filename="../Sources/ptProcessor.cpp" line="355"/>
+        <location filename="../Sources/ptProcessor.cpp" line="367"/>
         <source>Profile not found</source>
         <translation>Профиль не найден</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="343"/>
-        <location filename="../Sources/ptProcessor.cpp" line="355"/>
+        <location filename="../Sources/ptProcessor.cpp" line="356"/>
+        <location filename="../Sources/ptProcessor.cpp" line="368"/>
         <source>Profile not found. Reverting to Adobe Matrix.
 You could try an external profile.</source>
         <translation>Профиль не найден. Возвращение к матрице Adobe.
 Можете попробовать внешний профиль.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="234"/>
+        <location filename="../Sources/ptProcessor.cpp" line="229"/>
         <source>Loading Bitmap</source>
         <translation>Загрузка растрового изображения</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1649"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1536"/>
         <source>Toning 1</source>
         <translation>Тонирование 1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1672"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1559"/>
         <source>Toning 2</source>
         <translation>Тонирование 2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2070"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1961"/>
         <source>Transfer Bitmap</source>
         <translation>Передача растрового изображения</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2120"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2011"/>
         <source>Spot tuning</source>
         <translation>Точечная коррекция</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2354"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2245"/>
         <source>Perspective transform</source>
         <translation>Преобразование перспективы</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2397"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2288"/>
         <source>Crop outside the image</source>
         <translation>Кадрирование вне изображения</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2398"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2289"/>
         <source>Crop rectangle too large.
 No crop, try again.</source>
         <translation>Область кадрирование слишком велика.
 Кадрирование невозможно, попробуйте ещё раз.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2408"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2299"/>
         <source>Cropping</source>
         <translation>Кадрирование</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2458"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2349"/>
         <source>Resize image</source>
         <translation>Масштабирование</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2478"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2370"/>
         <source>Flip image</source>
         <translation>Отражение</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="443"/>
+        <location filename="../Sources/ptProcessor.cpp" line="456"/>
         <source>Calculate auto exposure</source>
         <translation>Вычисление автоэкспозиции</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2145"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2036"/>
         <source>Lensfun corrections</source>
         <translation>Коррекция оптических искажений</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2295"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2186"/>
         <source>Defish correction</source>
         <translation>Коррекция геометрии рыбьего глаза</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2435"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2326"/>
         <source>Seam carving</source>
         <translation>Вырезание по шву</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="456"/>
+        <location filename="../Sources/ptProcessor.cpp" line="469"/>
         <source>Channel Mixing</source>
         <translation>Микшер каналов</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="497"/>
+        <location filename="../Sources/ptProcessor.cpp" line="510"/>
         <source>Correcting Exposure</source>
         <translation>Поправка экспозиции</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="571"/>
         <source>RGB Texture contrast</source>
         <translation>Текстурный контраст RGB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="588"/>
         <source>Microcontrast 1</source>
         <translation>Микроконтраст 1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="603"/>
         <source>Microcontrast 2</source>
         <translation>Микроконтраст 2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1505"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1392"/>
         <source>Applying a* b* curves</source>
         <translation>Кривые a* b*</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1711"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1598"/>
         <source>Applying RGB Contrast</source>
         <translation>RGB контраст</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="705"/>
         <source>Texture curve</source>
         <translation>Текстурная кривая</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="716"/>
         <source>Texture contrast 1</source>
         <translation>Текстурный контраст 1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="737"/>
         <source>Texture contrast 2</source>
         <translation>Текстурный контраст 2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="762"/>
         <source>LabMicrocontrast 1</source>
         <translation>Микроконтраст Lab 1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="785"/>
         <source>LabMicrocontrast 2</source>
         <translation>Микроконтраст Lab 2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="812"/>
         <source>Local Contrast 1</source>
         <translation>Локальный контраст 1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="830"/>
         <source>Local Contrast 2</source>
         <translation>Локальный контраст 2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="902"/>
         <source>Impulse denoise</source>
         <translation>Подавление импульсного шума</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="923"/>
+        <location filename="../Sources/ptProcessor.cpp" line="810"/>
         <source>Edge avoiding wavelets</source>
         <translation>Избегающие краёв вейвлеты</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="951"/>
-        <location filename="../Sources/ptProcessor.cpp" line="982"/>
+        <location filename="../Sources/ptProcessor.cpp" line="838"/>
+        <location filename="../Sources/ptProcessor.cpp" line="869"/>
         <source>GreyCStoration on L</source>
         <translation>GreyCStoration в L</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1007"/>
+        <location filename="../Sources/ptProcessor.cpp" line="894"/>
         <source>Defringe</source>
         <translation>Подавление ореолов</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1036"/>
+        <location filename="../Sources/ptProcessor.cpp" line="923"/>
         <source>Wavelet L denoising</source>
         <translation>Вейвлетное подавление шума в L</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1062"/>
+        <location filename="../Sources/ptProcessor.cpp" line="949"/>
         <source>Wavelet A denoising</source>
         <translation>Вейвлетное подавление шума в A</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1084"/>
+        <location filename="../Sources/ptProcessor.cpp" line="971"/>
         <source>Wavelet B denoising</source>
         <translation>Вейвлетное подавление шума в B</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1107"/>
+        <location filename="../Sources/ptProcessor.cpp" line="994"/>
         <source>Luminance denoising</source>
         <translation>Подавление яркостного шума</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1131"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1018"/>
         <source>Denoise curve</source>
         <translation>Кривая подавления шума</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1141"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1028"/>
         <source>Pyramid denoising</source>
         <translation>Пирамидальное подавление шума</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1166"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1053"/>
         <source>Color A denoising</source>
         <translation>Подавление шума в A</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1188"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1075"/>
         <source>Color B denoising</source>
         <translation>Подавление шума в B</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1213"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1100"/>
         <source>Detail curve</source>
         <translation>Кривая детализации</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1224"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1111"/>
         <source>Gradient Sharpen</source>
         <translation>Градиентная резкость</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1252"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1139"/>
         <source>Wiener Filter</source>
         <translation>Фильтр Винера</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1263"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1150"/>
         <source>Inverse Diffusion Sharpen</source>
         <translation>Обратная диффузия</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1288"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1175"/>
         <source>USM sharpening</source>
         <translation>Нерезкая маска</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1318"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1205"/>
         <source>Highpass</source>
         <translation>Высокочастотное повышение резкости</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1345"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1232"/>
         <source>Film grain 1</source>
         <translation>Плёночное зерно 1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1369"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1256"/>
         <source>Film grain 2</source>
         <translation>Плёночное зерно 2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1403"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1290"/>
         <source>View LAB</source>
         <translation>Просмотр LAB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1453"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1340"/>
         <source>Applying Outline</source>
         <translation>Оконтуривание</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1463"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1350"/>
         <source>Applying L by Hue curve</source>
         <translation>Кривая яркости по тону</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1474"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1361"/>
         <source>Applying saturation curve</source>
         <translation>Кривая насыщенности</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1484"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1371"/>
         <source>Applying hue curve</source>
         <translation>Тоновая кривая</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1495"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1382"/>
         <source>Applying L curve</source>
         <translation>Кривая L</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1580"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1467"/>
         <source>Lab Vignette</source>
         <translation>Виньетирование Lab</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1609"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1496"/>
         <source>Lab to RGB</source>
         <translation>Lab в RGB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1620"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1507"/>
         <source>Black and White</source>
         <translation>Чёрный и Белый</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1636"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1523"/>
         <source>Simple Toning</source>
         <translation>Простое тонирование</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1698"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1585"/>
         <source>Crossprocessing</source>
         <translation>Кросс-процесс</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1721"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1608"/>
         <source>Texture Overlay</source>
         <translation>Наложение текстуры</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1802"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1691"/>
         <source>Texture Overlay 2</source>
         <translation>Наложение текстуры 2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1883"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1774"/>
         <source>Gradual Overlay 1</source>
         <translation>Наложение градиента 1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1906"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1797"/>
         <source>Gradual Overlay 2</source>
         <translation>Наложение градиента 2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1933"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1824"/>
         <source>Vignette</source>
         <translation>Виньетирование</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1950"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1841"/>
         <source>Gradual Blur 1</source>
         <translation>Градиентное размытие 1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1969"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1860"/>
         <source>Gradual Blur 2</source>
         <translation>Градиентное размытие 2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1991"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1882"/>
         <source>Softglow</source>
         <translation>Мягкий свет</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2017"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1908"/>
         <source>Applying R curve</source>
         <translation>Кривая R</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2024"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1915"/>
         <source>Applying G curve</source>
         <translation>Кривая G</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2031"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1922"/>
         <source>Applying B curve</source>
         <translation>Кривая B</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2053"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1944"/>
         <source>Ready</source>
         <translation>Готово</translation>
     </message>
@@ -8294,1771 +8449,1757 @@ No crop, try again.</source>
 <context>
     <name>ptSettings</name>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="63"/>
+        <location filename="../Sources/ptSettings.cpp" line="66"/>
         <source>MB</source>
         <translation>МБ</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="63"/>
+        <location filename="../Sources/ptSettings.cpp" line="66"/>
         <source>MB to waste</source>
         <translation>исползуемые МБ</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="64"/>
+        <location filename="../Sources/ptSettings.cpp" line="67"/>
         <source>Pixel</source>
         <translation>Пикселей</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="64"/>
+        <location filename="../Sources/ptSettings.cpp" line="67"/>
         <source>Size of the LED</source>
         <translation>Размер индикатора</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="66"/>
+        <location filename="../Sources/ptSettings.cpp" line="69"/>
         <source>Zoom</source>
         <translation>Масштаб</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="66"/>
+        <location filename="../Sources/ptSettings.cpp" line="69"/>
         <source>Zoom factor</source>
         <translation>Коэффициент масштабирования</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="67"/>
+        <location filename="../Sources/ptSettings.cpp" line="70"/>
         <source>Temp</source>
         <translation>Температура</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="67"/>
+        <location filename="../Sources/ptSettings.cpp" line="70"/>
         <source>Color Temperature</source>
         <translation>Цветовая тепмература</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="68"/>
+        <location filename="../Sources/ptSettings.cpp" line="71"/>
         <source>WB-G</source>
         <translation>ББ-Зел</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="68"/>
+        <location filename="../Sources/ptSettings.cpp" line="71"/>
         <source>Green Intensity in balance</source>
         <translation>Интенсивность зелёного в балансе</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="69"/>
+        <location filename="../Sources/ptSettings.cpp" line="72"/>
         <source>R</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="69"/>
+        <location filename="../Sources/ptSettings.cpp" line="72"/>
         <source>Red Multiplier in balance</source>
         <translation>Множитель красного в балансе</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="70"/>
+        <location filename="../Sources/ptSettings.cpp" line="73"/>
         <source>G</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="70"/>
+        <location filename="../Sources/ptSettings.cpp" line="73"/>
         <source>Green Multiplier in balance</source>
         <translation>Множитель зелёного в балансе</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="71"/>
+        <location filename="../Sources/ptSettings.cpp" line="74"/>
         <source>B</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="71"/>
+        <location filename="../Sources/ptSettings.cpp" line="74"/>
         <source>Blue Multiplier in balance</source>
         <translation>Множитель синего в балансе</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="72"/>
+        <location filename="../Sources/ptSettings.cpp" line="75"/>
         <source>BP</source>
         <translation>Чёрный</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="72"/>
+        <location filename="../Sources/ptSettings.cpp" line="75"/>
         <source>Black point in raw</source>
         <translation>Точка чёрного в RAW</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="73"/>
+        <location filename="../Sources/ptSettings.cpp" line="76"/>
         <source>WP</source>
         <translation>Белый</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="73"/>
+        <location filename="../Sources/ptSettings.cpp" line="76"/>
         <source>White point in raw</source>
         <translation>Точка белого в RAW</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="74"/>
+        <location filename="../Sources/ptSettings.cpp" line="77"/>
         <source>CA red factor</source>
         <translation>Множитель красных ХА</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="75"/>
+        <location filename="../Sources/ptSettings.cpp" line="78"/>
         <source>CA blue factor</source>
         <translation>Множитель синих ХА</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="76"/>
+        <location filename="../Sources/ptSettings.cpp" line="79"/>
         <source>Green equilibration</source>
         <translation>Выравнивание зелёного</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="77"/>
+        <location filename="../Sources/ptSettings.cpp" line="80"/>
         <source>Line denoise</source>
         <translation>Фильтр линейного шума</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="77"/>
+        <location filename="../Sources/ptSettings.cpp" line="80"/>
         <source>Raw line denoise threshold</source>
         <translation>Порог подавления линейного шума в RAW</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="78"/>
+        <location filename="../Sources/ptSettings.cpp" line="81"/>
         <source>Adjust maximum</source>
         <translation>Настроить максимум</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="78"/>
+        <location filename="../Sources/ptSettings.cpp" line="81"/>
         <source>Threshold to prevent pink highlights</source>
         <translation>Порог для предотвращения розовых пересветов</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="79"/>
+        <location filename="../Sources/ptSettings.cpp" line="82"/>
         <source>Wavelet denoise</source>
         <translation>Вейвлетный фильтр</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="79"/>
+        <location filename="../Sources/ptSettings.cpp" line="82"/>
         <source>Raw wavelet denoise threshold</source>
         <translation>Порог вейвлетного подавления шума в RAW</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="80"/>
+        <location filename="../Sources/ptSettings.cpp" line="83"/>
         <source>Badpixel reduction</source>
         <translation>Удаление битых пикселей</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="80"/>
-        <location filename="../Sources/ptSettings.cpp" line="239"/>
+        <location filename="../Sources/ptSettings.cpp" line="83"/>
+        <location filename="../Sources/ptSettings.cpp" line="187"/>
         <source>Automatic badpixel reduction</source>
         <translation>Автоматическое удаление битых пикселей</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="81"/>
-        <location filename="../Sources/ptSettings.cpp" line="234"/>
+        <location filename="../Sources/ptSettings.cpp" line="84"/>
+        <location filename="../Sources/ptSettings.cpp" line="182"/>
         <source>Passes</source>
         <translation>Итерации</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="81"/>
+        <location filename="../Sources/ptSettings.cpp" line="84"/>
         <source>Nr of refinement passes</source>
         <translation>Количество уточняющих итераций</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="82"/>
+        <location filename="../Sources/ptSettings.cpp" line="85"/>
         <source>Median passes</source>
         <translation>Медианный фильтр</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="82"/>
+        <location filename="../Sources/ptSettings.cpp" line="85"/>
         <source>Nr of median filter passes</source>
         <translation>Количество проходов медианного фильтра</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="83"/>
+        <location filename="../Sources/ptSettings.cpp" line="86"/>
         <source>Edge sensitive median passes</source>
         <translation>Чувствительный к краям фильтр</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="83"/>
+        <location filename="../Sources/ptSettings.cpp" line="86"/>
         <source>Nr of edge sensitive median filter passes</source>
         <translation>Количество проходов чувствительного к краям медианного фильтра</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="84"/>
+        <location filename="../Sources/ptSettings.cpp" line="87"/>
         <source>Parameter</source>
         <translation>Параметр</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="84"/>
+        <location filename="../Sources/ptSettings.cpp" line="87"/>
         <source>Clip function dependent parameter</source>
         <translation>Параметр функции вырезания</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="87"/>
+        <location filename="../Sources/ptSettings.cpp" line="90"/>
         <source>Distance</source>
         <translation>Расстояние</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="88"/>
-        <location filename="../Sources/ptSettings.cpp" line="109"/>
-        <location filename="../Sources/ptSettings.cpp" line="137"/>
-        <location filename="../Sources/ptSettings.cpp" line="157"/>
-        <location filename="../Sources/ptSettings.cpp" line="163"/>
+        <location filename="../Sources/ptSettings.cpp" line="91"/>
+        <location filename="../Sources/ptSettings.cpp" line="112"/>
         <source>Scale</source>
         <translation>Масштаб</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="110"/>
+        <location filename="../Sources/ptSettings.cpp" line="113"/>
         <source>Rotate</source>
         <translation>Угол</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="85"/>
-        <location filename="../Sources/ptSettings.cpp" line="108"/>
+        <location filename="../Sources/ptSettings.cpp" line="88"/>
         <location filename="../Sources/ptSettings.cpp" line="111"/>
+        <location filename="../Sources/ptSettings.cpp" line="114"/>
         <source>Focal length (35mm equiv.)</source>
         <translation>Фокусное расстояние (35мм эквив.)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="59"/>
+        <location filename="../Sources/ptSettings.cpp" line="61"/>
         <source>Thumbnail size</source>
         <translation>Размер миниатюр</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="59"/>
+        <location filename="../Sources/ptSettings.cpp" line="61"/>
         <source>Thumbnail size in pixel</source>
         <translation>Размер миниатюр в пикселах</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="60"/>
+        <location filename="../Sources/ptSettings.cpp" line="62"/>
         <source>Thumbnail padding</source>
         <translation>Расстояние между миниатюрами</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="60"/>
+        <location filename="../Sources/ptSettings.cpp" line="62"/>
         <source>Thumbnail padding in pixel</source>
         <translation>Расстояние между миниатюрами в пикселах</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="61"/>
-        <location filename="../Sources/ptSettings.cpp" line="444"/>
+        <location filename="../Sources/ptSettings.cpp" line="63"/>
+        <location filename="../Sources/ptSettings.cpp" line="388"/>
         <source>Maximum number of thumbnails that should be placed in a row or column.</source>
         <translation>Максимальное количество миниатюр в строке/столбце.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="61"/>
+        <location filename="../Sources/ptSettings.cpp" line="63"/>
         <source>Thumbnails in a row/column</source>
         <translation>Миниатюр в строке/столбце</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="62"/>
+        <location filename="../Sources/ptSettings.cpp" line="64"/>
         <source>Thumbnail export size</source>
         <translation>Размер миниатюр при экспорте</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="62"/>
+        <location filename="../Sources/ptSettings.cpp" line="64"/>
         <source>Thumbnail export size in pixel</source>
         <translation>Размер миниатюр при экспорте в пикселах</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="65"/>
+        <location filename="../Sources/ptSettings.cpp" line="68"/>
         <source>Maximum slider width</source>
         <translation>Максимальная ширина ползунков</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="65"/>
+        <location filename="../Sources/ptSettings.cpp" line="68"/>
         <source>Maximum slider width. Enter 0 to remove restriction</source>
         <translation>Максимальная ширина ползунков. Введите 0, чтобы убрать ограничения.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="112"/>
+        <location filename="../Sources/ptSettings.cpp" line="115"/>
         <source>Tilt</source>
         <translation>Наклон</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="113"/>
+        <location filename="../Sources/ptSettings.cpp" line="116"/>
         <source>Turn</source>
         <translation>Поворот</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="116"/>
+        <location filename="../Sources/ptSettings.cpp" line="119"/>
         <source>X</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="116"/>
+        <location filename="../Sources/ptSettings.cpp" line="119"/>
         <source>Vertical lines</source>
         <translation>Вертикальные линии</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="117"/>
+        <location filename="../Sources/ptSettings.cpp" line="120"/>
         <source>Y</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="117"/>
+        <location filename="../Sources/ptSettings.cpp" line="120"/>
         <source>Horizontal lines</source>
         <translation>Горизонтальные линии</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="118"/>
+        <location filename="../Sources/ptSettings.cpp" line="121"/>
         <source>Crop exposure</source>
         <translation>Экспозиция при кадрировании</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="118"/>
+        <location filename="../Sources/ptSettings.cpp" line="121"/>
         <source>Temporary exposure in EV</source>
         <translation>Временная экспозиция в EV</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="121"/>
+        <location filename="../Sources/ptSettings.cpp" line="124"/>
         <source>Width</source>
         <translation>Ширина</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="122"/>
+        <location filename="../Sources/ptSettings.cpp" line="125"/>
+        <location filename="../Sources/ptSettings.cpp" line="127"/>
         <source>Height</source>
         <translation>Высота</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="123"/>
-        <location filename="../Sources/ptSettings.cpp" line="343"/>
+        <location filename="../Sources/ptSettings.cpp" line="126"/>
+        <location filename="../Sources/ptSettings.cpp" line="291"/>
         <source>Image size</source>
         <translation>Размер изображения</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="123"/>
-        <location filename="../Sources/ptSettings.cpp" line="343"/>
+        <location filename="../Sources/ptSettings.cpp" line="291"/>
         <source>pixels</source>
         <translation>пикселей</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="124"/>
+        <location filename="../Sources/ptSettings.cpp" line="128"/>
         <source>Contribution of red to red</source>
         <translation>Вклад красного в красный</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="125"/>
+        <location filename="../Sources/ptSettings.cpp" line="129"/>
         <source>Contribution of green to red</source>
         <translation>Вклад зелёного в красный</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="126"/>
+        <location filename="../Sources/ptSettings.cpp" line="130"/>
         <source>Contribution of blue to red</source>
         <translation>Вклад синего в красный</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="127"/>
+        <location filename="../Sources/ptSettings.cpp" line="131"/>
         <source>Contribution of red to green</source>
         <translation>Вклад красного в зелёный</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="128"/>
+        <location filename="../Sources/ptSettings.cpp" line="132"/>
         <source>Contribution of green to green</source>
         <translation>Вклад зелёного в зелёный</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="129"/>
+        <location filename="../Sources/ptSettings.cpp" line="133"/>
         <source>Contribution of blue to green</source>
         <translation>Вклад синего в зелёный</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="130"/>
+        <location filename="../Sources/ptSettings.cpp" line="134"/>
         <source>Contribution of red to blue</source>
         <translation>Вклад красного в синий</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="131"/>
+        <location filename="../Sources/ptSettings.cpp" line="135"/>
         <source>Contribution of green to blue</source>
         <translation>Вклад зелёного в синий</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="132"/>
+        <location filename="../Sources/ptSettings.cpp" line="136"/>
         <source>Contribution of blue to blue</source>
         <translation>Вклад синего в синий</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="267"/>
-        <location filename="../Sources/ptSettings.cpp" line="270"/>
-        <location filename="../Sources/ptSettings.cpp" line="476"/>
+        <location filename="../Sources/ptSettings.cpp" line="215"/>
+        <location filename="../Sources/ptSettings.cpp" line="218"/>
+        <location filename="../Sources/ptSettings.cpp" line="421"/>
         <source>Red</source>
         <translation>Красный</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="268"/>
-        <location filename="../Sources/ptSettings.cpp" line="271"/>
-        <location filename="../Sources/ptSettings.cpp" line="478"/>
+        <location filename="../Sources/ptSettings.cpp" line="216"/>
+        <location filename="../Sources/ptSettings.cpp" line="219"/>
+        <location filename="../Sources/ptSettings.cpp" line="423"/>
         <source>Green</source>
         <translation>Зелёный</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="269"/>
-        <location filename="../Sources/ptSettings.cpp" line="272"/>
-        <location filename="../Sources/ptSettings.cpp" line="480"/>
+        <location filename="../Sources/ptSettings.cpp" line="217"/>
+        <location filename="../Sources/ptSettings.cpp" line="220"/>
+        <location filename="../Sources/ptSettings.cpp" line="425"/>
         <source>Blue</source>
         <translation>Синий</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="133"/>
+        <location filename="../Sources/ptSettings.cpp" line="137"/>
         <source>Percentage of white aimed at</source>
         <translation>Желаемый процент белого</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="133"/>
+        <location filename="../Sources/ptSettings.cpp" line="137"/>
         <source>% white</source>
         <translation>% белого</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="134"/>
+        <location filename="../Sources/ptSettings.cpp" line="138"/>
         <source>WhiteLevel</source>
         <translation>Уровень белого</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="135"/>
+        <location filename="../Sources/ptSettings.cpp" line="139"/>
         <source>EV</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="135"/>
+        <location filename="../Sources/ptSettings.cpp" line="139"/>
         <source>Exposure in EV</source>
         <translation>Экспозиция в EV</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="136"/>
-        <location filename="../Sources/ptSettings.cpp" line="143"/>
-        <location filename="../Sources/ptSettings.cpp" line="150"/>
-        <location filename="../Sources/ptSettings.cpp" line="156"/>
-        <location filename="../Sources/ptSettings.cpp" line="162"/>
-        <location filename="../Sources/ptSettings.cpp" line="169"/>
-        <location filename="../Sources/ptSettings.cpp" line="176"/>
-        <location filename="../Sources/ptSettings.cpp" line="243"/>
-        <location filename="../Sources/ptSettings.cpp" line="246"/>
-        <location filename="../Sources/ptSettings.cpp" line="259"/>
-        <location filename="../Sources/ptSettings.cpp" line="273"/>
-        <location filename="../Sources/ptSettings.cpp" line="277"/>
-        <location filename="../Sources/ptSettings.cpp" line="301"/>
-        <location filename="../Sources/ptSettings.cpp" line="306"/>
-        <location filename="../Sources/ptSettings.cpp" line="312"/>
-        <location filename="../Sources/ptSettings.cpp" line="338"/>
+        <location filename="../Sources/ptSettings.cpp" line="191"/>
+        <location filename="../Sources/ptSettings.cpp" line="194"/>
+        <location filename="../Sources/ptSettings.cpp" line="207"/>
+        <location filename="../Sources/ptSettings.cpp" line="221"/>
+        <location filename="../Sources/ptSettings.cpp" line="225"/>
+        <location filename="../Sources/ptSettings.cpp" line="249"/>
+        <location filename="../Sources/ptSettings.cpp" line="254"/>
+        <location filename="../Sources/ptSettings.cpp" line="260"/>
+        <location filename="../Sources/ptSettings.cpp" line="286"/>
         <source>Amount</source>
         <translation>Величина</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="146"/>
-        <location filename="../Sources/ptSettings.cpp" line="153"/>
-        <location filename="../Sources/ptSettings.cpp" line="172"/>
-        <location filename="../Sources/ptSettings.cpp" line="179"/>
-        <location filename="../Sources/ptSettings.cpp" line="251"/>
-        <location filename="../Sources/ptSettings.cpp" line="256"/>
-        <location filename="../Sources/ptSettings.cpp" line="274"/>
-        <location filename="../Sources/ptSettings.cpp" line="278"/>
+        <location filename="../Sources/ptSettings.cpp" line="199"/>
+        <location filename="../Sources/ptSettings.cpp" line="204"/>
+        <location filename="../Sources/ptSettings.cpp" line="222"/>
+        <location filename="../Sources/ptSettings.cpp" line="226"/>
         <source>Lower Limit</source>
         <translation>Нижняя граница</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="147"/>
-        <location filename="../Sources/ptSettings.cpp" line="154"/>
-        <location filename="../Sources/ptSettings.cpp" line="173"/>
-        <location filename="../Sources/ptSettings.cpp" line="180"/>
-        <location filename="../Sources/ptSettings.cpp" line="252"/>
-        <location filename="../Sources/ptSettings.cpp" line="257"/>
-        <location filename="../Sources/ptSettings.cpp" line="275"/>
-        <location filename="../Sources/ptSettings.cpp" line="279"/>
+        <location filename="../Sources/ptSettings.cpp" line="200"/>
+        <location filename="../Sources/ptSettings.cpp" line="205"/>
+        <location filename="../Sources/ptSettings.cpp" line="223"/>
+        <location filename="../Sources/ptSettings.cpp" line="227"/>
         <source>Upper Limit</source>
         <translation>Верхняя граница</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="148"/>
-        <location filename="../Sources/ptSettings.cpp" line="155"/>
-        <location filename="../Sources/ptSettings.cpp" line="174"/>
-        <location filename="../Sources/ptSettings.cpp" line="181"/>
-        <location filename="../Sources/ptSettings.cpp" line="265"/>
-        <location filename="../Sources/ptSettings.cpp" line="276"/>
-        <location filename="../Sources/ptSettings.cpp" line="280"/>
-        <location filename="../Sources/ptSettings.cpp" line="291"/>
-        <location filename="../Sources/ptSettings.cpp" line="300"/>
-        <location filename="../Sources/ptSettings.cpp" line="305"/>
-        <location filename="../Sources/ptSettings.cpp" line="310"/>
-        <location filename="../Sources/ptSettings.cpp" line="318"/>
-        <location filename="../Sources/ptSettings.cpp" line="322"/>
-        <location filename="../Sources/ptSettings.cpp" line="331"/>
+        <location filename="../Sources/ptSettings.cpp" line="213"/>
+        <location filename="../Sources/ptSettings.cpp" line="224"/>
+        <location filename="../Sources/ptSettings.cpp" line="228"/>
+        <location filename="../Sources/ptSettings.cpp" line="239"/>
+        <location filename="../Sources/ptSettings.cpp" line="248"/>
+        <location filename="../Sources/ptSettings.cpp" line="253"/>
+        <location filename="../Sources/ptSettings.cpp" line="258"/>
+        <location filename="../Sources/ptSettings.cpp" line="266"/>
+        <location filename="../Sources/ptSettings.cpp" line="270"/>
+        <location filename="../Sources/ptSettings.cpp" line="279"/>
         <source>Softness</source>
         <translation>Плавность</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="138"/>
         <location filename="../Sources/ptSettings.cpp" line="158"/>
-        <location filename="../Sources/ptSettings.cpp" line="164"/>
-        <location filename="../Sources/ptSettings.cpp" line="210"/>
-        <location filename="../Sources/ptSettings.cpp" line="244"/>
+        <location filename="../Sources/ptSettings.cpp" line="192"/>
         <source>Threshold</source>
         <translation>Порог</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="139"/>
-        <location filename="../Sources/ptSettings.cpp" line="144"/>
-        <location filename="../Sources/ptSettings.cpp" line="151"/>
-        <location filename="../Sources/ptSettings.cpp" line="159"/>
-        <location filename="../Sources/ptSettings.cpp" line="165"/>
-        <location filename="../Sources/ptSettings.cpp" line="170"/>
-        <location filename="../Sources/ptSettings.cpp" line="177"/>
-        <location filename="../Sources/ptSettings.cpp" line="184"/>
-        <location filename="../Sources/ptSettings.cpp" line="188"/>
-        <location filename="../Sources/ptSettings.cpp" line="199"/>
-        <location filename="../Sources/ptSettings.cpp" line="216"/>
-        <location filename="../Sources/ptSettings.cpp" line="250"/>
-        <location filename="../Sources/ptSettings.cpp" line="255"/>
-        <location filename="../Sources/ptSettings.cpp" line="266"/>
-        <location filename="../Sources/ptSettings.cpp" line="283"/>
-        <location filename="../Sources/ptSettings.cpp" line="292"/>
+        <location filename="../Sources/ptSettings.cpp" line="147"/>
+        <location filename="../Sources/ptSettings.cpp" line="164"/>
+        <location filename="../Sources/ptSettings.cpp" line="198"/>
+        <location filename="../Sources/ptSettings.cpp" line="203"/>
+        <location filename="../Sources/ptSettings.cpp" line="214"/>
+        <location filename="../Sources/ptSettings.cpp" line="231"/>
+        <location filename="../Sources/ptSettings.cpp" line="240"/>
         <source>Opacity</source>
         <translation>Непрозрачность</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="140"/>
-        <location filename="../Sources/ptSettings.cpp" line="160"/>
-        <location filename="../Sources/ptSettings.cpp" line="166"/>
-        <location filename="../Sources/ptSettings.cpp" line="247"/>
+        <location filename="../Sources/ptSettings.cpp" line="195"/>
         <source>Denoise</source>
         <translation>Подавление шума</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="140"/>
-        <location filename="../Sources/ptSettings.cpp" line="141"/>
-        <location filename="../Sources/ptSettings.cpp" line="160"/>
-        <location filename="../Sources/ptSettings.cpp" line="161"/>
-        <location filename="../Sources/ptSettings.cpp" line="166"/>
-        <location filename="../Sources/ptSettings.cpp" line="167"/>
         <source>Don&apos;t amplify noise</source>
         <translation>Не усиливать шум</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="141"/>
-        <location filename="../Sources/ptSettings.cpp" line="161"/>
-        <location filename="../Sources/ptSettings.cpp" line="167"/>
-        <location filename="../Sources/ptSettings.cpp" line="185"/>
-        <location filename="../Sources/ptSettings.cpp" line="189"/>
         <source>Masking</source>
         <translation>Маска</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="142"/>
-        <location filename="../Sources/ptSettings.cpp" line="149"/>
-        <location filename="../Sources/ptSettings.cpp" line="168"/>
-        <location filename="../Sources/ptSettings.cpp" line="175"/>
-        <location filename="../Sources/ptSettings.cpp" line="182"/>
-        <location filename="../Sources/ptSettings.cpp" line="186"/>
-        <location filename="../Sources/ptSettings.cpp" line="209"/>
-        <location filename="../Sources/ptSettings.cpp" line="242"/>
-        <location filename="../Sources/ptSettings.cpp" line="245"/>
-        <location filename="../Sources/ptSettings.cpp" line="249"/>
-        <location filename="../Sources/ptSettings.cpp" line="254"/>
-        <location filename="../Sources/ptSettings.cpp" line="319"/>
-        <location filename="../Sources/ptSettings.cpp" line="328"/>
-        <location filename="../Sources/ptSettings.cpp" line="337"/>
+        <location filename="../Sources/ptSettings.cpp" line="157"/>
+        <location filename="../Sources/ptSettings.cpp" line="190"/>
+        <location filename="../Sources/ptSettings.cpp" line="193"/>
+        <location filename="../Sources/ptSettings.cpp" line="197"/>
+        <location filename="../Sources/ptSettings.cpp" line="202"/>
+        <location filename="../Sources/ptSettings.cpp" line="267"/>
+        <location filename="../Sources/ptSettings.cpp" line="276"/>
+        <location filename="../Sources/ptSettings.cpp" line="285"/>
         <source>Radius</source>
         <translation>Радиус</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="145"/>
-        <location filename="../Sources/ptSettings.cpp" line="152"/>
-        <location filename="../Sources/ptSettings.cpp" line="171"/>
-        <location filename="../Sources/ptSettings.cpp" line="178"/>
         <source>Halo Control</source>
         <translation>Контроль ореолов</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="183"/>
-        <location filename="../Sources/ptSettings.cpp" line="187"/>
         <source>Feather</source>
         <translation>Размытие</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="214"/>
-        <location filename="../Sources/ptSettings.cpp" line="341"/>
+        <location filename="../Sources/ptSettings.cpp" line="162"/>
+        <location filename="../Sources/ptSettings.cpp" line="289"/>
         <source>Gamma</source>
         <translation>Гамма</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="342"/>
+        <location filename="../Sources/ptSettings.cpp" line="290"/>
         <source>Linearity</source>
         <translation>Линейность</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="340"/>
+        <location filename="../Sources/ptSettings.cpp" line="288"/>
         <source>Contrast</source>
         <translation>Контраст</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="190"/>
+        <location filename="../Sources/ptSettings.cpp" line="140"/>
         <source>Master</source>
         <translation>Главный</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="190"/>
+        <location filename="../Sources/ptSettings.cpp" line="140"/>
         <source>Quick setup for the levels</source>
         <translation>Быстрая установка уровней</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="191"/>
         <source>Threshold on L</source>
         <translation>Порог по L</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="192"/>
         <source>Threshold on color</source>
         <translation>Порог по цвету</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="193"/>
+        <location filename="../Sources/ptSettings.cpp" line="141"/>
         <source>Level 1</source>
         <translation>Уровень 1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="193"/>
+        <location filename="../Sources/ptSettings.cpp" line="141"/>
         <source>Boosting of level 1</source>
         <translation>Усиление уровня 1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="194"/>
+        <location filename="../Sources/ptSettings.cpp" line="142"/>
         <source>Level 2</source>
         <translation>Уровень 2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="194"/>
+        <location filename="../Sources/ptSettings.cpp" line="142"/>
         <source>Boosting of level 2</source>
         <translation>Усиление уровня 2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="195"/>
+        <location filename="../Sources/ptSettings.cpp" line="143"/>
         <source>Level 3</source>
         <translation>Уровень 3</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="195"/>
+        <location filename="../Sources/ptSettings.cpp" line="143"/>
         <source>Boosting of level 3</source>
         <translation>Усиление уровня 3</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="196"/>
+        <location filename="../Sources/ptSettings.cpp" line="144"/>
         <source>Level 4</source>
         <translation>Уровень 4</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="196"/>
+        <location filename="../Sources/ptSettings.cpp" line="144"/>
         <source>Boosting of level 4</source>
         <translation>Усиление уровня 4</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="197"/>
+        <location filename="../Sources/ptSettings.cpp" line="145"/>
         <source>Level 5</source>
         <translation>Уровень 5</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="197"/>
+        <location filename="../Sources/ptSettings.cpp" line="145"/>
         <source>Boosting of level 5</source>
         <translation>Усиление уровня 5</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="198"/>
+        <location filename="../Sources/ptSettings.cpp" line="146"/>
         <source>Level 6</source>
         <translation>Уровень 6</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="198"/>
+        <location filename="../Sources/ptSettings.cpp" line="146"/>
         <source>Boosting of level 6</source>
         <translation>Усиление уровня 6</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="200"/>
-        <location filename="../Sources/ptSettings.cpp" line="241"/>
+        <location filename="../Sources/ptSettings.cpp" line="148"/>
+        <location filename="../Sources/ptSettings.cpp" line="189"/>
         <source>Amplitude</source>
         <translation>Амплитуда</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="201"/>
-        <location filename="../Sources/ptSettings.cpp" line="240"/>
+        <location filename="../Sources/ptSettings.cpp" line="149"/>
+        <location filename="../Sources/ptSettings.cpp" line="188"/>
         <source>Iterations</source>
         <translation>Итерации</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="202"/>
-        <location filename="../Sources/ptSettings.cpp" line="226"/>
+        <location filename="../Sources/ptSettings.cpp" line="150"/>
+        <location filename="../Sources/ptSettings.cpp" line="174"/>
         <source>Sharpness</source>
         <translation>Резкость</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="203"/>
-        <location filename="../Sources/ptSettings.cpp" line="227"/>
+        <location filename="../Sources/ptSettings.cpp" line="151"/>
+        <location filename="../Sources/ptSettings.cpp" line="175"/>
         <source>Anisotropy</source>
         <translation>Анизотропия</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="204"/>
-        <location filename="../Sources/ptSettings.cpp" line="228"/>
+        <location filename="../Sources/ptSettings.cpp" line="152"/>
+        <location filename="../Sources/ptSettings.cpp" line="176"/>
         <source>Gradient smoothness</source>
         <translation>Градиентное сглаживание</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="204"/>
-        <location filename="../Sources/ptSettings.cpp" line="228"/>
+        <location filename="../Sources/ptSettings.cpp" line="152"/>
+        <location filename="../Sources/ptSettings.cpp" line="176"/>
         <source>Alpha</source>
         <translation>Альфа</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="205"/>
-        <location filename="../Sources/ptSettings.cpp" line="229"/>
+        <location filename="../Sources/ptSettings.cpp" line="153"/>
+        <location filename="../Sources/ptSettings.cpp" line="177"/>
         <source>Tensor smoothness</source>
         <translation>Тензорное сглаживание</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="205"/>
-        <location filename="../Sources/ptSettings.cpp" line="229"/>
+        <location filename="../Sources/ptSettings.cpp" line="153"/>
+        <location filename="../Sources/ptSettings.cpp" line="177"/>
         <source>Sigma</source>
         <translation>Сигма</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="206"/>
+        <location filename="../Sources/ptSettings.cpp" line="154"/>
         <source>Spacial precision</source>
         <translation>Пространственная точность</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="206"/>
+        <location filename="../Sources/ptSettings.cpp" line="154"/>
         <source>dl</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="207"/>
+        <location filename="../Sources/ptSettings.cpp" line="155"/>
         <source>Angular precision</source>
         <translation>Угловая точность</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="207"/>
+        <location filename="../Sources/ptSettings.cpp" line="155"/>
         <source>da</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="208"/>
+        <location filename="../Sources/ptSettings.cpp" line="156"/>
         <source>Value precision</source>
         <translation>Точность значения</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="208"/>
+        <location filename="../Sources/ptSettings.cpp" line="156"/>
         <source>Gauss</source>
         <translation>Гаусс</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="211"/>
+        <location filename="../Sources/ptSettings.cpp" line="159"/>
         <source>Tune masks</source>
         <translation>Маска</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="211"/>
+        <location filename="../Sources/ptSettings.cpp" line="159"/>
         <source>Fine tune the color masks</source>
         <translation>Тонкая настройка цветовой маски</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="212"/>
-        <location filename="../Sources/ptSettings.cpp" line="219"/>
-        <location filename="../Sources/ptSettings.cpp" line="224"/>
+        <location filename="../Sources/ptSettings.cpp" line="160"/>
+        <location filename="../Sources/ptSettings.cpp" line="167"/>
+        <location filename="../Sources/ptSettings.cpp" line="172"/>
         <source>L amount</source>
         <translation>Яркость</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="212"/>
+        <location filename="../Sources/ptSettings.cpp" line="160"/>
         <source>Denoise amount on L</source>
         <translation>Величина подавления шума в канале L</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="213"/>
+        <location filename="../Sources/ptSettings.cpp" line="161"/>
         <source>Color amount</source>
         <translation>Цветность</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="213"/>
+        <location filename="../Sources/ptSettings.cpp" line="161"/>
         <source>Denoise amount on AB</source>
         <translation>Величина подавления шума в каналах AB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="215"/>
+        <location filename="../Sources/ptSettings.cpp" line="163"/>
         <source>Levels</source>
         <translation>Уровни</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="216"/>
+        <location filename="../Sources/ptSettings.cpp" line="164"/>
         <source>Opacity of denoising on L</source>
         <translation>Непрозрачность подавления яркостного шума</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="217"/>
+        <location filename="../Sources/ptSettings.cpp" line="165"/>
         <source>Edge Threshold</source>
         <translation>Краевой порог</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="217"/>
+        <location filename="../Sources/ptSettings.cpp" line="165"/>
         <source>Edge thresholding for denoising on L</source>
         <translation>Краевой порог подавления шума в L</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="218"/>
+        <location filename="../Sources/ptSettings.cpp" line="166"/>
         <source>L scale</source>
         <translation>Масштаб L</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="218"/>
+        <location filename="../Sources/ptSettings.cpp" line="166"/>
         <source>Denoise scale on L</source>
         <translation>Масштаб подавления шума в L</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="219"/>
+        <location filename="../Sources/ptSettings.cpp" line="167"/>
         <source>Denoise on L</source>
         <translation>Величина подавления шума в L</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="220"/>
-        <location filename="../Sources/ptSettings.cpp" line="230"/>
+        <location filename="../Sources/ptSettings.cpp" line="168"/>
+        <location filename="../Sources/ptSettings.cpp" line="178"/>
         <source>A amount</source>
         <translation>Величина A</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="220"/>
+        <location filename="../Sources/ptSettings.cpp" line="168"/>
         <source>Color A denoise</source>
         <translation>Величина подавления шума в A</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="221"/>
+        <location filename="../Sources/ptSettings.cpp" line="169"/>
         <source>A scale</source>
         <translation>Масштаб A</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="221"/>
+        <location filename="../Sources/ptSettings.cpp" line="169"/>
         <source>Denoise scale on A</source>
         <translation>Масштаб подавления шума в A</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="222"/>
-        <location filename="../Sources/ptSettings.cpp" line="232"/>
+        <location filename="../Sources/ptSettings.cpp" line="170"/>
+        <location filename="../Sources/ptSettings.cpp" line="180"/>
         <source>B amount</source>
         <translation>Величина B</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="222"/>
+        <location filename="../Sources/ptSettings.cpp" line="170"/>
         <source>Color B denoise</source>
         <translation>Величина подавления шума в B</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="223"/>
+        <location filename="../Sources/ptSettings.cpp" line="171"/>
         <source>B scale</source>
         <translation>Масштаб B</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="223"/>
+        <location filename="../Sources/ptSettings.cpp" line="171"/>
         <source>Denoise scale on B</source>
         <translation>Масштаб подавления шума в B</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="224"/>
+        <location filename="../Sources/ptSettings.cpp" line="172"/>
         <source>Threshold for wavelet L denoise (with edge mask)</source>
         <translation>Порог вейвлетного подавления шума в L (с краевой маской)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="225"/>
+        <location filename="../Sources/ptSettings.cpp" line="173"/>
         <source>L softness</source>
         <translation>Плавность L</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="225"/>
+        <location filename="../Sources/ptSettings.cpp" line="173"/>
         <source>Softness for wavelet L denoise (with edge mask)</source>
         <translation>Плавность вейвлетного подавления шума в L (с краевой маской)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="230"/>
+        <location filename="../Sources/ptSettings.cpp" line="178"/>
         <source>Threshold for wavelet A denoise</source>
         <translation>Порог вейвлетного подавления шума в A</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="231"/>
+        <location filename="../Sources/ptSettings.cpp" line="179"/>
         <source>A softness</source>
         <translation>Плавность A</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="231"/>
+        <location filename="../Sources/ptSettings.cpp" line="179"/>
         <source>Softness for wavelet A denoise</source>
         <translation>Плавность вейвлетного подавления шума в A</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="232"/>
+        <location filename="../Sources/ptSettings.cpp" line="180"/>
         <source>Threshold for wavelet B denoise</source>
         <translation>Порог вейвлетного подавления шума в B</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="233"/>
+        <location filename="../Sources/ptSettings.cpp" line="181"/>
         <source>B softness</source>
         <translation>Плавность B</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="233"/>
+        <location filename="../Sources/ptSettings.cpp" line="181"/>
         <source>Softness for wavelet B denoise</source>
         <translation>Плавность вейвлетного подавления шума в B</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="234"/>
+        <location filename="../Sources/ptSettings.cpp" line="182"/>
         <source>Number of passes</source>
         <translation>Количество итераций</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="235"/>
-        <location filename="../Sources/ptSettings.cpp" line="248"/>
-        <location filename="../Sources/ptSettings.cpp" line="253"/>
+        <location filename="../Sources/ptSettings.cpp" line="183"/>
+        <location filename="../Sources/ptSettings.cpp" line="196"/>
+        <location filename="../Sources/ptSettings.cpp" line="201"/>
         <source>Strength</source>
         <translation>Сила</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="237"/>
+        <location filename="../Sources/ptSettings.cpp" line="185"/>
         <source>Halo control</source>
         <translation>Контроль ореолов</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="238"/>
+        <location filename="../Sources/ptSettings.cpp" line="186"/>
         <source>Weight</source>
         <translation>Вес</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="239"/>
+        <location filename="../Sources/ptSettings.cpp" line="187"/>
         <source>Clean up</source>
         <translation>Очистка</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="236"/>
+        <location filename="../Sources/ptSettings.cpp" line="184"/>
         <source>Microcontrast</source>
         <translation>Микроконтраст</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="236"/>
+        <location filename="../Sources/ptSettings.cpp" line="184"/>
         <source>Microcontrast strength</source>
         <translation>Сила микроконтраста</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="237"/>
+        <location filename="../Sources/ptSettings.cpp" line="185"/>
         <source>Microcontrast Halo control</source>
         <translation>Контроль ореолов микроконтраста</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="238"/>
+        <location filename="../Sources/ptSettings.cpp" line="186"/>
         <source>Microcontrast weight</source>
         <translation>Вес микроконтраста</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="240"/>
+        <location filename="../Sources/ptSettings.cpp" line="188"/>
         <source>Number of iterations</source>
         <translation>Количество итераций</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="242"/>
+        <location filename="../Sources/ptSettings.cpp" line="190"/>
         <source>Radius for USM</source>
         <translation>Радиус нерезкой маски</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="243"/>
+        <location filename="../Sources/ptSettings.cpp" line="191"/>
         <source>Amount for USM</source>
         <translation>Величина нерезкой маски</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="244"/>
+        <location filename="../Sources/ptSettings.cpp" line="192"/>
         <source>Threshold for USM</source>
         <translation>Порог нерезкой маски</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="245"/>
+        <location filename="../Sources/ptSettings.cpp" line="193"/>
         <source>Radius for Highpass</source>
         <translation>Радиус высокочастотного повышения резкости</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="246"/>
+        <location filename="../Sources/ptSettings.cpp" line="194"/>
         <source>Amount for Highpass</source>
         <translation>Величина высокочастотного повышения резкости</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="247"/>
+        <location filename="../Sources/ptSettings.cpp" line="195"/>
         <source>Denoise for Highpass</source>
         <translation>Фильтр шума при высокочастотном повышении резкости</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="248"/>
-        <location filename="../Sources/ptSettings.cpp" line="253"/>
+        <location filename="../Sources/ptSettings.cpp" line="196"/>
+        <location filename="../Sources/ptSettings.cpp" line="201"/>
         <source>Strength for film grain</source>
         <translation>Сила имитации плёночного зерна</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="249"/>
-        <location filename="../Sources/ptSettings.cpp" line="254"/>
+        <location filename="../Sources/ptSettings.cpp" line="197"/>
+        <location filename="../Sources/ptSettings.cpp" line="202"/>
         <source>Radius for film grain</source>
         <translation>Радиус имитации плёночного зерна</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="250"/>
-        <location filename="../Sources/ptSettings.cpp" line="255"/>
+        <location filename="../Sources/ptSettings.cpp" line="198"/>
+        <location filename="../Sources/ptSettings.cpp" line="203"/>
         <source>Opacity for film grain</source>
         <translation>Непрозрачность имитации плёночного зерна</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="284"/>
-        <location filename="../Sources/ptSettings.cpp" line="293"/>
-        <location filename="../Sources/ptSettings.cpp" line="339"/>
+        <location filename="../Sources/ptSettings.cpp" line="232"/>
+        <location filename="../Sources/ptSettings.cpp" line="241"/>
+        <location filename="../Sources/ptSettings.cpp" line="287"/>
         <source>Saturation</source>
         <translation>Насыщенность</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="477"/>
+        <location filename="../Sources/ptSettings.cpp" line="422"/>
         <source>Yellow</source>
         <translation>Жёлтый</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="479"/>
+        <location filename="../Sources/ptSettings.cpp" line="424"/>
         <source>Cyan</source>
         <translation>Голубой</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="258"/>
-        <location filename="../Sources/ptSettings.cpp" line="285"/>
-        <location filename="../Sources/ptSettings.cpp" line="294"/>
-        <location filename="../Sources/ptSettings.cpp" line="311"/>
-        <location filename="../Sources/ptSettings.cpp" line="324"/>
-        <location filename="../Sources/ptSettings.cpp" line="333"/>
+        <location filename="../Sources/ptSettings.cpp" line="206"/>
+        <location filename="../Sources/ptSettings.cpp" line="233"/>
+        <location filename="../Sources/ptSettings.cpp" line="242"/>
+        <location filename="../Sources/ptSettings.cpp" line="259"/>
+        <location filename="../Sources/ptSettings.cpp" line="272"/>
+        <location filename="../Sources/ptSettings.cpp" line="281"/>
         <source>Shape</source>
         <translation>Форма</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="258"/>
-        <location filename="../Sources/ptSettings.cpp" line="311"/>
-        <location filename="../Sources/ptSettings.cpp" line="324"/>
-        <location filename="../Sources/ptSettings.cpp" line="333"/>
+        <location filename="../Sources/ptSettings.cpp" line="65"/>
+        <source>Thumbnail cache (MB)</source>
+        <translation>Кэш миниатюр (МБ)</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="65"/>
+        <source>Maximum size of thumbnail cache in MBytes.
+Requires a restart to take effect.</source>
+        <translation>Максимальный размер кэша миниатюр в МБайтах.
+Вступает в силу после перезагрузки.</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="126"/>
+        <source>Pixels</source>
+        <translation>Пикселов</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="127"/>
+        <source>Image height</source>
+        <translation>Высота изображения</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="206"/>
+        <location filename="../Sources/ptSettings.cpp" line="259"/>
+        <location filename="../Sources/ptSettings.cpp" line="272"/>
+        <location filename="../Sources/ptSettings.cpp" line="281"/>
         <source>Shape of the vignette</source>
         <translation>Форма виньетирования</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="260"/>
-        <location filename="../Sources/ptSettings.cpp" line="286"/>
-        <location filename="../Sources/ptSettings.cpp" line="295"/>
-        <location filename="../Sources/ptSettings.cpp" line="313"/>
+        <location filename="../Sources/ptSettings.cpp" line="208"/>
+        <location filename="../Sources/ptSettings.cpp" line="234"/>
+        <location filename="../Sources/ptSettings.cpp" line="243"/>
+        <location filename="../Sources/ptSettings.cpp" line="261"/>
         <source>Inner Radius</source>
         <translation>Внутренний радиус</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="261"/>
-        <location filename="../Sources/ptSettings.cpp" line="287"/>
-        <location filename="../Sources/ptSettings.cpp" line="296"/>
-        <location filename="../Sources/ptSettings.cpp" line="314"/>
+        <location filename="../Sources/ptSettings.cpp" line="209"/>
+        <location filename="../Sources/ptSettings.cpp" line="235"/>
+        <location filename="../Sources/ptSettings.cpp" line="244"/>
+        <location filename="../Sources/ptSettings.cpp" line="262"/>
         <source>Outer Radius</source>
         <translation>Внешний радиус</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="262"/>
-        <location filename="../Sources/ptSettings.cpp" line="288"/>
-        <location filename="../Sources/ptSettings.cpp" line="297"/>
-        <location filename="../Sources/ptSettings.cpp" line="315"/>
-        <location filename="../Sources/ptSettings.cpp" line="325"/>
-        <location filename="../Sources/ptSettings.cpp" line="334"/>
+        <location filename="../Sources/ptSettings.cpp" line="210"/>
+        <location filename="../Sources/ptSettings.cpp" line="236"/>
+        <location filename="../Sources/ptSettings.cpp" line="245"/>
+        <location filename="../Sources/ptSettings.cpp" line="263"/>
+        <location filename="../Sources/ptSettings.cpp" line="273"/>
+        <location filename="../Sources/ptSettings.cpp" line="282"/>
         <source>Roundness</source>
         <translation>Закруглённость</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="263"/>
-        <location filename="../Sources/ptSettings.cpp" line="289"/>
-        <location filename="../Sources/ptSettings.cpp" line="298"/>
-        <location filename="../Sources/ptSettings.cpp" line="316"/>
-        <location filename="../Sources/ptSettings.cpp" line="326"/>
-        <location filename="../Sources/ptSettings.cpp" line="335"/>
+        <location filename="../Sources/ptSettings.cpp" line="211"/>
+        <location filename="../Sources/ptSettings.cpp" line="237"/>
+        <location filename="../Sources/ptSettings.cpp" line="246"/>
+        <location filename="../Sources/ptSettings.cpp" line="264"/>
+        <location filename="../Sources/ptSettings.cpp" line="274"/>
+        <location filename="../Sources/ptSettings.cpp" line="283"/>
         <source>Center X</source>
         <translation>Центр по X</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="264"/>
-        <location filename="../Sources/ptSettings.cpp" line="290"/>
-        <location filename="../Sources/ptSettings.cpp" line="299"/>
-        <location filename="../Sources/ptSettings.cpp" line="317"/>
-        <location filename="../Sources/ptSettings.cpp" line="327"/>
-        <location filename="../Sources/ptSettings.cpp" line="336"/>
+        <location filename="../Sources/ptSettings.cpp" line="212"/>
+        <location filename="../Sources/ptSettings.cpp" line="238"/>
+        <location filename="../Sources/ptSettings.cpp" line="247"/>
+        <location filename="../Sources/ptSettings.cpp" line="265"/>
+        <location filename="../Sources/ptSettings.cpp" line="275"/>
+        <location filename="../Sources/ptSettings.cpp" line="284"/>
         <source>Center Y</source>
         <translation>Центр по Y</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="267"/>
+        <location filename="../Sources/ptSettings.cpp" line="215"/>
         <source>Red multiplicity</source>
         <translation>Множитель красного</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="268"/>
+        <location filename="../Sources/ptSettings.cpp" line="216"/>
         <source>Green multiplicity</source>
         <translation>Множитель зелёного</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="269"/>
+        <location filename="../Sources/ptSettings.cpp" line="217"/>
         <source>Blue multiplicity</source>
         <translation>Множитель синего</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="270"/>
+        <location filename="../Sources/ptSettings.cpp" line="218"/>
         <source>Red toning</source>
         <translation>Тонирование красным</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="271"/>
+        <location filename="../Sources/ptSettings.cpp" line="219"/>
         <source>Green toning</source>
         <translation>Тонирование зелёным</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="272"/>
+        <location filename="../Sources/ptSettings.cpp" line="220"/>
         <source>Blue toning</source>
         <translation>Тонирование синим</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="273"/>
-        <location filename="../Sources/ptSettings.cpp" line="277"/>
+        <location filename="../Sources/ptSettings.cpp" line="221"/>
+        <location filename="../Sources/ptSettings.cpp" line="225"/>
         <source>Amount of toning</source>
         <translation>Величина тонирования</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="281"/>
+        <location filename="../Sources/ptSettings.cpp" line="229"/>
         <source>Main color</source>
         <translation>Основной цвет</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="281"/>
+        <location filename="../Sources/ptSettings.cpp" line="229"/>
         <source>Intensity of the main color</source>
         <translation>Интенсивность основного цвета</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="282"/>
+        <location filename="../Sources/ptSettings.cpp" line="230"/>
         <source>Second color</source>
         <translation>Второй цвет</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="282"/>
+        <location filename="../Sources/ptSettings.cpp" line="230"/>
         <source>Intensity of the second color</source>
         <translation>Интенсивность второго цвета</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="285"/>
-        <location filename="../Sources/ptSettings.cpp" line="294"/>
+        <location filename="../Sources/ptSettings.cpp" line="233"/>
+        <location filename="../Sources/ptSettings.cpp" line="242"/>
         <source>Shape of the mask</source>
         <translation>Форма маски</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="302"/>
-        <location filename="../Sources/ptSettings.cpp" line="307"/>
-        <location filename="../Sources/ptSettings.cpp" line="323"/>
-        <location filename="../Sources/ptSettings.cpp" line="332"/>
+        <location filename="../Sources/ptSettings.cpp" line="250"/>
+        <location filename="../Sources/ptSettings.cpp" line="255"/>
+        <location filename="../Sources/ptSettings.cpp" line="271"/>
+        <location filename="../Sources/ptSettings.cpp" line="280"/>
         <source>Angle</source>
         <translation>Угол</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="303"/>
-        <location filename="../Sources/ptSettings.cpp" line="308"/>
-        <location filename="../Sources/ptSettings.cpp" line="320"/>
-        <location filename="../Sources/ptSettings.cpp" line="329"/>
+        <location filename="../Sources/ptSettings.cpp" line="251"/>
+        <location filename="../Sources/ptSettings.cpp" line="256"/>
+        <location filename="../Sources/ptSettings.cpp" line="268"/>
+        <location filename="../Sources/ptSettings.cpp" line="277"/>
         <source>Lower Level</source>
         <translation>Нижний уровень</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="304"/>
-        <location filename="../Sources/ptSettings.cpp" line="309"/>
-        <location filename="../Sources/ptSettings.cpp" line="321"/>
-        <location filename="../Sources/ptSettings.cpp" line="330"/>
+        <location filename="../Sources/ptSettings.cpp" line="252"/>
+        <location filename="../Sources/ptSettings.cpp" line="257"/>
+        <location filename="../Sources/ptSettings.cpp" line="269"/>
+        <location filename="../Sources/ptSettings.cpp" line="278"/>
         <source>Upper Level</source>
         <translation>Верхний уровень</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="319"/>
-        <location filename="../Sources/ptSettings.cpp" line="328"/>
+        <location filename="../Sources/ptSettings.cpp" line="267"/>
+        <location filename="../Sources/ptSettings.cpp" line="276"/>
         <source>Maximal radius for the blur</source>
         <translation>Максимальный радиус размытия</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="353"/>
+        <location filename="../Sources/ptSettings.cpp" line="301"/>
         <source>Quality</source>
         <translation>Качество</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="354"/>
+        <location filename="../Sources/ptSettings.cpp" line="302"/>
         <source>dpi</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="354"/>
+        <location filename="../Sources/ptSettings.cpp" line="302"/>
         <source>Resolution in dpi</source>
         <translation>Разрешение в dpi</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="355"/>
+        <location filename="../Sources/ptSettings.cpp" line="303"/>
         <source>Rating</source>
         <translation>Рейтинг</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="355"/>
+        <location filename="../Sources/ptSettings.cpp" line="303"/>
         <source>Image rating</source>
         <translation>Рейтинг изображения</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="361"/>
+        <location filename="../Sources/ptSettings.cpp" line="309"/>
         <source>File for autosaving batch list</source>
         <translation>Файл для автосохранения списка заданий</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="362"/>
+        <location filename="../Sources/ptSettings.cpp" line="310"/>
         <source>Remember setting level</source>
         <translation>Уровень запоминания настроек</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="363"/>
+        <location filename="../Sources/ptSettings.cpp" line="311"/>
         <source>Transform camera RGB to working space RGB</source>
         <translation>Преобразовывать RGB камеры в RGB рабочего пространства</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="364"/>
-        <location filename="../Sources/ptSettings.cpp" line="368"/>
-        <location filename="../Sources/ptSettings.cpp" line="369"/>
+        <location filename="../Sources/ptSettings.cpp" line="312"/>
+        <location filename="../Sources/ptSettings.cpp" line="316"/>
+        <location filename="../Sources/ptSettings.cpp" line="317"/>
         <source>Intent of the profile</source>
         <translation>Цветопередача профиля</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="365"/>
+        <location filename="../Sources/ptSettings.cpp" line="313"/>
         <source>Gamma that was applied before this profile</source>
         <translation>Гамма, применённая перед этим профилем</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="366"/>
+        <location filename="../Sources/ptSettings.cpp" line="314"/>
         <source>Working colorspace</source>
         <translation>Рабочее цветовое пространство</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="367"/>
+        <location filename="../Sources/ptSettings.cpp" line="315"/>
         <source>Color management quality</source>
         <translation>Точность управления цветом</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="370"/>
+        <location filename="../Sources/ptSettings.cpp" line="318"/>
         <source>Output mode of save button</source>
         <translation>Режим кнопки сохранения</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="371"/>
+        <location filename="../Sources/ptSettings.cpp" line="319"/>
         <source>Output mode of reset button</source>
         <translation>Режим кнопки сброса</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="372"/>
+        <location filename="../Sources/ptSettings.cpp" line="320"/>
         <source>Set the theme.</source>
         <translation>Установить тему</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="373"/>
+        <location filename="../Sources/ptSettings.cpp" line="321"/>
         <source>Set the highlight color of the theme.</source>
         <translation>Установить цвет подсветки для темы</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="374"/>
+        <location filename="../Sources/ptSettings.cpp" line="322"/>
         <source>Set the start up mode for the UI.</source>
         <translation>Начальный режим пользовательского интерфейса</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="375"/>
+        <location filename="../Sources/ptSettings.cpp" line="323"/>
         <source>Size of image processed vs original.</source>
         <translation>Размер обрабатываемого изображения по сравнению с оригиналом</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="376"/>
+        <location filename="../Sources/ptSettings.cpp" line="324"/>
         <source>Initial pipe size when Photivo starts.</source>
         <translation>Размер изображения при запуске Photivo.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="377"/>
+        <location filename="../Sources/ptSettings.cpp" line="325"/>
         <source>Special preview for image analysis</source>
         <translation>Специальный режим просмотра для анализа изображения</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="378"/>
+        <location filename="../Sources/ptSettings.cpp" line="326"/>
         <source>Bad pixels file</source>
         <translation>Файл с битыми пикселями</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="379"/>
+        <location filename="../Sources/ptSettings.cpp" line="327"/>
         <source>Darkframe file</source>
         <translation>Тёмный кадр</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="380"/>
+        <location filename="../Sources/ptSettings.cpp" line="328"/>
         <source>WhiteBalance</source>
         <translation>Баланс белого</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="381"/>
+        <location filename="../Sources/ptSettings.cpp" line="329"/>
         <source>CA correction</source>
         <translation>Коррекция хроматических аберраций</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="382"/>
+        <location filename="../Sources/ptSettings.cpp" line="330"/>
         <source>Demosaicing algorithm</source>
         <translation>Алгоритм дебайеризации</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="383"/>
+        <location filename="../Sources/ptSettings.cpp" line="331"/>
         <source>Denosie on Bayer pattern</source>
         <translation>Подавление шума на байеровской матрице</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="385"/>
+        <location filename="../Sources/ptSettings.cpp" line="333"/>
         <source>Guide lines for crop</source>
         <translation>Направляющие для кадрирования</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="386"/>
+        <location filename="../Sources/ptSettings.cpp" line="334"/>
         <source>Dim areas outside the crop rectangle</source>
         <translation>Затемнение изображения вне области кадрирования</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="387"/>
+        <location filename="../Sources/ptSettings.cpp" line="335"/>
         <source>How to handle clipping</source>
         <translation>Как обрабатывать ошибки экспозиции</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="395"/>
-        <location filename="../Sources/ptSettings.cpp" line="435"/>
+        <location filename="../Sources/ptSettings.cpp" line="343"/>
+        <location filename="../Sources/ptSettings.cpp" line="379"/>
         <source>Filter to be used for resizing</source>
         <translation>Фильтр, используемый для масштабирования</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="396"/>
-        <location filename="../Sources/ptSettings.cpp" line="434"/>
+        <location filename="../Sources/ptSettings.cpp" line="344"/>
+        <location filename="../Sources/ptSettings.cpp" line="378"/>
         <source>Image dimension the resize value applies to</source>
         <translation>Сторона изображения, масштабируемая до указанного размера</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="397"/>
+        <location filename="../Sources/ptSettings.cpp" line="345"/>
         <source>Flip mode</source>
         <translation>Режим отражения</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="398"/>
+        <location filename="../Sources/ptSettings.cpp" line="346"/>
         <source>Aspect width</source>
         <translation>Ширина</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="399"/>
+        <location filename="../Sources/ptSettings.cpp" line="347"/>
         <source>Aspect height</source>
         <translation>Высота</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="400"/>
+        <location filename="../Sources/ptSettings.cpp" line="348"/>
         <source>ChannelMixer</source>
         <translation>Микшер каналов</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="401"/>
+        <location filename="../Sources/ptSettings.cpp" line="349"/>
         <source>Clip mode</source>
         <translation>Режим вырезания</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="402"/>
+        <location filename="../Sources/ptSettings.cpp" line="350"/>
         <source>Auto exposure mode</source>
         <translation>Режим автоэкспозиции</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="403"/>
-        <location filename="../Sources/ptSettings.cpp" line="404"/>
-        <location filename="../Sources/ptSettings.cpp" line="405"/>
-        <location filename="../Sources/ptSettings.cpp" line="406"/>
         <source>Values for microcontrast</source>
         <translation>Значения для микроконтраста</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="407"/>
+        <location filename="../Sources/ptSettings.cpp" line="351"/>
         <source>Enable GreyCStoration on L</source>
         <translation>Разрешить GreyCStoration в L</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="408"/>
+        <location filename="../Sources/ptSettings.cpp" line="352"/>
         <source>Shadow mask for denoising</source>
         <translation>Маска теней для подавления шума</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="409"/>
+        <location filename="../Sources/ptSettings.cpp" line="353"/>
         <source>GREYC Interpolation</source>
         <translation>Интерполяция GREYC</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="410"/>
+        <location filename="../Sources/ptSettings.cpp" line="354"/>
         <source>Enable USM sharpening</source>
         <translation>Разрешить нерезкую маску</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="411"/>
+        <location filename="../Sources/ptSettings.cpp" line="355"/>
         <source>Enable Highpass sharpening</source>
         <translation>Разрешить высокочастотное повышение резкости</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="412"/>
-        <location filename="../Sources/ptSettings.cpp" line="414"/>
+        <location filename="../Sources/ptSettings.cpp" line="356"/>
+        <location filename="../Sources/ptSettings.cpp" line="358"/>
         <source>Values for film grain</source>
         <translation>Значения для имитации плёночного зерна</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="413"/>
-        <location filename="../Sources/ptSettings.cpp" line="415"/>
+        <location filename="../Sources/ptSettings.cpp" line="357"/>
+        <location filename="../Sources/ptSettings.cpp" line="359"/>
         <source>Mode for film grain</source>
         <translation>Режим имитации плёночного зерна</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="416"/>
-        <location filename="../Sources/ptSettings.cpp" line="429"/>
+        <location filename="../Sources/ptSettings.cpp" line="360"/>
+        <location filename="../Sources/ptSettings.cpp" line="373"/>
         <source>Mode for Vignette</source>
         <translation>Режим виньетирования</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="417"/>
+        <location filename="../Sources/ptSettings.cpp" line="361"/>
         <source>View seperate LAB channels</source>
         <translation>Показать отдельные каналы LAB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="418"/>
+        <location filename="../Sources/ptSettings.cpp" line="362"/>
         <source>Film emulation</source>
         <translation>Имитация плёнки</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="419"/>
+        <location filename="../Sources/ptSettings.cpp" line="363"/>
         <source>Color filter emulation</source>
         <translation>Имитация цветного фильтра</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="420"/>
-        <location filename="../Sources/ptSettings.cpp" line="421"/>
+        <location filename="../Sources/ptSettings.cpp" line="364"/>
+        <location filename="../Sources/ptSettings.cpp" line="365"/>
         <source>Values for Toning</source>
         <translation>Значения для тонирования</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="422"/>
+        <location filename="../Sources/ptSettings.cpp" line="366"/>
         <source>Colors for cross processing</source>
         <translation>Цвета кросс-процесса</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="423"/>
-        <location filename="../Sources/ptSettings.cpp" line="425"/>
+        <location filename="../Sources/ptSettings.cpp" line="367"/>
+        <location filename="../Sources/ptSettings.cpp" line="369"/>
         <source>Mode for Texture Overlay</source>
         <translation>Режим наложения текстуры</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="424"/>
-        <location filename="../Sources/ptSettings.cpp" line="426"/>
+        <location filename="../Sources/ptSettings.cpp" line="368"/>
+        <location filename="../Sources/ptSettings.cpp" line="370"/>
         <source>Mask for Texture Overlay</source>
         <translation>Маска наложения текстуры</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="427"/>
-        <location filename="../Sources/ptSettings.cpp" line="428"/>
+        <location filename="../Sources/ptSettings.cpp" line="371"/>
+        <location filename="../Sources/ptSettings.cpp" line="372"/>
         <source>Mode for Gradual Overlay</source>
         <translation>Режим наложения градиента</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="430"/>
-        <location filename="../Sources/ptSettings.cpp" line="431"/>
+        <location filename="../Sources/ptSettings.cpp" line="374"/>
+        <location filename="../Sources/ptSettings.cpp" line="375"/>
         <source>Mode for the gradual blur</source>
         <translation>Режим градиентного размытия</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="432"/>
+        <location filename="../Sources/ptSettings.cpp" line="376"/>
         <source>Mode for Softglow</source>
         <translation>Режим мягкого света</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="433"/>
+        <location filename="../Sources/ptSettings.cpp" line="377"/>
         <source>Enable web resizing</source>
         <translation>Разрешить масштабирование для веб</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="436"/>
+        <location filename="../Sources/ptSettings.cpp" line="380"/>
         <source>Output format</source>
         <translation>Формат вывода</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="437"/>
+        <location filename="../Sources/ptSettings.cpp" line="381"/>
         <source>JPEG color sampling</source>
         <translation>Цветовая выборка JPEG</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="438"/>
+        <location filename="../Sources/ptSettings.cpp" line="382"/>
         <source>Switch to this zoom level when starting to crop.</source>
         <translation>Переключаться на этот масштаб при кадрировании.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="444"/>
+        <location filename="../Sources/ptSettings.cpp" line="388"/>
         <source>At most</source>
         <translation>Не более</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="445"/>
+        <location filename="../Sources/ptSettings.cpp" line="389"/>
         <source>Open file manager on startup</source>
         <translation>Открывать файловый менеджер при запуске</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="445"/>
+        <location filename="../Sources/ptSettings.cpp" line="389"/>
         <source>Opens the file manager when Photivo starts without an image</source>
         <translation>Открывать файловый менеджер при запуске Photivo без изображения</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="447"/>
+        <location filename="../Sources/ptSettings.cpp" line="391"/>
         <source>Automatically save batch list</source>
         <translation>Автоматически сохранять список заданий</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="447"/>
+        <location filename="../Sources/ptSettings.cpp" line="391"/>
         <source>Automatically save current batch list</source>
         <translation>Автоматически сохранять текущий список заданий</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="448"/>
+        <location filename="../Sources/ptSettings.cpp" line="392"/>
         <source>Automatically load batch list</source>
         <translation>Автоматически загружать список заданий</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="448"/>
+        <location filename="../Sources/ptSettings.cpp" line="392"/>
         <source>Automatically load previous batch list saved to standard path on startup</source>
         <translation>Автоматически загружать предыдущий список заданий, сохранённый в стандартный файл, при запуске</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="450"/>
+        <location filename="../Sources/ptSettings.cpp" line="394"/>
         <source>User settings</source>
         <translation>Пользовательские настройки</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="450"/>
+        <location filename="../Sources/ptSettings.cpp" line="394"/>
         <source>Load user settings on startup</source>
         <translation>Загрузить пользовательские настройки при запуске</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="451"/>
+        <location filename="../Sources/ptSettings.cpp" line="395"/>
         <source>Reset on new image</source>
         <translation>Сбросить для нового изображения</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="451"/>
+        <location filename="../Sources/ptSettings.cpp" line="395"/>
         <source>Reset to user settings when new image is opened</source>
         <translation>Вернуться к пользовательским настройкам при открытии нового изображения</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="452"/>
+        <location filename="../Sources/ptSettings.cpp" line="396"/>
         <source>Adjust aspect ratio</source>
         <translation>Установить соотношение кадрирования</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="452"/>
+        <location filename="../Sources/ptSettings.cpp" line="396"/>
         <source>Adjust crop aspect ratio to image aspect ratio</source>
         <translation>Установить соотношение кадрирования равным отношению сторон изображения</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="453"/>
+        <location filename="../Sources/ptSettings.cpp" line="397"/>
         <source>Nonlinear slider response</source>
         <translation>Нелинейный отклик ползунка</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="453"/>
+        <location filename="../Sources/ptSettings.cpp" line="397"/>
         <source>Alter the slider behaviour</source>
         <translation>Изменить поведение ползунков</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="454"/>
+        <location filename="../Sources/ptSettings.cpp" line="398"/>
         <source>Use gimp plugin</source>
         <translation>Использовать плагин GIMP</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="454"/>
+        <location filename="../Sources/ptSettings.cpp" line="398"/>
         <source>Use gimp plugin for export</source>
         <translation>Использовать плагин GIMP для экспорта</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="455"/>
+        <location filename="../Sources/ptSettings.cpp" line="399"/>
         <source>Enabled</source>
         <translation>Разрешено</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="455"/>
+        <location filename="../Sources/ptSettings.cpp" line="399"/>
         <source>Show seperate toolboxes</source>
         <translation>Показывать отдельные панели инструментов</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="456"/>
+        <location filename="../Sources/ptSettings.cpp" line="400"/>
         <source>Tab mode</source>
         <translation>Режим вкладок</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="456"/>
+        <location filename="../Sources/ptSettings.cpp" line="400"/>
         <source>Show the preview after the active tab</source>
         <translation>Показывать предпросмотр после активной вкладки</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="457"/>
+        <location filename="../Sources/ptSettings.cpp" line="401"/>
         <source>Override default</source>
         <translation>Заменить стандартный</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="457"/>
+        <location filename="../Sources/ptSettings.cpp" line="401"/>
         <source>Override the default color</source>
         <translation>Заменить стандартный цвет</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="458"/>
+        <location filename="../Sources/ptSettings.cpp" line="402"/>
         <source>Display search bar</source>
         <translation>Показывать панель поиска</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="459"/>
+        <location filename="../Sources/ptSettings.cpp" line="403"/>
         <source>Backup settings</source>
         <translation>Резервирование настроек</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="459"/>
+        <location filename="../Sources/ptSettings.cpp" line="403"/>
         <source>Write backup settings during processing</source>
         <translation>Записывать резевные настройки во время обработки</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="460"/>
+        <location filename="../Sources/ptSettings.cpp" line="404"/>
         <source>manual</source>
         <translation>Вручную</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="460"/>
+        <location filename="../Sources/ptSettings.cpp" line="404"/>
         <source>manual or automatic pipe</source>
         <translation>Ручной или автоматический запуск конвейера</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="461"/>
+        <location filename="../Sources/ptSettings.cpp" line="405"/>
+        <source>Use thumbnail</source>
+        <translation>Использовать миниатюру</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="405"/>
+        <source>Use the embedded thumbnail of RAW images</source>
+        <translation>Использовать миниатюру, встроенную в RAW файлы</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="406"/>
         <source>Intensify</source>
         <translation>Усилить</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="461"/>
+        <location filename="../Sources/ptSettings.cpp" line="406"/>
         <source>Normalize lowest channel to 1</source>
         <translation>Нормировать слабый канал на 1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="462"/>
+        <location filename="../Sources/ptSettings.cpp" line="407"/>
         <source>Manual BP</source>
         <translation>Ручная ЧТ</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="462"/>
+        <location filename="../Sources/ptSettings.cpp" line="407"/>
         <source>Manual black point setting enabled</source>
         <translation>Включение ручной установки чёрной точки</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="463"/>
+        <location filename="../Sources/ptSettings.cpp" line="408"/>
         <source>Manual WP</source>
         <translation>Ручная БТ</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="463"/>
+        <location filename="../Sources/ptSettings.cpp" line="408"/>
         <source>Manual white point setting enabled</source>
         <translation>Включение ручной установки белой точки</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="464"/>
+        <location filename="../Sources/ptSettings.cpp" line="409"/>
         <source>Eeci refinement</source>
         <translation>EECI уточнение</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="465"/>
-        <location filename="../Sources/ptSettings.cpp" line="467"/>
+        <location filename="../Sources/ptSettings.cpp" line="410"/>
+        <location filename="../Sources/ptSettings.cpp" line="412"/>
         <source>Auto scale</source>
         <translation>Автомасштабирование</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="465"/>
+        <location filename="../Sources/ptSettings.cpp" line="410"/>
         <source>Auto scale to avoid black borders after distortion correction or geometry conversion.</source>
         <translation>Автомасштабирование для устранения чёрной рамки после коррекции дисторсии или преобразования геометрии.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="467"/>
+        <location filename="../Sources/ptSettings.cpp" line="412"/>
         <source>Auto scale to avoid black borders</source>
         <translation>Автомасштабирование для устранения чёрной рамки</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="468"/>
+        <location filename="../Sources/ptSettings.cpp" line="413"/>
         <source>Grid</source>
         <translation>Сетка</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="468"/>
+        <location filename="../Sources/ptSettings.cpp" line="413"/>
         <source>Enable the overlay grid</source>
         <translation>Включить наложение сетки</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="469"/>
+        <location filename="../Sources/ptSettings.cpp" line="414"/>
         <source>Crop</source>
         <translation>Кадрирование</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="469"/>
+        <location filename="../Sources/ptSettings.cpp" line="414"/>
         <source>Enable to make a crop</source>
         <translation>Включить кадрирование</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="470"/>
+        <location filename="../Sources/ptSettings.cpp" line="415"/>
         <source>Aspect Ratio</source>
         <translation>Соотношение</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="470"/>
+        <location filename="../Sources/ptSettings.cpp" line="415"/>
         <source>Crop with a fixed aspect ratio</source>
         <translation>Кадрировать с фиксированным соотношением</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="472"/>
+        <location filename="../Sources/ptSettings.cpp" line="417"/>
         <source>Resize</source>
         <translation>Изменить размер</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="472"/>
+        <location filename="../Sources/ptSettings.cpp" line="417"/>
         <source>Enable resize</source>
         <translation>Включить изменение размера</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="473"/>
+        <location filename="../Sources/ptSettings.cpp" line="418"/>
         <source>Automatic pipe size</source>
         <translation>Автоматический размер при обработке</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="474"/>
+        <location filename="../Sources/ptSettings.cpp" line="419"/>
         <source>Block pipe</source>
         <translation>Блокировать обработку</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="474"/>
+        <location filename="../Sources/ptSettings.cpp" line="419"/>
         <source>Disable the pipe</source>
         <translation>Заблокировать дальнейшую обработку (для упрощения геометрических преобразований)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="490"/>
+        <location filename="../Sources/ptSettings.cpp" line="433"/>
+        <source>Autosave settings</source>
+        <translation>Автосохранение настроек</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="433"/>
+        <source>Autosave settings when loading another image (if save confirmation is off)</source>
+        <translation>Автоматически сохранять настройки при открытии другого файла (если подтверждение сохранения выключено)</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="436"/>
         <source>Esc key exits Photivo</source>
         <translation>Клавиша Esc закрывает Photivo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="490"/>
+        <location filename="../Sources/ptSettings.cpp" line="436"/>
         <source>Use the Esc key not only to exit special view modes (e.g. full screen) but also to close Photivo.</source>
         <translation>Использовать Esc не только для выхода из особых режимов просмотра, но и для закрытия Photivo.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="466"/>
+        <location filename="../Sources/ptSettings.cpp" line="437"/>
+        <source>Load tags from sidecar files</source>
+        <translation>Загружать теги из отдельного файла</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="437"/>
+        <source>Load tags from sidecar XMP files when opening an image.</source>
+        <translation>Загружать теги из отдельного XMP файла при открытии изображения.</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="411"/>
         <source>Enable</source>
         <translation>Включить</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="86"/>
+        <location filename="../Sources/ptSettings.cpp" line="89"/>
         <source>Aperture</source>
         <translation>Диафрагма</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="87"/>
+        <location filename="../Sources/ptSettings.cpp" line="90"/>
         <source>Distance between object and camera</source>
         <translation>Расстояние между объектом и камерой</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="88"/>
+        <location filename="../Sources/ptSettings.cpp" line="91"/>
         <source>Image scaling.
 Useful to avoid losing content through the distortion/geometry tools.
 0.0 means auto-scaling.</source>
@@ -10067,239 +10208,239 @@ Useful to avoid losing content through the distortion/geometry tools.
 0.0 означает автомасштабирование.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="89"/>
+        <location filename="../Sources/ptSettings.cpp" line="92"/>
         <source>kr</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="90"/>
+        <location filename="../Sources/ptSettings.cpp" line="93"/>
         <source>kb</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="91"/>
+        <location filename="../Sources/ptSettings.cpp" line="94"/>
         <source>vr</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="92"/>
+        <location filename="../Sources/ptSettings.cpp" line="95"/>
         <source>vb</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="93"/>
+        <location filename="../Sources/ptSettings.cpp" line="96"/>
         <source>cr</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="94"/>
+        <location filename="../Sources/ptSettings.cpp" line="97"/>
         <source>cb</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="95"/>
+        <location filename="../Sources/ptSettings.cpp" line="98"/>
         <source>br</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="96"/>
+        <location filename="../Sources/ptSettings.cpp" line="99"/>
         <source>bb</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="97"/>
         <location filename="../Sources/ptSettings.cpp" line="100"/>
-        <location filename="../Sources/ptSettings.cpp" line="101"/>
+        <location filename="../Sources/ptSettings.cpp" line="103"/>
+        <location filename="../Sources/ptSettings.cpp" line="104"/>
         <source>k1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="98"/>
-        <location filename="../Sources/ptSettings.cpp" line="102"/>
+        <location filename="../Sources/ptSettings.cpp" line="101"/>
+        <location filename="../Sources/ptSettings.cpp" line="105"/>
         <source>k2</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="99"/>
+        <location filename="../Sources/ptSettings.cpp" line="102"/>
         <source>k3</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="103"/>
+        <location filename="../Sources/ptSettings.cpp" line="106"/>
         <source>omega</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="104"/>
+        <location filename="../Sources/ptSettings.cpp" line="107"/>
         <source>a</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="105"/>
+        <location filename="../Sources/ptSettings.cpp" line="108"/>
         <source>b</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="106"/>
+        <location filename="../Sources/ptSettings.cpp" line="109"/>
         <source>c</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="109"/>
+        <location filename="../Sources/ptSettings.cpp" line="112"/>
         <source>Image scaling.
 0.0 means auto-scaling.</source>
         <translation>Масштабирование изображения.
 0.0 означает автомасштабирование.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="114"/>
-        <location filename="../Sources/ptSettings.cpp" line="119"/>
+        <location filename="../Sources/ptSettings.cpp" line="117"/>
+        <location filename="../Sources/ptSettings.cpp" line="122"/>
         <source>Horizontal scale</source>
         <translation>Горизонтальный масштаб</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="115"/>
-        <location filename="../Sources/ptSettings.cpp" line="120"/>
+        <location filename="../Sources/ptSettings.cpp" line="118"/>
+        <location filename="../Sources/ptSettings.cpp" line="123"/>
         <source>Vertical scale</source>
         <translation>Вертикальный масштаб</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="388"/>
+        <location filename="../Sources/ptSettings.cpp" line="336"/>
         <source>Mathematical model for CA correction</source>
         <translation>Математическая модель коррекции ХА</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="389"/>
+        <location filename="../Sources/ptSettings.cpp" line="337"/>
         <source>Mathematical model for vignetting correction</source>
         <translation>Математическая модель коррекции виньетирования</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="390"/>
+        <location filename="../Sources/ptSettings.cpp" line="338"/>
         <source>Geometry of the lens the image was taken with</source>
         <translation>Геометрия объектива, которым было получено изображение</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="391"/>
+        <location filename="../Sources/ptSettings.cpp" line="339"/>
         <source>Convert image to this lens geometry</source>
         <translation>Преобразовать изображение в эту геометрию объектива</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="392"/>
+        <location filename="../Sources/ptSettings.cpp" line="340"/>
         <source>Mathematical distortion model to apply to the image</source>
         <translation>Математическая модель дисторсии, примяняемой к изображению</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="393"/>
+        <location filename="../Sources/ptSettings.cpp" line="341"/>
         <source>Energy method for liquid rescale</source>
         <translation>Функция энергии для избирательного масштабирования</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="394"/>
+        <location filename="../Sources/ptSettings.cpp" line="342"/>
         <source>Scaling method for liquid rescale</source>
         <translation>Метод масштабирования для избирательного масштабирования</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="466"/>
+        <location filename="../Sources/ptSettings.cpp" line="411"/>
         <source>Enable defishing</source>
         <translation>Разрешить исправление геометрии рыбьего глаза</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="471"/>
+        <location filename="../Sources/ptSettings.cpp" line="416"/>
         <source>Vertical first</source>
         <translation>Сначала по вертикали</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="471"/>
+        <location filename="../Sources/ptSettings.cpp" line="416"/>
         <source>Resizing starts with vertical direction</source>
         <translation>Масштабирование начинается с вертикального направления</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="475"/>
+        <location filename="../Sources/ptSettings.cpp" line="420"/>
         <source>Enable &apos;fast&apos;</source>
         <translation>Включить &quot;быстрый&quot;</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="475"/>
+        <location filename="../Sources/ptSettings.cpp" line="420"/>
         <source>Enable GREYC &apos;fast&apos;</source>
         <translation>Включить &quot;быстрый&quot; алгоритм GREYC</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="481"/>
+        <location filename="../Sources/ptSettings.cpp" line="426"/>
         <source>Purple</source>
         <translation>Пурпурный</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="482"/>
+        <location filename="../Sources/ptSettings.cpp" line="427"/>
         <source>Only edges</source>
         <translation>Только края</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="482"/>
+        <location filename="../Sources/ptSettings.cpp" line="427"/>
         <source>Sharpen only edges</source>
         <translation>Увеличивать резкость только на краях</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="483"/>
+        <location filename="../Sources/ptSettings.cpp" line="428"/>
         <source>before gamma</source>
         <translation>Перед гаммой</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="483"/>
+        <location filename="../Sources/ptSettings.cpp" line="428"/>
         <source>Webresizing before gamma compensation</source>
         <translation>Масштабирование для веб перед компенсацией гаммы</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="484"/>
+        <location filename="../Sources/ptSettings.cpp" line="429"/>
         <source>sRGB gamma compensation</source>
         <translation>Компенсация sRGB гаммы</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="485"/>
+        <location filename="../Sources/ptSettings.cpp" line="430"/>
         <source>Include metadata</source>
         <translation>Включить метаданные</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="485"/>
+        <location filename="../Sources/ptSettings.cpp" line="430"/>
         <source>Include metadata (only in jpeg and tiff)</source>
         <translation>Включить метаданные (только в JPEG и TIFF)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="486"/>
+        <location filename="../Sources/ptSettings.cpp" line="431"/>
         <source>Erase thumbnail</source>
         <translation>Удалить миниатюру</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="486"/>
+        <location filename="../Sources/ptSettings.cpp" line="431"/>
         <source>Erase the exif thumbnail (only in jpeg and tiff)</source>
         <translation>Удалить миниатюру из EXIF (только в JPEG и TIFF)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="487"/>
+        <location filename="../Sources/ptSettings.cpp" line="432"/>
         <source>Save image</source>
         <translation>Сохранение изображение</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="487"/>
+        <location filename="../Sources/ptSettings.cpp" line="432"/>
         <source>Confirm any action that would discard an unsaved image</source>
         <translation>Подтверждение любого действия, требующего отказа от несохранённого изображения</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="488"/>
+        <location filename="../Sources/ptSettings.cpp" line="434"/>
         <source>Reset settings</source>
         <translation>Сброс настроек</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="488"/>
+        <location filename="../Sources/ptSettings.cpp" line="434"/>
         <source>Confirm resetting settings or dropping a settings file onto an image</source>
         <translation>Подтверждение сброса настроек или применения файла настроек к изображению</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="489"/>
+        <location filename="../Sources/ptSettings.cpp" line="435"/>
         <source>Switch to 1:1 pipe</source>
         <translation>Переключение в режим 1:1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="489"/>
+        <location filename="../Sources/ptSettings.cpp" line="435"/>
         <source>Confirm switch to the full sized pipe</source>
         <translation>Подтверждение переключения в режим 1:1</translation>
     </message>
@@ -10321,28 +10462,28 @@ Useful to avoid losing content through the distortion/geometry tools.
     </message>
     <message>
         <location filename="../Sources/filters/imagespot/ptSpotListWidget.ui" line="87"/>
-        <location filename="../Sources/filters/imagespot/ptSpotListWidget.cpp" line="146"/>
+        <location filename="../Sources/filters/imagespot/ptSpotListWidget.cpp" line="145"/>
         <source>Append spot mode</source>
         <translation>Режим добавления точек</translation>
     </message>
     <message>
         <location filename="../Sources/filters/imagespot/ptSpotListWidget.ui" line="108"/>
-        <location filename="../Sources/filters/imagespot/ptSpotListWidget.cpp" line="175"/>
+        <location filename="../Sources/filters/imagespot/ptSpotListWidget.cpp" line="174"/>
         <source>Edit spots</source>
         <translation>Редактировать точку</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/imagespot/ptSpotListWidget.cpp" line="159"/>
+        <location filename="../Sources/filters/imagespot/ptSpotListWidget.cpp" line="158"/>
         <source>Exit append spot mode</source>
         <translation>Выйти из режима добавления точек</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/imagespot/ptSpotListWidget.cpp" line="189"/>
+        <location filename="../Sources/filters/imagespot/ptSpotListWidget.cpp" line="188"/>
         <source>Leave edit mode</source>
         <translation>Выйти из режима редактирования</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/imagespot/ptSpotListWidget.cpp" line="238"/>
+        <location filename="../Sources/filters/imagespot/ptSpotListWidget.cpp" line="237"/>
         <source>Spot</source>
         <translation>Точка</translation>
     </message>
@@ -10380,6 +10521,21 @@ Useful to avoid losing content through the distortion/geometry tools.
         <translation>С&amp;крыть</translation>
     </message>
     <message>
+        <location filename="../Sources/ptToolBox.cpp" line="275"/>
+        <source>All&amp;ow</source>
+        <translation>&amp;Разрешить</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptToolBox.cpp" line="278"/>
+        <source>Bl&amp;ock</source>
+        <translation>За&amp;блокировать</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptToolBox.cpp" line="295"/>
+        <source>Remove from &amp;favourites</source>
+        <translation>&amp;Удалить из избранных</translation>
+    </message>
+    <message>
         <location filename="../Sources/ptToolBox.cpp" line="298"/>
         <source>Add to &amp;favourites</source>
         <translation>Добавить в &amp;избранные</translation>
@@ -10388,222 +10544,262 @@ Useful to avoid losing content through the distortion/geometry tools.
 <context>
     <name>ptViewWindow</name>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="660"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="676"/>
         <source>Zoom &amp;fit</source>
         <translation>Уместить в &amp;окне</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="652"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="668"/>
         <source>Zoom &amp;100%</source>
         <translation>Увеличить до &amp;100%</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="725"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="741"/>
         <source>&amp;Over exposure</source>
         <translation>&amp;Передержка</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="730"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="746"/>
         <source>&amp;Under exposure</source>
         <translation>&amp;Недодержка</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="762"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="778"/>
         <source>Show &amp;tool pane</source>
         <translation>Показать панель &amp;инструментов</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="775"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="791"/>
         <source>Full&amp;screen</source>
         <translation>По&amp;лноэкранный режим</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="184"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="187"/>
         <source>Fit</source>
         <translation>Уместить</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="685"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="701"/>
         <source>&amp;Gradient</source>
         <translation>&amp;Градиент</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="669"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="685"/>
         <source>&amp;Structure</source>
         <translation>&amp;Структура</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="648"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="652"/>
+        <source>Copy settings</source>
+        <translation>Копировать настройки</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptViewWindow.cpp" line="652"/>
+        <source>Ctrl+Shift+C</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptViewWindow.cpp" line="655"/>
+        <source>Paste settings</source>
+        <translation>Вставить настройки</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptViewWindow.cpp" line="655"/>
+        <source>Ctrl+Shift+V</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptViewWindow.cpp" line="658"/>
+        <source>Reset settings</source>
+        <translation>Сбросить настройки</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptViewWindow.cpp" line="658"/>
+        <source>Ctrl+Shift+R</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptViewWindow.cpp" line="661"/>
+        <source>Reset settings to last saved</source>
+        <translation>Вернуться к сохранённым настройкам</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptViewWindow.cpp" line="661"/>
+        <source>Ctrl+Shift+U</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptViewWindow.cpp" line="664"/>
         <source>Zoom &amp;in</source>
         <translation>У&amp;величить</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="648"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="664"/>
         <source>1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="652"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="668"/>
         <source>2</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="656"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="672"/>
         <source>Zoom &amp;out</source>
         <translation>У&amp;меньшить</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="656"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="672"/>
         <source>3</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="660"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="676"/>
         <source>4</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="665"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="681"/>
         <source>&amp;RGB</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="665"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="681"/>
         <source>0</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="669"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="685"/>
         <source>9</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="673"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="689"/>
         <source>&amp;L*</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="673"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="689"/>
         <source>8</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="677"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="693"/>
         <source>&amp;a*</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="677"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="693"/>
         <source>7</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="681"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="697"/>
         <source>&amp;b*</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="681"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="697"/>
         <source>6</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="685"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="701"/>
         <source>5</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="697"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="713"/>
         <source>&amp;disabled</source>
         <translation>&amp;запрещено</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="701"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="717"/>
         <source>&amp;linear</source>
         <translation>&amp;линейный</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="705"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="721"/>
         <source>&amp;preview</source>
         <translation>&amp;просмотр</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="720"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="736"/>
         <source>Highlight &amp;clipped pixels</source>
         <translation>Показывать ошибки &amp;экспозиции</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="720"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="736"/>
         <source>C</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="735"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="751"/>
         <source>&amp;R</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="740"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="756"/>
         <source>&amp;G</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="745"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="761"/>
         <source>&amp;B</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="750"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="766"/>
         <source>&amp;Sensor</source>
         <translation>&amp;Сенсор</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="757"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="773"/>
         <source>Show &amp;bottom bar</source>
         <translation>Показывать &amp;нижнюю панель</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="762"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="778"/>
         <source>Space</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="768"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="784"/>
         <source>Open file m&amp;anager</source>
         <translation>Открыть &amp;файловый менеджер</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="768"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="784"/>
         <source>Ctrl+M</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="772"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="788"/>
         <source>Open &amp;batch processing</source>
         <translation>Открыть &amp;пакетную обработку</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="772"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="788"/>
         <source>Ctrl+B</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="775"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="791"/>
         <source>F11</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="800"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="816"/>
         <source>Show &amp;clipping</source>
         <translation>Ошибки &amp;экспозиции</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="812"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="828"/>
         <source>Pixel values</source>
         <translation>Значения пикселов</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="790"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="806"/>
         <source>Display &amp;mode</source>
         <translation>&amp;Режим</translation>
     </message>

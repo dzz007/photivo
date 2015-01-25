@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>GreyCStorationForm</class>
+ <widget class="QWidget" name="GreyCStorationForm">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>261</width>
+    <height>339</height>
+   </rect>
+  </property>
+  <layout class="QVBoxLayout" name="MainLayout">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="ptChoice" name="Mode"/>
+     </item>
+     <item>
+      <widget class="ptChoice" name="MaskType"/>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>10</width>
+         <height>1</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="ptCheck" name="FastGauss"/>
+   </item>
+   <item>
+    <widget class="ptInput" name="Iterations"/>
+   </item>
+   <item>
+    <widget class="ptInput" name="Opacity"/>
+   </item>
+   <item>
+    <widget class="ptInput" name="Amplitude"/>
+   </item>
+   <item>
+    <widget class="ptInput" name="Sharpness"/>
+   </item>
+   <item>
+    <widget class="ptInput" name="Anisotropy"/>
+   </item>
+   <item>
+    <widget class="ptInput" name="GradientSmooth"/>
+   </item>
+   <item>
+    <widget class="ptInput" name="TensorSmooth"/>
+   </item>
+   <item>
+    <widget class="ptInput" name="SpacialPrec"/>
+   </item>
+   <item>
+    <widget class="ptInput" name="AngularPrec"/>
+   </item>
+   <item>
+    <widget class="ptInput" name="ValuePrec"/>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="ptChoice" name="Interpolation"/>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>5</width>
+         <height>1</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>ptCheck</class>
+   <extends>QCheckBox</extends>
+   <header>ptCheck.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ptInput</class>
+   <extends>QProgressBar</extends>
+   <header>ptInput.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ptChoice</class>
+   <extends>QComboBox</extends>
+   <header>ptChoice.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

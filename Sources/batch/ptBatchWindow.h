@@ -43,6 +43,16 @@ public:
 
   void UpdateTheme();
 
+  /*!
+   * Adds job from \c settingFile to the list. Allows one to specify a \c rawFile.
+   */
+  void AddJobToList(const QString &settingFile, const QString &rawFile = QString());
+
+  /*!
+   * Adds jobs from \c settingFiles to the list.
+   */
+  void AddJobsToList(const QStringList &settingFiles);
+
 protected:
   void keyPressEvent(QKeyEvent *event);
   void showEvent(QShowEvent *event);
@@ -52,6 +62,7 @@ private slots:
   void OnRemoveJob();
   void OnRunJobs();
   void OnAbortProcessing();
+  void OnResetStatus();
   void OnSaveJobList();
   void OnOpenJobList();
   void OnCloseWindow();

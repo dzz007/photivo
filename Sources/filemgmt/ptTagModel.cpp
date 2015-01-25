@@ -20,12 +20,12 @@
 **
 *******************************************************************************/
 
-#include <QSettings>
-#include <QDir>
-
 #include "../ptDefines.h"
 #include "../ptConstants.h"
 #include "ptTagModel.h"
+
+#include <QSettings>
+#include <QDir>
 
 extern QString UserDirectory;
 

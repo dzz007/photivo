@@ -20,14 +20,6 @@
 **
 *******************************************************************************/
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-#include <exiv2/image.hpp>
-#pragma GCC diagnostic pop
-#include <wand/magick_wand.h>
-
-#include <QStringList>
-
 #include "ptDefines.h"
 #include "ptCalloc.h"
 #include "ptError.h"
@@ -36,9 +28,18 @@
 #include "ptSettings.h"
 #include "ptMessageBox.h"
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#include <exiv2/image.hpp>
+#pragma GCC diagnostic pop
+#include <wand/magick_wand.h>
+
+#include <vector>
+#include <QStringList>
+
 //==============================================================================
 
-const unsigned char CExifHeader[]    = {0x45, 0x78, 0x69, 0x66, 0x00, 0x00};
+static const std::vector<uint8_t> CExifHeader{0x45, 0x78, 0x69, 0x66, 0x00, 0x00};
 const unsigned int  CMaxHeaderLength = 65527;
 
 //==============================================================================
@@ -52,10 +53,18 @@ void StringClean(QString& AString) {
 
 //==============================================================================
 
-bool ptImageHelper::WriteExif(const QString AFileName, const Exiv2::ExifData AExifData) {
+bool ptImageHelper::WriteExif(const QString              &AFileName,
+                              const std::vector<uint8_t> &AExifBuffer,
+                              Exiv2::IptcData            &AIptcData,
+                              Exiv2::XmpData             &AXmpData) {
   try {
 #if EXIV2_TEST_VERSION(0,17,91)   /* Exiv2 0.18-pre1 */
-    Exiv2::ExifData hInExifData = AExifData;
+
+    Exiv2::ExifData hInExifData;
+
+    Exiv2::ExifParser::decode(hInExifData,
+                              AExifBuffer.data() + CExifHeader.size(),
+                              AExifBuffer.size() - CExifHeader.size());
 
     // Reset orientation
     Exiv2::ExifData::iterator pos = hInExifData.begin();
@@ -81,7 +90,7 @@ bool ptImageHelper::WriteExif(const QString AFileName, const Exiv2::ExifData AEx
               << "Exif.Image.ResolutionUnit";
 
     for (short i = 0; i < ExifKeys.count(); i++) {
-      if ((pos = hInExifData.findKey(Exiv2::ExifKey(ExifKeys.at(i).toAscii().data()))) != hInExifData.end())
+      if ((pos = hInExifData.findKey(Exiv2::ExifKey(ExifKeys.at(i).toLocal8Bit().data()))) != hInExifData.end())
         hInExifData.erase(pos);
     }
 
@@ -97,7 +106,7 @@ bool ptImageHelper::WriteExif(const QString AFileName, const Exiv2::ExifData AEx
       if (!AFileName.endsWith(JpegExtensions.at(i))) deleteDNGdata = true;
     }
 
-    Exiv2::Image::AutoPtr Exiv2Image = Exiv2::ImageFactory::open(AFileName.toAscii().data());
+    Exiv2::Image::AutoPtr Exiv2Image = Exiv2::ImageFactory::open(AFileName.toLocal8Bit().data());
 
     Exiv2Image->readMetadata();
     Exiv2::ExifData outExifData = Exiv2Image->exifData();
@@ -109,7 +118,6 @@ bool ptImageHelper::WriteExif(const QString AFileName, const Exiv2::ExifData AEx
     }
 
     // IPTC data
-    Exiv2::IptcData iptcData;
 
     QStringList Tags        = Settings->GetStringList("TagsList");
     QStringList DigikamTags = Settings->GetStringList("DigikamTagsList");
@@ -117,54 +125,54 @@ bool ptImageHelper::WriteExif(const QString AFileName, const Exiv2::ExifData AEx
     Exiv2::StringValue StringValue;
     for (int i = 0; i < Tags.size(); i++) {
       StringValue.read(Tags.at(i).toStdString());
-      iptcData.add(Exiv2::IptcKey("Iptc.Application2.Keywords"), &StringValue);
+      AIptcData.add(Exiv2::IptcKey("Iptc.Application2.Keywords"), &StringValue);
     }
+
 
     // XMP data
-    Exiv2::XmpData xmpData;
 
     for (int i = 0; i < Tags.size(); i++) {
-      xmpData["Xmp.dc.subject"] = Tags.at(i).toStdString();
+      AXmpData["Xmp.dc.subject"] = Tags.at(i).toStdString();
     }
     for (int i = 0; i < DigikamTags.size(); i++) {
-      xmpData["Xmp.digiKam.TagsList"] = DigikamTags.at(i).toStdString();
+      AXmpData["Xmp.digiKam.TagsList"] = DigikamTags.at(i).toStdString();
     }
 
     // Image rating
     outExifData["Exif.Image.Rating"] = Settings->GetInt("ImageRating");
-    xmpData["Xmp.xmp.Rating"]        = Settings->GetInt("ImageRating");
+    AXmpData["Xmp.xmp.Rating"]       = Settings->GetInt("ImageRating");
 
     // Program name
-    outExifData["Exif.Image.ProcessingSoftware"] = ProgramName;
-    outExifData["Exif.Image.Software"]           = ProgramName;
-    iptcData["Iptc.Application2.Program"]        = ProgramName;
-    iptcData["Iptc.Application2.ProgramVersion"] = "idle";
-    xmpData["Xmp.xmp.CreatorTool"]               = ProgramName;
-    xmpData["Xmp.tiff.Software"]                 = ProgramName;
+    outExifData["Exif.Image.ProcessingSoftware"]  = ProgramName;
+    outExifData["Exif.Image.Software"]            = ProgramName;
+    AIptcData["Iptc.Application2.Program"]        = ProgramName;
+    AIptcData["Iptc.Application2.ProgramVersion"] = "idle";
+    AXmpData["Xmp.xmp.CreatorTool"]               = ProgramName;
+    AXmpData["Xmp.tiff.Software"]                 = ProgramName;
 
     // Title
     QString TitleWorking = Settings->GetString("ImageTitle");
     StringClean(TitleWorking);
     if (TitleWorking != "") {
-      outExifData["Exif.Photo.UserComment"] = TitleWorking.toStdString();
-      iptcData["Iptc.Application2.Caption"] = TitleWorking.toStdString();
-      xmpData["Xmp.dc.description"]         = TitleWorking.toStdString();
-      xmpData["Xmp.exif.UserComment"]       = TitleWorking.toStdString();
-      xmpData["Xmp.tiff.ImageDescription"]  = TitleWorking.toStdString();
+      outExifData["Exif.Photo.UserComment"]  = TitleWorking.toStdString();
+      AIptcData["Iptc.Application2.Caption"] = TitleWorking.toStdString();
+      AXmpData["Xmp.dc.description"]         = TitleWorking.toStdString();
+      AXmpData["Xmp.exif.UserComment"]       = TitleWorking.toStdString();
+      AXmpData["Xmp.tiff.ImageDescription"]  = TitleWorking.toStdString();
     }
 
     // Copyright
     QString CopyrightWorking = Settings->GetString("Copyright");
     StringClean(CopyrightWorking);
     if (CopyrightWorking != "") {
-      outExifData["Exif.Image.Copyright"]     = CopyrightWorking.toStdString();
-      iptcData["Iptc.Application2.Copyright"] = CopyrightWorking.toStdString();
-      xmpData["Xmp.tiff.Copyright"]           = CopyrightWorking.toStdString();
+      outExifData["Exif.Image.Copyright"]      = CopyrightWorking.toStdString();
+      AIptcData["Iptc.Application2.Copyright"] = CopyrightWorking.toStdString();
+      AXmpData["Xmp.tiff.Copyright"]           = CopyrightWorking.toStdString();
     }
 
     Exiv2Image->setExifData(outExifData);
-    Exiv2Image->setIptcData(iptcData);
-    Exiv2Image->setXmpData( xmpData);
+    Exiv2Image->setIptcData(AIptcData);
+    Exiv2Image->setXmpData(AXmpData);
     Exiv2Image->writeMetadata();
     return true;
 #endif
@@ -180,15 +188,17 @@ bool ptImageHelper::WriteExif(const QString AFileName, const Exiv2::ExifData AEx
 
 //==============================================================================
 
-bool ptImageHelper::ReadExif(const QString AFileName, Exiv2::ExifData &AExifData, unsigned char *&AExifBuffer, unsigned int &AExifBufferLength)
+bool ptImageHelper::ReadExif(const QString        &AFileName,
+                             Exiv2::ExifData      &AExifData,
+                             std::vector<uint8_t> &AExifBuffer)
 {
   if (AFileName.trimmed().isEmpty()) return false;
 
   try {
-    if (Exiv2::ImageFactory::getType(AFileName.toAscii().data()) == Exiv2::ImageType::none)
+    if (Exiv2::ImageFactory::getType(AFileName.toLocal8Bit().data()) == Exiv2::ImageType::none)
       return false;
 
-    Exiv2::Image::AutoPtr hImage = Exiv2::ImageFactory::open(AFileName.toAscii().data());
+    Exiv2::Image::AutoPtr hImage = Exiv2::ImageFactory::open(AFileName.toLocal8Bit().data());
 
     if (!hImage.get()) return false;
 
@@ -196,7 +206,7 @@ bool ptImageHelper::ReadExif(const QString AFileName, Exiv2::ExifData &AExifData
 
     AExifData = hImage->exifData();
     if (AExifData.empty()) {
-      ptLogWarning(ptWarning_Argument, "No Exif data found in %s", AFileName.toAscii().data());
+      ptLogWarning(ptWarning_Argument, "No Exif data found in %s", AFileName.toLocal8Bit().data());
       return false;
     }
 
@@ -213,7 +223,7 @@ bool ptImageHelper::ReadExif(const QString AFileName, Exiv2::ExifData &AExifData
 #endif
 
     /* If buffer too big for JPEG, try deleting some stuff. */
-    if (Size + sizeof(CExifHeader) > CMaxHeaderLength) {
+    if (Size + CExifHeader.size() > CMaxHeaderLength) {
       if ((Pos = AExifData.findKey(Exiv2::ExifKey("Exif.Photo.MakerNote"))) != AExifData.end() ) {
         AExifData.erase(Pos);
         ptLogWarning(ptWarning_Argument, "Exif buffer too big, erasing Exif.Photo.MakerNote");
@@ -221,14 +231,15 @@ bool ptImageHelper::ReadExif(const QString AFileName, Exiv2::ExifData &AExifData
         Exiv2::ExifParser::encode(Blob, Exiv2::bigEndian, AExifData);
         Size = Blob.size();
 #else
-        Buf = AExifData.copy();
+        Buf  = AExifData.copy();
         Size = Buf.size_;
 #endif
       }
     }
 
     // Erase embedded thumbnail if needed
-    if (Settings->GetInt("EraseExifThumbnail") || Size + sizeof(CExifHeader) > CMaxHeaderLength ) {
+    if (Settings->GetInt("EraseExifThumbnail") ||
+        (Size + CExifHeader.size()) > CMaxHeaderLength ) {
 #if EXIV2_TEST_VERSION(0,17,91)   /* Exiv2 0.18-pre1 */
       Exiv2::ExifThumb Thumb(AExifData);
       Thumb.erase();
@@ -240,7 +251,7 @@ bool ptImageHelper::ReadExif(const QString AFileName, Exiv2::ExifData &AExifData
         ptLogWarning(ptWarning_Argument, "Exif buffer too big, erasing Thumbnail");
 
 #if EXIV2_TEST_VERSION(0,17,91)   /* Exiv2 0.18-pre1 */
-      Exiv2::ExifParser::encode(Blob ,Exiv2::bigEndian, AExifData);
+      Exiv2::ExifParser::encode(Blob, Exiv2::bigEndian, AExifData);
       Size = Blob.size();
 #else
       Buf = AExifData.copy();
@@ -248,16 +259,17 @@ bool ptImageHelper::ReadExif(const QString AFileName, Exiv2::ExifData &AExifData
 #endif
     }
 
-    AExifBufferLength = Size + sizeof(CExifHeader);
-    if (AExifBuffer) FREE(AExifBuffer);
-    AExifBuffer = (unsigned char*) MALLOC(AExifBufferLength);
-    ptMemoryError(AExifBuffer,__FILE__,__LINE__);
-
-    memcpy(AExifBuffer, CExifHeader, sizeof(CExifHeader));
+    AExifBuffer.clear();
+    AExifBuffer.insert(AExifBuffer.end(),
+                       CExifHeader.begin(),
+                       CExifHeader.end());
 #if EXIV2_TEST_VERSION(0,17,91)   /* Exiv2 0.18-pre1 */
-    memcpy(AExifBuffer+sizeof(CExifHeader), &Blob[0], Blob.size());
+    AExifBuffer.insert(AExifBuffer.end(),
+                       Blob.begin(),
+                       Blob.end());
 #else
-    memcpy(AExifBuffer+sizeof(CExifHeader), Buf.pData_, Buf.size_);
+    // old code will currently not compile
+    memcpy(AExifBuffer+sizeof(ExifHeader), Buf.pData_, Buf.size_);
 #endif
     return true;
 
@@ -280,16 +292,16 @@ bool ptImageHelper::TransferExif(const QString ASourceFile, const QString ATarge
     return false;
 
   try {
-    if (Exiv2::ImageFactory::getType(ASourceFile.toAscii().data()) == Exiv2::ImageType::none)
+    if (Exiv2::ImageFactory::getType(ASourceFile.toLocal8Bit().data()) == Exiv2::ImageType::none)
       return false;
 
-    Exiv2::Image::AutoPtr hSourceImage = Exiv2::ImageFactory::open(ASourceFile.toAscii().data());
+    Exiv2::Image::AutoPtr hSourceImage = Exiv2::ImageFactory::open(ASourceFile.toLocal8Bit().data());
 
     if (!hSourceImage.get()) return false;
 
     hSourceImage->readMetadata();
 
-    Exiv2::Image::AutoPtr hTargetImage = Exiv2::ImageFactory::open(ATargetFile.toAscii().data());
+    Exiv2::Image::AutoPtr hTargetImage = Exiv2::ImageFactory::open(ATargetFile.toLocal8Bit().data());
 
     hTargetImage->clearMetadata();
     hTargetImage->setMetadata(*hSourceImage);
@@ -328,7 +340,7 @@ bool ptImageHelper::DumpImage(QImage* AImage, const QString AFileName) {
   MagickSetCompressionQuality(mw,95);
   MagickSetImageCompression(mw, LZWCompression);
 
-  bool Result = MagickWriteImage(mw, AFileName.toAscii().data());
+  bool Result = MagickWriteImage(mw, AFileName.toLocal8Bit().data());
   DestroyMagickWand(mw);
   return Result;
 }

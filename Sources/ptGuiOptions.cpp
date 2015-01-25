@@ -2,9 +2,9 @@
 **
 ** Photivo
 **
-** Copyright (C) 2008,2009 Jos De Laender <jos.de_laender@telenet.be>
-** Copyright (C) 2009,2010 Michael Munzert <mail@mm-log.com>
-** Copyright (C) 2011 Bernd Schoeler <brjohn@brother-john.net>
+** Copyright (C) 2008-2009 Jos De Laender <jos.de_laender@telenet.be>
+** Copyright (C) 2009-2010 Michael Munzert <mail@mm-log.com>
+** Copyright (C) 2011-2015 Bernd Schoeler <brjohn@brother-john.net>
 **
 ** This file is part of Photivo.
 **
@@ -22,16 +22,68 @@
 **
 *******************************************************************************/
 
-#include <cstdlib>
-
-#include <QtCore>
-
+#include "ptConstants.h"
 #include "ptGuiOptions.h"
-#include "ptDefines.h"
+#include "ptSettings.h"
+#include <QObject>
+
+// -----------------------------------------------------------------------------
+
+namespace pt {
+  namespace ComboEntries {
+    const ptCfgItem::TComboEntryList FilterModes({
+      {QObject::tr("Disabled"),       static_cast<int>(TFilterMode::Disabled), "Disabled"},
+      {QObject::tr("Only final run"), static_cast<int>(TFilterMode::FinalRun), "FinalRun"},
+      {QObject::tr("With preview"),   static_cast<int>(TFilterMode::AlwaysOn), "AlwaysOn"},
+    });
+
+    const ptCfgItem::TComboEntryList MaskedFilterModes({
+      {QObject::tr("Disabled"),       static_cast<int>(TFilterMode::Disabled), "Disabled"},
+      {QObject::tr("Only final run"), static_cast<int>(TFilterMode::FinalRun), "FinalRun"},
+      {QObject::tr("With preview"),   static_cast<int>(TFilterMode::AlwaysOn), "AlwaysOn"},
+      {QObject::tr("Show mask"),      static_cast<int>(TFilterMode::ShowMask), "ShowMask"}
+    });
+
+    const ptCfgItem::TComboEntryList MaskTypes({
+      {QObject::tr("Disabled"),   static_cast<int>(TMaskType::Disabled),   "Disabled"},
+      {QObject::tr("Shadows"),    static_cast<int>(TMaskType::Shadows),    "Shadows"},
+      {QObject::tr("Midtones"),   static_cast<int>(TMaskType::Midtones),   "Midtones"},
+      {QObject::tr("Highlights"), static_cast<int>(TMaskType::Highlights), "Highlights"},
+      {QObject::tr("All values"), static_cast<int>(TMaskType::All),        "AllValues"},
+    });
+  } // namespace ComboEntries
+
+  /*!
+   * Checks the activation state for filters that are enabled/disabled via a FilterModes
+   * or MaskedFilterModes combobox.
+   * \pre AFilterMode must contain an integer that can be cast to a valid TFilterMode value.
+   * \returns true if active, false otherwise.
+   */
+  bool isActiveFilterMode(const QVariant& AFilterMode) {
+    Q_ASSERT(AFilterMode.type() == QVariant::Int);
+    auto mode = static_cast<TFilterMode>(AFilterMode.toInt());
+
+    return
+        (mode >= TFilterMode::AlwaysOn) ||
+        ((mode == TFilterMode::FinalRun) && Settings->GetInt("FullOutput"));
+  }
+
+  /*!
+   * Checks the activation state for filters that are enabled/disabled via a MaskTypes
+   * combobox.
+   * \pre AMaskMode must contain an integer that can be cast to a valid TMaskType value.
+   * \returns true if active, false otherwise.
+   */
+  bool isActiveMaskType(const QVariant& AMaskType) {
+    Q_ASSERT(AMaskType.type() == QVariant::Int);
+    return static_cast<TMaskType>(AMaskType.toInt()) != TMaskType::Disabled;
+  }
+} // namespace pt
 
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Bunch of structured options for the Gui choice elements;
+// DEPRECATED for the new filter-architecture. Use TComboEntryList like above.
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -214,7 +266,15 @@ const ptGuiOptionsItem ptGuiOptions::ResizeDimension[] = {
   {ptResizeDimension_LongerEdge,       QObject::tr("Longer edge") },
   {ptResizeDimension_Width,            QObject::tr("Width") },
   {ptResizeDimension_Height,           QObject::tr("Height") },
+  {ptResizeDimension_WidthHeight,      QObject::tr("Width x Height") },
   {-1,NULL}};
+
+const ptGuiOptionsItem ptGuiOptions::WebResizeDimension[] = {
+  {ptResizeDimension_LongerEdge,       QObject::tr("Longer edge") },
+  {ptResizeDimension_Width,            QObject::tr("Width") },
+  {ptResizeDimension_Height,           QObject::tr("Height") },
+  {-1,NULL}};
+
 
 const ptGuiOptionsItem ptGuiOptions::IMResizeFilter[] = {
   {ptIMFilter_Point,              QObject::tr("Point filter") },
@@ -294,34 +354,11 @@ const ptGuiOptionsItem ptGuiOptions::ClipMode[] = {
   {ptClipMode_Rebuild,QObject::tr("Rebuild")             },
   {-1,NULL}};
 
-const ptGuiOptionsItem ptGuiOptions::LMHLightRecoveryMaskType[] = {
-  {ptMaskType_None,              QObject::tr("Disabled") },
-  {ptMaskType_Shadows,           QObject::tr("Shadows") },
-  {ptMaskType_Midtones,          QObject::tr("Midtones") },
-  {ptMaskType_Highlights,        QObject::tr("Highlights") },
-  {ptMaskType_All,               QObject::tr("All values") },
-  {-1,NULL}};
-
 const ptGuiOptionsItem ptGuiOptions::LABTransformMode[] = {
   {ptLABTransform_L,             QObject::tr("Regular L*") },
   {ptLABTransform_R,             QObject::tr("R -> L*") },
   {ptLABTransform_G,             QObject::tr("G -> L*") },
   {ptLABTransform_B,             QObject::tr("B -> L*") },
-  {-1,NULL}};
-
-const ptGuiOptionsItem ptGuiOptions::GREYCInterpolation[] = {
-  {ptGREYCInterpolation_NearestNeighbour, QObject::tr("Nearest Neighbour") },
-  {ptGREYCInterpolation_Linear,           QObject::tr("Linear")            },
-  {ptGREYCInterpolation_RungeKutta,       QObject::tr("Runge-Kutta")       },
-  {-1,NULL}};
-
-const ptGuiOptionsItem ptGuiOptions::DenoiseMask[] = {
-  {ptDenoiseMask_All,      QObject::tr("All values") },
-  {ptDenoiseMask_Shadows1, QObject::tr("Shadows 1") },
-  {ptDenoiseMask_Shadows2, QObject::tr("Shadows 2") },
-  {ptDenoiseMask_Shadows3, QObject::tr("Shadows 3") },
-  {ptDenoiseMask_Shadows4, QObject::tr("Shadows 4") },
-  {ptDenoiseMask_Shadows5, QObject::tr("Shadows 5") },
   {-1,NULL}};
 
 const ptGuiOptionsItem ptGuiOptions::FilmType[] = {
@@ -359,15 +396,6 @@ const ptGuiOptionsItem ptGuiOptions::FlipMode[] = {
   {ptFlipMode_None,              QObject::tr("No flip") },
   {ptFlipMode_Horizontal,        QObject::tr("Horizontal flip") },
   {ptFlipMode_Vertical,          QObject::tr("Vertical flip") },
-  {-1,NULL}};
-
-const ptGuiOptionsItem ptGuiOptions::GrainMode[] = {
-  {ptGrainMode_SoftGaussian,     QObject::tr("Soft gaussian") },
-  {ptGrainMode_SoftUniform,      QObject::tr("Soft uniform") },
-  {ptGrainMode_SoftSaltPepper,   QObject::tr("Soft salt'n pepper") },
-  {ptGrainMode_HardGaussian,     QObject::tr("Hard gaussian") },
-  {ptGrainMode_HardUniform,      QObject::tr("Hard uniform") },
-  {ptGrainMode_HardSaltPepper,   QObject::tr("Hard salt'n pepper") },
   {-1,NULL}};
 
 const ptGuiOptionsItem ptGuiOptions::MaskType[] = {
@@ -437,11 +465,11 @@ const ptGuiOptionsItem ptGuiOptions::CrossprocessMode[] = {
   {-1,NULL}};
 
 const ptGuiOptionsItem ptGuiOptions::VignetteMode[] = {
-  {NoVignetteMask,              QObject::tr("Disabled") },
-  {SoftVignetteMask,              QObject::tr("Soft") },
-  {HardVignetteMask,              QObject::tr("Hard") },
-  {FancyVignetteMask,             QObject::tr("Fancy") },
-  {MaskVignetteMask,              QObject::tr("Show Mask") },
+  {ptVignetteMode_None,              QObject::tr("Disabled") },
+  {ptVignetteMode_Soft,              QObject::tr("Soft") },
+  {ptVignetteMode_Hard,              QObject::tr("Hard") },
+  {ptVignetteMode_Fancy,             QObject::tr("Fancy") },
+  {ptVignetteMode_Mask,              QObject::tr("Show Mask") },
   {-1,NULL}};
 
 const ptGuiOptionsItem ptGuiOptions::SoftglowMode[] = {
@@ -460,14 +488,9 @@ const ptGuiOptionsItem ptGuiOptions::Enable[] = {
   {ptEnable_Preview,           QObject::tr("With Preview") },
   {-1,NULL}};
 
-const ptGuiOptionsItem ptGuiOptions::EnableGreyC[] = {
-  {ptEnable_None,              QObject::tr("Disabled") },
-  {ptEnable_NoPreview,         QObject::tr("Only final run") },
-  {ptEnable_Preview,           QObject::tr("With Preview") },
-  {ptEnable_ShowMask,          QObject::tr("Show mask") },
-  {-1,NULL}};
-
 const ptGuiOptionsItem ptGuiOptions::AspectRatio[] = {
+  {64,   "64"    },
+  {27,   "27"    },
   {21,   "21"    },
   {18,   "18"    },
   {16,   "16"    },
@@ -485,9 +508,9 @@ const ptGuiOptionsItem ptGuiOptions::AspectRatio[] = {
   {-1,NULL}};
 
 const ptGuiOptionsItem ptGuiOptions::ExposureClipMode[] = {
-  {NoExposureClip,   QObject::tr("None")                },
-  {RatioExposureClip,  QObject::tr("Ratio")               },
-  {CurveExposureClip,  QObject::tr("Film curve")          },
+  {ptExposureClipMode_None,   QObject::tr("None")                },
+  {ptExposureClipMode_Ratio,  QObject::tr("Ratio")               },
+  {ptExposureClipMode_Curve,  QObject::tr("Film curve")          },
   {-1,NULL}};
 
 const ptGuiOptionsItem ptGuiOptions::AutoExposureMode[] = {
@@ -497,11 +520,6 @@ const ptGuiOptionsItem ptGuiOptions::AutoExposureMode[] = {
   {ptAutoExposureMode_Manual, QObject::tr("Manual")              },
   {-1,NULL}};
 
-const ptGuiOptionsItem ptGuiOptions::ChannelMixer[] = {
-  {ptChannelMixerChoice_None,    QObject::tr("None") },
-  {ptChannelMixerChoice_Manual,  QObject::tr("Manual") },
-  {-1,NULL}};
-
 const ptGuiOptionsItem ptGuiOptions::SpecialPreview[] = {
   {ptSpecialPreview_RGB,        QObject::tr("RGB") },
   {ptSpecialPreview_Structure,  QObject::tr("Structure") },
@@ -509,16 +527,6 @@ const ptGuiOptionsItem ptGuiOptions::SpecialPreview[] = {
   {ptSpecialPreview_A,          QObject::tr("a*") },
   {ptSpecialPreview_B,          QObject::tr("b*") },
   {ptSpecialPreview_Gradient,   QObject::tr("Gradient") },
-  {-1,NULL}};
-
-const ptGuiOptionsItem ptGuiOptions::ViewLAB[] = {
-  {ptViewLAB_LAB,         QObject::tr("LAB") },
-  {ptViewLAB_L,           QObject::tr("L") },
-  {ptViewLAB_L_Grad,      QObject::tr("Structure on L") },
-  {ptViewLAB_A,           QObject::tr("A") },
-  {ptViewLAB_B,           QObject::tr("B") },
-  {ptViewLAB_C,           QObject::tr("C") },
-  {ptViewLAB_H,           QObject::tr("H") },
   {-1,NULL}};
 
 const ptGuiOptionsItem ptGuiOptions::SaveFormat[] = {
@@ -537,16 +545,17 @@ const ptGuiOptionsItem ptGuiOptions::SaveSampling[] = {
   {-1,NULL}};
 
 const ptGuiOptionsItem ptGuiOptions::OutputMode[] = {
-  {ptOutputMode_Full,      QObject::tr("Full size")    },
-  {ptOutputMode_Pipe,      QObject::tr("Pipe size")    },
-  {ptOutputMode_Jobfile,   QObject::tr("Only jobfile")    },
+  {ptOutputMode_Full,         QObject::tr("Full size")     },
+  {ptOutputMode_Pipe,         QObject::tr("Pipe size")     },
+  {ptOutputMode_Jobfile,      QObject::tr("Only jobfile")  },
   {ptOutputMode_Settingsfile, QObject::tr("Only settings") },
+  {ptOutputMode_Batch,        QObject::tr("Send to batch") },
   {-1,NULL}};
 
 const ptGuiOptionsItem ptGuiOptions::ResetMode[] = {
-  {ptResetMode_Full,         QObject::tr("Neutral reset")    },
+  {ptResetMode_Full,         QObject::tr("Neutral reset") },
   {ptResetMode_User,         QObject::tr("User reset")    },
-  {ptResetMode_OpenPreset,   QObject::tr("Open preset")    },
+  {ptResetMode_OpenPreset,   QObject::tr("Open preset")   },
   {ptResetMode_OpenSettings, QObject::tr("Open settings") },
   {-1,NULL}};
 
@@ -564,5 +573,3 @@ const ptGuiOptionsItem ptGuiOptions::SpotRepair[] = {
   {SpotRepairAlgo_Clone,     QObject::tr("Clone")},
   {SpotRepairAlgo_Heal,      QObject::tr("Heal (Dummy)")},
   {-1, NULL}};
-
-////////////////////////////////////////////////////////////////////////////////

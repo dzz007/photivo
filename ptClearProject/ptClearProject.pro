@@ -27,51 +27,32 @@
 #
 ################################################################################
 
+#--- Qt configuration ---
+QT += core gui
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets 
+
+TEMPLATE   = app
+TARGET     = ptClear
+CONFIG      += silent
+
+DESTDIR = ..
+
 isEmpty(PREFIX) {
   PREFIX = $$[QT_INSTALL_PREFIX]
 }
 
-CONFIG    += silent
-TEMPLATE   = app
-TARGET     = ptClear
-
-DEPENDPATH     += .
-INCLUDEPATH    += $${PREFIX}/include
-DESTDIR         = ..
-OBJECTS_DIR     = ../Objects
-MOC_DIR         = ../Objects
-UI_HEADERS_DIR  = ../Objects
-RCC_DIR         = ../Objects
-
-QMAKE_CXXFLAGS_RELEASE += -O3 -ffast-math $$(CXXFLAGS) -std=gnu++0x
-QMAKE_CXXFLAGS_DEBUG +=  -O0 -g -ffast-math $$(CXXFLAGS) -std=gnu++0x
-
-QMAKE_CFLAGS_RELEASE += $$QMAKE_CXXFLAGS_RELEASE
-QMAKE_CFLAGS_DEBUG += $$QMAKE_CXXFLAGS_DEBUG
-
-QMAKE_LFLAGS_RELEASE += $$(LDFLAGS) -L$${PREFIX}/lib
-QMAKE_LFLAGS_DEBUG += $$QMAKE_LFLAGS_RELEASE
-
-unix {
-  QMAKE_CC = ccache /usr/bin/gcc
-  QMAKE_CXX = ccache /usr/bin/g++
-  QMAKE_LFLAGS_DEBUG += -rdynamic
-}
-
-win32 {
-  LIBS += -lwsock32 -lexpat -lgdi32
-}
+QMAKE_CXXFLAGS += $$(CXXFLAGS) -std=gnu++0x
+QMAKE_CFLAGS   += $$(CFLAGS)
+QMAKE_LFLAGS   += $$(LDFLAGS)
 
 macx {
-  QMAKE_CC = /usr/bin/gcc
-  QMAKE_CXX = /usr/bin/g++
-  
   #prevent qmake from adding -arch flags
   QMAKE_CFLAGS_X86_64           = -m64
   QMAKE_CXXFLAGS_X86_64         = -m64 -std=gnu++0x
   QMAKE_OBJECTIVE_CFLAGS_X86_64 = -m64
   QMAKE_LFLAGS_X86_64           = -headerpad_max_install_names
-  QMAKE_LFLAGS_DEBUG           += -rdynamic
+  
+  LIBS += -framework QtCore -framework QtGui
 }
 
 SOURCES += ../Sources/ptClear.cpp

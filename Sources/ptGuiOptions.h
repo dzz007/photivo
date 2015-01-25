@@ -2,8 +2,9 @@
 **
 ** Photivo
 **
-** Copyright (C) 2008,2009 Jos De Laender <jos.de_laender@telenet.be>
-** Copyright (C) 2009,2010 Michael Munzert <mail@mm-log.com>
+** Copyright (C) 2008-2009 Jos De Laender <jos.de_laender@telenet.be>
+** Copyright (C) 2009-2010 Michael Munzert <mail@mm-log.com>
+** Copyright (C) 2015 Bernd Schoeler <brjohn@brother-john.net>
 **
 ** This file is part of Photivo.
 **
@@ -21,19 +22,32 @@
 **
 *******************************************************************************/
 
-#ifndef DLGUIOPTIONS_H
-#define DLGUIOPTIONS_H
+#ifndef PTGUIOPTIONS_H
+#define PTGUIOPTIONS_H
 
-#include <QtCore>
+#include "filters/ptCfgItem.h"
+#include <QString>
+#include <QVariant>
 
-#include "ptConstants.h"
-#include "lensfun.h"
+// -----------------------------------------------------------------------------
+
+namespace pt {
+  namespace ComboEntries {
+    extern const ptCfgItem::TComboEntryList FilterModes;
+    extern const ptCfgItem::TComboEntryList MaskedFilterModes;
+    extern const ptCfgItem::TComboEntryList MaskTypes;
+  }
+
+  bool isActiveFilterMode(const QVariant& AFilterMode);
+  bool isActiveMaskType(const QVariant& AMaskType);
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 //
 // ptGuiOptions
 //
 // Bunch of structured options for the Gui choice elements;
+// DEPRECATED for the new filter-architecture.
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -74,6 +88,7 @@ public:
   static const ptGuiOptionsItem LightsOutMode[];
   static const ptGuiOptionsItem ResizeFilter[];
   static const ptGuiOptionsItem ResizeDimension[];
+  static const ptGuiOptionsItem WebResizeDimension[];
   static const ptGuiOptionsItem IMResizeFilter[];
   static const ptGuiOptionsItem LqrEnergy[];
   static const ptGuiOptionsItem LqrScaling[];
@@ -85,18 +100,12 @@ public:
   static const ptGuiOptionsItem AspectRatio[];
   static const ptGuiOptionsItem ExposureClipMode[];
   static const ptGuiOptionsItem AutoExposureMode[];
-  static const ptGuiOptionsItem LMHLightRecoveryMaskType[];
   static const ptGuiOptionsItem LABTransformMode[];
-  static const ptGuiOptionsItem DenoiseMask[];
-  static const ptGuiOptionsItem ChannelMixer[];
   static const ptGuiOptionsItem SpecialPreview[];
-  static const ptGuiOptionsItem ViewLAB[];
-  static const ptGuiOptionsItem GREYCInterpolation[];
   static const ptGuiOptionsItem FilmType[];
   static const ptGuiOptionsItem ColorFilterType[];
   static const ptGuiOptionsItem GradualBlurMode[];
   static const ptGuiOptionsItem FlipMode[];
-  static const ptGuiOptionsItem GrainMode[];
   static const ptGuiOptionsItem MaskType[];
   static const ptGuiOptionsItem GrainMaskType[];
   static const ptGuiOptionsItem OverlayMode[];
@@ -106,7 +115,6 @@ public:
   static const ptGuiOptionsItem VignetteMode[];
   static const ptGuiOptionsItem SoftglowMode[];
   static const ptGuiOptionsItem Enable[];
-  static const ptGuiOptionsItem EnableGreyC[];
   static const ptGuiOptionsItem SaveFormat[];
   static const ptGuiOptionsItem SaveSampling[];
   static const ptGuiOptionsItem OutputMode[];
@@ -119,6 +127,4 @@ public:
 
 extern ptGuiOptions* GuiOptions;
 
-#endif
-
-////////////////////////////////////////////////////////////////////////////////
+#endif // PTGUIOPTIONS_H

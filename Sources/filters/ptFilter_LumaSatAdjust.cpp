@@ -22,8 +22,8 @@
 
 #include "ptFilter_LumaSatAdjust.h"
 #include "ptCfgItem.h"
-#include <ptImage.h>
-#include <ptInfo.h>
+#include "../ptImage.h"
+#include "../ptInfo.h"
 
 //==============================================================================
 
@@ -70,7 +70,7 @@ ptFilterBase *ptFilter_LumaSatAdjust::createSatAdjust() {
 //==============================================================================
 
 void ptFilter_LumaSatAdjust::doDefineControls() {
-  FCfgItems = QList<ptCfgItem>()                                                 //--- Combo: list of entries               ---//
+  FConfig.initStores(TCfgItemList()                                              //--- Combo: list of entries               ---//
     //            Id                       Type                      Default     Min           Max           Step        Decimals, commonConnect, storeable, caption, tooltip
       << ptCfgItem({CAdjustRed,              ptCfgItem::Slider,        0.0,       -3.0,          3.0,          0.05,       2,        true, true, tr("Red"),    tr("")})
       << ptCfgItem({CAdjustOrange,           ptCfgItem::Slider,        0.0,       -3.0,          3.0,          0.05,       2,        true, true, tr("Orange"),    tr("")})
@@ -80,20 +80,20 @@ void ptFilter_LumaSatAdjust::doDefineControls() {
       << ptCfgItem({CAdjustCyan,             ptCfgItem::Slider,        0.0,       -3.0,          3.0,          0.05,       2,        true, true, tr("Cyan"),    tr("")})
       << ptCfgItem({CAdjustBlue,             ptCfgItem::Slider,        0.0,       -3.0,          3.0,          0.05,       2,        true, true, tr("Blue"),    tr("")})
       << ptCfgItem({CAdjustMagenta,          ptCfgItem::Slider,        0.0,       -3.0,          3.0,          0.05,       2,        true, true, tr("Magenta"),    tr("")})
-  ;
+  );
 }
 
 //==============================================================================
 
 bool ptFilter_LumaSatAdjust::doCheckHasActiveCfg() {
-  return (FConfig->getValue(CAdjustRed).toDouble() != 0.0) ||
-         (FConfig->getValue(CAdjustOrange).toDouble() != 0.0) ||
-         (FConfig->getValue(CAdjustYellow).toDouble() != 0.0) ||
-         (FConfig->getValue(CAdjustLightGreen).toDouble() != 0.0) ||
-         (FConfig->getValue(CAdjustDarkGreen).toDouble() != 0.0) ||
-         (FConfig->getValue(CAdjustCyan).toDouble() != 0.0) ||
-         (FConfig->getValue(CAdjustBlue).toDouble() != 0.0) ||
-         (FConfig->getValue(CAdjustMagenta).toDouble() != 0.0);
+  return (FConfig.value(CAdjustRed).toDouble() != 0.0) ||
+         (FConfig.value(CAdjustOrange).toDouble() != 0.0) ||
+         (FConfig.value(CAdjustYellow).toDouble() != 0.0) ||
+         (FConfig.value(CAdjustLightGreen).toDouble() != 0.0) ||
+         (FConfig.value(CAdjustDarkGreen).toDouble() != 0.0) ||
+         (FConfig.value(CAdjustCyan).toDouble() != 0.0) ||
+         (FConfig.value(CAdjustBlue).toDouble() != 0.0) ||
+         (FConfig.value(CAdjustMagenta).toDouble() != 0.0);
 }
 
 //==============================================================================
@@ -103,25 +103,25 @@ void ptFilter_LumaSatAdjust::doRunFilter(ptImage *AImage) const {
 
   switch (FMode) {
     case LumaMode:
-      AImage->LumaAdjust(FConfig->getValue(CAdjustRed).toDouble(),
-                         FConfig->getValue(CAdjustOrange).toDouble(),
-                         FConfig->getValue(CAdjustYellow).toDouble(),
-                         FConfig->getValue(CAdjustLightGreen).toDouble(),
-                         FConfig->getValue(CAdjustDarkGreen).toDouble(),
-                         FConfig->getValue(CAdjustCyan).toDouble(),
-                         FConfig->getValue(CAdjustBlue).toDouble(),
-                         FConfig->getValue(CAdjustMagenta).toDouble());
+      AImage->LumaAdjust(FConfig.value(CAdjustRed).toDouble(),
+                         FConfig.value(CAdjustOrange).toDouble(),
+                         FConfig.value(CAdjustYellow).toDouble(),
+                         FConfig.value(CAdjustLightGreen).toDouble(),
+                         FConfig.value(CAdjustDarkGreen).toDouble(),
+                         FConfig.value(CAdjustCyan).toDouble(),
+                         FConfig.value(CAdjustBlue).toDouble(),
+                         FConfig.value(CAdjustMagenta).toDouble());
       break;
 
     case SatMode:
-      AImage->SatAdjust(FConfig->getValue(CAdjustRed).toDouble(),
-                        FConfig->getValue(CAdjustOrange).toDouble(),
-                        FConfig->getValue(CAdjustYellow).toDouble(),
-                        FConfig->getValue(CAdjustLightGreen).toDouble(),
-                        FConfig->getValue(CAdjustDarkGreen).toDouble(),
-                        FConfig->getValue(CAdjustCyan).toDouble(),
-                        FConfig->getValue(CAdjustBlue).toDouble(),
-                        FConfig->getValue(CAdjustMagenta).toDouble());
+      AImage->SatAdjust(FConfig.value(CAdjustRed).toDouble(),
+                        FConfig.value(CAdjustOrange).toDouble(),
+                        FConfig.value(CAdjustYellow).toDouble(),
+                        FConfig.value(CAdjustLightGreen).toDouble(),
+                        FConfig.value(CAdjustDarkGreen).toDouble(),
+                        FConfig.value(CAdjustCyan).toDouble(),
+                        FConfig.value(CAdjustBlue).toDouble(),
+                        FConfig.value(CAdjustMagenta).toDouble());
       break;
 
     default:

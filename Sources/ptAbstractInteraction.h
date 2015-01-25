@@ -30,10 +30,10 @@
 
 //==============================================================================
 
+#include "ptConstants.h"
+
 #include <QObject>
 #include <QGraphicsView>
-
-#include "ptConstants.h"
 
 //==============================================================================
 
@@ -60,7 +60,7 @@ public:
    *
    *  The default implementation does nothing.
    */
-  virtual void abortMouseAction(const ptMouseAction AAction) {}
+  virtual void abortMouseAction(const ptMouseAction /*AAction*/) {}
 
   /*! Returns the keyboard modifiers this interaction uses. Derived classes must implement
    *  this method to return the appropriate values. */

@@ -3,7 +3,7 @@
 ** Photivo
 **
 ** Copyright (C) 2010 Michael Munzert <mail@mm-log.com>
-** Copyright (C) 2011 Bernd Schöler <brother.john@photivo.org>
+** Copyright (C) 2011 Bernd SchÃ¶ler <brother.john@photivo.org>
 **
 ** This file is part of Photivo.
 **
@@ -24,6 +24,8 @@
 #include <QtCore>
 #include <QtGui>
 #include <QDateTime>
+#include <QApplication>
+#include <QMessageBox>
  
 #ifdef Q_OS_WIN32
   #include "qt_windows.h"
@@ -31,6 +33,10 @@
   #ifndef CSIDL_APPDATA
     #define CSIDL_APPDATA 0x001a
   #endif
+#endif
+
+#if QT_VERSION >= 0x050000
+	#define QT_WA(unicode, ansi) unicode
 #endif
 
 QApplication* TheApplication;

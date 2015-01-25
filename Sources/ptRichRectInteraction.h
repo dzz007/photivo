@@ -25,14 +25,14 @@
 
 //==============================================================================
 
+#include "ptAbstractInteraction.h"
+
 #include <QGraphicsRectItem>
 #include <QGraphicsDropShadowEffect>
 #include <QMouseEvent>
 #include <QKeyEvent>
 #include <QRectF>
 #include <QRect>
-
-#include "ptAbstractInteraction.h"
 
 //==============================================================================
 

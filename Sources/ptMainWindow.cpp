@@ -4,6 +4,7 @@
 **
 ** Copyright (C) 2008,2009 Jos De Laender <jos.de_laender@telenet.be>
 ** Copyright (C) 2009-2011 Michael Munzert <mail@mm-log.com>
+** Copyright (C) 2013 Alexander Tzyganenko <tz@fast-report.com>
 **
 ** This file is part of Photivo.
 **
@@ -21,11 +22,7 @@
 **
 *******************************************************************************/
 
-#include <iomanip>
-#include <iostream>
-
 #include "ptDefines.h"
-#include "ptChannelMixer.h"
 #include "ptConfirmRequest.h"
 #include "ptConstants.h"
 #include "ptError.h"
@@ -46,6 +43,13 @@
   #include "ptEcWin7.h"
 #endif
 
+#include <QDesktopWidget>
+#include <QFileDialog>
+
+#include <iomanip>
+#include <iostream>
+#include <cassert>
+
 using namespace std;
 
 extern ptTheme* Theme;
@@ -58,6 +62,17 @@ void CB_MenuFileOpen(const short HaveFile);
 void CB_OpenSettingsFile(QString SettingsFileName);
 void CB_OpenFileButton();
 void CB_ZoomStep(int direction);
+void ReadSidecar(const QString& Sidecar);
+
+// undo-redo & clipboard support
+void ptMakeUndo();
+void ptMakeRedo();
+void ptClearUndoRedo();
+void ptMakeFullUndo();
+void ptResetSettingsToDefault();
+void ptCopySettingsToClipboard();
+void ptPasteSettingsFromClipboard();
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -142,13 +157,13 @@ ptMainWindow::ptMainWindow(const QString Title)
   const QStringList Keys = Settings->GetKeys();
   for (int i=0; i<Keys.size(); i++) {
     const QString Key = Keys[i];
-    //printf("(%s,%d) '%s'\n",__FILE__,__LINE__,Key.toAscii().data());
+    //printf("(%s,%d) '%s'\n",__FILE__,__LINE__,Key.toLocal8Bit().data());
     switch (Settings->GetGuiType(Key)) {
 
       case ptGT_InputSlider :
       case ptGT_Input       :
         //printf("(%s,%d) Creating Input for '%s'\n",
-        //       __FILE__,__LINE__,Key.toAscii().data());
+        //       __FILE__,__LINE__,Key.toLocal8Bit().data());
         {
         QString ParentName = Key + "Widget";
         QString ObjectName = Key + "Input";
@@ -175,7 +190,7 @@ ptMainWindow::ptMainWindow(const QString Title)
         break;
       case ptGT_InputSliderHue :
         //printf("(%s,%d) Creating Input for '%s'\n",
-        //       __FILE__,__LINE__,Key.toAscii().data());
+        //       __FILE__,__LINE__,Key.toLocal8Bit().data());
         {
         QString ParentName = Key + "Widget";
         QString ObjectName = Key + "Input";
@@ -202,7 +217,7 @@ ptMainWindow::ptMainWindow(const QString Title)
         break;
       case ptGT_Choice :
         //printf("(%s,%d) Creating Choice for '%s'\n",
-        //       __FILE__,__LINE__,Key.toAscii().data());
+        //       __FILE__,__LINE__,Key.toLocal8Bit().data());
         {
         QString ParentName = Key + "Widget";
         QString ObjectName = Key + "Choice";
@@ -224,7 +239,7 @@ ptMainWindow::ptMainWindow(const QString Title)
 
       case ptGT_Check :
         //printf("(%s,%d) Creating Check for '%s'\n",
-        //       __FILE__,__LINE__,Key.toAscii().data());
+        //       __FILE__,__LINE__,Key.toLocal8Bit().data());
         {
         QString ParentName = Key + "Widget";
         QString ObjectName = Key + "Check";
@@ -244,7 +259,7 @@ ptMainWindow::ptMainWindow(const QString Title)
 
       default :
         //printf("(%s,%d) No widget for '%s'\n",
-        //       __FILE__,__LINE__,Key.toAscii().data());
+        //       __FILE__,__LINE__,Key.toLocal8Bit().data());
         continue;
     };
     // To sync the state of the now created gui element we have
@@ -306,16 +321,14 @@ ptMainWindow::ptMainWindow(const QString Title)
   Macro_ConnectSomeButton(FullScreen);
   FullScreenButton->setChecked(0);
   Macro_ConnectSomeButton(LoadStyle);
+  Macro_ConnectSomeButton(PreviousImage);
+  Macro_ConnectSomeButton(NextImage);
+
 
   //
-  // Gimp related
+  // Connect Export button (not only for Gimp like the name suggests)
   //
-
-#if defined (DLRAW_GIMP_PLUGIN) || defined (DLRAW_HAVE_GIMP)
   Macro_ConnectSomeButton(ToGimp);
-#else
-  ToGimpButton->hide();
-#endif
 
   //
   // Settings related
@@ -376,9 +389,6 @@ ptMainWindow::ptMainWindow(const QString Title)
   //
   // TAB : RGB
   //
-
-  Macro_ConnectSomeButton(ChannelMixerOpen);
-  Macro_ConnectSomeButton(ChannelMixerSave);
 
   if (Settings->GetInt("AutoExposure")==ptAutoExposureMode_Auto) {
     Settings->SetEnabled("WhiteFraction",1);
@@ -553,6 +563,8 @@ ptMainWindow::ptMainWindow(const QString Title)
   connect(m_AtnSaveSettings, SIGNAL(triggered()), this, SLOT(SaveMenuSettings()));
   m_AtnSaveJobfile = new QAction(tr("Save job file"), this);
   connect(m_AtnSaveJobfile, SIGNAL(triggered()), this, SLOT(SaveMenuJobfile()));
+  m_AtnSendToBatch = new QAction(tr("Send to batch"), this);
+  connect(m_AtnSendToBatch, SIGNAL(triggered()), this, SLOT(SaveMenuBatch()));
 
   // context menu for gimp button
   m_AtnGimpSavePipe = new QAction(tr("Export current pipe"), this);
@@ -647,9 +659,11 @@ ptMainWindow::ptMainWindow(const QString Title)
     SwitchUIState(uisProcessing);
   }
 #else
-  SwitchUIMode(uisProcessing);
+  SwitchUIState(uisProcessing);
   findChild<ptGroupBox *>(QString("TabFileMgrSettings"))->setVisible(0);
 #endif
+
+  AutosaveSettingsWidget->setDisabled(Settings->GetInt("SaveConfirmation"));
 }
 
 //==============================================================================
@@ -697,7 +711,7 @@ bool ptMainWindow::eventFilter(QObject *obj, QEvent *event)
   if (event->type() == QEvent::ContextMenu) {
     if (obj == Tabbar) {
       // compute the tab number
-      QMouseEvent *mouseEvent = static_cast<QMouseEvent *>(event);
+      QContextMenuEvent *mouseEvent = static_cast<QContextMenuEvent *>(event);
       QPoint position = mouseEvent->pos();
       int c = Tabbar->count();
       int clickedItem = -1;
@@ -723,7 +737,7 @@ bool ptMainWindow::eventFilter(QObject *obj, QEvent *event)
         Menu.setStyle(Theme->style());
         Menu.setPalette(Theme->menuPalette());
         Menu.addAction(m_AtnShowTools);
-        Menu.exec(static_cast<QMouseEvent *>(event)->globalPos());
+        Menu.exec(static_cast<QContextMenuEvent *>(event)->globalPos());
       }
     } else if (obj == WritePipeButton) {
       QMenu Menu(NULL);
@@ -733,14 +747,15 @@ bool ptMainWindow::eventFilter(QObject *obj, QEvent *event)
       Menu.addAction(m_AtnSaveFull);
       Menu.addAction(m_AtnSaveSettings);
       Menu.addAction(m_AtnSaveJobfile);
-      Menu.exec(static_cast<QMouseEvent *>(event)->globalPos());
+      Menu.addAction(m_AtnSendToBatch);
+      Menu.exec(static_cast<QContextMenuEvent *>(event)->globalPos());
     } else if (obj == ToGimpButton) {
       QMenu Menu(NULL);
       Menu.setStyle(Theme->style());
       Menu.setPalette(Theme->menuPalette());
       Menu.addAction(m_AtnGimpSavePipe);
       Menu.addAction(m_AtnGimpSaveFull);
-      Menu.exec(static_cast<QMouseEvent *>(event)->globalPos());
+      Menu.exec(static_cast<QContextMenuEvent *>(event)->globalPos());
     } else if (obj == ResetButton) {
       QMenu Menu(NULL);
       Menu.setStyle(Theme->style());
@@ -750,7 +765,7 @@ bool ptMainWindow::eventFilter(QObject *obj, QEvent *event)
       Menu.addSeparator();
       Menu.addAction(m_AtnMenuOpenPreset);
       Menu.addAction(m_AtnMenuOpenSettings);
-      Menu.exec(static_cast<QMouseEvent *>(event)->globalPos());
+      Menu.exec(static_cast<QContextMenuEvent *>(event)->globalPos());
     }
     return QObject::eventFilter(obj, event);
   } else if (obj == LogoLabel &&
@@ -783,6 +798,9 @@ void ptMainWindow::SaveMenuSettings() {
 }
 void ptMainWindow::SaveMenuJobfile() {
   SaveOutput(ptOutputMode_Jobfile);
+}
+void ptMainWindow::SaveMenuBatch() {
+  SaveOutput(ptOutputMode_Batch);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -888,7 +906,13 @@ void ptMainWindow::OtherInstanceMessage(const QString &msg) {
     ImageFileToOpen.remove(0,7);
     ImageCleanUp++;
     CB_MenuFileOpen(1);
+  } else if (msg.startsWith("::sidecar::")) {
+    QString Sidecar = msg;
+    Sidecar.remove(0,11);
+    ReadSidecar(Sidecar);
+    Settings->SetValue("Sidecar", Sidecar);
   }
+  
 }
 
 //==============================================================================
@@ -1144,9 +1168,7 @@ void ptMainWindow::OnToGimpButtonClicked() {
 #ifdef DLRAW_GIMP_PLUGIN
   ::CB_MenuFileExit(1);
 #endif
-#ifdef DLRAW_HAVE_GIMP
   GimpSaveMenuPipe();
-#endif
 }
 
 //
@@ -1202,9 +1224,19 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value);
 void ptMainWindow::OnInputChanged(const QVariant Value) {
   QObject* Sender = sender();
   printf("(%s,%d) Sender : '%s'\n",
-         __FILE__,__LINE__,Sender->objectName().toAscii().data());
+         __FILE__,__LINE__,Sender->objectName().toLocal8Bit().data());
   CB_InputChanged(Sender->objectName(),Value);
 
+}
+
+void CB_PreviousImageButton();
+void ptMainWindow::OnPreviousImageButtonClicked() {
+  ::CB_PreviousImageButton();
+}
+
+void CB_NextImageButton();
+void ptMainWindow::OnNextImageButtonClicked() {
+  ::CB_NextImageButton();
 }
 
 void CB_BatchButton();
@@ -1387,21 +1419,6 @@ void ptMainWindow::OnCropCenterHorButtonClicked() {
 void CB_CropCenterVertButton();
 void ptMainWindow::OnCropCenterVertButtonClicked() {
   ::CB_CropCenterVertButton();
-}
-
-
-//
-// Tab : RGB
-//
-
-
-void CB_ChannelMixerOpenButton();
-void ptMainWindow::OnChannelMixerOpenButtonClicked() {
-  ::CB_ChannelMixerOpenButton();
-}
-void CB_ChannelMixerSaveButton();
-void ptMainWindow::OnChannelMixerSaveButtonClicked() {
-  ::CB_ChannelMixerSaveButton();
 }
 
 
@@ -1668,6 +1685,8 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
       ProcessingTabBook->setCurrentIndex(6);
     } else if (Event->key()==Qt::Key_8 && Event->modifiers()==Qt::AltModifier) {
       ProcessingTabBook->setCurrentIndex(7);
+    } else if (Event->key()==Qt::Key_9 && Event->modifiers()==Qt::AltModifier) {
+      ProcessingTabBook->setCurrentIndex(8);
     } else if (Event->key()==Qt::Key_Period && Event->modifiers()==Qt::NoModifier) {
       ProcessingTabBook->setCurrentIndex(MIN(ProcessingTabBook->currentIndex()+1,ProcessingTabBook->count()));
     } else if (Event->key()==Qt::Key_Comma && Event->modifiers()==Qt::NoModifier) {
@@ -1732,6 +1751,27 @@ void ptMainWindow::keyPressEvent(QKeyEvent *Event) {
       }
       if (Tools == "") Tools = tr("No tools blocked!");
       ptMessageBox::information(this,tr("Blocked tools"),Tools);
+    } else if (Event->key()==Qt::Key_R && Event->modifiers()==(Qt::ControlModifier | Qt::ShiftModifier)) {
+      // Ctrl+Shift+R resets to default settings
+      ptResetSettingsToDefault();
+    } else if (Event->key()==Qt::Key_U && Event->modifiers()==(Qt::ControlModifier | Qt::ShiftModifier)) {
+      // Ctrl+Shift+U resets to the last saved user settings
+      ptMakeFullUndo();
+    } else if (Event->key()==Qt::Key_Z && Event->modifiers()==Qt::ControlModifier) {
+      // Ctrl+Z undo
+      ptMakeUndo();
+    } else if (Event->key()==Qt::Key_Y && Event->modifiers()==Qt::ControlModifier) {
+      // Ctrl+Y redo
+      ptMakeRedo();
+    } else if (Event->key()==Qt::Key_Z && Event->modifiers()==(Qt::ControlModifier | Qt::ShiftModifier)) {
+      // Ctrl+Shift+Z redo
+      ptMakeRedo();
+    } else if (Event->key()==Qt::Key_C && Event->modifiers()==(Qt::ControlModifier | Qt::ShiftModifier)) {
+      // Ctrl+Shift+C copy settings
+      ptCopySettingsToClipboard();
+    } else if (Event->key()==Qt::Key_V && Event->modifiers()==(Qt::ControlModifier | Qt::ShiftModifier)) {
+      // Ctrl+Shift+V paste settings
+      ptPasteSettingsFromClipboard();
     }
   }
 }
@@ -1954,9 +1994,9 @@ void ptMainWindow::UpdateToolBoxes() {
              << static_cast<ptGroupBox*>(m_GroupBox->value("TabWhiteBalance"))
              << static_cast<ptGroupBox*>(m_GroupBox->value("TabDemosaicing"))
              << static_cast<ptGroupBox*>(m_GroupBox->value("TabHighlightRecovery"));
-  short Temp = Settings->GetInt("IsRAW");
+  bool hTemp = Settings->useRAWHandling();
   for (int i = 0; i < m_RawTools.size(); i++) {
-    m_RawTools.at(i)->SetEnabled(Temp);
+    m_RawTools.at(i)->SetEnabled(hTemp);
   }
 
   // disable tools when we are in detail view
@@ -1971,9 +2011,9 @@ void ptMainWindow::UpdateToolBoxes() {
                     << static_cast<ptGroupBox*>(m_GroupBox->value("TabResize"))
                     << static_cast<ptGroupBox*>(m_GroupBox->value("TabWebResize"));
 
-  Temp = 1 - Settings->GetInt("DetailViewActive");
+  hTemp = !(Settings->GetInt("DetailViewActive") == 1);
   for (int i = 0; i < m_DetailViewTools.size(); i++) {
-    m_DetailViewTools.at(i)->SetEnabled(Temp);
+    m_DetailViewTools.at(i)->SetEnabled(hTemp);
   }
 }
 
@@ -2176,18 +2216,6 @@ void ptMainWindow::UpdateSettings() {
   else
     Settings->SetEnabled("InterpolationPasses",0);
 
-
-  // ChannelMixer
-  Settings->SetValue("ChannelMixerR2R",ChannelMixer->m_Mixer[0][0]);
-  Settings->SetValue("ChannelMixerG2R",ChannelMixer->m_Mixer[0][1]);
-  Settings->SetValue("ChannelMixerB2R",ChannelMixer->m_Mixer[0][2]);
-  Settings->SetValue("ChannelMixerR2G",ChannelMixer->m_Mixer[1][0]);
-  Settings->SetValue("ChannelMixerG2G",ChannelMixer->m_Mixer[1][1]);
-  Settings->SetValue("ChannelMixerB2G",ChannelMixer->m_Mixer[1][2]);
-  Settings->SetValue("ChannelMixerR2B",ChannelMixer->m_Mixer[2][0]);
-  Settings->SetValue("ChannelMixerG2B",ChannelMixer->m_Mixer[2][1]);
-  Settings->SetValue("ChannelMixerB2B",ChannelMixer->m_Mixer[2][2]);
-
   // Preview Mode
   PreviewModeButton->setChecked(Settings->GetInt("PreviewMode"));
 
@@ -2202,6 +2230,9 @@ void ptMainWindow::UpdateSettings() {
   // Show containers
   BottomContainer->setVisible(Settings->GetInt("ShowBottomContainer"));
   ControlFrame->setVisible(Settings->GetInt("ShowToolContainer"));
+
+  // Geometry
+  ResizeHeightWidget->setVisible(Settings->GetInt("ResizeDimension") == ptResizeDimension_WidthHeight);
 
   // Exposure
   if (Settings->GetInt("AutoExposure")==ptAutoExposureMode_Auto) {
@@ -2572,7 +2603,7 @@ void ptMainWindow::UpdateExifInfo(Exiv2::ExifData ExifData) {
   if (Pos != ExifData.end() ) {
     std::stringstream str;
     str << *Pos;
-    TheInfo.append(QString(str.str().c_str()));
+    TheInfo.append(QString::fromLocal8Bit(str.str().c_str()));
   }
   InfoFlashLabel->setText(TheInfo);
   TheInfo="";
@@ -2581,7 +2612,7 @@ void ptMainWindow::UpdateExifInfo(Exiv2::ExifData ExifData) {
   if (Pos != ExifData.end() ) {
     std::stringstream str;
     str << *Pos;
-    TheInfo.append(QString(str.str().c_str()));
+    TheInfo.append(QString::fromLocal8Bit(str.str().c_str()));
   }
   InfoWhitebalanceLabel->setText(TheInfo);
   TheInfo="";
@@ -3041,7 +3072,7 @@ void ptMainWindow::UpdateLiquidRescaleUI() {
 ////////////////////////////////////////////////////////////////////////////////
 
 void ptMainWindow::UpdateGradualBlurUI() {
-  boolean Visible = Settings->GetInt("GradBlur1") == ptGradualBlur_Linear  ||
+  bool Visible = Settings->GetInt("GradBlur1") == ptGradualBlur_Linear  ||
                     Settings->GetInt("GradBlur1") == ptGradualBlur_MaskLinear;
   Settings->Show("GradBlur1Angle",      Visible);
   Settings->Show("GradBlur1Vignette",  !Visible);

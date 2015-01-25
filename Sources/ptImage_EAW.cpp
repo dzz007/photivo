@@ -1,3 +1,7 @@
+#include "ptImage.h"
+#include "ptError.h"
+#include "ptCalloc.h"
+
 #include <QMessageBox>
 
 #include <cstdio>
@@ -5,10 +9,7 @@
 #include <cstring>
 #include <cmath>
 #include <cfloat>
-
-#include "ptImage.h"
-#include "ptError.h"
-#include "ptCalloc.h"
+#include <cassert>
 
 #ifdef _OPENMP
   #include <omp.h>

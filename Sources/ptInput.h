@@ -31,10 +31,10 @@
 
 //==============================================================================
 
-#include <QtGui>
-
 #include "ptSlider.h"
 #include "ptWidget.h"
+
+#include <QLabel>
 
 class ptCfgItem;
 

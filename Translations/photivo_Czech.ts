@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="cs_CZ">
+<TS version="2.1" language="cs_CZ">
 <context>
     <name>Form</name>
     <message>
@@ -22,42 +22,46 @@
 <context>
     <name>Global Strings</name>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="170"/>
+        <location filename="../Sources/ptMain.cpp" line="181"/>
         <source>Photivo channelmixer file (*.ptm);;All files (*.*)</source>
         <translation>Photivo míchání kanálů (*.ptm);;Všechny soubory (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="172"/>
+        <location filename="../Sources/ptMain.cpp" line="183"/>
         <source>Photivo curve file (*.ptc);;All files (*.*)</source>
         <translation>Photivo křivky (*.ptm);;Všechny soubory (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="174"/>
+        <location filename="../Sources/ptMain.cpp" line="185"/>
         <source>Photivo job file (*.ptj);;All files (*.*)</source>
-        <translation>Photivo job projektu (*.ptj);;Všechny soubory (*.*)</translation>
+        <translation>Photivo pracovní soubor (*.ptj);;Všechny soubory (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="176"/>
+        <location filename="../Sources/ptMain.cpp" line="187"/>
         <source>Photivo settings file (*.pts);;All files (*.*)</source>
         <translation>Photivo nastavení souboru (*.pts);;Všechny soubory (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="178"/>
+        <location filename="../Sources/ptMain.cpp" line="189"/>
         <source>ICC colour profiles (*.icc *.icm);;All files (*.*)</source>
-        <translation>ICC profil barev (*.icc *.icm);;Všechny soubory (*.*)</translation>
+        <translation>ICC profil (*.icc *.icm);;Všechny soubory (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="182"/>
+        <location filename="../Sources/ptMain.cpp" line="193"/>
+        <source>Raw files (*.arw *.ARW *.Arw *.bay *.BAY *.Bay *.bmq *.BMQ *.Bmq *.cr2 *.CR2 *.Cr2 *.crw *.CRW *.Crw *.cs1 *.CS1 *.Cs1 *.dc2 *.DC2 *.Dc2 *.dcr *.DCR *.Dcr *.dng *.DNG *.Dng *.erf *.ERF *.Erf *.fff *.FFF *.Fff *.hdr *.HDR *.Hdr *.ia  *.IA *.Ia *.k25 *.K25 *.kc2 *.KC2 *.Kc2 *.kdc *.KDC *.Kdc *.mdc *.MDC *.Mdc *.mef *.MEF *.Mef *.mos *.MOS *.Mos *.mrw *.MRW *.Mrw *.nef *.NEF *.Nef *.nrw *.NRW *.Nrw *.orf *.ORF *.Orf *.pef *.PEF *.Pef *.pxn *.PXN *.Pxn *.qtk *.QTK *.Qtk *.raf *.RAF *.Raf *.raw *.RAW *.Raw *.rdc *.RDC *.Rdc *.rw2 *.RW2 *.Rw2 *.sr2 *.SR2 *.Sr2 *.srf *.SRF *.Srf *.srw *.SRW *.Srw *.sti *.STI *.Sti *.tif *.TIF *.Tif *.x3f *.X3F *.X3f);;Bitmaps (*.jpeg *.JPEG *.Jpeg *.jpg *.JPG *.Jpg *.tiff *.TIFF *.Tiff *.tif *.TIF *.Tif *.bmp *.BMP *.Bmp *.png *.PNG *.Png *.ppm *.PPm *.Ppm);;All files (*.*)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Raw files (*.arw *.ARW *.Arw *.bay *.BAY *.Bay *.bmq *.BMQ *.Bmq *.cr2 *.CR2 *.Cr2 *.crw *.CRW *.Crw *.cs1 *.CS1 *.Cs1 *.dc2 *.DC2 *.Dc2 *.dcr *.DCR *.Dcr *.dng *.DNG *.Dng *.erf *.ERF *.Erf *.fff *.FFF *.Fff *.hdr *.HDR *.Hdr *.ia  *.IA *.Ia *.k25 *.K25 *.kc2 *.KC2 *.Kc2 *.kdc *.KDC *.Kdc *.mdc *.MDC *.Mdc *.mef *.MEF *.Mef *.mos *.MOS *.Mos *.mrw *.MRW *.Mrw *.nef *.NEF *.Nef *.orf *.ORF *.Orf *.pef *.PEF *.Pef *.pxn *.PXN *.Pxn *.qtk *.QTK *.Qtk *.raf *.RAF *.Raf *.raw *.RAW *.Raw *.rdc *.RDC *.Rdc *.rw2 *.RW2 *.Rw2 *.sr2 *.SR2 *.Sr2 *.srf *.SRF *.Srf *.srw *.SRW *.Srw *.sti *.STI *.Sti *.tif *.TIF *.Tif *.x3f *.X3F *.X3f);;Bitmaps (*.jpeg *.JPEG *.Jpeg *.jpg *.JPG *.Jpg *.tiff *.TIFF *.Tiff *.tif *.TIF *.Tif *.bmp *.BMP *.Bmp *.png *.PNG *.Png *.ppm *.PPm *.Ppm ;;All files (*.*)</source>
-        <translation>Raw soubory (*.arw *.ARW *.Arw *.bay *.BAY *.Bay *.bmq *.BMQ *.Bmq *.cr2 *.CR2 *.Cr2 *.crw *.CRW *.Crw *.cs1 *.CS1 *.Cs1 *.dc2 *.DC2 *.Dc2 *.dcr *.DCR *.Dcr *.dng *.DNG *.Dng *.erf *.ERF *.Erf *.fff *.FFF *.Fff *.hdr *.HDR *.Hdr *.ia  *.IA *.Ia *.k25 *.K25 *.kc2 *.KC2 *.Kc2 *.kdc *.KDC *.Kdc *.mdc *.MDC *.Mdc *.mef *.MEF *.Mef *.mos *.MOS *.Mos *.mrw *.MRW *.Mrw *.nef *.NEF *.Nef *.orf *.ORF *.Orf *.pef *.PEF *.Pef *.pxn *.PXN *.Pxn *.qtk *.QTK *.Qtk *.raf *.RAF *.Raf *.raw *.RAW *.Raw *.rdc *.RDC *.Rdc *.rw2 *.RW2 *.Rw2 *.sr2 *.SR2 *.Sr2 *.srf *.SRF *.Srf *.srw *.SRW *.Srw *.sti *.STI *.Sti *.tif *.TIF *.Tif *.x3f *.X3F *.X3f);;Bitmaps (*.jpeg *.JPEG *.Jpeg *.jpg *.JPG *.Jpg *.tiff *.TIFF *.Tiff *.tif *.TIF *.Tif *.bmp *.BMP *.Bmp *.png *.PNG *.Png *.ppm *.PPm *.Ppm ;;Všechny soubory (*.*)</translation>
+        <translation type="vanished">Raw soubory (*.arw *.ARW *.Arw *.bay *.BAY *.Bay *.bmq *.BMQ *.Bmq *.cr2 *.CR2 *.Cr2 *.crw *.CRW *.Crw *.cs1 *.CS1 *.Cs1 *.dc2 *.DC2 *.Dc2 *.dcr *.DCR *.Dcr *.dng *.DNG *.Dng *.erf *.ERF *.Erf *.fff *.FFF *.Fff *.hdr *.HDR *.Hdr *.ia  *.IA *.Ia *.k25 *.K25 *.kc2 *.KC2 *.Kc2 *.kdc *.KDC *.Kdc *.mdc *.MDC *.Mdc *.mef *.MEF *.Mef *.mos *.MOS *.Mos *.mrw *.MRW *.Mrw *.nef *.NEF *.Nef *.orf *.ORF *.Orf *.pef *.PEF *.Pef *.pxn *.PXN *.Pxn *.qtk *.QTK *.Qtk *.raf *.RAF *.Raf *.raw *.RAW *.Raw *.rdc *.RDC *.Rdc *.rw2 *.RW2 *.Rw2 *.sr2 *.SR2 *.Sr2 *.srf *.SRF *.Srf *.srw *.SRW *.Srw *.sti *.STI *.Sti *.tif *.TIF *.Tif *.x3f *.X3F *.X3f);;Bitmaps (*.jpeg *.JPEG *.Jpeg *.jpg *.JPG *.Jpg *.tiff *.TIFF *.Tiff *.tif *.TIF *.Tif *.bmp *.BMP *.Bmp *.png *.PNG *.Png *.ppm *.PPm *.Ppm ;;Všechny soubory (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="229"/>
+        <location filename="../Sources/ptMain.cpp" line="241"/>
         <source>Bitmaps (*.jpeg *.JPEG *.Jpeg *.jpg *.JPG *.Jpg *.tiff *.TIFF *.Tiff *.tif *.TIF *.Tif *.bmp *.BMP *.Bmp *.png *.PNG *.Png *.ppm *.PPm *.Ppm ;;All files (*.*)</source>
         <translation>Bitmapy (*.jpeg *.JPEG *.Jpeg *.jpg *.JPG *.Jpg *.tiff *.TIFF *.Tiff *.tif *.TIF *.Tif *.bmp *.BMP *.Bmp *.png *.PNG *.Png *.ppm *.PPm *.Ppm ;;Všechny soubory (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="240"/>
+        <location filename="../Sources/ptMain.cpp" line="252"/>
         <source>Jpeg (*.jpg);;Tiff (*.tiff);;Png (*.png);;All files (*.*)</source>
         <translation>Jpeg (*.jpg);;Tiff (*.tiff);;Png (*.png);;Všechny soubory (*.*)</translation>
     </message>
@@ -65,137 +69,140 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="516"/>
-        <location filename="../Sources/ptMain.cpp" line="2449"/>
-        <location filename="../Sources/ptMain.cpp" line="2795"/>
+        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="523"/>
+        <location filename="../Sources/ptMain.cpp" line="2519"/>
+        <location filename="../Sources/ptMain.cpp" line="2887"/>
         <source>Save File</source>
-        <translation type="unfinished">Uložit soubor</translation>
+        <translation>Uložit soubor</translation>
     </message>
     <message>
-        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="522"/>
+        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="515"/>
+        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="532"/>
         <source>Error</source>
         <translation>Chyba</translation>
     </message>
     <message>
-        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="522"/>
+        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="515"/>
+        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="532"/>
         <source>Thumbnail could not be saved.</source>
-        <translation>Miniatura nemůže být zapsaná.</translation>
+        <translation>Miniatura nemůže být uložena.</translation>
     </message>
     <message>
-        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="526"/>
+        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="536"/>
         <source>Exif error</source>
         <translation>Chyba Exifu</translation>
     </message>
     <message>
-        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="526"/>
+        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="536"/>
         <source>Exif data could not be written.</source>
         <translation>Exif nemohl být zapsán.</translation>
     </message>
     <message>
-        <location filename="../Sources/filemgmt/ptImageView.cpp" line="377"/>
+        <location filename="../Sources/filemgmt/ptImageView.cpp" line="146"/>
         <source>Loading</source>
         <translation>Načítání</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilterDM.cpp" line="365"/>
+        <location filename="../Sources/filters/ptFilterDM.cpp" line="369"/>
         <source>Append settings file</source>
         <translation>Připojit soubor nastavení</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilterDM.cpp" line="366"/>
-        <location filename="../Sources/ptMain.cpp" line="3778"/>
+        <location filename="../Sources/filters/ptFilterDM.cpp" line="370"/>
+        <location filename="../Sources/filters/ptFilterDM.cpp" line="445"/>
+        <location filename="../Sources/ptMain.cpp" line="3939"/>
         <source>Save settings file</source>
         <translation>Uložit nastavení</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilterDM.cpp" line="395"/>
+        <location filename="../Sources/filters/ptFilterDM.cpp" line="399"/>
         <source>Select input file(s)</source>
         <translation>Vybrat vstupní soubor(y)</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilterDM.cpp" line="407"/>
+        <location filename="../Sources/filters/ptFilterDM.cpp" line="411"/>
         <source>Select output directory</source>
         <translation>Vybrat výstupní složku</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilterDM.cpp" line="421"/>
+        <location filename="../Sources/filters/ptFilterDM.cpp" line="426"/>
         <source>Select job file</source>
-        <translation type="unfinished">Vybrat job soubor</translation>
+        <translation>Vyberte pracovní soubor</translation>
     </message>
     <message>
-        <location filename="../Sources/ptCimg.cpp" line="93"/>
+        <location filename="../Sources/ptCimg.cpp" line="95"/>
         <source>GreycStoration iteration </source>
         <translation>Iterace GreycStoration </translation>
     </message>
     <message>
-        <location filename="../Sources/ptConfirmRequest.cpp" line="46"/>
+        <location filename="../Sources/ptConfirmRequest.cpp" line="48"/>
         <source>Photivo: Load configuration</source>
         <translation>Photivo: Načtení konfigurace</translation>
     </message>
     <message>
-        <location filename="../Sources/ptConfirmRequest.cpp" line="50"/>
+        <location filename="../Sources/ptConfirmRequest.cpp" line="52"/>
         <source>Discard current configuration and load new settings?</source>
         <translation>Zahodit aktuální konfiguraci a načíst nové nastavení? </translation>
     </message>
     <message>
-        <location filename="../Sources/ptConfirmRequest.cpp" line="58"/>
+        <location filename="../Sources/ptConfirmRequest.cpp" line="60"/>
         <source>Discard current configuration and reset to startup preset?
 </source>
         <translation>Zahodit aktuální konfiguraci a resetovat na výchozí nastavení? </translation>
     </message>
     <message>
-        <location filename="../Sources/ptConfirmRequest.cpp" line="63"/>
+        <location filename="../Sources/ptConfirmRequest.cpp" line="65"/>
         <source>Discard current configuration and reset to neutral preset?</source>
         <translation>Zahodit aktuální konfiguraci a resetovat na neutrální nastavení? </translation>
     </message>
     <message>
-        <location filename="../Sources/ptConfirmRequest.cpp" line="67"/>
+        <location filename="../Sources/ptConfirmRequest.cpp" line="69"/>
         <source>Discard current configuration and load preset file?
 </source>
         <translation>Zahodit aktuální konfiguraci a načíst soubor s předvolbami? </translation>
     </message>
     <message>
-        <location filename="../Sources/ptConfirmRequest.cpp" line="76"/>
+        <location filename="../Sources/ptConfirmRequest.cpp" line="78"/>
         <source>Discard current configuration and load settings file?
 </source>
         <translation>Zahodit aktuální konfiguraci a načíst soubor s nastavením? </translation>
     </message>
     <message>
-        <location filename="../Sources/ptConfirmRequest.cpp" line="117"/>
+        <location filename="../Sources/ptConfirmRequest.cpp" line="127"/>
         <source>Photivo: Save image</source>
         <translation>Photivo: Uložit obrázek</translation>
     </message>
     <message>
-        <location filename="../Sources/ptConfirmRequest.cpp" line="118"/>
-        <location filename="../Sources/ptConfirmRequest.cpp" line="130"/>
+        <location filename="../Sources/ptConfirmRequest.cpp" line="128"/>
+        <location filename="../Sources/ptConfirmRequest.cpp" line="140"/>
         <source>Do you want to save the current image?</source>
-        <translation>Zapsat aktuální obrázek?</translation>
+        <translation>Uložit aktuální obrázek?</translation>
     </message>
     <message>
-        <location filename="../Sources/ptConfirmRequest.cpp" line="122"/>
+        <location filename="../Sources/ptConfirmRequest.cpp" line="132"/>
         <source>Photivo: Open image</source>
         <translation>Photivo: Otevřít obrázek</translation>
     </message>
     <message>
-        <location filename="../Sources/ptConfirmRequest.cpp" line="123"/>
+        <location filename="../Sources/ptConfirmRequest.cpp" line="133"/>
         <source>Before opening the image:
 </source>
         <translation>Před otevřením obrázku:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptCurve.cpp" line="305"/>
+        <location filename="../Sources/ptCurve.cpp" line="453"/>
         <source>Failed to load curve file %1.</source>
         <translation>Chyba načtení křivek souboru %1.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptCurve.cpp" line="306"/>
+        <location filename="../Sources/ptCurve.cpp" line="455"/>
         <source>
 The error occurred in line %1.</source>
         <translation>
 Došlo k chybě na řádku %1.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptCurve.cpp" line="307"/>
+        <location filename="../Sources/ptCurve.cpp" line="456"/>
         <source>Load curve file</source>
         <translation>Načíst soubor křivek</translation>
     </message>
@@ -292,7 +299,7 @@ Došlo k chybě na řádku %1.</translation>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="66"/>
         <source>Minimal: dirs, available curves ...</source>
-        <translation type="unfinished">Minimální: složky s křivkami ...</translation>
+        <translation>Minimální: složky s dostupnými křivkami ...</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="67"/>
@@ -302,7 +309,7 @@ Došlo k chybě na řádku %1.</translation>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="68"/>
         <source>All: remember everything</source>
-        <translation type="unfinished">Všechno: zapamatovat všechno</translation>
+        <translation>Všechno: zapamatovat všechno</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="72"/>
@@ -329,7 +336,7 @@ Došlo k chybě na řádku %1.</translation>
         <location filename="../Sources/ptGuiOptions.cpp" line="107"/>
         <location filename="../Sources/ptGuiOptions.cpp" line="114"/>
         <source>Perceptual</source>
-        <translation>Perceptual</translation>
+        <translation>Perceptuální</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="81"/>
@@ -359,12 +366,12 @@ Došlo k chybě na řádku %1.</translation>
         <location filename="../Sources/ptGuiOptions.cpp" line="164"/>
         <location filename="../Sources/ptGuiOptions.cpp" line="177"/>
         <location filename="../Sources/ptGuiOptions.cpp" line="193"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="282"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="341"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="488"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="501"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="554"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="559"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="290"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="349"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="498"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="511"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="565"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="570"/>
         <source>None</source>
         <translation>Nic</translation>
     </message>
@@ -396,7 +403,7 @@ Došlo k chybě na řádku %1.</translation>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="96"/>
         <source>Wide Gamut RGB - D50</source>
-        <translation type="unfinished">Široké spektrum RGB - D50</translation>
+        <translation>Široké spektrum RGB - D50</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="97"/>
@@ -411,7 +418,7 @@ Došlo k chybě na řádku %1.</translation>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="102"/>
         <source>High res pre calc</source>
-        <translation type="unfinished">Vysoké rozlišení před kalkulací</translation>
+        <translation>Vysoké rozlišení před kalkulací</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="103"/>
@@ -420,15 +427,15 @@ Došlo k chybě na řádku %1.</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="122"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="402"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="452"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="410"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="460"/>
         <source>Normal</source>
         <translation>Normální</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="123"/>
         <source>50% grey</source>
-        <translation type="unfinished">50% šedá</translation>
+        <translation>50% šedá</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="124"/>
@@ -452,21 +459,21 @@ Došlo k chybě na řádku %1.</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="131"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="347"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="355"/>
         <source>Blue</source>
         <translation>Modrá</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="132"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="346"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="354"/>
         <source>Green</source>
         <translation>Zelená</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="133"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="343"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="351"/>
         <source>Orange</source>
-        <translation type="unfinished">Oranžová</translation>
+        <translation>Oranžová</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="137"/>
@@ -530,8 +537,8 @@ Došlo k chybě na řádku %1.</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="159"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="314"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="352"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="322"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="360"/>
         <source>Linear</source>
         <translation>Lineární</translation>
     </message>
@@ -623,21 +630,21 @@ Došlo k chybě na řádku %1.</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="199"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="221"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="229"/>
         <source>Box filter</source>
         <translation>Box filtr</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="200"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="222"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="230"/>
         <source>Triangle filter</source>
-        <translation type="unfinished">Trojuhelníkový filtr</translation>
+        <translation>Trojuhelníkový filtr</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="201"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="228"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="236"/>
         <source>Quadratic filter</source>
-        <translation type="unfinished">Čtvercový filtr</translation>
+        <translation>Čtvercový filtr</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="202"/>
@@ -647,7 +654,7 @@ Došlo k chybě na řádku %1.</translation>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="203"/>
         <source>Quadratic spline filter</source>
-        <translation type="unfinished">Čtvercový spline filtr</translation>
+        <translation>Kvadratická křivka filtru</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="204"/>
@@ -656,13 +663,13 @@ Došlo k chybě na řádku %1.</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="205"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="232"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="240"/>
         <source>Lanczos3 filter</source>
         <translation>Lanczos3 filtr</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="206"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="231"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="239"/>
         <source>Mitchell filter</source>
         <translation>Mitchell filtr</translation>
     </message>
@@ -674,7 +681,7 @@ Došlo k chybě na řádku %1.</translation>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="208"/>
         <source>Cosine filter</source>
-        <translation>Kosinusový filtr</translation>
+        <translation>Kosinový filtr</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="209"/>
@@ -683,851 +690,864 @@ Došlo k chybě na řádku %1.</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="210"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="223"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="231"/>
         <source>Hermite filter</source>
         <translation>Hermite filtr</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="214"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="221"/>
         <source>Longer edge</source>
         <translation>Delší okraje</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="215"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="222"/>
         <source>Width</source>
         <translation>Délka</translation>
     </message>
     <message>
         <location filename="../Sources/ptGuiOptions.cpp" line="216"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="223"/>
         <source>Height</source>
         <translation>Výška</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="220"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="217"/>
+        <source>Width x Height</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptGuiOptions.cpp" line="228"/>
         <source>Point filter</source>
         <translation>Bodový filtr</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="224"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="232"/>
         <source>Hanning filter</source>
         <translation>Hanning filtr</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="225"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="233"/>
         <source>Hamming filter</source>
         <translation>Hamming filtr</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="226"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="234"/>
         <source>Blackman filter</source>
         <translation>Blackman filtr</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="227"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="235"/>
         <source>Gaussian filter</source>
         <translation>Gaussian filtr</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="229"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="237"/>
         <source>Cubic filter</source>
         <translation>Kubický filtr</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="230"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="238"/>
         <source>Catmull-Rom filter</source>
         <translation>Catmull Rom filtr</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="238"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="298"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="374"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="386"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="246"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="306"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="382"/>
         <location filename="../Sources/ptGuiOptions.cpp" line="394"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="409"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="430"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="440"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="402"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="417"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="438"/>
         <location filename="../Sources/ptGuiOptions.cpp" line="448"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="458"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="464"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="456"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="466"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="472"/>
         <source>Disabled</source>
         <translation>Disabled</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="239"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="247"/>
         <source>Directional grad brightness</source>
         <translation>Směrový gradient jasu</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="240"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="248"/>
         <source>Average grad brightness</source>
         <translation>Průměrný gradient jasu</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="241"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="249"/>
         <source>Norm brightness</source>
         <translation>Normální jas</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="242"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="250"/>
         <source>Directional grad luminance</source>
         <translation>Směrový gradient svítivosti</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="243"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="251"/>
         <source>Average grad luminance</source>
         <translation>Průměrný gradient svítivosti</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="244"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="252"/>
         <source>Norm luminance</source>
         <translation>Normální svítivost</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="248"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="256"/>
         <source>Relative</source>
         <translation>Relativní</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="249"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="257"/>
         <source>Absolute</source>
         <translation>Absolutní</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="253"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="261"/>
         <source>Camera</source>
-        <translation type="unfinished">Fotoaparát</translation>
+        <translation>Fotoaparát</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="254"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="262"/>
         <source>Automatic</source>
         <translation>Automatický</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="255"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="263"/>
         <source>Spot</source>
         <translation>Bodový</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="256"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="497"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="502"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="264"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="507"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="512"/>
         <source>Manual</source>
         <translation>Manuální</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="260"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="268"/>
         <source>No CA correction</source>
         <translation>Bez korekce chromatické aberace</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="261"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="269"/>
         <source>Automatic CA cor.</source>
         <translation>Automatická korekce chromatické aberace.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="262"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="270"/>
         <source>Manual CA cor.</source>
         <translation>Manualní korekce chromatické aberace.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="266"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="274"/>
         <source>Bilinear</source>
-        <translation type="unfinished">Bilineární</translation>
+        <translation>Bilineární</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="267"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="275"/>
         <source>VNG</source>
         <translation>VNG</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="268"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="276"/>
         <source>VNG 4 color</source>
         <translation>VNG 4 kolor</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="269"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="277"/>
         <source>PPG</source>
         <translation>PPG</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="270"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="278"/>
         <source>AHD</source>
         <translation>AHD</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="271"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="279"/>
         <source>AHD modified</source>
         <translation>AHD modifikovaný</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="272"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="280"/>
         <source>AMaZE</source>
         <translation>AMaZE</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="273"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="281"/>
         <source>DCB</source>
         <translation>DCB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="274"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="282"/>
         <source>DCB soft</source>
         <translation>DCB měkký</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="275"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="283"/>
         <source>DCB sharp</source>
         <translation>DCB ostrý</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="276"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="284"/>
         <source>VCD</source>
         <translation>VCD</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="277"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="285"/>
         <source>LMMSE</source>
         <translation>LMMSE</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="278"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="286"/>
         <source>Bayer pattern</source>
-        <translation type="unfinished">Bayerova maska</translation>
+        <translation>Bayerova maska</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="283"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="291"/>
         <source>FBDD 1</source>
         <translation>FBDD 1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="284"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="292"/>
         <source>FBDD 2</source>
         <translation>FBDD 2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="289"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="297"/>
         <source>Clip</source>
         <translation>Připnout</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="290"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="298"/>
         <source>No clipping</source>
         <translation>Nepřipínat</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="291"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="299"/>
         <source>Restore in Lab</source>
         <translation>Obnovit v Lab</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="292"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="300"/>
         <source>Restore in HSV</source>
-        <translation type="unfinished">Obnovit v HSV</translation>
+        <translation>Obnovit v HSV</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="293"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="301"/>
         <source>Blend in Lab</source>
         <translation>Míchat v Lab</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="294"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="302"/>
         <source>Rebuild</source>
         <translation>Přestavět</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="299"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="375"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="387"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="307"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="383"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="395"/>
         <source>Shadows</source>
         <translation>Stíny</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="300"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="376"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="388"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="308"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="384"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="396"/>
         <source>Midtones</source>
         <translation>Střední tóny</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="301"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="377"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="389"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="309"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="385"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="397"/>
         <source>Highlights</source>
         <translation>Přesvícené</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="302"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="319"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="378"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="390"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="310"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="327"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="386"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="398"/>
         <source>All values</source>
         <translation>Všechny hodnoty</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="306"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="314"/>
         <source>Regular L*</source>
-        <translation>Regulární  L*</translation>
+        <translation>Regulární L*</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="307"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="315"/>
         <source>R -&gt; L*</source>
         <translation>R -&gt; L*</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="308"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="316"/>
         <source>G -&gt; L*</source>
         <translation>G -&gt; L*</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="309"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="317"/>
         <source>B -&gt; L*</source>
         <translation>B -&gt; L*</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="313"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="321"/>
         <source>Nearest Neighbour</source>
         <translation>Nejbližší sousední</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="315"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="323"/>
         <source>Runge-Kutta</source>
         <translation>Runge-Kutta</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="320"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="328"/>
         <source>Shadows 1</source>
         <translation>Stíny 1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="321"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="329"/>
         <source>Shadows 2</source>
         <translation>Stíny 2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="322"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="330"/>
         <source>Shadows 3</source>
         <translation>Stíny 3</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="323"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="331"/>
         <source>Shadows 4</source>
         <translation>Stíny 4</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="324"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="332"/>
         <source>Shadows 5</source>
         <translation>Stíny 5</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="328"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="336"/>
         <source>Low sensitivity</source>
         <translation>Nízká citlivost</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="329"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="337"/>
         <source>High sensitivity</source>
         <translation>Vysoká citlivost</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="330"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="338"/>
         <source>Hyperpanchromatic</source>
         <translation>Hyperpanchromatický</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="331"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="339"/>
         <source>Orthochromatic</source>
         <translation>Orthochromatický</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="332"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="340"/>
         <source>Normal contrast</source>
         <translation>Normální kontrast</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="333"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="341"/>
         <source>High contrast</source>
         <translation>Vysoký kontrast</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="334"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="342"/>
         <source>Luminance</source>
-        <translation>Luminance</translation>
+        <translation>Svítivost</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="335"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="343"/>
         <source>Landscape</source>
         <translation>Krajina</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="336"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="344"/>
         <source>Face in interior</source>
         <translation>Obličej v interiéru</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="337"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="345"/>
         <source>Channelmixer</source>
         <translation>Mixer kanálů</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="342"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="350"/>
         <source>Red</source>
         <translation>Červený</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="344"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="352"/>
         <source>Yellow</source>
         <translation>Žlutý</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="345"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="353"/>
         <source>Lime</source>
         <translation>Limetka</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="353"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="361"/>
         <source>Round</source>
         <translation>Kruhový</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="354"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="362"/>
         <source>Linear mask</source>
         <translation>Lineární maska</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="355"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="363"/>
         <source>Round mask</source>
         <translation>Kruhová maska</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="359"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="367"/>
         <source>No flip</source>
         <translation>Bez otočení</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="360"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="368"/>
         <source>Horizontal flip</source>
         <translation>Horizontální otočení</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="361"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="369"/>
         <source>Vertical flip</source>
         <translation>Vertikální otočení</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="365"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="373"/>
         <source>Soft gaussian</source>
         <translation>Měkký gaussian</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="366"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="374"/>
         <source>Soft uniform</source>
         <translation>Měkký jednolitý</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="367"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="375"/>
         <source>Soft salt&apos;n pepper</source>
-        <translation type="unfinished">Měkké světla i stíny</translation>
+        <translation>Měkké světla i stíny</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="368"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="376"/>
         <source>Hard gaussian</source>
         <translation>Tvrdý gaussian</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="369"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="377"/>
         <source>Hard uniform</source>
-        <translation>Tvrdý jednolity</translation>
+        <translation>Tvrdý jednolitý</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="370"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="378"/>
         <source>Hard salt&apos;n pepper</source>
-        <translation type="unfinished">Tvrdé světla i stíny</translation>
+        <translation>Tvrdé světla i stíny</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="379"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="387"/>
         <source>Midtones - Screen</source>
-        <translation type="unfinished">Střední tóny - Obrazovka</translation>
+        <translation>Střední tóny - Obrazovka</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="380"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="388"/>
         <source>Midtones - Multiply</source>
-        <translation type="unfinished">Střední tóny - Násobit</translation>
+        <translation>Střední tóny - Násobit</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="381"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="389"/>
         <source>Midtones - Gamma bright</source>
         <translation>Střední tóny - Gamma světlost</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="382"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="390"/>
         <source>Midtones - Gamma dark</source>
         <translation>Střední tóny - Gamma tmavost</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="395"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="410"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="403"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="418"/>
         <source>SoftLight</source>
         <translation>Měkké světlo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="396"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="411"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="404"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="419"/>
         <source>Multiply</source>
         <translation>Násobení</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="397"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="412"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="450"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="405"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="420"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="458"/>
         <source>Screen</source>
         <translation>Obrazovka</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="398"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="413"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="406"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="421"/>
         <source>Gamma dark</source>
         <translation>Tmavá Gamma</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="399"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="414"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="407"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="422"/>
         <source>Gamma bright</source>
         <translation>Světlá Gamma</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="400"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="415"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="408"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="423"/>
         <source>Color burn</source>
         <translation>Vypálené barvy</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="401"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="416"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="409"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="424"/>
         <source>Color dodge</source>
         <translation>Rozjasnění</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="403"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="411"/>
         <source>Replace</source>
-        <translation>Náhrada</translation>
+        <translation>Nahradit</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="405"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="444"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="413"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="452"/>
         <source>Show Mask</source>
         <translation>Ukaž masku</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="417"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="425"/>
         <source>Darken only</source>
         <translation>Jen tmavé</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="418"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="426"/>
         <source>Lighten only</source>
         <translation>Jen světlé</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="419"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="427"/>
         <source>Show outlines</source>
         <translation>Ukaž kontury</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="424"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="432"/>
         <source>Full image</source>
         <translation>Celý obraz</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="425"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="433"/>
         <source>Vignette</source>
         <translation>Vinětace</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="426"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="434"/>
         <source>Inv vignette</source>
-        <translation>Reverzní vinětace </translation>
+        <translation>Reverzní vinětace</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="431"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="439"/>
         <source>Green - yellow</source>
         <translation>Zelená - Žlutá</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="432"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="440"/>
         <source>Green - cyan</source>
         <translation>Zelená - Azurová</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="433"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="441"/>
         <source>Red - yellow</source>
         <translation>Červená - Žlutá</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="434"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="442"/>
         <source>Red - magenta</source>
         <translation>Červená - Purpurová</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="435"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="443"/>
         <source>Blue - cyan</source>
         <translation>Modrá - Azurová</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="436"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="444"/>
         <source>Blue - magenta</source>
         <translation>Modrá - Purpurová</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="441"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="449"/>
         <source>Soft</source>
         <translation>Měkké</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="442"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="450"/>
         <source>Hard</source>
         <translation>Tvrdé</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="443"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="451"/>
         <source>Fancy</source>
         <translation>Zábavné</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="449"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="457"/>
         <source>Lighten</source>
         <translation>Světlé</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="451"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="459"/>
         <source>Softlight</source>
         <translation>Měkké světlo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="453"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="461"/>
         <source>Orton screen</source>
         <translation>Obrazovka Orton</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="454"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="462"/>
         <source>Orton softlight</source>
         <translation>Měkké světlo Orton</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="459"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="465"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="467"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="473"/>
         <source>Only final run</source>
         <translation>Jen konečné spuštění</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="460"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="466"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="468"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="474"/>
         <source>With Preview</source>
         <translation>S náhledem</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="467"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="475"/>
         <source>Show mask</source>
         <translation>Zobrazit masku</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="489"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="499"/>
         <source>Ratio</source>
         <translation>Proporce</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="490"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="500"/>
         <source>Film curve</source>
         <translation>Křivka filmu</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="494"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="504"/>
         <source>Auto</source>
-        <translation>Auto</translation>
+        <translation>Automaticky</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="495"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="505"/>
         <source>Like UFRaw</source>
         <translation>Jako UFRaw</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="496"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="506"/>
         <source>Null</source>
         <translation>Nula</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="506"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="516"/>
         <source>RGB</source>
         <translation>RGB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="507"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="517"/>
         <source>Structure</source>
         <translation>Struktura</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="508"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="518"/>
         <source>L*</source>
         <translation>L*</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="509"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="519"/>
         <source>a*</source>
         <translation>a*</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="510"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="520"/>
         <source>b*</source>
         <translation>b*</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="511"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="521"/>
         <source>Gradient</source>
         <translation>Gradient</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="515"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="525"/>
         <source>LAB</source>
         <translation>LAB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="516"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="526"/>
         <source>L</source>
         <translation>L</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="517"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="527"/>
         <source>Structure on L</source>
         <translation>Struktura v L</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="518"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="528"/>
         <source>A</source>
         <translation>A</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="519"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="529"/>
         <source>B</source>
         <translation>B</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="520"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="530"/>
         <source>C</source>
         <translation type="unfinished">C</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="521"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="531"/>
         <source>H</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="525"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="535"/>
         <source>PPM 8-bit</source>
         <translation>PPM 8-bit</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="526"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="536"/>
         <source>PPM 16-bit</source>
-        <translation type="unfinished">PPM 16-bit</translation>
+        <translation>PPM 16-bit</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="527"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="537"/>
         <source>TIFF 8-bit</source>
         <translation>TIFF 8-bit</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="528"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="538"/>
         <source>TIFF 16-bit</source>
         <translation>TIFF 16-bit</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="529"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="539"/>
         <source>JPEG</source>
         <translation>JPEG</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="530"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="540"/>
         <source>PNG 8-bit</source>
         <translation>PNG 8-bit</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="531"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="541"/>
         <source>PNG 16-bit</source>
         <translation>PNG 16-bit</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="535"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="545"/>
         <source>4:4:4</source>
         <translation>4:4:4</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="536"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="546"/>
         <source>4:2:2</source>
         <translation>4:2:2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="540"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="550"/>
         <source>Full size</source>
         <translation>Plná velikost</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="541"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="551"/>
         <source>Pipe size</source>
         <translation>Velikost zpracování</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="542"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="552"/>
         <source>Only jobfile</source>
-        <translation>Jen job soubor</translation>
+        <translation>Pouze pracovní soubor</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="543"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="553"/>
         <source>Only settings</source>
         <translation>Jediné nastavení</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="547"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="554"/>
+        <source>Send to batch</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptGuiOptions.cpp" line="558"/>
         <source>Neutral reset</source>
         <translation>Neutrální reset</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="548"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="559"/>
         <source>User reset</source>
         <translation>Uživatelský reset</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="549"/>
-        <location filename="../Sources/ptMain.cpp" line="3839"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="560"/>
+        <location filename="../Sources/ptMain.cpp" line="4009"/>
         <source>Open preset</source>
         <translation>Otevřít šablonu</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="550"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="561"/>
         <source>Open settings</source>
         <translation>Otevřít nastavení</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="555"/>
-        <location filename="../Sources/ptGuiOptions.cpp" line="560"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="566"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="571"/>
         <source>Load one</source>
         <translation>Načíst jednou</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="564"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="575"/>
         <source>Clone</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/ptGuiOptions.cpp" line="565"/>
+        <location filename="../Sources/ptGuiOptions.cpp" line="576"/>
         <source>Heal (Dummy)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="481"/>
+        <location filename="../Sources/ptMain.cpp" line="526"/>
         <source>Photivo crashed</source>
         <translation>Photivo se neočekávaně ukončilo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="482"/>
+        <location filename="../Sources/ptMain.cpp" line="527"/>
         <source>Photivo crashed. You can get help on our flickr forum at
 &lt;a href=&quot;http://www.flickr.com/groups/photivo/discuss/&quot;&gt;http://www.flickr.com/groups/photivo/discuss/&lt;/a&gt;
 When you post there make sure to describe your last actions before the crash occurred.</source>
@@ -1536,17 +1556,17 @@ When you post there make sure to describe your last actions before the crash occ
 Když budete hlásit chybu, pokuste se popsat poslední akci před spadnutím.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="495"/>
+        <location filename="../Sources/ptMain.cpp" line="540"/>
         <source>Fatal error: Wrong GraphicsMagick quantum depth!
 Found quantum depth %1. Photivo needs at least %2.
 </source>
-        <translation type="unfinished"> Fatal error: Nesprávné uchování informací GraphicsMagic!
+        <translation> Fatal error: Nesprávné uchování informací GraphicsMagic!
 Nalezeno  %1. Photivo potřebuje minimálně %2.  </translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="500"/>
+        <location filename="../Sources/ptMain.cpp" line="545"/>
         <source>Photivo: Fatal Error</source>
-        <translation type="unfinished">Photivo: Fatalní Chyba</translation>
+        <translation>Photivo: Fatalní Chyba</translation>
     </message>
     <message>
         <source>Syntax: photivo [inputfile | -i imagefile | -j jobfile | -g imagefile]
@@ -1577,7 +1597,7 @@ inputfile
 
 For more documentation visit the wiki: http://photivo.org/photivo/start
 </source>
-        <translation type="obsolete">Syntax: photivo [inputfile | -i imagefile | -j jobfile | -g imagefile]
+        <translation type="vanished">Syntax: photivo [inputfile | -i imagefile | -j jobfile | -g imagefile]
                 [-h] [--new-instance]
 Nastavení:
 vstupní soubor
@@ -1605,9 +1625,10 @@ Pro více informací navštivte: http://photivo.org/photivo/start
 </translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="506"/>
-        <source>Syntax: photivo [inputfile | -i imagefile | -j jobfile | -g imagefile]
-                [-h] [--new-instance]
+        <location filename="../Sources/ptMain.cpp" line="551"/>
+        <source>Syntax: photivo [inputfile | -i imagefile | -j jobfile |
+                 --load-and-delete imagefile]
+                [--pts ptsfile] [--sidecar sidecarfile] [-h] [--new-instance]
 Options:
 inputfile
       Specify the image or settings file to load. Works like -i for image files
@@ -1624,6 +1645,8 @@ inputfile
 --pts ptsfile
       Specify settings file to load with the image. Must be used together
       with -i.
+--sidecar sidecarfile
+      Specify sidecar file to load with the image.
 --new-instance
       Allow opening another Photivo instance instead of using a currently
       running Photivo. Job files are always opened in a new instance.
@@ -1637,499 +1660,496 @@ For more documentation visit the wiki: http://photivo.org/photivo/start
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="546"/>
-        <location filename="../Sources/ptMain.cpp" line="850"/>
+        <location filename="../Sources/ptMain.cpp" line="594"/>
+        <location filename="../Sources/ptMain.cpp" line="908"/>
         <source>Photivo</source>
         <translation>Photivo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1000"/>
+        <location filename="../Sources/ptMain.cpp" line="1058"/>
         <source>Clean up input file</source>
         <translation>Zrušte vstupní soubor</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1111"/>
+        <location filename="../Sources/ptMain.cpp" line="1174"/>
         <source>Loading channelmixers</source>
         <translation>Načítání mixéru kanálů</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1121"/>
-        <location filename="../Sources/ptMain.cpp" line="2108"/>
-        <location filename="../Sources/ptMain.cpp" line="4886"/>
+        <location filename="../Sources/ptMain.cpp" line="1184"/>
+        <location filename="../Sources/ptMain.cpp" line="2173"/>
+        <location filename="../Sources/ptMain.cpp" line="5081"/>
         <source>Cannot read channelmixer </source>
         <translation>Nelze načíst mixér kanálů</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1127"/>
-        <location filename="../Sources/ptMain.cpp" line="2107"/>
-        <location filename="../Sources/ptMain.cpp" line="4891"/>
+        <location filename="../Sources/ptMain.cpp" line="1190"/>
+        <location filename="../Sources/ptMain.cpp" line="2172"/>
+        <location filename="../Sources/ptMain.cpp" line="5086"/>
         <source>Channelmixer read error</source>
         <translation>Chyba mixéru kanálů</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1160"/>
-        <location filename="../Sources/ptMain.cpp" line="1310"/>
-        <location filename="../Sources/ptMain.cpp" line="1472"/>
-        <location filename="../Sources/ptMain.cpp" line="1510"/>
-        <location filename="../Sources/ptMain.cpp" line="1737"/>
-        <location filename="../Sources/ptMain.cpp" line="2066"/>
-        <location filename="../Sources/ptMain.cpp" line="2406"/>
-        <location filename="../Sources/ptMain.cpp" line="3064"/>
+        <location filename="../Sources/ptMain.cpp" line="1223"/>
+        <location filename="../Sources/ptMain.cpp" line="1373"/>
+        <location filename="../Sources/ptMain.cpp" line="1535"/>
+        <location filename="../Sources/ptMain.cpp" line="1573"/>
+        <location filename="../Sources/ptMain.cpp" line="1802"/>
+        <location filename="../Sources/ptMain.cpp" line="2131"/>
+        <location filename="../Sources/ptMain.cpp" line="2476"/>
+        <location filename="../Sources/ptMain.cpp" line="3160"/>
         <source>Ready</source>
         <translation>Připraven</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1466"/>
+        <location filename="../Sources/ptMain.cpp" line="1529"/>
         <source>Selection</source>
         <translation>Výběr</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1470"/>
-        <location filename="../Sources/ptMain.cpp" line="1508"/>
-        <location filename="../Sources/ptMain.cpp" line="1826"/>
-        <location filename="../Sources/ptMain.cpp" line="1898"/>
+        <location filename="../Sources/ptMain.cpp" line="1533"/>
+        <location filename="../Sources/ptMain.cpp" line="1571"/>
+        <location filename="../Sources/ptMain.cpp" line="1891"/>
+        <location filename="../Sources/ptMain.cpp" line="1963"/>
         <source>Updating histogram</source>
         <translation>Aktualizovat histogram</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1499"/>
+        <location filename="../Sources/ptMain.cpp" line="1562"/>
         <source>Selection too small</source>
         <translation>Výběr je příliš malý</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1500"/>
+        <location filename="../Sources/ptMain.cpp" line="1563"/>
         <source>Selection rectangle needs to be at least 50x50 pixels in size.
 No crop, try again.</source>
         <translation>Výběr obdélníku nesmí být menší než 50x50 pixelů.
-Bez rámování. Zkuste to znovu.</translation>
+Bez ořezu. Zkuste to znovu.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1539"/>
-        <location filename="../Sources/ptMain.cpp" line="1594"/>
+        <location filename="../Sources/ptMain.cpp" line="1602"/>
+        <location filename="../Sources/ptMain.cpp" line="1658"/>
         <source>WebResizing</source>
         <translation>Zmenšení na web</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1552"/>
+        <location filename="../Sources/ptMain.cpp" line="1616"/>
         <source>Applying base curve</source>
         <translation>Použít základní křivku</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1558"/>
+        <location filename="../Sources/ptMain.cpp" line="1622"/>
         <source>Applying gamma compensation</source>
         <translation>Použít gamma kompenzaci</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1579"/>
+        <location filename="../Sources/ptMain.cpp" line="1643"/>
         <source>Applying RGB Contrast</source>
-        <translation type="unfinished">Použít kontrast RGB</translation>
+        <translation>Použít kontrast RGB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1586"/>
+        <location filename="../Sources/ptMain.cpp" line="1650"/>
         <source>Applying after gamma curve</source>
         <translation>Použít křivku po gamma</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1604"/>
+        <location filename="../Sources/ptMain.cpp" line="1669"/>
         <source>Wiener Filter</source>
         <translation>Wienerův filtr</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1742"/>
+        <location filename="../Sources/ptMain.cpp" line="1807"/>
         <source>Updating preview image</source>
         <translation>Aktualizovat náhled obrázku</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1839"/>
-        <location filename="../Sources/ptMain.cpp" line="1958"/>
+        <location filename="../Sources/ptMain.cpp" line="1904"/>
         <location filename="../Sources/ptMain.cpp" line="2023"/>
+        <location filename="../Sources/ptMain.cpp" line="2088"/>
         <source>Histogram selection outside the image</source>
         <translation>Výběr je mimo obraz histogramu</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1840"/>
-        <location filename="../Sources/ptMain.cpp" line="1959"/>
+        <location filename="../Sources/ptMain.cpp" line="1905"/>
         <location filename="../Sources/ptMain.cpp" line="2024"/>
+        <location filename="../Sources/ptMain.cpp" line="2089"/>
         <source>Histogram selection rectangle too large.
 No crop, try again.</source>
         <translation>Obdélníkový výběr pro velký obrázek.
-Bez rámování. Zkuste to prosím znovu.</translation>
+Bez ořezu. Zkuste to prosím znovu.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1863"/>
+        <location filename="../Sources/ptMain.cpp" line="1928"/>
         <source>Indicating exposure</source>
-        <translation type="unfinished">Indikace expozice</translation>
+        <translation>Indikace expozice</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1905"/>
-        <location filename="../Sources/ptMain.cpp" line="2334"/>
-        <location filename="../Sources/ptMain.cpp" line="2944"/>
+        <location filename="../Sources/ptMain.cpp" line="1970"/>
+        <location filename="../Sources/ptMain.cpp" line="2402"/>
+        <location filename="../Sources/ptMain.cpp" line="3036"/>
         <source>Converting to output space</source>
         <translation>Konverze do výstupního prostoru</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="1976"/>
+        <location filename="../Sources/ptMain.cpp" line="2041"/>
         <source>Converting to screen space</source>
         <translation>Převod na obrazovce místa</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2183"/>
-        <location filename="../Sources/ptMain.cpp" line="2657"/>
+        <location filename="../Sources/ptMain.cpp" line="2248"/>
+        <location filename="../Sources/ptMain.cpp" line="2728"/>
         <source>Cannot decode</source>
         <translation>Nelze dekódovat</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2260"/>
+        <location filename="../Sources/ptMain.cpp" line="2328"/>
         <source>Memory error, no conversion for file:</source>
-        <translation>Chyba paměti, není konverzace pro soubor: </translation>
+        <translation>Chyba paměti, není konverze pro soubor: </translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2362"/>
+        <location filename="../Sources/ptMain.cpp" line="2430"/>
         <source>Writing output</source>
         <translation>Zapisuje výstup</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2374"/>
+        <location filename="../Sources/ptMain.cpp" line="2442"/>
         <source>GraphicsMagick Error</source>
         <translation>Chyba GraphicsMagick</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2374"/>
+        <location filename="../Sources/ptMain.cpp" line="2442"/>
         <source>No output file written.</source>
-        <translation type="unfinished">Žádný soubor pro výstup.</translation>
+        <translation>Žádný soubor pro výstup.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2376"/>
+        <location filename="../Sources/ptMain.cpp" line="2444"/>
         <source>Writing output (exif)</source>
         <translation>Zápis výstupu (exif)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2381"/>
+        <location filename="../Sources/ptMain.cpp" line="2451"/>
         <source>Exif Error</source>
         <translation>Chyba Exifu</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2381"/>
+        <location filename="../Sources/ptMain.cpp" line="2451"/>
         <source>No exif data written.</source>
         <translation>Žádné Exif data pro zápis.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2390"/>
+        <location filename="../Sources/ptMain.cpp" line="2460"/>
         <source>Writing output (settings)</source>
         <translation>Zápis výstupu (Nastavení)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2401"/>
+        <location filename="../Sources/ptMain.cpp" line="2471"/>
         <source>Written %L1 bytes (%L2 MByte)</source>
         <translation>Zápis %L1 bytes (%L2 MByte)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2428"/>
-        <location filename="../Sources/ptMain.cpp" line="2774"/>
+        <location filename="../Sources/ptMain.cpp" line="2498"/>
+        <location filename="../Sources/ptMain.cpp" line="2866"/>
         <source>Jpg images (*.jpg *.jpeg);;All files (*.*)</source>
         <translation>Jpg obrazy (*.jpg *.jpeg);;Všechny soubory (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2433"/>
-        <location filename="../Sources/ptMain.cpp" line="2779"/>
+        <location filename="../Sources/ptMain.cpp" line="2503"/>
+        <location filename="../Sources/ptMain.cpp" line="2871"/>
         <source>PNG images(*.png);;All files (*.*)</source>
         <translation>PNG obrazy(*.png);;Všechny soubory (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2438"/>
-        <location filename="../Sources/ptMain.cpp" line="2784"/>
+        <location filename="../Sources/ptMain.cpp" line="2508"/>
+        <location filename="../Sources/ptMain.cpp" line="2876"/>
         <source>Tiff images (*.tif *.tiff);;All files (*.*)</source>
         <translation>Tiff obrazy (*.tif *.tiff);;Všechny soubory (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2442"/>
-        <location filename="../Sources/ptMain.cpp" line="2788"/>
+        <location filename="../Sources/ptMain.cpp" line="2512"/>
+        <location filename="../Sources/ptMain.cpp" line="2880"/>
         <source>Ppm images (*.ppm);;All files (*.*)</source>
         <translation>Ppm obrazy (*.ppm);;Všechny soubory (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2619"/>
+        <location filename="../Sources/ptMain.cpp" line="2690"/>
         <source>Open Raw</source>
         <translation>Otevřít Raw</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2630"/>
+        <location filename="../Sources/ptMain.cpp" line="2701"/>
         <source>File not found</source>
         <translation>Soubor nenalezen</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2631"/>
+        <location filename="../Sources/ptMain.cpp" line="2702"/>
         <source>Input file does not exist.</source>
         <translation>Vstupní soubor neexistuje.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2644"/>
+        <location filename="../Sources/ptMain.cpp" line="2715"/>
         <source>Reading file</source>
         <translation>Načítám soubor</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2912"/>
+        <location filename="../Sources/ptMain.cpp" line="3004"/>
         <source>Writing tmp image for gimp</source>
         <translation>Zapisuji tmp obraz pro gimp</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2983"/>
+        <location filename="../Sources/ptMain.cpp" line="3076"/>
         <source>Writing tmp exif for gimp</source>
         <translation>Zapisuji tmp exif pro gimp</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="2996"/>
+        <location filename="../Sources/ptMain.cpp" line="3090"/>
         <source>Writing tmp icc for gimp</source>
         <translation>Zapisuji tmp icc pro gimp</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3028"/>
+        <location filename="../Sources/ptMain.cpp" line="3123"/>
         <source>Writing gimp interface file</source>
         <translation>Zapisuji soubor interfejsu gimp</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3129"/>
-        <location filename="../Sources/ptMain.cpp" line="3130"/>
+        <location filename="../Sources/ptMain.cpp" line="3285"/>
+        <location filename="../Sources/ptMain.cpp" line="3286"/>
         <source>Please load a profile first</source>
         <translation>Prosím načtěte nejdřív profil</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3138"/>
+        <location filename="../Sources/ptMain.cpp" line="3294"/>
         <source>Not yet implemented</source>
         <translation>Není implementováno</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3139"/>
+        <location filename="../Sources/ptMain.cpp" line="3295"/>
         <source>Not yet implemented. Reverting to Adobe.</source>
         <translation>Není implementováno.Návrat k Adobe. </translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3149"/>
-        <location filename="../Sources/ptMain.cpp" line="3192"/>
-        <location filename="../Sources/ptMain.cpp" line="3232"/>
+        <location filename="../Sources/ptMain.cpp" line="3305"/>
+        <location filename="../Sources/ptMain.cpp" line="3348"/>
+        <location filename="../Sources/ptMain.cpp" line="3388"/>
         <source>Open Profile</source>
         <translation>Otevřít profil</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3338"/>
+        <location filename="../Sources/ptMain.cpp" line="3494"/>
         <source>Open Image</source>
         <translation>Otevřít obrázek</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3340"/>
+        <location filename="../Sources/ptMain.cpp" line="3496"/>
         <source>CSS files (*.css *.qss);;All files(*.*)</source>
         <translation>CSS soubor (*.css *.qss);;Včechny soubory(*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3374"/>
+        <location filename="../Sources/ptMain.cpp" line="3535"/>
         <source>Are you sure?</source>
         <translation>Jste si jisti?</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3375"/>
+        <location filename="../Sources/ptMain.cpp" line="3536"/>
         <source>If you don&apos;t stop me, I will waste %1 MB of memory.</source>
         <translation>Pokud se zastaví, zabírá %1 MB paměti.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3396"/>
+        <location filename="../Sources/ptMain.cpp" line="3557"/>
         <source>Really switch to 1:1 pipe?</source>
-        <translation type="unfinished">Opravdu přepnout na velikost 1:1 souboru?</translation>
+        <translation>Opravdu přepnout na velikost 1:1 souboru?</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3397"/>
+        <location filename="../Sources/ptMain.cpp" line="3558"/>
         <source>Switching to 1:1 pipe will increase memory usage and processing time greatly.
 Are you sure?</source>
         <translation>Přepnutí datového proudu na 1:1 vede k většímu využití paměti a CPU, operace bude prodloužena.
 Jste si jisti?</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3399"/>
-        <location filename="../Sources/ptMain.cpp" line="3436"/>
+        <location filename="../Sources/ptMain.cpp" line="3560"/>
+        <location filename="../Sources/ptMain.cpp" line="3597"/>
         <source>Detail view</source>
         <translation>Zobrazit detail</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3568"/>
-        <location filename="../Sources/ptMain.cpp" line="3583"/>
+        <location filename="../Sources/ptMain.cpp" line="3729"/>
+        <location filename="../Sources/ptMain.cpp" line="3744"/>
         <source>Reset?</source>
         <translation>Resetovat?</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3569"/>
+        <location filename="../Sources/ptMain.cpp" line="3730"/>
         <source>Reset to neutral values?
 </source>
         <translation>Restovat do neutrálního nastavení?</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3584"/>
+        <location filename="../Sources/ptMain.cpp" line="3745"/>
         <source>Reset to start up settings?
 </source>
         <translation>Resetovat do startovního nastavení?</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3613"/>
+        <location filename="../Sources/ptMain.cpp" line="3774"/>
         <source>Get Gimp command</source>
         <translation>Získejte Gimp příkaz</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3644"/>
+        <location filename="../Sources/ptMain.cpp" line="3805"/>
         <source>Get preset file</source>
         <translation>Získej nastavení souboru</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3772"/>
+        <location filename="../Sources/ptMain.cpp" line="3933"/>
         <source>Save full size image</source>
         <translation>Ulož plnou velikost obrázku</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3774"/>
+        <location filename="../Sources/ptMain.cpp" line="3935"/>
         <source>Save current pipe</source>
         <translation>Ulož aktuální proud</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3776"/>
+        <location filename="../Sources/ptMain.cpp" line="3937"/>
         <source>Save job file</source>
-        <translation>Ulož job souboru</translation>
+        <translation>Uložit pracovní soubor</translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptBatchWindow.cpp" line="106"/>
-        <location filename="../Sources/ptMain.cpp" line="3824"/>
-        <location filename="../Sources/ptMain.cpp" line="3836"/>
-        <source>Settings files (*.pts *.ptj);;All files (*.*)</source>
-        <translation>Nastavení souboru (*.pts *.ptj);;Všechny soubory (*.*) </translation>
-    </message>
-    <message>
-        <location filename="../Sources/batch/ptBatchWindow.cpp" line="109"/>
-        <source>Open setting files</source>
+        <location filename="../Sources/ptMain.cpp" line="3941"/>
+        <source>Save and send to batch manager</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3827"/>
+        <source>Settings files (*.pts *.ptj);;All files (*.*)</source>
+        <translation type="vanished">Nastavení souboru (*.pts *.ptj);;Všechny soubory (*.*) </translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMain.cpp" line="3995"/>
         <source>Open setting file</source>
         <translation>Otevřít nastavení souboru</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3853"/>
+        <location filename="../Sources/ptMain.cpp" line="4032"/>
         <source>Open &apos;bad pixels&apos; file</source>
         <translation>Otevření souboru špatných pixelů</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3877"/>
+        <location filename="../Sources/ptMain.cpp" line="4056"/>
         <source>Open &apos;dark frame&apos; file</source>
         <translation>Otevřít soubor s rámečky</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="3925"/>
-        <location filename="../Sources/ptMain.cpp" line="3926"/>
+        <location filename="../Sources/ptMain.cpp" line="4104"/>
+        <location filename="../Sources/ptMain.cpp" line="4105"/>
         <source>Spot WB</source>
         <translation>Bodové vyvážení bílé</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4378"/>
+        <location filename="../Sources/ptMain.cpp" line="4557"/>
         <source>No selection</source>
         <translation>Bez výběru</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4379"/>
-        <location filename="../Sources/ptMain.cpp" line="4578"/>
+        <location filename="../Sources/ptMain.cpp" line="4558"/>
+        <location filename="../Sources/ptMain.cpp" line="4757"/>
         <source>Open an image first.</source>
         <translation>Otevři obrázek.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4391"/>
-        <location filename="../Sources/ptMain.cpp" line="4392"/>
+        <location filename="../Sources/ptMain.cpp" line="4570"/>
+        <location filename="../Sources/ptMain.cpp" line="4571"/>
         <source>Get angle</source>
         <translation>Získat úhel</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4577"/>
+        <location filename="../Sources/ptMain.cpp" line="4756"/>
         <source>No crop possible</source>
         <translation>Oříznout nelze</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="189"/>
-        <location filename="../Sources/ptMain.cpp" line="4582"/>
+        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="201"/>
+        <location filename="../Sources/ptMain.cpp" line="4761"/>
         <source>Prepare</source>
         <translation>Zpracovává</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="190"/>
+        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="202"/>
         <source>Prepare for local adjust</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="195"/>
-        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="196"/>
+        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="207"/>
+        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="208"/>
         <source>Local adjust</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4583"/>
+        <location filename="../Sources/ptMain.cpp" line="4762"/>
         <source>Prepare for cropping</source>
         <translation>Zpracování ořezu</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4591"/>
-        <location filename="../Sources/ptMain.cpp" line="4592"/>
+        <location filename="../Sources/ptMain.cpp" line="4770"/>
+        <location filename="../Sources/ptMain.cpp" line="4771"/>
         <source>Crop</source>
         <translation>Ořez</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4626"/>
+        <location filename="../Sources/ptMain.cpp" line="4805"/>
         <source>Crop too small</source>
         <translation>Oříznutí obrázku je příliš malé</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4627"/>
+        <location filename="../Sources/ptMain.cpp" line="4806"/>
         <source>Crop rectangle needs to be at least 4x4 pixels in size.
 No crop, try again.</source>
         <translation>Označení ořezu musí mít minimálně 4x4px.
 Bez ořezu. Zkuste to znovu.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4685"/>
+        <location filename="../Sources/ptMain.cpp" line="4864"/>
         <source>No previous crop found</source>
         <translation>Nenalezen náhled ořezu</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4686"/>
+        <location filename="../Sources/ptMain.cpp" line="4865"/>
         <source>Set a crop rectangle now.</source>
         <translation>Nastavte ořezový čtverec.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4872"/>
+        <location filename="../Sources/ptMain.cpp" line="5067"/>
         <source>Open Channelmixer</source>
         <translation>Otevřít mixer kanálů</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4919"/>
-        <location filename="../Sources/ptMain.cpp" line="4934"/>
+        <location filename="../Sources/ptMain.cpp" line="5114"/>
+        <location filename="../Sources/ptMain.cpp" line="5129"/>
         <source>Save Channelmixer</source>
         <translation>Uložit mixér kanálů</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="4935"/>
+        <location filename="../Sources/ptMain.cpp" line="5130"/>
         <source>Give a description</source>
         <translation>Popis</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMain.cpp" line="6286"/>
-        <location filename="../Sources/ptMain.cpp" line="6360"/>
+        <location filename="../Sources/ptMain.cpp" line="6347"/>
+        <location filename="../Sources/ptMain.cpp" line="6421"/>
         <source>Get texture bitmap file</source>
         <translation>Získat bitmapovou texturu souboru</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="468"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="471"/>
         <source>Done</source>
         <translation>Hotovo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="474"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="477"/>
         <source>Updating</source>
         <translation>Aktualizace</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="480"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="483"/>
         <source>Processing</source>
         <translation>Zpracovávám</translation>
     </message>
@@ -2870,7 +2890,7 @@ Bez ořezu. Zkuste to znovu.</translation>
         <location filename="../Sources/ptWhiteBalances.cpp" line="7962"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="8264"/>
         <source>Underwater</source>
-        <translation type="unfinished">Pod vodou</translation>
+        <translation>Pod vodou</translation>
     </message>
     <message>
         <location filename="../Sources/ptWhiteBalances.cpp" line="124"/>
@@ -3670,7 +3690,7 @@ Bez ořezu. Zkuste to znovu.</translation>
         <location filename="../Sources/ptWhiteBalances.cpp" line="8492"/>
         <location filename="../Sources/ptWhiteBalances.cpp" line="8720"/>
         <source>3200K</source>
-        <translation type="unfinished">3200K</translation>
+        <translation>3200K</translation>
     </message>
     <message>
         <location filename="../Sources/ptWhiteBalances.cpp" line="2284"/>
@@ -5094,19 +5114,31 @@ Bez ořezu. Zkuste to znovu.</translation>
         <translation>14000K</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/imagespot/ptSpotListWidget.cpp" line="152"/>
-        <location filename="../Sources/filters/imagespot/ptSpotListWidget.cpp" line="183"/>
+        <location filename="../Sources/batch/ptBatchWindow.cpp" line="129"/>
+        <location filename="../Sources/ptMain.cpp" line="3992"/>
+        <location filename="../Sources/ptMain.cpp" line="4006"/>
+        <source>All supported files (*.pts *ptj);;Settings files (*.pts);;Job files (*.ptj);;All files (*.*)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/batch/ptBatchWindow.cpp" line="132"/>
+        <source>Open setting files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/imagespot/ptSpotListWidget.cpp" line="151"/>
+        <location filename="../Sources/filters/imagespot/ptSpotListWidget.cpp" line="182"/>
         <source>No image opened</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/filters/imagespot/ptSpotListWidget.cpp" line="153"/>
-        <location filename="../Sources/filters/imagespot/ptSpotListWidget.cpp" line="184"/>
+        <location filename="../Sources/filters/imagespot/ptSpotListWidget.cpp" line="152"/>
+        <location filename="../Sources/filters/imagespot/ptSpotListWidget.cpp" line="183"/>
         <source>Open an image before editing spots.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/ptCurveWindow.cpp" line="188"/>
+        <location filename="../Sources/ptCurveWindow.cpp" line="176"/>
         <source>Open Curve</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5116,22 +5148,22 @@ Bez ořezu. Zkuste to znovu.</translation>
     <message>
         <location filename="../Sources/filters/ptFilter_Tone.ui" line="18"/>
         <source>All values</source>
-        <translation type="unfinished">Všechny hodnoty</translation>
+        <translation>Všechny hodnoty</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Tone.ui" line="62"/>
         <source>Shadows</source>
-        <translation type="unfinished">Stíny</translation>
+        <translation>Stíny</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Tone.ui" line="106"/>
         <source>Midtones</source>
-        <translation type="unfinished">Střední tóny</translation>
+        <translation>Střední tóny</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Tone.ui" line="150"/>
         <source>Highlights</source>
-        <translation type="unfinished"></translation>
+        <translation>Přesvícené</translation>
     </message>
 </context>
 <context>
@@ -5178,57 +5210,67 @@ Bez ořezu. Zkuste to znovu.</translation>
     </message>
     <message>
         <location filename="../Sources/batch/ptBatchWindow.ui" line="162"/>
-        <source>Save job list to file</source>
+        <source>Reset status</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../Sources/batch/ptBatchWindow.ui" line="165"/>
+        <source>Reset</source>
+        <translation type="unfinished">Reset</translation>
+    </message>
+    <message>
+        <location filename="../Sources/batch/ptBatchWindow.ui" line="204"/>
+        <source>Save job list to file</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/batch/ptBatchWindow.ui" line="207"/>
         <source>Save...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptBatchWindow.ui" line="188"/>
+        <location filename="../Sources/batch/ptBatchWindow.ui" line="230"/>
         <source>Open job list from files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptBatchWindow.ui" line="191"/>
+        <location filename="../Sources/batch/ptBatchWindow.ui" line="233"/>
         <source>Open...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptBatchWindow.ui" line="227"/>
+        <location filename="../Sources/batch/ptBatchWindow.ui" line="269"/>
         <source>Show processing log</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptBatchWindow.ui" line="230"/>
+        <location filename="../Sources/batch/ptBatchWindow.ui" line="272"/>
         <source>Show log</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptBatchWindow.ui" line="272"/>
+        <location filename="../Sources/batch/ptBatchWindow.ui" line="314"/>
         <source>Close batch manager</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptBatchWindow.ui" line="275"/>
+        <location filename="../Sources/batch/ptBatchWindow.ui" line="317"/>
         <source>Close</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptBatchWindow.cpp" line="169"/>
-        <location filename="../Sources/batch/ptBatchWindow.cpp" line="184"/>
+        <location filename="../Sources/batch/ptBatchWindow.cpp" line="196"/>
+        <location filename="../Sources/batch/ptBatchWindow.cpp" line="211"/>
         <source>Job list files (*.ptb);;All files (*.*)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptBatchWindow.cpp" line="172"/>
+        <location filename="../Sources/batch/ptBatchWindow.cpp" line="199"/>
         <source>Save job list file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptBatchWindow.cpp" line="187"/>
+        <location filename="../Sources/batch/ptBatchWindow.cpp" line="214"/>
         <source>Open job list files</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5236,52 +5278,52 @@ Bez ořezu. Zkuste to znovu.</translation>
 <context>
     <name>ptCurveWindow</name>
     <message>
-        <location filename="../Sources/ptCurveWindow.cpp" line="671"/>
+        <location filename="../Sources/ptCurveWindow.cpp" line="650"/>
         <source>L&amp;uminance mask</source>
         <translation>Luminanční maska</translation>
     </message>
     <message>
-        <location filename="../Sources/ptCurveWindow.cpp" line="675"/>
+        <location filename="../Sources/ptCurveWindow.cpp" line="654"/>
         <source>C&amp;olor mask</source>
         <translation>Maska barev</translation>
     </message>
     <message>
-        <location filename="../Sources/ptCurveWindow.cpp" line="684"/>
+        <location filename="../Sources/ptCurveWindow.cpp" line="663"/>
         <source>&amp;Linear</source>
         <translation>&amp;Lineální</translation>
     </message>
     <message>
-        <location filename="../Sources/ptCurveWindow.cpp" line="685"/>
+        <location filename="../Sources/ptCurveWindow.cpp" line="664"/>
         <source>Linear interpolation</source>
         <translation>Lineární interpolace</translation>
     </message>
     <message>
-        <location filename="../Sources/ptCurveWindow.cpp" line="689"/>
+        <location filename="../Sources/ptCurveWindow.cpp" line="668"/>
         <source>&amp;Spline</source>
-        <translation>&amp;Spline</translation>
+        <translation>Křivka</translation>
     </message>
     <message>
-        <location filename="../Sources/ptCurveWindow.cpp" line="690"/>
+        <location filename="../Sources/ptCurveWindow.cpp" line="669"/>
         <source>Spline interpolation</source>
         <translation>Spline interpolační</translation>
     </message>
     <message>
-        <location filename="../Sources/ptCurveWindow.cpp" line="694"/>
+        <location filename="../Sources/ptCurveWindow.cpp" line="673"/>
         <source>&amp;Cosine</source>
         <translation>&amp;Cosinus</translation>
     </message>
     <message>
-        <location filename="../Sources/ptCurveWindow.cpp" line="695"/>
+        <location filename="../Sources/ptCurveWindow.cpp" line="674"/>
         <source>Cosine interpolation</source>
         <translation>Kosinusová interpolace</translation>
     </message>
     <message>
-        <location filename="../Sources/ptCurveWindow.cpp" line="704"/>
+        <location filename="../Sources/ptCurveWindow.cpp" line="683"/>
         <source>Open &amp;file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/ptCurveWindow.cpp" line="705"/>
+        <location filename="../Sources/ptCurveWindow.cpp" line="684"/>
         <source>Open anchor curve file</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5290,7 +5332,7 @@ Bez ořezu. Zkuste to znovu.</translation>
     <name>ptFileMgrWindow</name>
     <message>
         <location filename="../Sources/filemgmt/ptFileMgrWindow.ui" line="119"/>
-        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="110"/>
+        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="114"/>
         <source>Bookmarks</source>
         <translation>Záložky</translation>
     </message>
@@ -5300,22 +5342,22 @@ Bez ořezu. Zkuste to znovu.</translation>
         <translation>Otevřít lištu záložek</translation>
     </message>
     <message>
-        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="78"/>
+        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="82"/>
         <source>Folders</source>
         <translation>Složky</translation>
     </message>
     <message>
-        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="80"/>
+        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="84"/>
         <source>Directories</source>
         <translation>Cesty</translation>
     </message>
     <message>
-        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="87"/>
+        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="91"/>
         <source>Bookmark current folder (Ctrl+B)</source>
         <translation>Záložky aktuální složky (Ctrl+B)</translation>
     </message>
     <message>
-        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="89"/>
+        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="93"/>
         <source>Bookmark current directory (Ctrl+B)</source>
         <translation>Záložky aktuální cesty (Ctrl+B)</translation>
     </message>
@@ -5352,7 +5394,7 @@ Bez ořezu. Zkuste to znovu.</translation>
     <message>
         <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="673"/>
         <source>Show &amp;folder thumbnails</source>
-        <translation>Zobraz minatury &amp;složek</translation>
+        <translation>Zobraz &amp;minatury složek</translation>
     </message>
     <message>
         <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="675"/>
@@ -5372,7 +5414,7 @@ Bez ořezu. Zkuste to znovu.</translation>
     <message>
         <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="691"/>
         <source>Show &amp;sidebar</source>
-        <translation type="unfinished">Zobrazit boční &amp;panel</translation>
+        <translation>Zobrazit boční &amp;panel</translation>
     </message>
     <message>
         <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="691"/>
@@ -5395,15 +5437,25 @@ Bez ořezu. Zkuste to znovu.</translation>
         <translation>Esc</translation>
     </message>
     <message>
-        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="708"/>
+        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="701"/>
+        <source>Show RAWs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="705"/>
+        <source>Show bitmaps</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/filemgmt/ptFileMgrWindow.cpp" line="715"/>
         <source>Thumbnail &amp;view</source>
-        <translation type="unfinished">&amp;Zobrazení miniatur </translation>
+        <translation>Zobrazení miniatur </translation>
     </message>
 </context>
 <context>
     <name>ptFilter_ABCurves</name>
     <message>
-        <location filename="../Sources/filters/ptFilter_ABCurves.cpp" line="48"/>
+        <location filename="../Sources/filters/ptFilter_ABCurves.cpp" line="45"/>
         <source>a* b* curves</source>
         <translation>Křivky a* b*</translation>
     </message>
@@ -5411,37 +5463,37 @@ Bez ořezu. Zkuste to znovu.</translation>
 <context>
     <name>ptFilter_Brightness</name>
     <message>
-        <location filename="../Sources/filters/ptFilter_Brightness.cpp" line="49"/>
+        <location filename="../Sources/filters/ptFilter_Brightness.cpp" line="48"/>
         <source>Brightness</source>
         <translation>Jas</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_Brightness.cpp" line="58"/>
+        <location filename="../Sources/filters/ptFilter_Brightness.cpp" line="57"/>
         <source>Catch white</source>
         <translation>Zachycení bílé</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_Brightness.cpp" line="58"/>
+        <location filename="../Sources/filters/ptFilter_Brightness.cpp" line="57"/>
         <source>Darken the bright parts</source>
-        <translation type="unfinished"></translation>
+        <translation>Tmavší díl odstínu</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_Brightness.cpp" line="59"/>
+        <location filename="../Sources/filters/ptFilter_Brightness.cpp" line="58"/>
         <source>Catch black</source>
         <translation>Zachycení černé</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_Brightness.cpp" line="59"/>
+        <location filename="../Sources/filters/ptFilter_Brightness.cpp" line="58"/>
         <source>Brighten the dark parts</source>
-        <translation type="unfinished"></translation>
+        <translation>Světlejší díl odstínu</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_Brightness.cpp" line="60"/>
+        <location filename="../Sources/filters/ptFilter_Brightness.cpp" line="59"/>
         <source>Gain</source>
         <translation>Zesílení</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_Brightness.cpp" line="60"/>
+        <location filename="../Sources/filters/ptFilter_Brightness.cpp" line="59"/>
         <source>Exposure gain</source>
         <translation>Zesílení expozice</translation>
     </message>
@@ -5451,17 +5503,17 @@ Bez ořezu. Zkuste to znovu.</translation>
     <message>
         <location filename="../Sources/filters/ptFilter_ColorBoost.cpp" line="48"/>
         <source>Color boost</source>
-        <translation type="unfinished"></translation>
+        <translation>Zesílení barev</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_ColorBoost.cpp" line="57"/>
         <source>Strength in a</source>
-        <translation type="unfinished"></translation>
+        <translation>Síla v a</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_ColorBoost.cpp" line="58"/>
         <source>Strength in b</source>
-        <translation type="unfinished"></translation>
+        <translation>Síla v b</translation>
     </message>
 </context>
 <context>
@@ -5479,7 +5531,7 @@ Bez ořezu. Zkuste to znovu.</translation>
     <message>
         <location filename="../Sources/filters/ptFilter_ColorContrast.cpp" line="59"/>
         <source>Radius</source>
-        <translation>Rádius</translation>
+        <translation>Poloměr</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_ColorContrast.cpp" line="60"/>
@@ -5497,7 +5549,7 @@ Bez ořezu. Zkuste to znovu.</translation>
     <message>
         <location filename="../Sources/filters/ptFilter_ColorEnhancement.cpp" line="48"/>
         <source>Color enhancement</source>
-        <translation type="unfinished"></translation>
+        <translation>Rozšíření barev</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_ColorEnhancement.cpp" line="57"/>
@@ -5525,7 +5577,7 @@ Bez ořezu. Zkuste to znovu.</translation>
     <message>
         <location filename="../Sources/filters/ptFilter_ColorIntensity.cpp" line="61"/>
         <source>Red</source>
-        <translation type="unfinished"></translation>
+        <translation>Červená</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_ColorIntensity.cpp" line="62"/>
@@ -5558,7 +5610,7 @@ Bez ořezu. Zkuste to znovu.</translation>
     <message>
         <location filename="../Sources/filters/ptFilter_DetailCurve.cpp" line="69"/>
         <source>Anti badpixel</source>
-        <translation>Anti chybný pixel</translation>
+        <translation>Odstranění chybných pixelů</translation>
     </message>
 </context>
 <context>
@@ -5566,7 +5618,7 @@ Bez ořezu. Zkuste to znovu.</translation>
     <message>
         <location filename="../Sources/filters/ptFilter_Drc.cpp" line="50"/>
         <source>Dynamic range compression</source>
-        <translation type="unfinished"></translation>
+        <translation>Komprese dynamického rozsahu</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Drc.cpp" line="59"/>
@@ -5641,17 +5693,35 @@ Bez ořezu. Zkuste to znovu.</translation>
     </message>
 </context>
 <context>
+    <name>ptFilter_ImpulseNR</name>
+    <message>
+        <location filename="../Sources/filters/ptFilter_ImpulseNR.cpp" line="47"/>
+        <source>Impulse noise reduction</source>
+        <translation type="unfinished">Impulsivní redukce šumu</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_ImpulseNR.cpp" line="56"/>
+        <source>Lightness threshold</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_ImpulseNR.cpp" line="57"/>
+        <source>Color threshold</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ptFilter_LMHRecovery</name>
     <message>
         <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="61"/>
         <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="69"/>
         <source>Low/mid/highlight recovery</source>
-        <translation type="unfinished"></translation>
+        <translation>Obnovení nízkých/vysokých světel</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="76"/>
         <source>Disabled</source>
-        <translation type="unfinished">Disabled</translation>
+        <translation>Disabled</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="77"/>
@@ -5666,7 +5736,7 @@ Bez ořezu. Zkuste to znovu.</translation>
     <message>
         <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="79"/>
         <source>Highlights</source>
-        <translation type="unfinished"></translation>
+        <translation>Přesvícené</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="80"/>
@@ -5677,7 +5747,7 @@ Bez ořezu. Zkuste to znovu.</translation>
         <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="84"/>
         <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="89"/>
         <source>Mask type</source>
-        <translation type="unfinished"></translation>
+        <translation>Typ masky</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_LMHRecovery.cpp" line="85"/>
@@ -5734,7 +5804,7 @@ Bez ořezu. Zkuste to znovu.</translation>
     <message>
         <location filename="../Sources/filters/ptFilter_LabTransform.cpp" line="61"/>
         <source>Transformation</source>
-        <translation type="unfinished"></translation>
+        <translation>Transformace</translation>
     </message>
 </context>
 <context>
@@ -5754,6 +5824,108 @@ Bez ořezu. Zkuste to znovu.</translation>
         <location filename="../Sources/filters/ptFilter_Levels.cpp" line="69"/>
         <source>Whitepoint</source>
         <translation>Bílý bod</translation>
+    </message>
+</context>
+<context>
+    <name>ptFilter_LocalContrast</name>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LocalContrast.cpp" line="63"/>
+        <location filename="../Sources/filters/ptFilter_LocalContrast.cpp" line="72"/>
+        <source>Local contrast</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LocalContrast.cpp" line="86"/>
+        <source>Disabled</source>
+        <translation type="unfinished">Disabled</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LocalContrast.cpp" line="87"/>
+        <source>Shadows</source>
+        <translation type="unfinished">Stíny</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LocalContrast.cpp" line="88"/>
+        <source>Midtones</source>
+        <translation type="unfinished">Střední tóny</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LocalContrast.cpp" line="89"/>
+        <source>Highlights</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LocalContrast.cpp" line="90"/>
+        <source>All values</source>
+        <translation type="unfinished">Všechny hodnoty</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LocalContrast.cpp" line="120"/>
+        <source>Mask type</source>
+        <translation type="unfinished">Typ masky</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LocalContrast.cpp" line="121"/>
+        <source>Radius</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LocalContrast.cpp" line="122"/>
+        <source>Strength</source>
+        <translation type="unfinished">Síla</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LocalContrast.cpp" line="123"/>
+        <source>Opacity</source>
+        <translation type="unfinished">Průhlednost</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LocalContrast.cpp" line="124"/>
+        <source>Halo control</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LocalContrast.cpp" line="125"/>
+        <source>Lower limit</source>
+        <translation type="unfinished">Dolní limit</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LocalContrast.cpp" line="126"/>
+        <source>Upper limit</source>
+        <translation type="unfinished">Horní limit</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LocalContrast.cpp" line="127"/>
+        <source>Softness</source>
+        <translation type="unfinished">Změkčení</translation>
+    </message>
+</context>
+<context>
+    <name>ptFilter_LocalContrastStretch</name>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LocalContrastStretch.cpp" line="58"/>
+        <source>Local contrast stretch</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LocalContrastStretch.cpp" line="84"/>
+        <source>Radius</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LocalContrastStretch.cpp" line="85"/>
+        <source>Feather</source>
+        <translation type="unfinished">Pero</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LocalContrastStretch.cpp" line="86"/>
+        <source>Opacity</source>
+        <translation type="unfinished">Průhlednost</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_LocalContrastStretch.cpp" line="87"/>
+        <source>Masking</source>
+        <translation type="unfinished">Maskuj</translation>
     </message>
 </context>
 <context>
@@ -5784,7 +5956,7 @@ Bez ořezu. Zkuste to znovu.</translation>
     <message>
         <location filename="../Sources/filters/ptFilter_LumaSatAdjust.cpp" line="66"/>
         <source>Saturation adjustment</source>
-        <translation>Saturace</translation>
+        <translation>Regulace saturace</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_LumaSatAdjust.cpp" line="75"/>
@@ -5965,7 +6137,7 @@ Bez ořezu. Zkuste to znovu.</translation>
     <message>
         <location filename="../Sources/filters/ptFilter_Outline.cpp" line="88"/>
         <source>Weight of the A/B channels in the outlines calculation</source>
-        <translation>Váha kanálů / B při výpočtu obrysu</translation>
+        <translation>Váha kanálů A/B při výpočtu obrysu</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Outline.cpp" line="89"/>
@@ -5978,7 +6150,7 @@ Bez ořezu. Zkuste to znovu.</translation>
     <message>
         <location filename="../Sources/filters/ptFilter_ReinhardBrighten.cpp" line="50"/>
         <source>Reinhard brighten</source>
-        <translation type="unfinished"></translation>
+        <translation>Světlost Reinhard</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_ReinhardBrighten.cpp" line="60"/>
@@ -5998,7 +6170,7 @@ Bez ořezu. Zkuste to znovu.</translation>
     <message>
         <location filename="../Sources/filters/ptFilter_ReinhardBrighten.cpp" line="63"/>
         <source>Lightness tweak</source>
-        <translation type="unfinished"></translation>
+        <translation>Zlepšit světlost</translation>
     </message>
 </context>
 <context>
@@ -6029,7 +6201,7 @@ Bez ořezu. Zkuste to znovu.</translation>
     <message>
         <location filename="../Sources/filters/ptFilter_Saturation.cpp" line="46"/>
         <source>Saturation adjustment</source>
-        <translation>Saturace</translation>
+        <translation>Rozšíření saturace</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Saturation.cpp" line="55"/>
@@ -6042,7 +6214,7 @@ Bez ořezu. Zkuste to znovu.</translation>
     <message>
         <location filename="../Sources/filters/ptFilter_ShadowsHighlights.cpp" line="50"/>
         <source>Shadows/Highlights</source>
-        <translation>Černá / Světlá</translation>
+        <translation>Stíny / Světla</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_ShadowsHighlights.cpp" line="60"/>
@@ -6091,63 +6263,63 @@ Bez ořezu. Zkuste to znovu.</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="79"/>
+        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="84"/>
         <source>Use maximum radius</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="80"/>
+        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="85"/>
         <source>Maximum radius</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="80"/>
+        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="85"/>
         <source>Pixels outside this radius will never be included in the mask.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="81"/>
+        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="86"/>
         <source>Brightness/color ratio</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="81"/>
+        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="86"/>
         <source>Defines how brightness and color affect the threshold.
 0.0: ignore color, 1.0: ignore brightness, 0.5: equal weight for both</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="82"/>
+        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="87"/>
         <source>Threshold</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="82"/>
+        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="87"/>
         <source>Maximum amount a pixel may differ from the spot&apos;s source pixel to get included in the mask.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="87"/>
+        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="88"/>
         <source>Saturation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="88"/>
+        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="89"/>
         <source>Adaptive saturation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="88"/>
+        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="89"/>
         <source>Prevent clipping when adjusting saturation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="89"/>
+        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="90"/>
         <source>Color shift</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="118"/>
+        <location filename="../Sources/filters/imagespot/ptFilter_SpotTuning.cpp" line="129"/>
         <source>Luminance curve</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6155,49 +6327,88 @@ Bez ořezu. Zkuste to znovu.</translation>
 <context>
     <name>ptFilter_StdCurve</name>
     <message>
-        <location filename="../Sources/filters/ptFilter_StdCurve.cpp" line="122"/>
+        <location filename="../Sources/filters/ptFilter_StdCurve.cpp" line="125"/>
         <source>RGB curve</source>
         <translation>Křivka RGB</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_StdCurve.cpp" line="135"/>
+        <location filename="../Sources/filters/ptFilter_StdCurve.cpp" line="138"/>
         <source>Texture curve</source>
         <translation>Křivka textury</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_StdCurve.cpp" line="148"/>
+        <location filename="../Sources/filters/ptFilter_StdCurve.cpp" line="151"/>
         <source>Luminance by hue curve</source>
-        <translation>Světlost pomocí křivky barvy</translation>
+        <translation>Světlost pomocí křivky obarvení</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_StdCurve.cpp" line="161"/>
+        <location filename="../Sources/filters/ptFilter_StdCurve.cpp" line="164"/>
         <source>Hue curve</source>
         <translation>Křivka obarvení</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_StdCurve.cpp" line="174"/>
+        <location filename="../Sources/filters/ptFilter_StdCurve.cpp" line="177"/>
         <source>L* curve</source>
         <translation>Křivka L*</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_StdCurve.cpp" line="187"/>
+        <location filename="../Sources/filters/ptFilter_StdCurve.cpp" line="190"/>
         <source>R tone curve</source>
         <translation>Křivka tónů R</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_StdCurve.cpp" line="200"/>
+        <location filename="../Sources/filters/ptFilter_StdCurve.cpp" line="203"/>
         <source>G tone curve</source>
         <translation>Křivka tónů G</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_StdCurve.cpp" line="213"/>
+        <location filename="../Sources/filters/ptFilter_StdCurve.cpp" line="216"/>
         <source>B tone curve</source>
         <translation>Křivka tónů B</translation>
     </message>
     <message>
-        <location filename="../Sources/filters/ptFilter_StdCurve.cpp" line="226"/>
+        <location filename="../Sources/filters/ptFilter_StdCurve.cpp" line="229"/>
         <source>After gamma curve</source>
-        <translation>Křivka gamma </translation>
+        <translation>Po gamma křivce</translation>
+    </message>
+</context>
+<context>
+    <name>ptFilter_TextureContrast</name>
+    <message>
+        <location filename="../Sources/filters/ptFilter_TextureContrast.cpp" line="60"/>
+        <location filename="../Sources/filters/ptFilter_TextureContrast.cpp" line="69"/>
+        <source>Texture contrast</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_TextureContrast.cpp" line="82"/>
+        <source>Strength</source>
+        <translation type="unfinished">Síla</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_TextureContrast.cpp" line="83"/>
+        <source>Scale</source>
+        <translation type="unfinished">Škála</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_TextureContrast.cpp" line="84"/>
+        <source>Threshold</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_TextureContrast.cpp" line="85"/>
+        <source>Opacity</source>
+        <translation type="unfinished">Průhlednost</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_TextureContrast.cpp" line="86"/>
+        <source>Denoise</source>
+        <translation type="unfinished">Odšumění</translation>
+    </message>
+    <message>
+        <location filename="../Sources/filters/ptFilter_TextureContrast.cpp" line="87"/>
+        <source>Masking</source>
+        <translation type="unfinished">Maskuj</translation>
     </message>
 </context>
 <context>
@@ -6213,7 +6424,7 @@ Bez ořezu. Zkuste to znovu.</translation>
         <location filename="../Sources/filters/ptFilter_Tone.cpp" line="77"/>
         <location filename="../Sources/filters/ptFilter_Tone.cpp" line="80"/>
         <source>Saturation</source>
-        <translation type="unfinished"></translation>
+        <translation>Sytost</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Tone.cpp" line="72"/>
@@ -6229,7 +6440,7 @@ Bez ořezu. Zkuste to znovu.</translation>
         <location filename="../Sources/filters/ptFilter_Tone.cpp" line="79"/>
         <location filename="../Sources/filters/ptFilter_Tone.cpp" line="82"/>
         <source>Hue</source>
-        <translation type="unfinished"></translation>
+        <translation>Odstín</translation>
     </message>
 </context>
 <context>
@@ -6252,7 +6463,7 @@ Bez ořezu. Zkuste to znovu.</translation>
     <message>
         <location filename="../Sources/filters/ptFilter_ToneAdjust.cpp" line="63"/>
         <source>Highlights</source>
-        <translation>Přesvětlení</translation>
+        <translation>Přesvícené</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_ToneAdjust.cpp" line="64"/>
@@ -6267,12 +6478,12 @@ Bez ořezu. Zkuste to znovu.</translation>
     <message>
         <location filename="../Sources/filters/ptFilter_ToneAdjust.cpp" line="69"/>
         <source>Mask mode</source>
-        <translation>Maskovací mód</translation>
+        <translation>Mód masky</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_ToneAdjust.cpp" line="70"/>
         <source>Saturation</source>
-        <translation>Saturace</translation>
+        <translation>Sytost</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_ToneAdjust.cpp" line="71"/>
@@ -6320,7 +6531,7 @@ Bez ořezu. Zkuste to znovu.</translation>
     <message>
         <location filename="../Sources/filters/ptFilter_Wiener.cpp" line="64"/>
         <source>Sharpen only edges</source>
-        <translation>Zaostření poze hran</translation>
+        <translation>Zaostření pouze hran</translation>
     </message>
     <message>
         <location filename="../Sources/filters/ptFilter_Wiener.cpp" line="65"/>
@@ -6346,61 +6557,61 @@ Bez ořezu. Zkuste to znovu.</translation>
 <context>
     <name>ptGroupBox</name>
     <message>
-        <location filename="../Sources/ptGroupBox.cpp" line="78"/>
+        <location filename="../Sources/ptGroupBox.cpp" line="79"/>
         <source>Complex filter. Might be slow.</source>
         <translation>Komplexní filtr. Může být pomalé.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGroupBox.cpp" line="92"/>
+        <location filename="../Sources/ptGroupBox.cpp" line="93"/>
         <source>Open help page in web browser.</source>
         <translation>Otevřít web stránku s nápovědou.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGroupBox.cpp" line="130"/>
+        <location filename="../Sources/ptGroupBox.cpp" line="131"/>
         <source>&amp;Hide</source>
         <translation>&amp;Skrýt</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGroupBox.cpp" line="140"/>
+        <location filename="../Sources/ptGroupBox.cpp" line="141"/>
         <source>&amp;Reset</source>
         <translation>&amp;Reset</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGroupBox.cpp" line="145"/>
+        <location filename="../Sources/ptGroupBox.cpp" line="146"/>
         <source>&amp;Save preset</source>
         <translation>Ulož nas&amp;tavení</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGroupBox.cpp" line="150"/>
+        <location filename="../Sources/ptGroupBox.cpp" line="151"/>
         <source>&amp;Append preset</source>
         <translation>Načíst &amp;nastavení</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGroupBox.cpp" line="331"/>
+        <location filename="../Sources/ptGroupBox.cpp" line="332"/>
         <source>Settings File</source>
         <translation>Soubor s nastavením</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGroupBox.cpp" line="484"/>
+        <location filename="../Sources/ptGroupBox.cpp" line="485"/>
         <source>All&amp;ow</source>
         <translation>P&amp;ovolit</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGroupBox.cpp" line="487"/>
+        <location filename="../Sources/ptGroupBox.cpp" line="488"/>
         <source>Bl&amp;ock</source>
         <translation>&amp;Blokuj</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGroupBox.cpp" line="502"/>
-        <location filename="../Sources/ptGroupBox.cpp" line="524"/>
-        <location filename="../Sources/ptGroupBox.cpp" line="539"/>
+        <location filename="../Sources/ptGroupBox.cpp" line="503"/>
+        <location filename="../Sources/ptGroupBox.cpp" line="525"/>
+        <location filename="../Sources/ptGroupBox.cpp" line="540"/>
         <source>Add to &amp;favourites</source>
         <translation>Při&amp;dat do oblíbených</translation>
     </message>
     <message>
-        <location filename="../Sources/ptGroupBox.cpp" line="505"/>
-        <location filename="../Sources/ptGroupBox.cpp" line="527"/>
-        <location filename="../Sources/ptGroupBox.cpp" line="542"/>
+        <location filename="../Sources/ptGroupBox.cpp" line="506"/>
+        <location filename="../Sources/ptGroupBox.cpp" line="528"/>
+        <location filename="../Sources/ptGroupBox.cpp" line="543"/>
         <source>Remove from &amp;favourites</source>
         <translation>Vymazat z oblí&amp;bených</translation>
     </message>
@@ -6408,100 +6619,105 @@ Bez ořezu. Zkuste to znovu.</translation>
 <context>
     <name>ptHistogramWindow</name>
     <message>
-        <location filename="../Sources/ptHistogramWindow.cpp" line="87"/>
+        <location filename="../Sources/ptHistogramWindow.cpp" line="92"/>
         <source>Logarithmic &amp;X axis</source>
         <translation>Logaritmická osa &amp;X</translation>
     </message>
     <message>
-        <location filename="../Sources/ptHistogramWindow.cpp" line="92"/>
+        <location filename="../Sources/ptHistogramWindow.cpp" line="97"/>
         <source>Logarithmic &amp;Y axis</source>
         <translation>Logaritmická osa &amp;Y</translation>
     </message>
     <message>
-        <location filename="../Sources/ptHistogramWindow.cpp" line="97"/>
+        <location filename="../Sources/ptHistogramWindow.cpp" line="102"/>
         <source>&amp;Selection</source>
-        <translation type="unfinished">&amp;Výběr</translation>
+        <translation>&amp;Výběr</translation>
     </message>
     <message>
-        <location filename="../Sources/ptHistogramWindow.cpp" line="98"/>
+        <location filename="../Sources/ptHistogramWindow.cpp" line="103"/>
         <source>Histogram only on a part of the image</source>
-        <translation type="unfinished">Histogram jen části obrazu</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptHistogramWindow.cpp" line="106"/>
-        <source>&amp;Linear</source>
-        <translation type="unfinished">&amp;Lineární</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptHistogramWindow.cpp" line="107"/>
-        <source>Use data from linear pipe</source>
-        <translation type="unfinished">Použít lineární data</translation>
+        <translation>Histogram jen části obrazu</translation>
     </message>
     <message>
         <location filename="../Sources/ptHistogramWindow.cpp" line="111"/>
-        <source>&amp;Preview</source>
-        <translation type="unfinished">&amp;Náhled</translation>
+        <source>&amp;Linear</source>
+        <translation>&amp;Lineární</translation>
     </message>
     <message>
         <location filename="../Sources/ptHistogramWindow.cpp" line="112"/>
-        <source>Use data with preview profile</source>
-        <translation type="unfinished">použít profilové data z náhledu</translation>
+        <source>Use data from linear pipe</source>
+        <translation>Použít lineární data</translation>
     </message>
     <message>
         <location filename="../Sources/ptHistogramWindow.cpp" line="116"/>
-        <source>&amp;Output</source>
-        <translation type="unfinished">&amp;Výstup</translation>
+        <source>&amp;Preview</source>
+        <translation>&amp;Náhled</translation>
     </message>
     <message>
         <location filename="../Sources/ptHistogramWindow.cpp" line="117"/>
-        <source>Use data with output profile</source>
-        <translation type="unfinished">Použít data z výstupního profilu</translation>
+        <source>Use data with preview profile</source>
+        <translation>Použít profilové data z náhledu</translation>
     </message>
     <message>
-        <location filename="../Sources/ptHistogramWindow.cpp" line="133"/>
-        <location filename="../Sources/ptHistogramWindow.cpp" line="134"/>
+        <location filename="../Sources/ptHistogramWindow.cpp" line="121"/>
+        <source>&amp;Output</source>
+        <translation>&amp;Výstup</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptHistogramWindow.cpp" line="122"/>
+        <source>Use data with output profile</source>
+        <translation>Použít data z výstupního profilu</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptHistogramWindow.cpp" line="138"/>
+        <location filename="../Sources/ptHistogramWindow.cpp" line="139"/>
         <source>RGB</source>
         <translation>RGB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptHistogramWindow.cpp" line="138"/>
+        <location filename="../Sources/ptHistogramWindow.cpp" line="143"/>
         <source>&amp;R</source>
         <translation>&amp;R</translation>
     </message>
     <message>
-        <location filename="../Sources/ptHistogramWindow.cpp" line="139"/>
+        <location filename="../Sources/ptHistogramWindow.cpp" line="144"/>
         <source>R</source>
         <translation>R</translation>
     </message>
     <message>
-        <location filename="../Sources/ptHistogramWindow.cpp" line="143"/>
+        <location filename="../Sources/ptHistogramWindow.cpp" line="148"/>
         <source>&amp;G</source>
         <translation>&amp;G</translation>
     </message>
     <message>
-        <location filename="../Sources/ptHistogramWindow.cpp" line="144"/>
+        <location filename="../Sources/ptHistogramWindow.cpp" line="149"/>
         <source>G</source>
         <translation>G</translation>
     </message>
     <message>
-        <location filename="../Sources/ptHistogramWindow.cpp" line="148"/>
+        <location filename="../Sources/ptHistogramWindow.cpp" line="153"/>
         <source>&amp;B</source>
         <translation>&amp;B</translation>
     </message>
     <message>
-        <location filename="../Sources/ptHistogramWindow.cpp" line="149"/>
+        <location filename="../Sources/ptHistogramWindow.cpp" line="154"/>
         <source>B</source>
         <translation>B</translation>
     </message>
     <message>
-        <location filename="../Sources/ptHistogramWindow.cpp" line="534"/>
-        <source>Display &amp;channels</source>
-        <translation type="unfinished">Zobraz &amp;kanály</translation>
+        <location filename="../Sources/ptHistogramWindow.cpp" line="493"/>
+        <source>RAW thumbnail is used</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/ptHistogramWindow.cpp" line="541"/>
+        <location filename="../Sources/ptHistogramWindow.cpp" line="559"/>
+        <source>Display &amp;channels</source>
+        <translation>Zobraz &amp;kanály</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptHistogramWindow.cpp" line="566"/>
         <source>Display &amp;mode</source>
-        <translation type="unfinished">Režim &amp;zobrazení</translation>
+        <translation>Režim &amp;zobrazení</translation>
     </message>
 </context>
 <context>
@@ -6524,149 +6740,156 @@ x=%2, y=%3 (1:1 pipe size)</source>
 <context>
     <name>ptImageView</name>
     <message>
-        <location filename="../Sources/filemgmt/ptImageView.cpp" line="115"/>
+        <location filename="../Sources/filemgmt/ptImageView.cpp" line="105"/>
         <source>Zoom &amp;in</source>
-        <translation type="unfinished">Z&amp;většit</translation>
+        <translation>Z&amp;většit</translation>
     </message>
     <message>
-        <location filename="../Sources/filemgmt/ptImageView.cpp" line="115"/>
+        <location filename="../Sources/filemgmt/ptImageView.cpp" line="105"/>
         <source>1</source>
         <translation>1</translation>
     </message>
     <message>
-        <location filename="../Sources/filemgmt/ptImageView.cpp" line="119"/>
+        <location filename="../Sources/filemgmt/ptImageView.cpp" line="109"/>
         <source>Zoom &amp;100%</source>
-        <translation type="unfinished">Zoom &amp;100%</translation>
+        <translation>Zoom &amp;100%</translation>
     </message>
     <message>
-        <location filename="../Sources/filemgmt/ptImageView.cpp" line="119"/>
+        <location filename="../Sources/filemgmt/ptImageView.cpp" line="109"/>
         <source>2</source>
         <translation>2</translation>
     </message>
     <message>
-        <location filename="../Sources/filemgmt/ptImageView.cpp" line="123"/>
+        <location filename="../Sources/filemgmt/ptImageView.cpp" line="113"/>
         <source>Zoom &amp;out</source>
-        <translation type="unfinished">Z&amp;menšit</translation>
+        <translation>Z&amp;menšit</translation>
     </message>
     <message>
-        <location filename="../Sources/filemgmt/ptImageView.cpp" line="123"/>
+        <location filename="../Sources/filemgmt/ptImageView.cpp" line="113"/>
         <source>3</source>
         <translation>3</translation>
     </message>
     <message>
-        <location filename="../Sources/filemgmt/ptImageView.cpp" line="127"/>
+        <location filename="../Sources/filemgmt/ptImageView.cpp" line="117"/>
         <source>Zoom &amp;fit</source>
-        <translation type="unfinished">&amp;Obrazovka</translation>
+        <translation>&amp;Obrazovka</translation>
     </message>
     <message>
-        <location filename="../Sources/filemgmt/ptImageView.cpp" line="127"/>
+        <location filename="../Sources/filemgmt/ptImageView.cpp" line="117"/>
         <source>4</source>
         <translation>4</translation>
     </message>
     <message>
-        <location filename="../Sources/filemgmt/ptImageView.cpp" line="317"/>
+        <location filename="../Sources/filemgmt/ptImageView.cpp" line="318"/>
         <source>Fit</source>
-        <translation type="unfinished">Přiszpůsobit</translation>
+        <translation>Přiszpůsobit</translation>
     </message>
 </context>
 <context>
     <name>ptJobListModel</name>
     <message>
-        <location filename="../Sources/batch/ptJobListModel.cpp" line="87"/>
+        <location filename="../Sources/batch/ptJobListModel.cpp" line="88"/>
         <source>Waiting</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptJobListModel.cpp" line="88"/>
+        <location filename="../Sources/batch/ptJobListModel.cpp" line="89"/>
         <source>Processing</source>
         <translation type="unfinished">Zpracovávám</translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptJobListModel.cpp" line="89"/>
+        <location filename="../Sources/batch/ptJobListModel.cpp" line="90"/>
         <source>Finished</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptJobListModel.cpp" line="90"/>
+        <location filename="../Sources/batch/ptJobListModel.cpp" line="91"/>
         <source>Skipped</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptJobListModel.cpp" line="91"/>
-        <location filename="../Sources/batch/ptJobListModel.cpp" line="208"/>
-        <location filename="../Sources/batch/ptJobListModel.cpp" line="224"/>
-        <location filename="../Sources/batch/ptJobListModel.cpp" line="228"/>
+        <location filename="../Sources/batch/ptJobListModel.cpp" line="92"/>
+        <location filename="../Sources/batch/ptJobListModel.cpp" line="264"/>
+        <location filename="../Sources/batch/ptJobListModel.cpp" line="280"/>
+        <location filename="../Sources/batch/ptJobListModel.cpp" line="284"/>
         <source>Error</source>
         <translation type="unfinished">Chyba</translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptJobListModel.cpp" line="92"/>
+        <location filename="../Sources/batch/ptJobListModel.cpp" line="93"/>
         <source>Aborted</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptJobListModel.cpp" line="117"/>
+        <location filename="../Sources/batch/ptJobListModel.cpp" line="118"/>
         <source>File name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptJobListModel.cpp" line="118"/>
+        <location filename="../Sources/batch/ptJobListModel.cpp" line="119"/>
         <source>Output path</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptJobListModel.cpp" line="119"/>
+        <location filename="../Sources/batch/ptJobListModel.cpp" line="120"/>
         <source>Output suffix</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptJobListModel.cpp" line="120"/>
+        <location filename="../Sources/batch/ptJobListModel.cpp" line="121"/>
         <source>Input files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptJobListModel.cpp" line="121"/>
+        <location filename="../Sources/batch/ptJobListModel.cpp" line="122"/>
         <source>Status</source>
         <translation type="unfinished">Status</translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptJobListModel.cpp" line="147"/>
+        <location filename="../Sources/batch/ptJobListModel.cpp" line="198"/>
+        <location filename="../Sources/batch/ptJobListModel.cpp" line="314"/>
         <source>Invalid settings file</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptJobListModel.cpp" line="148"/>
+        <location filename="../Sources/batch/ptJobListModel.cpp" line="199"/>
         <source>
 is not a Photivo settings file.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptJobListModel.cpp" line="178"/>
+        <location filename="../Sources/batch/ptJobListModel.cpp" line="234"/>
         <source>Remove this job?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptJobListModel.cpp" line="179"/>
+        <location filename="../Sources/batch/ptJobListModel.cpp" line="235"/>
         <source>
 job is being processed. Do you want to abort processing and remove it from the list?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptJobListModel.cpp" line="208"/>
+        <location filename="../Sources/batch/ptJobListModel.cpp" line="264"/>
         <source>Error writing job list file
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptJobListModel.cpp" line="224"/>
+        <location filename="../Sources/batch/ptJobListModel.cpp" line="280"/>
         <source>Error reading job list file
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/batch/ptJobListModel.cpp" line="228"/>
+        <location filename="../Sources/batch/ptJobListModel.cpp" line="284"/>
         <source>
 is not a job list file.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/batch/ptJobListModel.cpp" line="315"/>
+        <source>
+doesn&apos;t exist.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -6674,298 +6897,298 @@ is not a job list file.</source>
     <name>ptMainWindow</name>
     <message>
         <source>photivo</source>
-        <translation type="obsolete">photivo</translation>
+        <translation type="vanished">photivo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="191"/>
+        <location filename="../Sources/ptMainWindow.ui" line="222"/>
         <source>Tool search</source>
-        <translation type="unfinished">Nástroje pro hledání</translation>
+        <translation>Nástroje pro hledání</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="214"/>
+        <location filename="../Sources/ptMainWindow.ui" line="245"/>
         <source>Reset</source>
         <translation>Reset</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="247"/>
-        <location filename="../Sources/ptMainWindow.cpp" line="1882"/>
+        <location filename="../Sources/ptMainWindow.ui" line="278"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1941"/>
         <source>Favourite tools</source>
-        <translation type="unfinished">Oblíbené nástroje</translation>
+        <translation>Oblíbené nástroje</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="267"/>
+        <location filename="../Sources/ptMainWindow.ui" line="298"/>
         <source>All visible tools</source>
-        <translation type="unfinished">Všechny nástroje</translation>
+        <translation>Všechny nástroje</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="287"/>
+        <location filename="../Sources/ptMainWindow.ui" line="318"/>
         <source>Active tools</source>
-        <translation type="unfinished">Aktivní nástroje</translation>
+        <translation>Aktivní nástroje</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="360"/>
-        <location filename="../Sources/ptMainWindow.ui" line="1302"/>
-        <location filename="../Sources/ptMainWindow.ui" line="7723"/>
+        <location filename="../Sources/ptMainWindow.ui" line="391"/>
+        <location filename="../Sources/ptMainWindow.ui" line="1486"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8014"/>
         <source>Camera</source>
-        <translation type="unfinished">Fotoaparát</translation>
+        <translation>Fotoaparát</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="399"/>
+        <location filename="../Sources/ptMainWindow.ui" line="430"/>
         <source>Input</source>
-        <translation type="unfinished">Vstup</translation>
+        <translation>Vstup</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="417"/>
-        <location filename="../Sources/ptMainWindow.ui" line="5668"/>
-        <location filename="../Sources/ptMainWindow.ui" line="5835"/>
+        <location filename="../Sources/ptMainWindow.ui" line="489"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5797"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5982"/>
         <source>Load image</source>
-        <translation type="unfinished">Načíst obrázek</translation>
+        <translation>Načíst obrázek</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="434"/>
+        <location filename="../Sources/ptMainWindow.ui" line="506"/>
         <source>Open file</source>
-        <translation type="unfinished">Otevřít soubor</translation>
+        <translation>Otevřít soubor</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="466"/>
-        <location filename="../Sources/ptMainWindow.ui" line="483"/>
-        <location filename="../Sources/ptMainWindow.ui" line="515"/>
+        <location filename="../Sources/ptMainWindow.ui" line="534"/>
+        <location filename="../Sources/ptMainWindow.ui" line="579"/>
+        <location filename="../Sources/ptMainWindow.ui" line="596"/>
         <source>Open settings file</source>
-        <translation type="unfinished">Otevřít soubor s nastavením</translation>
+        <translation>Otevřít soubor s nastavením</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="532"/>
-        <location filename="../Sources/ptMainWindow.cpp" line="568"/>
+        <location filename="../Sources/ptMainWindow.ui" line="551"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="584"/>
         <source>Open preset</source>
-        <translation type="unfinished">Otevřít šablonu</translation>
+        <translation>Otevřít šablonu</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="580"/>
+        <location filename="../Sources/ptMainWindow.ui" line="683"/>
         <source>Camera color space</source>
-        <translation type="unfinished">Barevný prostor fotoaparátu</translation>
+        <translation>Barevný prostor fotoaparátu</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="600"/>
-        <location filename="../Sources/ptMainWindow.ui" line="8477"/>
-        <location filename="../Sources/ptMainWindow.ui" line="8629"/>
+        <location filename="../Sources/ptMainWindow.ui" line="703"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8813"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8965"/>
         <source>Load a camera profile</source>
-        <translation type="unfinished">Načíst profil fotoaparátu</translation>
+        <translation>Načíst profil fotoaparátu</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="679"/>
+        <location filename="../Sources/ptMainWindow.ui" line="782"/>
         <source>Generic Corrections</source>
-        <translation type="unfinished">Celková úprava</translation>
+        <translation>Celková úprava</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="697"/>
+        <location filename="../Sources/ptMainWindow.ui" line="809"/>
         <source>Darkframe image</source>
-        <translation type="unfinished">Tmavý okraj obrázku</translation>
+        <translation>Tmavý okraj obrázku</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="729"/>
+        <location filename="../Sources/ptMainWindow.ui" line="850"/>
         <source>DcRaw bad pixel file</source>
-        <translation type="unfinished">Soubor vadných pixelů DcRaw</translation>
+        <translation>Soubor vadných pixelů DcRaw</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="780"/>
+        <location filename="../Sources/ptMainWindow.ui" line="901"/>
         <source>White Balance</source>
-        <translation type="unfinished">Vyvážení bílé</translation>
+        <translation>Vyvážení bílé</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="807"/>
+        <location filename="../Sources/ptMainWindow.ui" line="937"/>
         <source>Spot white balance</source>
-        <translation type="unfinished">Bodové vyvážení bílé</translation>
+        <translation>Bodové vyvážení bílé</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1001"/>
+        <location filename="../Sources/ptMainWindow.ui" line="1167"/>
         <source>Demosaicing</source>
-        <translation type="unfinished">Demozajkování</translation>
+        <translation>Demozajkování</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1149"/>
+        <location filename="../Sources/ptMainWindow.ui" line="1324"/>
         <source>Highlight recovery</source>
-        <translation type="unfinished">Obnovení světel</translation>
+        <translation>Obnovení světel</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1248"/>
+        <location filename="../Sources/ptMainWindow.ui" line="1423"/>
         <source>Geometry</source>
-        <translation type="unfinished">Geometrie</translation>
+        <translation>Geometrie</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1287"/>
+        <location filename="../Sources/ptMainWindow.ui" line="1462"/>
         <source>Lens Parameters (Lensfun)</source>
-        <translation type="unfinished">Parametry objektivu (Lensfun)</translation>
+        <translation>Parametry objektivu (Lensfun)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1325"/>
-        <location filename="../Sources/ptMainWindow.ui" line="7772"/>
+        <location filename="../Sources/ptMainWindow.ui" line="1518"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8072"/>
         <source>Lens</source>
-        <translation type="unfinished">Objektiv</translation>
+        <translation>Objektiv</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1429"/>
+        <location filename="../Sources/ptMainWindow.ui" line="1640"/>
         <source>Chromatic Aberration (Lensfun)</source>
-        <translation type="unfinished">Chromatická aberace (Lensfun)</translation>
+        <translation>Chromatická aberace (Lensfun)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1444"/>
-        <location filename="../Sources/ptMainWindow.ui" line="1552"/>
-        <location filename="../Sources/ptMainWindow.ui" line="1636"/>
+        <location filename="../Sources/ptMainWindow.ui" line="1664"/>
+        <location filename="../Sources/ptMainWindow.ui" line="1799"/>
+        <location filename="../Sources/ptMainWindow.ui" line="1901"/>
         <source>Model</source>
         <translation>Model</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1537"/>
+        <location filename="../Sources/ptMainWindow.ui" line="1775"/>
         <source>Vignetting (Lensfun)</source>
-        <translation type="unfinished">Vinětace (Lensfun)</translation>
+        <translation>Vinětace (Lensfun)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1621"/>
+        <location filename="../Sources/ptMainWindow.ui" line="1877"/>
         <source>Lens Distortion (Lensfun)</source>
-        <translation type="unfinished">Zkreslení objektivu (Lensfun) </translation>
+        <translation>Zkreslení objektivu (Lensfun) </translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1744"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2045"/>
         <source>Geometry Conversion (Lensfun)</source>
-        <translation type="unfinished">Konverze geometrie (Lensfun)</translation>
+        <translation>Konverze geometrie (Lensfun)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1759"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2069"/>
         <source>Source geometry</source>
-        <translation type="unfinished">Zdroj geometrie</translation>
+        <translation>Zdroj geometrie</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1791"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2110"/>
         <source>Target geometry</source>
-        <translation type="unfinished">Cíl geometrie</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1842"/>
-        <source>Defish</source>
-        <translation>Defish</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1888"/>
-        <source>Rotation and Perspective</source>
-        <translation type="unfinished">Rotace a perspektiva</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1903"/>
-        <source>Rotate left</source>
-        <translation type="unfinished">Otočit vlevo</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1920"/>
-        <source>Rotate right</source>
-        <translation type="unfinished">Otočit vpravo</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1953"/>
-        <source>Get rotate angle</source>
-        <translation type="unfinished">Otočit pod úhlem</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2124"/>
-        <location filename="../Sources/ptMainWindow.ui" line="8779"/>
-        <source>Crop</source>
-        <translation type="unfinished">Ořez</translation>
+        <translation>Cíl geometrie</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="2161"/>
-        <source>Make a crop</source>
-        <translation type="unfinished">Ožíznout</translation>
+        <source>Defish</source>
+        <translation>Korekce prohnutí</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2181"/>
-        <source>Confirm crop</source>
-        <translation type="unfinished">Potvrzení ořezu</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2198"/>
-        <source>Cancel crop</source>
-        <translation type="unfinished">Zrušit ořez</translation>
+        <location filename="../Sources/ptMainWindow.ui" line="2207"/>
+        <source>Rotation and Perspective</source>
+        <translation>Rotace a perspektiva</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="2231"/>
+        <source>Rotate left</source>
+        <translation>Otočit vlevo</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMainWindow.ui" line="2248"/>
+        <source>Rotate right</source>
+        <translation>Otočit vpravo</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMainWindow.ui" line="2281"/>
+        <source>Get rotate angle</source>
+        <translation>Otočit pod úhlem</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMainWindow.ui" line="2461"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9118"/>
+        <source>Crop</source>
+        <translation>Ořez</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMainWindow.ui" line="2507"/>
+        <source>Make a crop</source>
+        <translation>Ožíznout</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMainWindow.ui" line="2527"/>
+        <source>Confirm crop</source>
+        <translation>Potvrzení ořezu</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMainWindow.ui" line="2544"/>
+        <source>Cancel crop</source>
+        <translation>Zrušit ořez</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMainWindow.ui" line="2577"/>
         <source>Switch crop between portrait/landscape</source>
-        <translation type="unfinished">Přepnout poměr ořezu</translation>
+        <translation>Přepnout poměr ořezu</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2242"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2588"/>
         <source>Center horizontally</source>
-        <translation type="unfinished">Vystředit horizontálně</translation>
+        <translation>Vystředit horizontálně</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2253"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2599"/>
         <source>Center vertically</source>
-        <translation type="unfinished">Vystředit vertikálně</translation>
+        <translation>Vystředit vertikálně</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2308"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2663"/>
         <source>W</source>
-        <translation type="unfinished">Šířka </translation>
+        <translation>Šířka </translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2340"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2695"/>
         <source>H </source>
-        <translation type="unfinished">Výška </translation>
+        <translation>Výška </translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2374"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2738"/>
         <source>Guidelines</source>
-        <translation type="unfinished">Tipy</translation>
+        <translation>Tipy</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2384"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2748"/>
         <source>Lights Out</source>
-        <translation type="unfinished">Vypnout světla</translation>
+        <translation>Vypnout světla</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2437"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2801"/>
         <source>Seam carving (*)</source>
-        <translation type="unfinished">Seam carving (*)</translation>
+        <translation>Zvýraznění ořezu (*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2458"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2831"/>
         <source>Scaling</source>
-        <translation type="unfinished">Škálování</translation>
+        <translation>Škálování</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2565"/>
+        <location filename="../Sources/ptMainWindow.ui" line="2947"/>
         <source>Resize</source>
-        <translation type="unfinished">Změna velikosti</translation>
+        <translation>Změna velikosti</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2640"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3037"/>
         <source>Flip</source>
-        <translation type="unfinished">Otočení</translation>
+        <translation>Otočení</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2677"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3074"/>
         <source>Block</source>
         <translation>Blokuj</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2714"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3111"/>
         <source>RGB</source>
         <translation>RGB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2756"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3153"/>
         <source>Channel  Mixer</source>
-        <translation type="unfinished">Mixer kanálů</translation>
+        <translation>Mixer kanálů</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2773"/>
-        <location filename="../Sources/ptMainWindow.ui" line="10468"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3170"/>
+        <location filename="../Sources/ptMainWindow.ui" line="11062"/>
         <source>Open</source>
-        <translation type="unfinished">Otevřít</translation>
+        <translation>Otevřít</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2790"/>
-        <location filename="../Sources/ptMainWindow.ui" line="8380"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3187"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8716"/>
         <source>Save</source>
-        <translation type="unfinished">Uložit</translation>
+        <translation>Uložit</translation>
     </message>
     <message>
         <source>8daccb81-5dd3-4664-bf3c-1fefe7ad084e</source>
@@ -6980,10 +7203,10 @@ is not a job list file.</source>
         <translation type="obsolete">Jas</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="2985"/>
-        <location filename="../Sources/ptMainWindow.ui" line="7663"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3382"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7954"/>
         <source>Exposure</source>
-        <translation type="unfinished">Expozice</translation>
+        <translation>Expozice</translation>
     </message>
     <message>
         <source>Brighten</source>
@@ -7006,21 +7229,16 @@ is not a job list file.</source>
         <translation type="obsolete">Obnova světel/stínů/tmy</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3152"/>
         <source>Texture Contrast</source>
-        <translation type="unfinished">Kontrast textury</translation>
+        <translation type="vanished">Kontrast textury</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3204"/>
-        <location filename="../Sources/ptMainWindow.ui" line="3574"/>
         <source>Local Contrast I</source>
-        <translation type="unfinished">Lokální kontrast I</translation>
+        <translation type="vanished">Lokální kontrast I</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3262"/>
-        <location filename="../Sources/ptMainWindow.ui" line="3619"/>
         <source>Local Contrast II</source>
-        <translation type="unfinished">Lokální kontrast II</translation>
+        <translation type="vanished">Lokální kontrast II</translation>
     </message>
     <message>
         <source>25b0402c-1668-4800-aab8-028160a08087</source>
@@ -7035,9 +7253,9 @@ is not a job list file.</source>
         <translation type="obsolete">786384c5-ded7-4669-b748-e40ebabcdf2c</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3361"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3641"/>
         <source>Lab Color/Contrast</source>
-        <translation type="unfinished">LAB Barvyr/Kontrast</translation>
+        <translation>LAB Barvy/Kontrast</translation>
     </message>
     <message>
         <source>LAB Transform</source>
@@ -7056,81 +7274,76 @@ is not a job list file.</source>
         <translation type="obsolete">02ffc2a8-1fc6-4f50-940a-924da85efa1e</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3470"/>
         <source>Texture Contrast I</source>
-        <translation type="unfinished">Kontrast textury I</translation>
+        <translation type="vanished">Kontrast textury I</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3522"/>
         <source>Texture Contrast II</source>
-        <translation type="unfinished">Kontrast textury II</translation>
+        <translation type="vanished">Kontrast textury II</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3677"/>
         <source>Local Contrast Stretch I (*)</source>
-        <translation type="unfinished">Rozšíření místního kontrastu I (*)</translation>
+        <translation type="vanished">Rozšíření místního kontrastu I (*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3723"/>
         <source>Local Contrast Stretch II (*)</source>
-        <translation type="unfinished">Rozšíření místního kontrastu II (*)</translation>
+        <translation type="vanished">Rozšíření místního kontrastu II (*)</translation>
     </message>
     <message>
         <source>2f4b0f7a-d720-41e0-b2fc-20dff3a02fcf</source>
         <translation type="obsolete">2f4b0f7a-d720-41e0-b2fc-20dff3a02fcf</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3772"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3837"/>
         <source>Increase contrast on L by a sigmoidal curve</source>
-        <translation type="unfinished">Zvýšení kontrastu L pomocí sigmoidální křivky</translation>
+        <translation>Zvýšení kontrastu L pomocí sigmoidální křivky</translation>
     </message>
     <message>
         <source>Saturation</source>
         <translation type="obsolete">Saturace</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3789"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3854"/>
         <source>Increase saturation by a sigmoidal curve</source>
-        <translation type="unfinished">Úprava saturace podle sigmoidální křivky</translation>
+        <translation>Úprava saturace podle sigmoidální křivky</translation>
     </message>
     <message>
         <source>Color Boost</source>
         <translation type="obsolete">Zvýšení barevnosti</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3831"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3896"/>
         <source>Lab Sharpen/Noise</source>
-        <translation type="unfinished">LAB Ostrost/Šum</translation>
+        <translation>LAB Ostrost/Šum</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3870"/>
         <source>Impulse noise reduction</source>
-        <translation type="unfinished">Impulsivní redukce šumu</translation>
+        <translation type="vanished">Impulsivní redukce šumu</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3910"/>
+        <location filename="../Sources/ptMainWindow.ui" line="3949"/>
         <source>Edge avoiding wavelets</source>
-        <translation type="unfinished">Filtr Wavelet ponechá hrany</translation>
+        <translation>Filtr Wavelet ponechá hrany</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="3981"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4020"/>
         <source>GreyCStoration on L (*)</source>
         <translation>GreyCStoration on L (*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4082"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4130"/>
         <source>Defringe</source>
         <translation>Defringe</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4174"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4222"/>
         <source>Wavelet Denoising</source>
-        <translation type="unfinished">Odšumění Wavelet</translation>
+        <translation>Odšumění Wavelet</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4254"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4302"/>
         <source>Luminance Denoising (*)</source>
-        <translation type="unfinished">Odstranění jasového šumu (*)</translation>
+        <translation>Odstranění jasového šumu (*)</translation>
     </message>
     <message>
         <source>e0310479-993f-4018-a80a-ac2d8c6c1ee4</source>
@@ -7141,57 +7354,57 @@ is not a job list file.</source>
         <translation type="obsolete">530aab8e-65e4-4bb8-b391-46f6673ac53d</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4327"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4375"/>
         <source>Pyramid Denoising</source>
-        <translation type="unfinished">Pyramidální odšumění</translation>
+        <translation>Pyramidální odšumění</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4373"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4421"/>
         <source>Color Denoising (*)</source>
-        <translation type="unfinished">Odstranění barevného šumu (*)</translation>
+        <translation>Odstranění barevného šumu (*)</translation>
     </message>
     <message>
         <source>bcc7f2e6-9db7-427f-a3d9-61db0cd73b29</source>
         <translation type="obsolete">bcc7f2e6-9db7-427f-a3d9-61db0cd73b29</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4433"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4481"/>
         <source>Gradient Sharpen</source>
-        <translation type="unfinished">Gradient ostrosti</translation>
+        <translation>Gradient ostrosti</translation>
     </message>
     <message>
         <source>f2d800db-1d7a-42bc-970c-9a89597f34a4</source>
         <translation type="obsolete">f2d800db-1d7a-42bc-970c-9a89597f34a4</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4531"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4579"/>
         <source>Inverse Diffusion Sharpen</source>
-        <translation type="unfinished">Inverzní zostření difůze</translation>
+        <translation>Inverzní zostření difůze</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4602"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4659"/>
         <source>Unsharp Mask (USM)</source>
-        <translation type="unfinished">Neostrá maska USM</translation>
+        <translation>Neostrá maska USM</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4648"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4705"/>
         <source>Highpass Sharpen</source>
-        <translation type="unfinished">Zaostření horní propusti</translation>
+        <translation>Zaostření horní propusti</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4694"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4751"/>
         <source>Film grain simulation</source>
-        <translation type="unfinished">Filmové zrno</translation>
+        <translation>Filmové zrno</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4836"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4911"/>
         <source>View LAB</source>
-        <translation type="unfinished">Zobrazit LAB</translation>
+        <translation>Zobrazit LAB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="4873"/>
+        <location filename="../Sources/ptMainWindow.ui" line="4948"/>
         <source>Lab EyeCandy</source>
-        <translation type="unfinished">LAB EyeCandy</translation>
+        <translation>LAB EyeCandy</translation>
     </message>
     <message>
         <source>1d3e2630-de72-46b8-b1f9-7169cd1b3832</source>
@@ -7258,111 +7471,111 @@ is not a job list file.</source>
         <translation type="obsolete">Světla</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5083"/>
-        <location filename="../Sources/ptMainWindow.ui" line="6133"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5158"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6298"/>
         <source>Vignette</source>
-        <translation type="unfinished">Vinětace</translation>
+        <translation>Vinětace</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5169"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5253"/>
         <source>EyeCandy</source>
         <translation>EyeCandy</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5208"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5292"/>
         <source>Black and White</source>
-        <translation type="unfinished">Černá a bílá</translation>
+        <translation>Černá a bílá</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5285"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5378"/>
         <source>Simple tone</source>
-        <translation type="unfinished">Jednoduché tóny</translation>
+        <translation>Jednoduché tóny</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5328"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5421"/>
         <source>Tone I</source>
-        <translation type="unfinished">Tóny I</translation>
+        <translation>Tóny I</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5364"/>
         <location filename="../Sources/ptMainWindow.ui" line="5466"/>
-        <location filename="../Sources/ptMainWindow.ui" line="5959"/>
-        <location filename="../Sources/ptMainWindow.ui" line="6064"/>
-        <location filename="../Sources/ptMainWindow.ui" line="9026"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5577"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6115"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6229"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9383"/>
         <source>Color</source>
-        <translation type="unfinished">Barva</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5430"/>
-        <source>Tone II</source>
-        <translation type="unfinished">Tóny II</translation>
+        <translation>Barva</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="5532"/>
+        <source>Tone II</source>
+        <translation>Tóny II</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMainWindow.ui" line="5643"/>
         <source>Cross processing</source>
-        <translation type="unfinished">Křížové zpracování</translation>
+        <translation>Křížové zpracování</translation>
     </message>
     <message>
         <source>6e7db630-310f-4f04-82e0-b668babfe8c9</source>
         <translation type="obsolete">6e7db630-310f-4f04-82e0-b668babfe8c9</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5589"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5700"/>
         <source>Texture overlay I</source>
-        <translation type="unfinished">Překrytí textury I</translation>
+        <translation>Překrytí textury I</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5635"/>
-        <location filename="../Sources/ptMainWindow.ui" line="5802"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5764"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5949"/>
         <source>Clear image</source>
-        <translation type="unfinished">Vyčistit obrázek</translation>
+        <translation>Vyčistit obrázek</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5638"/>
-        <location filename="../Sources/ptMainWindow.ui" line="5805"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5767"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5952"/>
         <source>Clear</source>
-        <translation type="unfinished">Vyčistit</translation>
+        <translation>Vyčistit</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5671"/>
-        <location filename="../Sources/ptMainWindow.ui" line="5838"/>
-        <location filename="../Sources/ptMainWindow.ui" line="6689"/>
-        <location filename="../Sources/ptMainWindow.ui" line="8266"/>
-        <location filename="../Sources/ptMainWindow.ui" line="8360"/>
-        <location filename="../Sources/ptMainWindow.ui" line="8480"/>
-        <location filename="../Sources/ptMainWindow.ui" line="8632"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5800"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5985"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6881"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8602"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8696"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8816"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8968"/>
         <source>Load</source>
-        <translation type="unfinished">Načti</translation>
+        <translation>Načti</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5756"/>
+        <location filename="../Sources/ptMainWindow.ui" line="5885"/>
         <source>Texture overlay II</source>
-        <translation type="unfinished">Překrytí textury II</translation>
+        <translation>Překrytí textury II</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="5923"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6070"/>
         <source>Gradual overlay I</source>
-        <translation type="unfinished">Postupné překrývání I</translation>
+        <translation>Postupné překrývání I</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="6028"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6184"/>
         <source>Gradual overlay II</source>
-        <translation type="unfinished">Postupné překrývání II</translation>
+        <translation>Postupné překrývání II</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="6219"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6393"/>
         <source>Gradual Blur I (*)</source>
-        <translation type="unfinished">Postupné rozmazání I (*)</translation>
+        <translation>Postupné rozmazání I (*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="6324"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6507"/>
         <source>Gradual Blur II (*)</source>
-        <translation type="unfinished">Postupné rozmazání II (*)</translation>
+        <translation>Postupné rozmazání II (*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="6429"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6621"/>
         <source>Softglow / Orton</source>
-        <translation type="unfinished">Teplé světlo / Orton</translation>
+        <translation>Teplé světlo / Orton</translation>
     </message>
     <message>
         <source>6e3971ac-f640-4628-8aa0-ae07620f8ca4</source>
@@ -7377,44 +7590,44 @@ is not a job list file.</source>
         <translation type="obsolete">44112e0a-81df-4ae5-aee8-18a17d0ac810</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="6534"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6726"/>
         <source>Output</source>
-        <translation type="unfinished">Výstup</translation>
+        <translation>Výstup</translation>
     </message>
     <message>
         <source>221fa750-226c-4a48-a94b-e8b516865aca</source>
         <translation type="obsolete">221fa750-226c-4a48-a94b-e8b516865aca</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="6590"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6782"/>
         <source>sRGB gamma compensation</source>
-        <translation type="unfinished">Kompenzace gamma sRGB</translation>
+        <translation>Kompenzace gamma sRGB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="6633"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6825"/>
         <source>Output Colorspace</source>
-        <translation type="unfinished">Výstupní barevný prostor</translation>
+        <translation>Výstupní barevný prostor</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="6653"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6845"/>
         <source>Reset profile</source>
-        <translation type="unfinished">Resetovat profil</translation>
+        <translation>Resetovat profil</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="6656"/>
-        <location filename="../Sources/ptMainWindow.ui" line="10331"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6848"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10857"/>
         <source>Full</source>
-        <translation type="unfinished">Plný</translation>
+        <translation>Plný</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="6676"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6868"/>
         <source>Embedded profile</source>
-        <translation type="unfinished">Vložený profil</translation>
+        <translation>Vložený profil</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="6686"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6878"/>
         <source>Load icc profile</source>
-        <translation type="unfinished">Načíst icc profil</translation>
+        <translation>Načíst icc profil</translation>
     </message>
     <message>
         <source>88b24988-7fcf-47b6-b9a2-8600c992f3f3</source>
@@ -7425,668 +7638,683 @@ is not a job list file.</source>
         <translation type="obsolete">71999980-5530-4a91-996e-43e752099870</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="6777"/>
+        <location filename="../Sources/ptMainWindow.ui" line="6969"/>
         <source>Resize for web</source>
-        <translation type="unfinished">Změnit rozměr pro web</translation>
+        <translation>Změnit rozměr pro web</translation>
     </message>
     <message>
         <source>7c2a63e3-50be-476c-9364-7c442c2662fa</source>
         <translation type="obsolete">7c2a63e3-50be-476c-9364-7c442c2662fa</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="22"/>
+        <location filename="../Sources/ptMainWindow.ui" line="20"/>
         <source>Photivo</source>
         <translation type="unfinished">Photivo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="1195"/>
+        <location filename="../Sources/ptMainWindow.ui" line="1370"/>
         <source>Local Edit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="6893"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7103"/>
         <source>Output Parameters</source>
-        <translation type="unfinished">Výstupní parametry</translation>
+        <translation>Výstupní parametry</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7036"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7273"/>
         <source>Suffix</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7058"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7295"/>
         <source>Suffix to be added to the end of the output file name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7122"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7368"/>
         <source>Title</source>
-        <translation type="unfinished">Titul</translation>
+        <translation>Titul</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7199"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7454"/>
         <source>Copyright</source>
         <translation>Copyright</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7273"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7537"/>
         <source>Tags</source>
-        <translation type="unfinished">Tagy</translation>
+        <translation>Tagy</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7317"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7581"/>
         <source>Tags for the photo (IPTC and XMP)</source>
-        <translation type="unfinished">Tagy podle obrázku (IPTC and XMP)</translation>
+        <translation>Tagy podle obrázku (IPTC and XMP)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7389"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7653"/>
         <source>About Photivo</source>
         <translation>O Photivo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7464"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7737"/>
         <source>Photivo photo processor</source>
         <translation>Photivo photo processor</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7474"/>
-        <location filename="../Sources/ptMainWindow.ui" line="10135"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7747"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10643"/>
         <source>Rev:</source>
         <translation>Rev:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7484"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7757"/>
         <source>&lt;a href=&quot;http://www.photivo.org&quot;&gt;www.photivo.org&lt;/a&gt;</source>
-        <translation type="unfinished">&lt;a href=&quot;http://www.photivo.org&quot;&gt;www.photivo.org&lt;/a&gt; &lt;br&gt; &lt;p&gt;Do češtiny přeložil &lt;br&gt;Dušan Vala (Rellik) &lt;br&gt;&lt;a href=&quot;http://rellik.eu&quot;&gt;rellik.eu&lt;/a&gt;&lt;br&gt; &lt;a href=&quot;http://nette.rellik.eu&quot;&gt;nette.rellik.eu&lt;/a&gt; (c)2012&lt;/p&gt;</translation>
+        <translation>&lt;a href=&quot;http://www.photivo.org&quot;&gt;www.photivo.org&lt;/a&gt; &lt;br&gt; &lt;p&gt;Do češtiny přeložil &lt;br&gt;Dušan Vala (Rellik) &lt;br&gt;&lt;a href=&quot;http://dv-foto.cz&quot;&gt;dv-foto.cz&lt;/a&gt;&lt;br&gt; &lt;a href=&quot;http://mmrspress.eu&quot;&gt;mmrspress.eu&lt;/a&gt; (c)2012&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7538"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7811"/>
         <source>File info</source>
-        <translation type="unfinished">Informace o souboru</translation>
+        <translation>Informace o souboru</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7565"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7847"/>
         <source>File name:</source>
-        <translation type="unfinished">Název souboru:</translation>
+        <translation>Název souboru:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7572"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7854"/>
         <source>File name of the currently loaded image</source>
-        <translation type="unfinished">Název aktuálního souboru</translation>
+        <translation>Název aktuálního souboru</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7603"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7894"/>
         <source>Path:</source>
-        <translation type="unfinished">Cesta:</translation>
+        <translation>Cesta:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7610"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7901"/>
         <source>Path of the currently loaded image</source>
-        <translation type="unfinished">Secta aktuálního souboru</translation>
+        <translation>Cesta aktuálního souboru</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7648"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7939"/>
         <source>Exif info</source>
         <translation>Exif info</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7694"/>
+        <location filename="../Sources/ptMainWindow.ui" line="7985"/>
         <source>Focal length</source>
-        <translation type="unfinished">Ohnisková vzdálenost</translation>
+        <translation>Ohnisková vzdálenost</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7803"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8103"/>
         <source>Time of original</source>
-        <translation type="unfinished">Čas originálu</translation>
+        <translation>Čas originálu</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7831"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8131"/>
         <source>Flash</source>
-        <translation type="unfinished">Blesk</translation>
+        <translation>Blesk</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7859"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8159"/>
         <source>Whitebalance</source>
-        <translation type="unfinished">Vyvážení bílé</translation>
+        <translation>Vyvážení bílé</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7887"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8187"/>
         <source>dcraw info</source>
         <translation>dcraw info</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7934"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8234"/>
         <source>Size info</source>
-        <translation type="unfinished">Rozměr</translation>
+        <translation>Rozměr</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7961"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8270"/>
         <source>Input:</source>
-        <translation type="unfinished">Vstup:</translation>
+        <translation>Vstup:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="7973"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8282"/>
         <source>Size of the image at the beginning</source>
-        <translation type="unfinished">Rozměr původního obrázku</translation>
+        <translation>Rozměr původního obrázku</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8004"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8322"/>
         <source>1:1 pipe:</source>
-        <translation type="unfinished">Zpracování 1:1:</translation>
+        <translation>Zpracování 1:1:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8016"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8334"/>
         <source>Size of the image at the end of the full pipe (without webresize)</source>
-        <translation type="unfinished">Rozměr obrázku po zpracování (bez zmenšení pro web)</translation>
+        <translation>Rozměr obrázku po zpracování (bez zmenšení pro web)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8047"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8374"/>
         <source>Current:</source>
-        <translation type="unfinished">Aktuální:</translation>
+        <translation>Aktuální:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8059"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8386"/>
         <source>Size of the image at the end of the current pipe (without webresize)</source>
-        <translation type="unfinished">Rozměr obrázku po aktuálním zpracování (bez zmenšení pro web)</translation>
+        <translation>Rozměr obrázku po aktuálním zpracování (bez zmenšení pro web)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8122"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8449"/>
         <source>TextLabel</source>
-        <translation type="unfinished">Etiketa</translation>
+        <translation>Etiketa</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8202"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8529"/>
         <source>Work Colorspace</source>
-        <translation type="unfinished">Pracovní barevný prostor</translation>
+        <translation>Pracovní barevný prostor</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8239"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8566"/>
         <source>Preview Colorspace</source>
-        <translation type="unfinished">Náhled barevného prostoru</translation>
+        <translation>Náhled barevného prostoru</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8263"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8599"/>
         <source>Load an icc profile</source>
-        <translation type="unfinished">Načti icc profil</translation>
+        <translation>Načti icc profil</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8346"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8682"/>
         <source>UI settings</source>
-        <translation type="unfinished">Nastavení interface</translation>
+        <translation>Nastavení interface</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8357"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8693"/>
         <source>Load UI settings from file</source>
-        <translation type="unfinished">Načíst nastavení interface ze souboru</translation>
+        <translation>Načíst nastavení interface ze souboru</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8377"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8713"/>
         <source>Save UI settings to file</source>
-        <translation type="unfinished">Uložit nastavení interface do souboru</translation>
+        <translation>Uložit nastavení interface do souboru</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8410"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8746"/>
         <source>Discard all changes</source>
-        <translation type="unfinished">Zrušit všechny změny</translation>
+        <translation>Zrušit všechny změny</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8413"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8749"/>
         <source>Discard</source>
-        <translation type="unfinished">Zrušit</translation>
+        <translation>Zrušit</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8460"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8796"/>
         <source>Export command</source>
-        <translation type="unfinished">Export příkazu</translation>
+        <translation>Export příkazu</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8556"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8892"/>
         <source>Remember settings</source>
-        <translation type="unfinished">Zapamatovat nastavení</translation>
+        <translation>Zapamatovat nastavení</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8593"/>
+        <location filename="../Sources/ptMainWindow.ui" line="8929"/>
         <source>Startup settings</source>
-        <translation type="unfinished">Výchozí nastavení</translation>
+        <translation>Výchozí nastavení</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8689"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9025"/>
         <source>Tool pane mode</source>
-        <translation type="unfinished">Mód nástrojového panelu</translation>
+        <translation>Mód nástrojového panelu</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8719"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9055"/>
         <source>Pipe size</source>
-        <translation type="unfinished">Velikost zpracování</translation>
+        <translation>Velikost zpracování</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8794"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9142"/>
         <source>Initial zoom</source>
-        <translation type="unfinished">Iniciovat změtšení</translation>
+        <translation>Iniciovat změtšení</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8845"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9193"/>
         <source>Inputs</source>
-        <translation type="unfinished">Vstupy</translation>
+        <translation>Vstupy</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8882"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9230"/>
         <source>ToolBoxes</source>
-        <translation type="unfinished">Nástrojové boxy</translation>
+        <translation>Nástrojové boxy</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8919"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9267"/>
         <source>Tab status indicator</source>
-        <translation type="unfinished">Karta indikátoru stavu</translation>
+        <translation>Karta indikátoru stavu</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8956"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9304"/>
         <source>Preview</source>
-        <translation type="unfinished">Náhled</translation>
+        <translation>Náhled</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="8993"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9341"/>
         <source>Theming</source>
-        <translation type="unfinished">Skiny</translation>
+        <translation>Skiny</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9067"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9433"/>
         <source>Set new CSS style</source>
-        <translation type="unfinished">Uložit nový CSS styl</translation>
+        <translation>Uložit nový CSS styl</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9070"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9436"/>
         <source>CSS</source>
         <translation>CSS</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9137"/>
+        <location filename="../Sources/ptMainWindow.ui" line="9503"/>
         <source>Button modes</source>
-        <translation type="unfinished">Typ tlačítek</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9176"/>
-        <source>Save button:</source>
-        <translation type="unfinished">Save button:</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9219"/>
-        <source>Reset button:</source>
-        <translation type="unfinished">Reset button:</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9257"/>
-        <source>Searchbar</source>
-        <translation type="unfinished">Hledat</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9294"/>
-        <source>Show confirmation dialogs</source>
-        <translation type="unfinished">Zobrazovat potvrzující dialogy</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9337"/>
-        <source>Backup settings</source>
-        <translation type="unfinished">Záloha nastavení</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9374"/>
-        <source>Translation</source>
-        <translation type="unfinished">Překlad</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9392"/>
-        <source>Switch Photivo&apos;s language</source>
-        <translation type="unfinished">Přepnout Photivo na jazyk</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9453"/>
-        <source>Memory test</source>
-        <translation type="unfinished">Test paměti</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9490"/>
-        <source>File Manager</source>
-        <translation type="unfinished">Souborový manažer</translation>
+        <translation>Typ tlačítek</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.ui" line="9551"/>
+        <source>Save button:</source>
+        <translation>Save button:</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMainWindow.ui" line="9603"/>
+        <source>Reset button:</source>
+        <translation>Reset button:</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMainWindow.ui" line="9641"/>
+        <source>Searchbar</source>
+        <translation>Hledat</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMainWindow.ui" line="9678"/>
+        <source>Show confirmation dialogs</source>
+        <translation>Zobrazovat potvrzující dialogy</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMainWindow.ui" line="9744"/>
+        <source>Backup settings</source>
+        <translation>Záloha nastavení</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMainWindow.ui" line="9781"/>
+        <source>Translation</source>
+        <translation>Překlad</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMainWindow.ui" line="9808"/>
+        <source>Switch Photivo&apos;s language</source>
+        <translation>Přepnout Photivo na jazyk</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMainWindow.ui" line="9869"/>
+        <source>Memory test</source>
+        <translation>Test paměti</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMainWindow.ui" line="9906"/>
+        <source>File Manager</source>
+        <translation>Souborový manažer</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMainWindow.ui" line="9978"/>
         <source>Batch Manager</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9618"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10063"/>
         <source>Change preview mode</source>
-        <translation type="unfinished">Změnit mód náhledu</translation>
+        <translation>Změnit mód náhledu</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9676"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10130"/>
         <source>Run pipe</source>
-        <translation type="unfinished">Zahájit proces</translation>
+        <translation>Zahájit proces</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9715"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10169"/>
         <source>Load template</source>
-        <translation type="unfinished">Načti šablonu</translation>
+        <translation>Načti šablonu</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9735"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10189"/>
         <source>Save image</source>
-        <translation type="unfinished">Uložit obrázek</translation>
+        <translation>Uložit obrázek</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9755"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10209"/>
         <source>Send image to external editor</source>
-        <translation type="unfinished">Poslat obrázek do externího editoru</translation>
+        <translation>Poslat obrázek do externího editoru</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9823"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10286"/>
         <source>Status</source>
         <translation>Status</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9849"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10312"/>
         <source>Processing pane</source>
-        <translation type="unfinished">Okno zpracování</translation>
+        <translation>Okno zpracování</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9872"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10335"/>
         <source>Info pane</source>
-        <translation type="unfinished">Info panel</translation>
+        <translation>Info panel</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="9895"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10358"/>
         <source>Photivo settings</source>
-        <translation type="unfinished">Nastavení Photivo </translation>
+        <translation>Nastavení Photivo </translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10087"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10595"/>
         <source>Open image</source>
-        <translation type="unfinished">Otevřít obrázek</translation>
+        <translation>Otevřít obrázek</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10125"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10633"/>
         <source>&lt;p align=&quot;center&quot;&gt;Photivo photo processor&lt;/p&gt;</source>
         <translation>&lt;p align=&quot;center&quot;&gt;Photivo photo processor&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10145"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10653"/>
         <source>&lt;p align=&quot;center&quot;&gt;&lt;a href=&quot;http://www.photivo.org&quot;&gt;www.photivo.org&lt;/a&gt;&lt;/p&gt;</source>
         <translation>&lt;p align=&quot;center&quot;&gt;&lt;a href=&quot;http://www.photivo.org&quot;&gt;www.photivo.org&lt;/a&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10158"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10666"/>
         <source>&lt;p align=&quot;center&quot;&gt;&lt;a href=&quot;http://www.flickr.com/groups/photivo/discuss/&quot;&gt;Forum&lt;/a&gt; &lt;a href=&quot;http://code.google.com/p/photivo/issues/list&quot;&gt;Issues&lt;/a&gt;&lt;/p&gt;</source>
-        <translation>&lt;p align=&quot;center&quot;&gt;&lt;a href=&quot;http://www.flickr.com/groups/photivo/discuss/&quot;&gt;Forum&lt;/a&gt; &lt;a href=&quot;http://code.google.com/p/photivo/issues/list&quot;&gt;Issues&lt;/a&gt;&lt;/p&gt;</translation>
+        <translation>&lt;p align=&quot;center&quot;&gt;&lt;a href=&quot;http://www.flickr.com/groups/photivo/discuss/&quot;&gt;Fórum&lt;/a&gt; &lt;a href=&quot;http://code.google.com/p/photivo/issues/list&quot;&gt;Řešení problémů&lt;/a&gt;&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10262"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10779"/>
         <source>Zoom in</source>
-        <translation type="unfinished">Zvětšit</translation>
+        <translation>Zvětšit</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10279"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10796"/>
         <source>Zoom out</source>
-        <translation type="unfinished">Zmenšit</translation>
+        <translation>Zmenšit</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10308"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10834"/>
         <source>Zoom fit</source>
-        <translation type="unfinished">Přispůsobit</translation>
+        <translation>Přispůsobit</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10328"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10854"/>
         <source>Zoom Full</source>
-        <translation type="unfinished">Celá velikost</translation>
+        <translation>Plná velikost</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10370"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10896"/>
+        <source>Open previous image</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMainWindow.ui" line="10913"/>
+        <source>Open next image</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMainWindow.ui" line="10946"/>
         <source>Batch job processing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10387"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10963"/>
         <source>File manager</source>
-        <translation type="unfinished">Souborový manažer</translation>
+        <translation>Souborový manažer</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10404"/>
+        <location filename="../Sources/ptMainWindow.ui" line="10980"/>
         <source>Fullscreen</source>
-        <translation type="unfinished">Celá obrazovka</translation>
+        <translation>Celá obrazovka</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10473"/>
+        <location filename="../Sources/ptMainWindow.ui" line="11067"/>
         <source>Exit</source>
-        <translation type="unfinished">Exit</translation>
+        <translation>Exit</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10481"/>
+        <location filename="../Sources/ptMainWindow.ui" line="11075"/>
         <source>TabMode</source>
-        <translation type="unfinished">Mód karet</translation>
+        <translation>Mód karet</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10486"/>
+        <location filename="../Sources/ptMainWindow.ui" line="11080"/>
         <source>Save Output</source>
-        <translation type="unfinished">Ulož výstup</translation>
+        <translation>Ulož výstup</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10491"/>
+        <location filename="../Sources/ptMainWindow.ui" line="11085"/>
         <source>Write Job</source>
-        <translation type="unfinished">Zapiš job</translation>
+        <translation>Zapiš projekt</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10499"/>
+        <location filename="../Sources/ptMainWindow.ui" line="11093"/>
         <source>Enabled</source>
-        <translation type="unfinished">Povolené</translation>
+        <translation>Povolené</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.ui" line="10510"/>
+        <location filename="../Sources/ptMainWindow.ui" line="11104"/>
         <source>Add power law</source>
-        <translation type="unfinished">Přidat power-law</translation>
+        <translation>Přidat power-law</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="548"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="562"/>
         <source>Save current pipe</source>
-        <translation type="unfinished">Ulož aktuální proces</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="550"/>
-        <source>Save full size</source>
-        <translation type="unfinished">Ulož plné rozlišení</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="552"/>
-        <source>Save settings file</source>
-        <translation type="unfinished">Ulož nastavení souboru</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="554"/>
-        <source>Save job file</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="558"/>
-        <source>Export current pipe</source>
-        <translation type="unfinished">Exportuj aktuální proces</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="560"/>
-        <source>Export full size</source>
-        <translation type="unfinished">Exportuj plné rozlišení</translation>
+        <translation>Ulož aktuální proces</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.cpp" line="564"/>
-        <source>Neutral reset</source>
-        <translation type="unfinished">Neutrální reset</translation>
+        <source>Save full size</source>
+        <translation>Ulož plné rozlišení</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.cpp" line="566"/>
-        <source>User reset</source>
-        <translation type="unfinished">Uživatelský reset</translation>
+        <source>Save settings file</source>
+        <translation>Ulož nastavení souboru</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMainWindow.cpp" line="568"/>
+        <source>Save job file</source>
+        <translation>Uložit pracovní soubor</translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.cpp" line="570"/>
-        <source>Open settings</source>
-        <translation type="unfinished">Otevřít nastavení</translation>
+        <source>Send to batch</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../Sources/ptMainWindow.cpp" line="574"/>
+        <source>Export current pipe</source>
+        <translation>Exportuj aktuální proces</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMainWindow.cpp" line="576"/>
+        <source>Export full size</source>
+        <translation>Exportuj plné rozlišení</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMainWindow.cpp" line="580"/>
+        <source>Neutral reset</source>
+        <translation>Neutrální reset</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMainWindow.cpp" line="582"/>
+        <source>User reset</source>
+        <translation>Uživatelský reset</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMainWindow.cpp" line="586"/>
+        <source>Open settings</source>
+        <translation>Otevřít nastavení</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptMainWindow.cpp" line="590"/>
         <source>&amp;Show hidden tools</source>
-        <translation type="unfinished">&amp;Zobraz / skryj nástroje</translation>
+        <translation>&amp;Zobraz / skryj nástroje</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="587"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="603"/>
         <source>Search</source>
-        <translation type="unfinished">Hledat</translation>
+        <translation>Hledat</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="669"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="687"/>
         <source>English (Default)</source>
-        <translation type="unfinished">Anglicky (Výchozí)</translation>
+        <translation>Anglicky (Výchozí)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="678"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="696"/>
         <source>Restart Photivo to change the language.</source>
-        <translation type="unfinished">Změna se projeví až po restartu.</translation>
+        <translation>Změna se projeví až po restartu.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1714"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1752"/>
         <source>No tools hidden!</source>
-        <translation type="unfinished">Žádné skryté nástroje!</translation>
+        <translation>Žádné skryté nástroje!</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1715"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1753"/>
         <source>Hidden tools</source>
-        <translation type="unfinished">Skryté nástroje</translation>
+        <translation>Skryté nástroje</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1733"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1771"/>
         <source>No tools blocked!</source>
-        <translation type="unfinished">Žádné blokované nástroje!</translation>
+        <translation>Žádné blokované nástroje!</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1734"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1772"/>
         <source>Blocked tools</source>
-        <translation type="unfinished">Blokované nástroje</translation>
+        <translation>Blokované nástroje</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1810"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1869"/>
         <source>Search results:</source>
-        <translation type="unfinished">Výsledek hledání:</translation>
+        <translation>Výsledek hledání:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1832"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1891"/>
         <source>No tools active!</source>
-        <translation type="unfinished">Žádné aktivní nástroje!</translation>
+        <translation>Žádné aktivní nástroje!</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1834"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1893"/>
         <source>Active tools:</source>
-        <translation type="unfinished">Aktivní nástroje:</translation>
+        <translation>Aktivní nástroje:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1857"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1916"/>
         <source>No tools visible!</source>
-        <translation type="unfinished">Žádné viditelné nástroje!</translation>
+        <translation>Žádné viditelné nástroje!</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1859"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1918"/>
         <source>All visible tools:</source>
-        <translation type="unfinished">Viditelné nástroje:</translation>
+        <translation>Viditelné nástroje:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1882"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1941"/>
         <source>No favourite tools!</source>
-        <translation type="unfinished">Žádné oblíbené nástroje!</translation>
+        <translation>Žádné oblíbené nástroje!</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="1886"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="1945"/>
         <source>Favourite tools:</source>
-        <translation type="unfinished">Oblíbené nástroje:</translation>
+        <translation>Oblíbené nástroje:</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="2499"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="2561"/>
         <source> at </source>
         <translation> at </translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="2518"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="2580"/>
         <source> with ISO </source>
         <translation>z ISO</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="2559"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="2621"/>
         <source> (35mm equiv.: </source>
         <translation> (35mm equiv.: </translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="2959"/>
-        <location filename="../Sources/ptMainWindow.cpp" line="2983"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="3021"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="3045"/>
         <source>Photivo UI file (*.ptu);;All files (*.*)</source>
-        <translation type="unfinished">Photivo soubor (*.ptu);;Všechny soubory (*.*)</translation>
+        <translation>Photivo soubor (*.ptu);;Všechny soubory (*.*)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="2961"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="3023"/>
         <source>Open UI</source>
-        <translation type="unfinished">Otevři UI</translation>
+        <translation>Otevři UI</translation>
     </message>
     <message>
-        <location filename="../Sources/ptMainWindow.cpp" line="2985"/>
+        <location filename="../Sources/ptMainWindow.cpp" line="3047"/>
         <source>Save UI</source>
-        <translation type="unfinished">Ulož UI</translation>
+        <translation>Ulož UI</translation>
     </message>
 </context>
 <context>
     <name>ptProcessor</name>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="234"/>
+        <location filename="../Sources/ptProcessor.cpp" line="229"/>
         <source>Loading Bitmap</source>
-        <translation type="unfinished">Načtení bitmapy</translation>
+        <translation>Načtení bitmapy</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="255"/>
-        <location filename="../Sources/ptProcessor.cpp" line="286"/>
+        <location filename="../Sources/ptProcessor.cpp" line="268"/>
+        <location filename="../Sources/ptProcessor.cpp" line="299"/>
         <source>Reading exif info</source>
-        <translation type="unfinished">Načíst exif</translation>
+        <translation>Načíst exif</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="269"/>
+        <location filename="../Sources/ptProcessor.cpp" line="282"/>
         <source>Reading RAW file</source>
-        <translation type="unfinished">Načíst RAW</translation>
+        <translation>Načíst RAW</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="297"/>
+        <location filename="../Sources/ptProcessor.cpp" line="310"/>
         <source>Demosaicing</source>
-        <translation type="unfinished">Demozajkování</translation>
+        <translation>Demozajkování</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="307"/>
+        <location filename="../Sources/ptProcessor.cpp" line="320"/>
         <source>Recovering highlights</source>
-        <translation type="unfinished">Obnova světel</translation>
+        <translation>Obnova světel</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="342"/>
-        <location filename="../Sources/ptProcessor.cpp" line="354"/>
-        <source>Profile not found</source>
-        <translation type="unfinished">Profil nenalezen</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptProcessor.cpp" line="343"/>
         <location filename="../Sources/ptProcessor.cpp" line="355"/>
+        <location filename="../Sources/ptProcessor.cpp" line="367"/>
+        <source>Profile not found</source>
+        <translation>Profil nenalezen</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptProcessor.cpp" line="356"/>
+        <location filename="../Sources/ptProcessor.cpp" line="368"/>
         <source>Profile not found. Reverting to Adobe Matrix.
 You could try an external profile.</source>
-        <translation type="unfinished">Profil nenalezen. Návrat na Adobe Matrix.
+        <translation>Profil nenalezen. Návrat na Adobe Matrix.
 Můžete zkusit externí profil.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="443"/>
+        <location filename="../Sources/ptProcessor.cpp" line="456"/>
         <source>Calculate auto exposure</source>
-        <translation type="unfinished">Výpočet automatické expozice</translation>
+        <translation>Výpočet automatické expozice</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="456"/>
+        <location filename="../Sources/ptProcessor.cpp" line="469"/>
         <source>Channel Mixing</source>
-        <translation type="unfinished">Mixer kanálů</translation>
+        <translation>Mixer kanálů</translation>
     </message>
     <message>
         <source>Highlights</source>
@@ -8105,9 +8333,9 @@ Můžete zkusit externí profil.</translation>
         <translation type="obsolete">Jas</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="497"/>
+        <location filename="../Sources/ptProcessor.cpp" line="510"/>
         <source>Correcting Exposure</source>
-        <translation type="unfinished">Korekce expozice</translation>
+        <translation>Korekce expozice</translation>
     </message>
     <message>
         <source>Brighten</source>
@@ -8130,19 +8358,16 @@ Můžete zkusit externí profil.</translation>
         <translation type="obsolete">Lokální expozice</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="571"/>
         <source>RGB Texture contrast</source>
-        <translation type="unfinished">Kontrast textury RGB</translation>
+        <translation type="vanished">Kontrast textury RGB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="588"/>
         <source>Microcontrast 1</source>
-        <translation>Microkontrast 1</translation>
+        <translation type="vanished">Microkontrast 1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="603"/>
         <source>Microcontrast 2</source>
-        <translation>Microkontrast 2</translation>
+        <translation type="vanished">Microkontrast 2</translation>
     </message>
     <message>
         <source>Applying RGB contrast</source>
@@ -8173,39 +8398,32 @@ Můžete zkusit externí profil.</translation>
         <translation type="obsolete">Dynamický rozsah komprese</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="705"/>
         <source>Texture curve</source>
-        <translation type="unfinished">Křivka textury</translation>
+        <translation type="vanished">Křivka textury</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="716"/>
         <source>Texture contrast 1</source>
-        <translation type="unfinished">Kontrast textury 1</translation>
+        <translation type="vanished">Kontrast textury 1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="737"/>
         <source>Texture contrast 2</source>
-        <translation type="unfinished">Kontrast textury 2</translation>
+        <translation type="vanished">Kontrast textury 2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="762"/>
         <source>LabMicrocontrast 1</source>
-        <translation>LabMicrokontrast 1</translation>
+        <translation type="vanished">LabMicrokontrast 1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="785"/>
         <source>LabMicrocontrast 2</source>
-        <translation>LabMicrokontrast 2</translation>
+        <translation type="vanished">LabMicrokontrast 2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="812"/>
         <source>Local Contrast 1</source>
-        <translation type="unfinished">Lokální kontrast 1</translation>
+        <translation type="vanished">Lokální kontrast 1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="830"/>
         <source>Local Contrast 2</source>
-        <translation type="unfinished">Lokální kontrast 2</translation>
+        <translation type="vanished">Lokální kontrast 2</translation>
     </message>
     <message>
         <source>Applying Lab contrast</source>
@@ -8224,140 +8442,139 @@ Můžete zkusit externí profil.</translation>
         <translation type="obsolete">Úrovně Lab</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="902"/>
         <source>Impulse denoise</source>
-        <translation type="unfinished">Impulsivní odšumění</translation>
+        <translation type="vanished">Impulsivní odšumění</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="923"/>
+        <location filename="../Sources/ptProcessor.cpp" line="810"/>
         <source>Edge avoiding wavelets</source>
-        <translation type="unfinished">Filtr Wavelet zachová hrany</translation>
+        <translation>Filtr Wavelet zachová hrany</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="951"/>
-        <location filename="../Sources/ptProcessor.cpp" line="982"/>
+        <location filename="../Sources/ptProcessor.cpp" line="838"/>
+        <location filename="../Sources/ptProcessor.cpp" line="869"/>
         <source>GreyCStoration on L</source>
         <translation>GreyCStoration on L </translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1007"/>
+        <location filename="../Sources/ptProcessor.cpp" line="894"/>
         <source>Defringe</source>
         <translation>Defringe</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1036"/>
+        <location filename="../Sources/ptProcessor.cpp" line="923"/>
         <source>Wavelet L denoising</source>
-        <translation type="unfinished">Odšumění L Wavelet</translation>
+        <translation>Odšumění L Wavelet</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1062"/>
+        <location filename="../Sources/ptProcessor.cpp" line="949"/>
         <source>Wavelet A denoising</source>
-        <translation type="unfinished">Odšumění A Wavelet</translation>
+        <translation>Odšumění A Wavelet</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1084"/>
+        <location filename="../Sources/ptProcessor.cpp" line="971"/>
         <source>Wavelet B denoising</source>
-        <translation type="unfinished">Odšumění B Wavelet</translation>
+        <translation>Odšumění B Wavelet</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1107"/>
+        <location filename="../Sources/ptProcessor.cpp" line="994"/>
         <source>Luminance denoising</source>
-        <translation type="unfinished">Odstranění jasového šumu</translation>
+        <translation>Odstranění jasového šumu</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1131"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1018"/>
         <source>Denoise curve</source>
-        <translation type="unfinished">Křivka odšumění</translation>
+        <translation>Křivka odšumění</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1141"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1028"/>
         <source>Pyramid denoising</source>
-        <translation type="unfinished">Pyramidální odšumění</translation>
+        <translation>Pyramidální odšumění</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1166"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1053"/>
         <source>Color A denoising</source>
-        <translation type="unfinished">Odšumění barev A</translation>
+        <translation>Odšumění barev A</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1188"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1075"/>
         <source>Color B denoising</source>
-        <translation type="unfinished">Odšumění barev B</translation>
+        <translation>Odšumění barev B</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1213"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1100"/>
         <source>Detail curve</source>
-        <translation type="unfinished">Detailní křivka</translation>
+        <translation>Detailní křivka</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1224"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1111"/>
         <source>Gradient Sharpen</source>
-        <translation type="unfinished">Gradient ostrosti</translation>
+        <translation>Gradient ostrosti</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1252"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1139"/>
         <source>Wiener Filter</source>
-        <translation type="unfinished">Filtr Wiener</translation>
+        <translation>Filtr Wiener</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1263"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1150"/>
         <source>Inverse Diffusion Sharpen</source>
-        <translation type="unfinished">Difuzní inverze ostrosti</translation>
+        <translation>Difuzní inverze ostrosti</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1288"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1175"/>
         <source>USM sharpening</source>
-        <translation type="unfinished">USM zaostření</translation>
+        <translation>USM zaostření</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1318"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1205"/>
         <source>Highpass</source>
-        <translation type="unfinished">Horní propust</translation>
+        <translation>Horní propust</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1345"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1232"/>
         <source>Film grain 1</source>
-        <translation type="unfinished">Filmové zrno 1</translation>
+        <translation>Filmové zrno 1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1369"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1256"/>
         <source>Film grain 2</source>
-        <translation type="unfinished">Filmové zrno 2</translation>
+        <translation>Filmové zrno 2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1403"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1290"/>
         <source>View LAB</source>
-        <translation type="unfinished">Zobrazit LAB</translation>
+        <translation>Zobrazit LAB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1453"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1340"/>
         <source>Applying Outline</source>
-        <translation type="unfinished">Aplikovat konturu</translation>
+        <translation>Aplikovat konturu</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1463"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1350"/>
         <source>Applying L by Hue curve</source>
-        <translation type="unfinished">Aplikovat L křivku obarvení</translation>
+        <translation>Aplikovat L křivku obarvení</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1474"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1361"/>
         <source>Applying saturation curve</source>
-        <translation type="unfinished">Aplikovat křivku saturace</translation>
+        <translation>Aplikovat křivku saturace</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1484"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1371"/>
         <source>Applying hue curve</source>
-        <translation type="unfinished">Aplikovat křivku obarvení</translation>
+        <translation>Aplikovat křivku obarvení</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1495"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1382"/>
         <source>Applying L curve</source>
-        <translation type="unfinished">Aplikovat L křivku</translation>
+        <translation>Aplikovat L křivku</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1505"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1392"/>
         <source>Applying a* b* curves</source>
-        <translation type="unfinished">Použít a*b* křivku</translation>
+        <translation>Použít a*b* křivku</translation>
     </message>
     <message>
         <source>Colorcontrast</source>
@@ -8396,624 +8613,652 @@ Můžete zkusit externí profil.</translation>
         <translation type="obsolete">LAB tónování světel</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1580"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1467"/>
         <source>Lab Vignette</source>
-        <translation type="unfinished">LAB vinětace</translation>
+        <translation>LAB vinětace</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1609"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1496"/>
         <source>Lab to RGB</source>
         <translation>LAB do RGB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1620"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1507"/>
         <source>Black and White</source>
-        <translation type="unfinished">Černá a bílá</translation>
+        <translation>Černá a bílá</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1636"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1523"/>
         <source>Simple Toning</source>
-        <translation type="unfinished">Jednoduché tóny</translation>
+        <translation>Jednoduché tóny</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1649"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1536"/>
         <source>Toning 1</source>
-        <translation type="unfinished">Tónování 1</translation>
+        <translation>Tónování 1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1672"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1559"/>
         <source>Toning 2</source>
-        <translation type="unfinished">Tónování 2</translation>
+        <translation>Tónování 2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1698"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1585"/>
         <source>Crossprocessing</source>
-        <translation type="unfinished">Křížové zpracování</translation>
+        <translation>Křížové zpracování</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1711"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1598"/>
         <source>Applying RGB Contrast</source>
-        <translation type="unfinished">Použít RGB kontrast</translation>
+        <translation>Použít RGB kontrast</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1721"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1608"/>
         <source>Texture Overlay</source>
-        <translation type="unfinished">Překrytí textury </translation>
+        <translation>Překrytí textury </translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1802"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1691"/>
         <source>Texture Overlay 2</source>
-        <translation type="unfinished">Překrytí textury 2</translation>
+        <translation>Překrytí textury 2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1883"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1774"/>
         <source>Gradual Overlay 1</source>
-        <translation type="unfinished">Poloviční filtr 1</translation>
+        <translation>Poloviční filtr 1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1906"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1797"/>
         <source>Gradual Overlay 2</source>
-        <translation type="unfinished">Poloviční filtr 2</translation>
+        <translation>Poloviční filtr 2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1933"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1824"/>
         <source>Vignette</source>
-        <translation type="unfinished">Vinětace</translation>
+        <translation>Vinětace</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1950"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1841"/>
         <source>Gradual Blur 1</source>
-        <translation type="unfinished">Gradient rozmazání 1</translation>
+        <translation>Gradient rozmazání 1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1969"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1860"/>
         <source>Gradual Blur 2</source>
-        <translation type="unfinished">Gradient rozmazání 2</translation>
+        <translation>Gradient rozmazání 2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="1991"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1882"/>
         <source>Softglow</source>
-        <translation type="unfinished">Teplé světlo</translation>
+        <translation>Teplé světlo</translation>
     </message>
     <message>
         <source>Vibrance 2</source>
-        <translation type="obsolete">Oživení 2</translation>
+        <translation type="vanished">Oživení 2</translation>
     </message>
     <message>
         <source>Intensity RGB 2</source>
-        <translation type="obsolete">Intenzita RGB 2</translation>
+        <translation type="vanished">Intenzita RGB 2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2017"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1908"/>
         <source>Applying R curve</source>
-        <translation type="unfinished">Použít R křivku</translation>
+        <translation>Použít R křivku</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2024"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1915"/>
         <source>Applying G curve</source>
-        <translation type="unfinished">Použít G křivku</translation>
+        <translation>Použít G křivku</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2031"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1922"/>
         <source>Applying B curve</source>
-        <translation type="unfinished">Použít B křivku</translation>
+        <translation>Použít B křivku</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2053"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1944"/>
         <source>Ready</source>
-        <translation type="unfinished">Připraven</translation>
+        <translation>Připraven</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2070"/>
+        <location filename="../Sources/ptProcessor.cpp" line="1961"/>
         <source>Transfer Bitmap</source>
-        <translation type="unfinished">Převod bitmapy</translation>
+        <translation>Převod bitmapy</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2120"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2011"/>
         <source>Spot tuning</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2145"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2036"/>
         <source>Lensfun corrections</source>
-        <translation type="unfinished">korekce objektivu</translation>
+        <translation>Korekce objektivu</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2295"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2186"/>
         <source>Defish correction</source>
-        <translation type="unfinished">Korekce Defish</translation>
+        <translation>Korekce Defish</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2354"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2245"/>
         <source>Perspective transform</source>
-        <translation type="unfinished">Transformace perspektivy</translation>
+        <translation>Transformace perspektivy</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2397"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2288"/>
         <source>Crop outside the image</source>
-        <translation type="unfinished">Ožez je mimo obraz</translation>
+        <translation>Ožez je mimo obraz</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2398"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2289"/>
         <source>Crop rectangle too large.
 No crop, try again.</source>
-        <translation type="unfinished">Obdélník příliš velký.
+        <translation>Obdélník příliš velký.
 Neořezáno, zkuste to znovu.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2408"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2299"/>
         <source>Cropping</source>
-        <translation type="unfinished">Ořezání</translation>
+        <translation>Ořezání</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2435"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2326"/>
         <source>Seam carving</source>
-        <translation type="unfinished">Seam carving</translation>
+        <translation>Označení ořezu</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2458"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2349"/>
         <source>Resize image</source>
-        <translation type="unfinished">Změnit velikost</translation>
+        <translation>Změnit velikost</translation>
     </message>
     <message>
-        <location filename="../Sources/ptProcessor.cpp" line="2478"/>
+        <location filename="../Sources/ptProcessor.cpp" line="2370"/>
         <source>Flip image</source>
-        <translation type="unfinished">Převrátit obraz</translation>
+        <translation>Převrátit obraz</translation>
     </message>
 </context>
 <context>
     <name>ptSettings</name>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="59"/>
+        <location filename="../Sources/ptSettings.cpp" line="61"/>
         <source>Thumbnail size</source>
-        <translation type="unfinished">Velikost miniatury</translation>
+        <translation>Velikost miniatury</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="59"/>
+        <location filename="../Sources/ptSettings.cpp" line="61"/>
         <source>Thumbnail size in pixel</source>
-        <translation type="unfinished">Velikost miniatur v px</translation>
+        <translation>Velikost miniatur v px</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="60"/>
+        <location filename="../Sources/ptSettings.cpp" line="62"/>
         <source>Thumbnail padding</source>
-        <translation type="unfinished">Odsazení miniatury</translation>
+        <translation>Odsazení miniatury</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="60"/>
+        <location filename="../Sources/ptSettings.cpp" line="62"/>
         <source>Thumbnail padding in pixel</source>
-        <translation type="unfinished">Odsazení miniatur v px</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptSettings.cpp" line="61"/>
-        <source>Thumbnails in a row/column</source>
-        <translation type="unfinished">Miniatury v řádku / sloupci</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptSettings.cpp" line="61"/>
-        <location filename="../Sources/ptSettings.cpp" line="444"/>
-        <source>Maximum number of thumbnails that should be placed in a row or column.</source>
-        <translation type="unfinished">Maximum miniatur v řádku nebo sloupci.</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptSettings.cpp" line="62"/>
-        <source>Thumbnail export size</source>
-        <translation type="unfinished">Rozměr miniatur do exportu</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptSettings.cpp" line="62"/>
-        <source>Thumbnail export size in pixel</source>
-        <translation type="unfinished">Rozměr miniatur do exportu v px</translation>
+        <translation>Odsazení miniatur v px</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="63"/>
+        <source>Thumbnails in a row/column</source>
+        <translation>Miniatury v řádku / sloupci</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="63"/>
+        <location filename="../Sources/ptSettings.cpp" line="388"/>
+        <source>Maximum number of thumbnails that should be placed in a row or column.</source>
+        <translation>Maximum miniatur v řádku nebo sloupci.</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="64"/>
+        <source>Thumbnail export size</source>
+        <translation>Rozměr miniatur do exportu</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="64"/>
+        <source>Thumbnail export size in pixel</source>
+        <translation>Rozměr miniatur do exportu v px</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="65"/>
+        <source>Thumbnail cache (MB)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="65"/>
+        <source>Maximum size of thumbnail cache in MBytes.
+Requires a restart to take effect.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="66"/>
         <source>MB</source>
         <translation>MB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="63"/>
+        <location filename="../Sources/ptSettings.cpp" line="66"/>
         <source>MB to waste</source>
-        <translation type="unfinished">MB koše</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptSettings.cpp" line="64"/>
-        <source>Pixel</source>
-        <translation type="unfinished">Pixel</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptSettings.cpp" line="64"/>
-        <source>Size of the LED</source>
-        <translation type="unfinished">Rozměr LED</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptSettings.cpp" line="65"/>
-        <source>Maximum slider width</source>
-        <translation type="unfinished">Maximální šířka jezdce</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptSettings.cpp" line="65"/>
-        <source>Maximum slider width. Enter 0 to remove restriction</source>
-        <translation type="unfinished">Maximální šířka jezdce. Zadejte 0 k odstranění omezení</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptSettings.cpp" line="66"/>
-        <source>Zoom</source>
-        <translation type="unfinished">Zoom</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptSettings.cpp" line="66"/>
-        <source>Zoom factor</source>
-        <translation type="unfinished">Faktor zoomu</translation>
+        <translation>MB koše</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="67"/>
+        <source>Pixel</source>
+        <translation>Pixel</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="67"/>
+        <source>Size of the LED</source>
+        <translation>Rozměr LED</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="68"/>
+        <source>Maximum slider width</source>
+        <translation>Maximální šířka jezdce</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="68"/>
+        <source>Maximum slider width. Enter 0 to remove restriction</source>
+        <translation>Maximální šířka jezdce. Zadejte 0 k odstranění omezení</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="69"/>
+        <source>Zoom</source>
+        <translation>Zoom</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="69"/>
+        <source>Zoom factor</source>
+        <translation>Faktor zoomu</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="70"/>
         <source>Temp</source>
         <translation>Temperatura</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="67"/>
+        <location filename="../Sources/ptSettings.cpp" line="70"/>
         <source>Color Temperature</source>
-        <translation type="unfinished">Temperatura barev</translation>
+        <translation>Temperatura barev</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="68"/>
+        <location filename="../Sources/ptSettings.cpp" line="71"/>
         <source>WB-G</source>
-        <translation type="unfinished">WB - G</translation>
+        <translation>WB - G</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="68"/>
+        <location filename="../Sources/ptSettings.cpp" line="71"/>
         <source>Green Intensity in balance</source>
-        <translation type="unfinished">Intenzita vyrovnání zelené</translation>
+        <translation>Intenzita vyrovnání zelené</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="69"/>
+        <location filename="../Sources/ptSettings.cpp" line="72"/>
         <source>R</source>
         <translation>R</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="69"/>
+        <location filename="../Sources/ptSettings.cpp" line="72"/>
         <source>Red Multiplier in balance</source>
-        <translation type="unfinished">Násobení intenzity červené</translation>
+        <translation>Násobení intenzity červené</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="70"/>
+        <location filename="../Sources/ptSettings.cpp" line="73"/>
         <source>G</source>
         <translation>G</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="70"/>
+        <location filename="../Sources/ptSettings.cpp" line="73"/>
         <source>Green Multiplier in balance</source>
-        <translation type="unfinished">Násobení intenzity zelené</translation>
+        <translation>Násobení intenzity zelené</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="71"/>
+        <location filename="../Sources/ptSettings.cpp" line="74"/>
         <source>B</source>
         <translation>B</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="71"/>
+        <location filename="../Sources/ptSettings.cpp" line="74"/>
         <source>Blue Multiplier in balance</source>
-        <translation type="unfinished">Násobení intenzity modré</translation>
+        <translation>Násobení intenzity modré</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="72"/>
+        <location filename="../Sources/ptSettings.cpp" line="75"/>
         <source>BP</source>
-        <translation type="unfinished">BP</translation>
+        <translation>BP</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="72"/>
+        <location filename="../Sources/ptSettings.cpp" line="75"/>
         <source>Black point in raw</source>
-        <translation type="unfinished">Černý bod v raw</translation>
+        <translation>Černý bod v raw</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="73"/>
+        <location filename="../Sources/ptSettings.cpp" line="76"/>
         <source>WP</source>
         <translation>WP</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="73"/>
-        <source>White point in raw</source>
-        <translation type="unfinished">Bílý bod v raw</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptSettings.cpp" line="74"/>
-        <source>CA red factor</source>
-        <translation type="unfinished">Chromatická aberace koeficient červená</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptSettings.cpp" line="75"/>
-        <source>CA blue factor</source>
-        <translation type="unfinished">Chromatická aberace koeficient modrá </translation>
-    </message>
-    <message>
         <location filename="../Sources/ptSettings.cpp" line="76"/>
+        <source>White point in raw</source>
+        <translation>Bílý bod v raw</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="77"/>
+        <source>CA red factor</source>
+        <translation>Chromatická aberace koeficient červená</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="78"/>
+        <source>CA blue factor</source>
+        <translation>Chromatická aberace koeficient modrá </translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="79"/>
         <source>Green equilibration</source>
-        <translation type="unfinished">Rovnováha zelené</translation>
+        <translation>Rovnováha zelené</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="77"/>
+        <location filename="../Sources/ptSettings.cpp" line="80"/>
         <source>Line denoise</source>
-        <translation type="unfinished">Linie odšumění</translation>
+        <translation>Linie odšumění</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="77"/>
+        <location filename="../Sources/ptSettings.cpp" line="80"/>
         <source>Raw line denoise threshold</source>
-        <translation type="unfinished">Prahová linie odšumění v raw </translation>
+        <translation>Prahová linie odšumění v raw </translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="78"/>
+        <location filename="../Sources/ptSettings.cpp" line="81"/>
         <source>Adjust maximum</source>
-        <translation type="unfinished">Nastavení maxima</translation>
+        <translation>Nastavení maxima</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="78"/>
+        <location filename="../Sources/ptSettings.cpp" line="81"/>
         <source>Threshold to prevent pink highlights</source>
-        <translation type="unfinished">Práh pro zabránění růžového zvýraznění</translation>
+        <translation>Práh pro zabránění růžového zvýraznění</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="79"/>
+        <location filename="../Sources/ptSettings.cpp" line="82"/>
         <source>Wavelet denoise</source>
-        <translation type="unfinished">Odšumění Wavelet</translation>
+        <translation>Odšumění Wavelet</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="79"/>
+        <location filename="../Sources/ptSettings.cpp" line="82"/>
         <source>Raw wavelet denoise threshold</source>
-        <translation type="unfinished">Práh odšumění Wavelet Raw</translation>
+        <translation>Práh odšumění Wavelet Raw</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="80"/>
+        <location filename="../Sources/ptSettings.cpp" line="83"/>
         <source>Badpixel reduction</source>
-        <translation type="unfinished">Redukce chybných pixelů</translation>
+        <translation>Redukce chybných pixelů</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="80"/>
-        <location filename="../Sources/ptSettings.cpp" line="239"/>
+        <location filename="../Sources/ptSettings.cpp" line="83"/>
+        <location filename="../Sources/ptSettings.cpp" line="187"/>
         <source>Automatic badpixel reduction</source>
-        <translation type="unfinished">Automatická redukce vadných pixelů</translation>
+        <translation>Automatická redukce vadných pixelů</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="81"/>
-        <location filename="../Sources/ptSettings.cpp" line="234"/>
+        <location filename="../Sources/ptSettings.cpp" line="84"/>
+        <location filename="../Sources/ptSettings.cpp" line="182"/>
         <source>Passes</source>
-        <translation type="unfinished">Přechody</translation>
+        <translation>Přechody</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="81"/>
+        <location filename="../Sources/ptSettings.cpp" line="84"/>
         <source>Nr of refinement passes</source>
-        <translation type="unfinished">Upřesnění počtu.průchodů</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptSettings.cpp" line="82"/>
-        <source>Median passes</source>
-        <translation type="unfinished">Přechod median</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptSettings.cpp" line="82"/>
-        <source>Nr of median filter passes</source>
-        <translation type="unfinished">Upřesnění počtu median filtrů</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptSettings.cpp" line="83"/>
-        <source>Edge sensitive median passes</source>
-        <translation type="unfinished">Okraj nasycení průchod střední</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptSettings.cpp" line="83"/>
-        <source>Nr of edge sensitive median filter passes</source>
-        <translation type="unfinished">Nr of edge sensitive median filter passes</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptSettings.cpp" line="84"/>
-        <source>Parameter</source>
-        <translation type="unfinished">Parametr</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptSettings.cpp" line="84"/>
-        <source>Clip function dependent parameter</source>
-        <translation type="unfinished">Klip funkcí v závislosti na parametru</translation>
+        <translation>Upřesnění počtu.průchodů</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="85"/>
-        <location filename="../Sources/ptSettings.cpp" line="108"/>
-        <location filename="../Sources/ptSettings.cpp" line="111"/>
-        <source>Focal length (35mm equiv.)</source>
-        <translation type="unfinished">Ohnisko (ekwiw 35mm)</translation>
+        <source>Median passes</source>
+        <translation>Přechod median</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="85"/>
+        <source>Nr of median filter passes</source>
+        <translation>Upřesnění počtu median filtrů</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="86"/>
+        <source>Edge sensitive median passes</source>
+        <translation>Okraj nasycení průchod střední</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="86"/>
+        <source>Nr of edge sensitive median filter passes</source>
+        <translation>Počet průchozí citlivosti median filtru</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="87"/>
+        <source>Parameter</source>
+        <translation>Parametr</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="87"/>
+        <source>Clip function dependent parameter</source>
+        <translation>Klip funkcí v závislosti na parametru</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="88"/>
+        <location filename="../Sources/ptSettings.cpp" line="111"/>
+        <location filename="../Sources/ptSettings.cpp" line="114"/>
+        <source>Focal length (35mm equiv.)</source>
+        <translation>Ohnisko (ekwiw 35mm)</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="89"/>
         <source>Aperture</source>
-        <translation type="unfinished">Světelnost</translation>
+        <translation>Světelnost</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="87"/>
+        <location filename="../Sources/ptSettings.cpp" line="90"/>
         <source>Distance</source>
-        <translation type="unfinished">Vzdálenost</translation>
+        <translation>Vzdálenost</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="87"/>
+        <location filename="../Sources/ptSettings.cpp" line="90"/>
         <source>Distance between object and camera</source>
-        <translation type="unfinished">Vzdálenost mezi objektem a fotoaparátem</translation>
+        <translation>Vzdálenost mezi objektem a fotoaparátem</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="88"/>
-        <location filename="../Sources/ptSettings.cpp" line="109"/>
-        <location filename="../Sources/ptSettings.cpp" line="137"/>
-        <location filename="../Sources/ptSettings.cpp" line="157"/>
-        <location filename="../Sources/ptSettings.cpp" line="163"/>
+        <location filename="../Sources/ptSettings.cpp" line="91"/>
+        <location filename="../Sources/ptSettings.cpp" line="112"/>
         <source>Scale</source>
-        <translation type="unfinished">Škála</translation>
+        <translation>Škála</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="88"/>
+        <location filename="../Sources/ptSettings.cpp" line="91"/>
         <source>Image scaling.
 Useful to avoid losing content through the distortion/geometry tools.
 0.0 means auto-scaling.</source>
-        <translation type="unfinished">Škálování obrázku. 
+        <translation>Škálování obrázku. 
 Užitečné, aby nedošlo ke ztrátě obsahu po zkreslení / geometrie nástroje.
 0.0 znamená automatickou změnu velikosti. </translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="89"/>
+        <location filename="../Sources/ptSettings.cpp" line="92"/>
         <source>kr</source>
         <translation>kr</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="90"/>
+        <location filename="../Sources/ptSettings.cpp" line="93"/>
         <source>kb</source>
         <translation>kb</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="91"/>
+        <location filename="../Sources/ptSettings.cpp" line="94"/>
         <source>vr</source>
         <translation>vr</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="92"/>
+        <location filename="../Sources/ptSettings.cpp" line="95"/>
         <source>vb</source>
         <translation>vb</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="93"/>
+        <location filename="../Sources/ptSettings.cpp" line="96"/>
         <source>cr</source>
         <translation>cr</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="94"/>
+        <location filename="../Sources/ptSettings.cpp" line="97"/>
         <source>cb</source>
         <translation>cb</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="95"/>
+        <location filename="../Sources/ptSettings.cpp" line="98"/>
         <source>br</source>
         <translation>br</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="96"/>
+        <location filename="../Sources/ptSettings.cpp" line="99"/>
         <source>bb</source>
         <translation>bb</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="97"/>
         <location filename="../Sources/ptSettings.cpp" line="100"/>
-        <location filename="../Sources/ptSettings.cpp" line="101"/>
+        <location filename="../Sources/ptSettings.cpp" line="103"/>
+        <location filename="../Sources/ptSettings.cpp" line="104"/>
         <source>k1</source>
         <translation>k1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="98"/>
-        <location filename="../Sources/ptSettings.cpp" line="102"/>
+        <location filename="../Sources/ptSettings.cpp" line="101"/>
+        <location filename="../Sources/ptSettings.cpp" line="105"/>
         <source>k2</source>
         <translation>k2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="99"/>
+        <location filename="../Sources/ptSettings.cpp" line="102"/>
         <source>k3</source>
         <translation>k3</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="103"/>
+        <location filename="../Sources/ptSettings.cpp" line="106"/>
         <source>omega</source>
         <translation>omega</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="104"/>
+        <location filename="../Sources/ptSettings.cpp" line="107"/>
         <source>a</source>
         <translation>a</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="105"/>
+        <location filename="../Sources/ptSettings.cpp" line="108"/>
         <source>b</source>
         <translation>b</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="106"/>
+        <location filename="../Sources/ptSettings.cpp" line="109"/>
         <source>c</source>
         <translation>c</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="109"/>
+        <location filename="../Sources/ptSettings.cpp" line="112"/>
         <source>Image scaling.
 0.0 means auto-scaling.</source>
-        <translation type="unfinished">Škálovatelnost obrazu.
+        <translation>Škálovatelnost obrazu.
 0.0 znamená automatickou změnu velikosti.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="110"/>
-        <source>Rotate</source>
-        <translation type="unfinished">Rotace</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptSettings.cpp" line="112"/>
-        <source>Tilt</source>
-        <translation type="unfinished">Náklon</translation>
-    </message>
-    <message>
         <location filename="../Sources/ptSettings.cpp" line="113"/>
-        <source>Turn</source>
-        <translation type="unfinished">Turn</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptSettings.cpp" line="114"/>
-        <location filename="../Sources/ptSettings.cpp" line="119"/>
-        <source>Horizontal scale</source>
-        <translation type="unfinished">Horizontální škála</translation>
+        <source>Rotate</source>
+        <translation>Rotace</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="115"/>
-        <location filename="../Sources/ptSettings.cpp" line="120"/>
-        <source>Vertical scale</source>
-        <translation type="unfinished">Vetikální škála</translation>
+        <source>Tilt</source>
+        <translation>Náklon</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="116"/>
+        <source>Turn</source>
+        <translation>Turn</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="117"/>
+        <location filename="../Sources/ptSettings.cpp" line="122"/>
+        <source>Horizontal scale</source>
+        <translation>Horizontální škála</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="118"/>
+        <location filename="../Sources/ptSettings.cpp" line="123"/>
+        <source>Vertical scale</source>
+        <translation>Vetikální škála</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="119"/>
         <source>X</source>
         <translation>X</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="116"/>
+        <location filename="../Sources/ptSettings.cpp" line="119"/>
         <source>Vertical lines</source>
-        <translation type="unfinished">Vertikální linie</translation>
+        <translation>Vertikální linie</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="117"/>
+        <location filename="../Sources/ptSettings.cpp" line="120"/>
         <source>Y</source>
         <translation>Y</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="117"/>
+        <location filename="../Sources/ptSettings.cpp" line="120"/>
         <source>Horizontal lines</source>
-        <translation type="unfinished">Horizontální linie</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptSettings.cpp" line="118"/>
-        <source>Crop exposure</source>
-        <translation type="unfinished">Ořez expozice</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptSettings.cpp" line="118"/>
-        <source>Temporary exposure in EV</source>
-        <translation type="unfinished">Teplota expozice v EV</translation>
+        <translation>Horizontální linie</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="121"/>
+        <source>Crop exposure</source>
+        <translation>Ořez expozice</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="121"/>
+        <source>Temporary exposure in EV</source>
+        <translation>Teplota expozice v EV</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="124"/>
         <source>Width</source>
-        <translation type="unfinished">Délka</translation>
+        <translation>Délka</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="122"/>
+        <location filename="../Sources/ptSettings.cpp" line="125"/>
+        <location filename="../Sources/ptSettings.cpp" line="127"/>
         <source>Height</source>
-        <translation type="unfinished">Výška</translation>
+        <translation>Výška</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="123"/>
-        <location filename="../Sources/ptSettings.cpp" line="343"/>
+        <location filename="../Sources/ptSettings.cpp" line="126"/>
+        <source>Pixels</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="127"/>
+        <source>Image height</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="291"/>
         <source>pixels</source>
-        <translation type="unfinished">Pixely</translation>
+        <translation>Pixely</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="123"/>
-        <location filename="../Sources/ptSettings.cpp" line="343"/>
+        <location filename="../Sources/ptSettings.cpp" line="437"/>
+        <source>Load tags from sidecar files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="437"/>
+        <source>Load tags from sidecar XMP files when opening an image.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="126"/>
+        <location filename="../Sources/ptSettings.cpp" line="291"/>
         <source>Image size</source>
-        <translation type="unfinished">Velikost obrázku</translation>
+        <translation>Velikost obrázku</translation>
     </message>
     <message>
         <source>Blackpoint</source>
@@ -9032,82 +9277,82 @@ Užitečné, aby nedošlo ke ztrátě obsahu po zkreslení / geometrie nástroje
         <translation type="obsolete">Úrovně bílého bodu</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="124"/>
-        <source>Contribution of red to red</source>
-        <translation type="unfinished">Množství červené v červené</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptSettings.cpp" line="125"/>
-        <source>Contribution of green to red</source>
-        <translation type="unfinished">Množství zelené v červené</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptSettings.cpp" line="126"/>
-        <source>Contribution of blue to red</source>
-        <translation type="unfinished">Množství modré v červené</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptSettings.cpp" line="127"/>
-        <source>Contribution of red to green</source>
-        <translation type="unfinished">Množství červené v zelené</translation>
-    </message>
-    <message>
         <location filename="../Sources/ptSettings.cpp" line="128"/>
-        <source>Contribution of green to green</source>
-        <translation type="unfinished">Množství zelené v zelené</translation>
+        <source>Contribution of red to red</source>
+        <translation>Množství červené v červené</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="129"/>
-        <source>Contribution of blue to green</source>
-        <translation type="unfinished">Množství modré v zelené</translation>
+        <source>Contribution of green to red</source>
+        <translation>Množství zelené v červené</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="130"/>
-        <source>Contribution of red to blue</source>
-        <translation type="unfinished">Množství červené v modré</translation>
+        <source>Contribution of blue to red</source>
+        <translation>Množství modré v červené</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="131"/>
-        <source>Contribution of green to blue</source>
-        <translation type="unfinished">Množství zelené v modré</translation>
+        <source>Contribution of red to green</source>
+        <translation>Množství červené v zelené</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="132"/>
+        <source>Contribution of green to green</source>
+        <translation>Množství zelené v zelené</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="133"/>
+        <source>Contribution of blue to green</source>
+        <translation>Množství modré v zelené</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="134"/>
+        <source>Contribution of red to blue</source>
+        <translation>Množství červené v modré</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="135"/>
+        <source>Contribution of green to blue</source>
+        <translation>Množství zelené v modré</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="136"/>
         <source>Contribution of blue to blue</source>
-        <translation type="unfinished">Množství modré v modré</translation>
+        <translation>Množství modré v modré</translation>
     </message>
     <message>
         <source>Vibrance</source>
         <translation type="obsolete">Oživení</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="267"/>
-        <location filename="../Sources/ptSettings.cpp" line="270"/>
-        <location filename="../Sources/ptSettings.cpp" line="476"/>
+        <location filename="../Sources/ptSettings.cpp" line="215"/>
+        <location filename="../Sources/ptSettings.cpp" line="218"/>
+        <location filename="../Sources/ptSettings.cpp" line="421"/>
         <source>Red</source>
-        <translation type="unfinished">Červená</translation>
+        <translation>Červená</translation>
     </message>
     <message>
         <source>Intensity red</source>
         <translation type="obsolete">Intenzivní červená</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="268"/>
-        <location filename="../Sources/ptSettings.cpp" line="271"/>
-        <location filename="../Sources/ptSettings.cpp" line="478"/>
+        <location filename="../Sources/ptSettings.cpp" line="216"/>
+        <location filename="../Sources/ptSettings.cpp" line="219"/>
+        <location filename="../Sources/ptSettings.cpp" line="423"/>
         <source>Green</source>
-        <translation type="unfinished">Zelená</translation>
+        <translation>Zelená</translation>
     </message>
     <message>
         <source>Intensity green</source>
         <translation type="obsolete">Intenzivní zelená</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="269"/>
-        <location filename="../Sources/ptSettings.cpp" line="272"/>
-        <location filename="../Sources/ptSettings.cpp" line="480"/>
+        <location filename="../Sources/ptSettings.cpp" line="217"/>
+        <location filename="../Sources/ptSettings.cpp" line="220"/>
+        <location filename="../Sources/ptSettings.cpp" line="425"/>
         <source>Blue</source>
-        <translation type="unfinished">Modrá</translation>
+        <translation>Modrá</translation>
     </message>
     <message>
         <source>Intensity blue</source>
@@ -9130,29 +9375,29 @@ Užitečné, aby nedošlo ke ztrátě obsahu po zkreslení / geometrie nástroje
         <translation type="obsolete">Rozšíření pouze světel</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="133"/>
+        <location filename="../Sources/ptSettings.cpp" line="137"/>
         <source>% white</source>
-        <translation type="unfinished">% bílé</translation>
+        <translation>% bílé</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="133"/>
+        <location filename="../Sources/ptSettings.cpp" line="137"/>
         <source>Percentage of white aimed at</source>
-        <translation type="unfinished">Procento bílé zaměřené na</translation>
+        <translation>Procento bílé zaměřené na</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="134"/>
+        <location filename="../Sources/ptSettings.cpp" line="138"/>
         <source>WhiteLevel</source>
-        <translation type="unfinished">Úroveň bílé</translation>
+        <translation>Úroveň bílé</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="135"/>
+        <location filename="../Sources/ptSettings.cpp" line="139"/>
         <source>EV</source>
         <translation>EV</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="135"/>
+        <location filename="../Sources/ptSettings.cpp" line="139"/>
         <source>Exposure in EV</source>
-        <translation type="unfinished">Expozice v EV</translation>
+        <translation>Expozice v EV</translation>
     </message>
     <message>
         <source>Gain</source>
@@ -9199,152 +9444,97 @@ Užitečné, aby nedošlo ke ztrátě obsahu po zkreslení / geometrie nástroje
         <translation type="obsolete">Zesvětlí jen ty nejtmavší</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="136"/>
-        <location filename="../Sources/ptSettings.cpp" line="143"/>
-        <location filename="../Sources/ptSettings.cpp" line="150"/>
-        <location filename="../Sources/ptSettings.cpp" line="156"/>
-        <location filename="../Sources/ptSettings.cpp" line="162"/>
-        <location filename="../Sources/ptSettings.cpp" line="169"/>
-        <location filename="../Sources/ptSettings.cpp" line="176"/>
-        <location filename="../Sources/ptSettings.cpp" line="243"/>
-        <location filename="../Sources/ptSettings.cpp" line="246"/>
-        <location filename="../Sources/ptSettings.cpp" line="259"/>
-        <location filename="../Sources/ptSettings.cpp" line="273"/>
-        <location filename="../Sources/ptSettings.cpp" line="277"/>
-        <location filename="../Sources/ptSettings.cpp" line="301"/>
-        <location filename="../Sources/ptSettings.cpp" line="306"/>
-        <location filename="../Sources/ptSettings.cpp" line="312"/>
-        <location filename="../Sources/ptSettings.cpp" line="338"/>
+        <location filename="../Sources/ptSettings.cpp" line="191"/>
+        <location filename="../Sources/ptSettings.cpp" line="194"/>
+        <location filename="../Sources/ptSettings.cpp" line="207"/>
+        <location filename="../Sources/ptSettings.cpp" line="221"/>
+        <location filename="../Sources/ptSettings.cpp" line="225"/>
+        <location filename="../Sources/ptSettings.cpp" line="249"/>
+        <location filename="../Sources/ptSettings.cpp" line="254"/>
+        <location filename="../Sources/ptSettings.cpp" line="260"/>
+        <location filename="../Sources/ptSettings.cpp" line="286"/>
         <source>Amount</source>
-        <translation type="unfinished">Množství</translation>
+        <translation>Množství</translation>
     </message>
     <message>
         <source>Amount of recovery</source>
         <translation type="obsolete">Množství k opravě</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="146"/>
-        <location filename="../Sources/ptSettings.cpp" line="153"/>
-        <location filename="../Sources/ptSettings.cpp" line="172"/>
-        <location filename="../Sources/ptSettings.cpp" line="179"/>
-        <location filename="../Sources/ptSettings.cpp" line="251"/>
-        <location filename="../Sources/ptSettings.cpp" line="256"/>
-        <location filename="../Sources/ptSettings.cpp" line="274"/>
-        <location filename="../Sources/ptSettings.cpp" line="278"/>
+        <location filename="../Sources/ptSettings.cpp" line="199"/>
+        <location filename="../Sources/ptSettings.cpp" line="204"/>
+        <location filename="../Sources/ptSettings.cpp" line="222"/>
+        <location filename="../Sources/ptSettings.cpp" line="226"/>
         <source>Lower Limit</source>
-        <translation type="unfinished">Dolní limit</translation>
+        <translation>Dolní limit</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="200"/>
+        <location filename="../Sources/ptSettings.cpp" line="205"/>
+        <location filename="../Sources/ptSettings.cpp" line="223"/>
+        <location filename="../Sources/ptSettings.cpp" line="227"/>
+        <source>Upper Limit</source>
+        <translation>Horní limit</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="213"/>
+        <location filename="../Sources/ptSettings.cpp" line="224"/>
+        <location filename="../Sources/ptSettings.cpp" line="228"/>
+        <location filename="../Sources/ptSettings.cpp" line="239"/>
+        <location filename="../Sources/ptSettings.cpp" line="248"/>
+        <location filename="../Sources/ptSettings.cpp" line="253"/>
+        <location filename="../Sources/ptSettings.cpp" line="258"/>
+        <location filename="../Sources/ptSettings.cpp" line="266"/>
+        <location filename="../Sources/ptSettings.cpp" line="270"/>
+        <location filename="../Sources/ptSettings.cpp" line="279"/>
+        <source>Softness</source>
+        <translation>Změkčení</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="158"/>
+        <location filename="../Sources/ptSettings.cpp" line="192"/>
+        <source>Threshold</source>
+        <translation>Zesílení</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="147"/>
-        <location filename="../Sources/ptSettings.cpp" line="154"/>
-        <location filename="../Sources/ptSettings.cpp" line="173"/>
-        <location filename="../Sources/ptSettings.cpp" line="180"/>
-        <location filename="../Sources/ptSettings.cpp" line="252"/>
-        <location filename="../Sources/ptSettings.cpp" line="257"/>
-        <location filename="../Sources/ptSettings.cpp" line="275"/>
-        <location filename="../Sources/ptSettings.cpp" line="279"/>
-        <source>Upper Limit</source>
-        <translation type="unfinished">Horní limit</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptSettings.cpp" line="148"/>
-        <location filename="../Sources/ptSettings.cpp" line="155"/>
-        <location filename="../Sources/ptSettings.cpp" line="174"/>
-        <location filename="../Sources/ptSettings.cpp" line="181"/>
-        <location filename="../Sources/ptSettings.cpp" line="265"/>
-        <location filename="../Sources/ptSettings.cpp" line="276"/>
-        <location filename="../Sources/ptSettings.cpp" line="280"/>
-        <location filename="../Sources/ptSettings.cpp" line="291"/>
-        <location filename="../Sources/ptSettings.cpp" line="300"/>
-        <location filename="../Sources/ptSettings.cpp" line="305"/>
-        <location filename="../Sources/ptSettings.cpp" line="310"/>
-        <location filename="../Sources/ptSettings.cpp" line="318"/>
-        <location filename="../Sources/ptSettings.cpp" line="322"/>
-        <location filename="../Sources/ptSettings.cpp" line="331"/>
-        <source>Softness</source>
-        <translation type="unfinished">Změkčení</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptSettings.cpp" line="138"/>
-        <location filename="../Sources/ptSettings.cpp" line="158"/>
         <location filename="../Sources/ptSettings.cpp" line="164"/>
-        <location filename="../Sources/ptSettings.cpp" line="210"/>
-        <location filename="../Sources/ptSettings.cpp" line="244"/>
-        <source>Threshold</source>
-        <translation type="unfinished">Zesílení</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptSettings.cpp" line="139"/>
-        <location filename="../Sources/ptSettings.cpp" line="144"/>
-        <location filename="../Sources/ptSettings.cpp" line="151"/>
-        <location filename="../Sources/ptSettings.cpp" line="159"/>
-        <location filename="../Sources/ptSettings.cpp" line="165"/>
-        <location filename="../Sources/ptSettings.cpp" line="170"/>
-        <location filename="../Sources/ptSettings.cpp" line="177"/>
-        <location filename="../Sources/ptSettings.cpp" line="184"/>
-        <location filename="../Sources/ptSettings.cpp" line="188"/>
-        <location filename="../Sources/ptSettings.cpp" line="199"/>
-        <location filename="../Sources/ptSettings.cpp" line="216"/>
-        <location filename="../Sources/ptSettings.cpp" line="250"/>
-        <location filename="../Sources/ptSettings.cpp" line="255"/>
-        <location filename="../Sources/ptSettings.cpp" line="266"/>
-        <location filename="../Sources/ptSettings.cpp" line="283"/>
-        <location filename="../Sources/ptSettings.cpp" line="292"/>
+        <location filename="../Sources/ptSettings.cpp" line="198"/>
+        <location filename="../Sources/ptSettings.cpp" line="203"/>
+        <location filename="../Sources/ptSettings.cpp" line="214"/>
+        <location filename="../Sources/ptSettings.cpp" line="231"/>
+        <location filename="../Sources/ptSettings.cpp" line="240"/>
         <source>Opacity</source>
-        <translation type="unfinished">Průhlednost</translation>
+        <translation>Průhlednost</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="140"/>
-        <location filename="../Sources/ptSettings.cpp" line="160"/>
-        <location filename="../Sources/ptSettings.cpp" line="166"/>
-        <location filename="../Sources/ptSettings.cpp" line="247"/>
+        <location filename="../Sources/ptSettings.cpp" line="195"/>
         <source>Denoise</source>
-        <translation type="unfinished">Odšumění</translation>
+        <translation>Odšumění</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="140"/>
-        <location filename="../Sources/ptSettings.cpp" line="141"/>
-        <location filename="../Sources/ptSettings.cpp" line="160"/>
-        <location filename="../Sources/ptSettings.cpp" line="161"/>
-        <location filename="../Sources/ptSettings.cpp" line="166"/>
-        <location filename="../Sources/ptSettings.cpp" line="167"/>
         <source>Don&apos;t amplify noise</source>
-        <translation type="unfinished">Nezesilovat šum</translation>
+        <translation type="vanished">Nezesilovat šum</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="141"/>
-        <location filename="../Sources/ptSettings.cpp" line="161"/>
-        <location filename="../Sources/ptSettings.cpp" line="167"/>
-        <location filename="../Sources/ptSettings.cpp" line="185"/>
-        <location filename="../Sources/ptSettings.cpp" line="189"/>
         <source>Masking</source>
-        <translation>Maskuj</translation>
+        <translation type="vanished">Maskuj</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="142"/>
-        <location filename="../Sources/ptSettings.cpp" line="149"/>
-        <location filename="../Sources/ptSettings.cpp" line="168"/>
-        <location filename="../Sources/ptSettings.cpp" line="175"/>
-        <location filename="../Sources/ptSettings.cpp" line="182"/>
-        <location filename="../Sources/ptSettings.cpp" line="186"/>
-        <location filename="../Sources/ptSettings.cpp" line="209"/>
-        <location filename="../Sources/ptSettings.cpp" line="242"/>
-        <location filename="../Sources/ptSettings.cpp" line="245"/>
-        <location filename="../Sources/ptSettings.cpp" line="249"/>
-        <location filename="../Sources/ptSettings.cpp" line="254"/>
-        <location filename="../Sources/ptSettings.cpp" line="319"/>
-        <location filename="../Sources/ptSettings.cpp" line="328"/>
-        <location filename="../Sources/ptSettings.cpp" line="337"/>
+        <location filename="../Sources/ptSettings.cpp" line="157"/>
+        <location filename="../Sources/ptSettings.cpp" line="190"/>
+        <location filename="../Sources/ptSettings.cpp" line="193"/>
+        <location filename="../Sources/ptSettings.cpp" line="197"/>
+        <location filename="../Sources/ptSettings.cpp" line="202"/>
+        <location filename="../Sources/ptSettings.cpp" line="267"/>
+        <location filename="../Sources/ptSettings.cpp" line="276"/>
+        <location filename="../Sources/ptSettings.cpp" line="285"/>
         <source>Radius</source>
-        <translation type="unfinished">Rádius</translation>
+        <translation>Rádius</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="145"/>
-        <location filename="../Sources/ptSettings.cpp" line="152"/>
-        <location filename="../Sources/ptSettings.cpp" line="171"/>
-        <location filename="../Sources/ptSettings.cpp" line="178"/>
         <source>Halo Control</source>
-        <translation>Kontrola halo</translation>
+        <translation type="vanished">Kontrola halo</translation>
     </message>
     <message>
         <source>Amount of compression</source>
@@ -9367,10 +9557,8 @@ Užitečné, aby nedošlo ke ztrátě obsahu po zkreslení / geometrie nástroje
         <translation type="obsolete">Adaptace barev</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="183"/>
-        <location filename="../Sources/ptSettings.cpp" line="187"/>
         <source>Feather</source>
-        <translation type="unfinished">Pero</translation>
+        <translation type="vanished">Pero</translation>
     </message>
     <message>
         <source>Amount of saturation</source>
@@ -9393,823 +9581,821 @@ Užitečné, aby nedošlo ke ztrátě obsahu po zkreslení / geometrie nástroje
         <translation type="obsolete">Velikost zesílení B </translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="190"/>
+        <location filename="../Sources/ptSettings.cpp" line="140"/>
         <source>Master</source>
-        <translation type="unfinished">Hlavní</translation>
+        <translation>Hlavní</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="190"/>
+        <location filename="../Sources/ptSettings.cpp" line="140"/>
         <source>Quick setup for the levels</source>
-        <translation type="unfinished">Rychlé nastavení úrovní</translation>
+        <translation>Rychlé nastavení úrovní</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="191"/>
         <source>Threshold on L</source>
-        <translation type="unfinished">Zesílení L</translation>
+        <translation type="vanished">Zesílení L</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="192"/>
         <source>Threshold on color</source>
-        <translation type="unfinished">Zesílení barev</translation>
+        <translation type="vanished">Zesílení barev</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="193"/>
+        <location filename="../Sources/ptSettings.cpp" line="141"/>
         <source>Level 1</source>
-        <translation type="unfinished">Úroveň 1</translation>
+        <translation>Úroveň 1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="193"/>
+        <location filename="../Sources/ptSettings.cpp" line="141"/>
         <source>Boosting of level 1</source>
-        <translation type="unfinished">Zesílení úrovně 1</translation>
+        <translation>Zesílení úrovně 1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="194"/>
+        <location filename="../Sources/ptSettings.cpp" line="142"/>
         <source>Level 2</source>
-        <translation type="unfinished">Úroveň 2</translation>
+        <translation>Úroveň 2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="194"/>
+        <location filename="../Sources/ptSettings.cpp" line="142"/>
         <source>Boosting of level 2</source>
-        <translation type="unfinished">Zesílení úrovně 2</translation>
+        <translation>Zesílení úrovně 2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="195"/>
+        <location filename="../Sources/ptSettings.cpp" line="143"/>
         <source>Level 3</source>
-        <translation type="unfinished">Úroveň 3</translation>
+        <translation>Úroveň 3</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="195"/>
+        <location filename="../Sources/ptSettings.cpp" line="143"/>
         <source>Boosting of level 3</source>
-        <translation type="unfinished">Zesílení úrovně 3</translation>
+        <translation>Zesílení úrovně 3</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="196"/>
+        <location filename="../Sources/ptSettings.cpp" line="144"/>
         <source>Level 4</source>
-        <translation type="unfinished">Úroveň 4</translation>
+        <translation>Úroveň 4</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="196"/>
+        <location filename="../Sources/ptSettings.cpp" line="144"/>
         <source>Boosting of level 4</source>
-        <translation type="unfinished">Zesílení úrovně 4</translation>
+        <translation>Zesílení úrovně 4</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="197"/>
+        <location filename="../Sources/ptSettings.cpp" line="145"/>
         <source>Level 5</source>
-        <translation type="unfinished">Úroveň 5</translation>
+        <translation>Úroveň 5</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="197"/>
+        <location filename="../Sources/ptSettings.cpp" line="145"/>
         <source>Boosting of level 5</source>
-        <translation type="unfinished">Zesílení úrovně 5</translation>
+        <translation>Zesílení úrovně 5</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="198"/>
+        <location filename="../Sources/ptSettings.cpp" line="146"/>
         <source>Level 6</source>
-        <translation type="unfinished">Úroveň 6</translation>
+        <translation>Úroveň 6</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="198"/>
+        <location filename="../Sources/ptSettings.cpp" line="146"/>
         <source>Boosting of level 6</source>
-        <translation type="unfinished">Zesílení úrovně 6</translation>
+        <translation>Zesílení úrovně 6</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="200"/>
-        <location filename="../Sources/ptSettings.cpp" line="241"/>
+        <location filename="../Sources/ptSettings.cpp" line="148"/>
+        <location filename="../Sources/ptSettings.cpp" line="189"/>
         <source>Amplitude</source>
         <translation>Amplituda</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="201"/>
-        <location filename="../Sources/ptSettings.cpp" line="240"/>
+        <location filename="../Sources/ptSettings.cpp" line="149"/>
+        <location filename="../Sources/ptSettings.cpp" line="188"/>
         <source>Iterations</source>
-        <translation type="unfinished">Opakování</translation>
+        <translation>Opakování</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="202"/>
-        <location filename="../Sources/ptSettings.cpp" line="226"/>
+        <location filename="../Sources/ptSettings.cpp" line="150"/>
+        <location filename="../Sources/ptSettings.cpp" line="174"/>
         <source>Sharpness</source>
-        <translation type="unfinished">Zaostření</translation>
+        <translation>Zaostření</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="203"/>
-        <location filename="../Sources/ptSettings.cpp" line="227"/>
+        <location filename="../Sources/ptSettings.cpp" line="151"/>
+        <location filename="../Sources/ptSettings.cpp" line="175"/>
         <source>Anisotropy</source>
-        <translation type="unfinished">Anisotropy</translation>
+        <translation>Anisotropy</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="204"/>
-        <location filename="../Sources/ptSettings.cpp" line="228"/>
+        <location filename="../Sources/ptSettings.cpp" line="152"/>
+        <location filename="../Sources/ptSettings.cpp" line="176"/>
         <source>Gradient smoothness</source>
-        <translation type="unfinished">Vyhlazení přechodů</translation>
+        <translation>Vyhlazení přechodů</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="204"/>
-        <location filename="../Sources/ptSettings.cpp" line="228"/>
+        <location filename="../Sources/ptSettings.cpp" line="152"/>
+        <location filename="../Sources/ptSettings.cpp" line="176"/>
         <source>Alpha</source>
         <translation>Alfa</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="205"/>
-        <location filename="../Sources/ptSettings.cpp" line="229"/>
+        <location filename="../Sources/ptSettings.cpp" line="153"/>
+        <location filename="../Sources/ptSettings.cpp" line="177"/>
         <source>Tensor smoothness</source>
-        <translation type="unfinished">Vyhlazování Tensor</translation>
+        <translation>Vyhlazování Tensor</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="205"/>
-        <location filename="../Sources/ptSettings.cpp" line="229"/>
+        <location filename="../Sources/ptSettings.cpp" line="153"/>
+        <location filename="../Sources/ptSettings.cpp" line="177"/>
         <source>Sigma</source>
         <translation>Sigma</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="206"/>
+        <location filename="../Sources/ptSettings.cpp" line="154"/>
         <source>Spacial precision</source>
-        <translation type="unfinished">Prostorové přednosti</translation>
+        <translation>Prostorové přednosti</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="206"/>
+        <location filename="../Sources/ptSettings.cpp" line="154"/>
         <source>dl</source>
         <translation>dl</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="207"/>
+        <location filename="../Sources/ptSettings.cpp" line="155"/>
         <source>Angular precision</source>
-        <translation type="unfinished">Přesný úhel</translation>
+        <translation>Přesný úhel</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="207"/>
+        <location filename="../Sources/ptSettings.cpp" line="155"/>
         <source>da</source>
         <translation>da</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="208"/>
+        <location filename="../Sources/ptSettings.cpp" line="156"/>
         <source>Value precision</source>
-        <translation type="unfinished">Hodnota přesnosti</translation>
+        <translation>Hodnota přesnosti</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="208"/>
+        <location filename="../Sources/ptSettings.cpp" line="156"/>
         <source>Gauss</source>
         <translation>Gauss</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="211"/>
+        <location filename="../Sources/ptSettings.cpp" line="159"/>
         <source>Tune masks</source>
-        <translation type="unfinished">Zlepšit masku</translation>
+        <translation>Zlepšit masku</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="211"/>
+        <location filename="../Sources/ptSettings.cpp" line="159"/>
         <source>Fine tune the color masks</source>
-        <translation type="unfinished">Vyladění masky barev</translation>
+        <translation>Vyladění masky barev</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="212"/>
-        <location filename="../Sources/ptSettings.cpp" line="219"/>
-        <location filename="../Sources/ptSettings.cpp" line="224"/>
+        <location filename="../Sources/ptSettings.cpp" line="160"/>
+        <location filename="../Sources/ptSettings.cpp" line="167"/>
+        <location filename="../Sources/ptSettings.cpp" line="172"/>
         <source>L amount</source>
-        <translation type="unfinished">Rozsah L</translation>
+        <translation>Rozsah L</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="212"/>
+        <location filename="../Sources/ptSettings.cpp" line="160"/>
         <source>Denoise amount on L</source>
-        <translation type="unfinished">Odšumění rozsahu L</translation>
+        <translation>Odšumění rozsahu L</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="213"/>
+        <location filename="../Sources/ptSettings.cpp" line="161"/>
         <source>Color amount</source>
-        <translation type="unfinished">Rozsah barev</translation>
+        <translation>Rozsah barev</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="213"/>
+        <location filename="../Sources/ptSettings.cpp" line="161"/>
         <source>Denoise amount on AB</source>
-        <translation type="unfinished">Odšumění rozsahu AB</translation>
+        <translation>Odšumění rozsahu AB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="214"/>
-        <location filename="../Sources/ptSettings.cpp" line="341"/>
+        <location filename="../Sources/ptSettings.cpp" line="162"/>
+        <location filename="../Sources/ptSettings.cpp" line="289"/>
         <source>Gamma</source>
         <translation>Gamma</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="215"/>
+        <location filename="../Sources/ptSettings.cpp" line="163"/>
         <source>Levels</source>
-        <translation type="unfinished">Úrovně</translation>
+        <translation>Úrovně</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="216"/>
+        <location filename="../Sources/ptSettings.cpp" line="164"/>
         <source>Opacity of denoising on L</source>
-        <translation type="unfinished">Překrytí odšumění L</translation>
+        <translation>Překrytí odšumění L</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="217"/>
+        <location filename="../Sources/ptSettings.cpp" line="165"/>
         <source>Edge Threshold</source>
-        <translation type="unfinished">Práh hrany</translation>
+        <translation>Práh hrany</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="217"/>
+        <location filename="../Sources/ptSettings.cpp" line="165"/>
         <source>Edge thresholding for denoising on L</source>
-        <translation type="unfinished">Hranové zesílení odšumění L</translation>
+        <translation>Hranové zesílení odšumění L</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="218"/>
+        <location filename="../Sources/ptSettings.cpp" line="166"/>
         <source>L scale</source>
-        <translation type="unfinished">Škála L</translation>
+        <translation>Škála L</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="218"/>
+        <location filename="../Sources/ptSettings.cpp" line="166"/>
         <source>Denoise scale on L</source>
-        <translation type="unfinished">Odšumění škály L</translation>
+        <translation>Odšumění škály L</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="219"/>
+        <location filename="../Sources/ptSettings.cpp" line="167"/>
         <source>Denoise on L</source>
-        <translation type="unfinished">Odšumění L</translation>
+        <translation>Odšumění L</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="220"/>
-        <location filename="../Sources/ptSettings.cpp" line="230"/>
+        <location filename="../Sources/ptSettings.cpp" line="168"/>
+        <location filename="../Sources/ptSettings.cpp" line="178"/>
         <source>A amount</source>
-        <translation type="unfinished">Rozsah A</translation>
+        <translation>Rozsah A</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="220"/>
+        <location filename="../Sources/ptSettings.cpp" line="168"/>
         <source>Color A denoise</source>
-        <translation type="unfinished">Odšumění barev A</translation>
+        <translation>Odšumění barev A</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="221"/>
+        <location filename="../Sources/ptSettings.cpp" line="169"/>
         <source>A scale</source>
-        <translation type="unfinished">Škála A</translation>
+        <translation>Škála A</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="221"/>
+        <location filename="../Sources/ptSettings.cpp" line="169"/>
         <source>Denoise scale on A</source>
-        <translation type="unfinished">Odšumění škály A</translation>
+        <translation>Odšumění škály A</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="222"/>
-        <location filename="../Sources/ptSettings.cpp" line="232"/>
+        <location filename="../Sources/ptSettings.cpp" line="170"/>
+        <location filename="../Sources/ptSettings.cpp" line="180"/>
         <source>B amount</source>
-        <translation type="unfinished">Rozsah B</translation>
+        <translation>Rozsah B</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="222"/>
+        <location filename="../Sources/ptSettings.cpp" line="170"/>
         <source>Color B denoise</source>
-        <translation type="unfinished">Odšumění barev B</translation>
+        <translation>Odšumění barev B</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="223"/>
+        <location filename="../Sources/ptSettings.cpp" line="171"/>
         <source>B scale</source>
-        <translation type="unfinished">Škála B</translation>
+        <translation>Škála B</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="223"/>
+        <location filename="../Sources/ptSettings.cpp" line="171"/>
         <source>Denoise scale on B</source>
-        <translation type="unfinished">Odšumění škály B</translation>
+        <translation>Odšumění škály B</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="224"/>
+        <location filename="../Sources/ptSettings.cpp" line="172"/>
         <source>Threshold for wavelet L denoise (with edge mask)</source>
-        <translation type="unfinished">Práh pro Wavelet odšumování L (s hranou masky)</translation>
+        <translation>Práh pro Wavelet odšumování L (s hranou masky)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="225"/>
+        <location filename="../Sources/ptSettings.cpp" line="173"/>
         <source>L softness</source>
-        <translation type="unfinished">Změkčení L</translation>
+        <translation>Změkčení L</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="225"/>
+        <location filename="../Sources/ptSettings.cpp" line="173"/>
         <source>Softness for wavelet L denoise (with edge mask)</source>
-        <translation type="unfinished">Změkčení pro Wavelet odšumování L (s hranou masky)</translation>
+        <translation>Změkčení pro Wavelet odšumování L (s hranou masky)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="230"/>
+        <location filename="../Sources/ptSettings.cpp" line="178"/>
         <source>Threshold for wavelet A denoise</source>
-        <translation type="unfinished">Práh pro Wavelet odšumování A</translation>
+        <translation>Práh pro Wavelet odšumování A</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="231"/>
+        <location filename="../Sources/ptSettings.cpp" line="179"/>
         <source>A softness</source>
-        <translation type="unfinished">Změkčení A</translation>
+        <translation>Změkčení A</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="231"/>
+        <location filename="../Sources/ptSettings.cpp" line="179"/>
         <source>Softness for wavelet A denoise</source>
-        <translation type="unfinished">Změkčení pro Wavelet odšumování A</translation>
+        <translation>Změkčení pro Wavelet odšumování A</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="232"/>
+        <location filename="../Sources/ptSettings.cpp" line="180"/>
         <source>Threshold for wavelet B denoise</source>
-        <translation type="unfinished">Práh pro Wavelet odšumování B</translation>
+        <translation>Práh pro Wavelet odšumování B</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="233"/>
+        <location filename="../Sources/ptSettings.cpp" line="181"/>
         <source>B softness</source>
-        <translation type="unfinished">Změkčení B</translation>
+        <translation>Změkčení B</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="233"/>
+        <location filename="../Sources/ptSettings.cpp" line="181"/>
         <source>Softness for wavelet B denoise</source>
-        <translation type="unfinished">Změkčení pro Wavelet odšumování B</translation>
+        <translation>Změkčení pro Wavelet odšumování B</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="234"/>
+        <location filename="../Sources/ptSettings.cpp" line="182"/>
         <source>Number of passes</source>
-        <translation type="unfinished">Počet průchodů</translation>
+        <translation>Počet průchodů</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="235"/>
-        <location filename="../Sources/ptSettings.cpp" line="248"/>
-        <location filename="../Sources/ptSettings.cpp" line="253"/>
+        <location filename="../Sources/ptSettings.cpp" line="183"/>
+        <location filename="../Sources/ptSettings.cpp" line="196"/>
+        <location filename="../Sources/ptSettings.cpp" line="201"/>
         <source>Strength</source>
-        <translation type="unfinished">Síla</translation>
+        <translation>Síla</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="236"/>
+        <location filename="../Sources/ptSettings.cpp" line="184"/>
         <source>Microcontrast</source>
         <translation>Mikrokontrast</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="236"/>
+        <location filename="../Sources/ptSettings.cpp" line="184"/>
         <source>Microcontrast strength</source>
-        <translation type="unfinished">Síla mikrokontrastu</translation>
+        <translation>Síla mikrokontrastu</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="237"/>
+        <location filename="../Sources/ptSettings.cpp" line="185"/>
         <source>Halo control</source>
-        <translation type="unfinished">Kontrola Halo</translation>
+        <translation>Kontrola Halo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="237"/>
+        <location filename="../Sources/ptSettings.cpp" line="185"/>
         <source>Microcontrast Halo control</source>
-        <translation type="unfinished">Kontrola mikrokontrastu Halo</translation>
+        <translation>Kontrola mikrokontrastu Halo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="238"/>
+        <location filename="../Sources/ptSettings.cpp" line="186"/>
         <source>Weight</source>
-        <translation type="unfinished">Váha</translation>
+        <translation>Váha</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="238"/>
+        <location filename="../Sources/ptSettings.cpp" line="186"/>
         <source>Microcontrast weight</source>
-        <translation type="unfinished">Váha mikrokontrastu</translation>
+        <translation>Váha mikrokontrastu</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="239"/>
+        <location filename="../Sources/ptSettings.cpp" line="187"/>
         <source>Clean up</source>
-        <translation type="unfinished">Vyčistit</translation>
+        <translation>Vyčistit</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="240"/>
+        <location filename="../Sources/ptSettings.cpp" line="188"/>
         <source>Number of iterations</source>
-        <translation type="unfinished">Počet opakování</translation>
+        <translation>Počet opakování</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="242"/>
+        <location filename="../Sources/ptSettings.cpp" line="190"/>
         <source>Radius for USM</source>
-        <translation type="unfinished">Rádius podle USM</translation>
+        <translation>Rádius podle USM</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="243"/>
+        <location filename="../Sources/ptSettings.cpp" line="191"/>
         <source>Amount for USM</source>
-        <translation type="unfinished">Rozsah pro USM</translation>
+        <translation>Rozsah pro USM</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="244"/>
+        <location filename="../Sources/ptSettings.cpp" line="192"/>
         <source>Threshold for USM</source>
-        <translation type="unfinished">Práh pro USM</translation>
+        <translation>Práh pro USM</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="245"/>
+        <location filename="../Sources/ptSettings.cpp" line="193"/>
         <source>Radius for Highpass</source>
-        <translation type="unfinished">Rádius pro Highpass</translation>
+        <translation>Rádius pro Highpass</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="246"/>
+        <location filename="../Sources/ptSettings.cpp" line="194"/>
         <source>Amount for Highpass</source>
-        <translation type="unfinished">Rozsah pro Highpass</translation>
+        <translation>Rozsah pro Highpass</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="247"/>
+        <location filename="../Sources/ptSettings.cpp" line="195"/>
         <source>Denoise for Highpass</source>
-        <translation type="unfinished">Odšumění pro Highpass</translation>
+        <translation>Odšumění pro Highpass</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="248"/>
-        <location filename="../Sources/ptSettings.cpp" line="253"/>
+        <location filename="../Sources/ptSettings.cpp" line="196"/>
+        <location filename="../Sources/ptSettings.cpp" line="201"/>
         <source>Strength for film grain</source>
-        <translation type="unfinished">Síla filmového zrna</translation>
+        <translation>Síla filmového zrna</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="249"/>
-        <location filename="../Sources/ptSettings.cpp" line="254"/>
+        <location filename="../Sources/ptSettings.cpp" line="197"/>
+        <location filename="../Sources/ptSettings.cpp" line="202"/>
         <source>Radius for film grain</source>
-        <translation type="unfinished">Rádius filmového zrna</translation>
+        <translation>Rádius filmového zrna</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="250"/>
-        <location filename="../Sources/ptSettings.cpp" line="255"/>
+        <location filename="../Sources/ptSettings.cpp" line="198"/>
+        <location filename="../Sources/ptSettings.cpp" line="203"/>
         <source>Opacity for film grain</source>
-        <translation type="unfinished">Překrytí pro filmové zrno</translation>
+        <translation>Překrytí pro filmové zrno</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="284"/>
-        <location filename="../Sources/ptSettings.cpp" line="293"/>
-        <location filename="../Sources/ptSettings.cpp" line="339"/>
+        <location filename="../Sources/ptSettings.cpp" line="232"/>
+        <location filename="../Sources/ptSettings.cpp" line="241"/>
+        <location filename="../Sources/ptSettings.cpp" line="287"/>
         <source>Saturation</source>
-        <translation type="unfinished">Sytost</translation>
+        <translation>Sytost</translation>
     </message>
     <message>
         <source>Hue</source>
         <translation type="obsolete">Barevnost</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="258"/>
-        <location filename="../Sources/ptSettings.cpp" line="285"/>
-        <location filename="../Sources/ptSettings.cpp" line="294"/>
-        <location filename="../Sources/ptSettings.cpp" line="311"/>
-        <location filename="../Sources/ptSettings.cpp" line="324"/>
-        <location filename="../Sources/ptSettings.cpp" line="333"/>
+        <location filename="../Sources/ptSettings.cpp" line="206"/>
+        <location filename="../Sources/ptSettings.cpp" line="233"/>
+        <location filename="../Sources/ptSettings.cpp" line="242"/>
+        <location filename="../Sources/ptSettings.cpp" line="259"/>
+        <location filename="../Sources/ptSettings.cpp" line="272"/>
+        <location filename="../Sources/ptSettings.cpp" line="281"/>
         <source>Shape</source>
-        <translation type="unfinished">Formování</translation>
+        <translation>Formování</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="258"/>
-        <location filename="../Sources/ptSettings.cpp" line="311"/>
-        <location filename="../Sources/ptSettings.cpp" line="324"/>
-        <location filename="../Sources/ptSettings.cpp" line="333"/>
+        <location filename="../Sources/ptSettings.cpp" line="206"/>
+        <location filename="../Sources/ptSettings.cpp" line="259"/>
+        <location filename="../Sources/ptSettings.cpp" line="272"/>
+        <location filename="../Sources/ptSettings.cpp" line="281"/>
         <source>Shape of the vignette</source>
-        <translation type="unfinished">Formování vinětace</translation>
+        <translation>Formování vinětace</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="260"/>
-        <location filename="../Sources/ptSettings.cpp" line="286"/>
-        <location filename="../Sources/ptSettings.cpp" line="295"/>
-        <location filename="../Sources/ptSettings.cpp" line="313"/>
-        <source>Inner Radius</source>
-        <translation type="unfinished">Vnitřní poloměr</translation>
-    </message>
-    <message>
+        <location filename="../Sources/ptSettings.cpp" line="208"/>
+        <location filename="../Sources/ptSettings.cpp" line="234"/>
+        <location filename="../Sources/ptSettings.cpp" line="243"/>
         <location filename="../Sources/ptSettings.cpp" line="261"/>
-        <location filename="../Sources/ptSettings.cpp" line="287"/>
-        <location filename="../Sources/ptSettings.cpp" line="296"/>
-        <location filename="../Sources/ptSettings.cpp" line="314"/>
-        <source>Outer Radius</source>
-        <translation type="unfinished">Vnější poloměr</translation>
+        <source>Inner Radius</source>
+        <translation>Vnitřní poloměr</translation>
     </message>
     <message>
+        <location filename="../Sources/ptSettings.cpp" line="209"/>
+        <location filename="../Sources/ptSettings.cpp" line="235"/>
+        <location filename="../Sources/ptSettings.cpp" line="244"/>
         <location filename="../Sources/ptSettings.cpp" line="262"/>
-        <location filename="../Sources/ptSettings.cpp" line="288"/>
-        <location filename="../Sources/ptSettings.cpp" line="297"/>
-        <location filename="../Sources/ptSettings.cpp" line="315"/>
-        <location filename="../Sources/ptSettings.cpp" line="325"/>
-        <location filename="../Sources/ptSettings.cpp" line="334"/>
-        <source>Roundness</source>
-        <translation type="unfinished">Zaokrouhlení</translation>
+        <source>Outer Radius</source>
+        <translation>Vnější poloměr</translation>
     </message>
     <message>
+        <location filename="../Sources/ptSettings.cpp" line="210"/>
+        <location filename="../Sources/ptSettings.cpp" line="236"/>
+        <location filename="../Sources/ptSettings.cpp" line="245"/>
         <location filename="../Sources/ptSettings.cpp" line="263"/>
-        <location filename="../Sources/ptSettings.cpp" line="289"/>
-        <location filename="../Sources/ptSettings.cpp" line="298"/>
-        <location filename="../Sources/ptSettings.cpp" line="316"/>
-        <location filename="../Sources/ptSettings.cpp" line="326"/>
-        <location filename="../Sources/ptSettings.cpp" line="335"/>
-        <source>Center X</source>
-        <translation type="unfinished">Centrální X</translation>
+        <location filename="../Sources/ptSettings.cpp" line="273"/>
+        <location filename="../Sources/ptSettings.cpp" line="282"/>
+        <source>Roundness</source>
+        <translation>Zaokrouhlení</translation>
     </message>
     <message>
+        <location filename="../Sources/ptSettings.cpp" line="211"/>
+        <location filename="../Sources/ptSettings.cpp" line="237"/>
+        <location filename="../Sources/ptSettings.cpp" line="246"/>
         <location filename="../Sources/ptSettings.cpp" line="264"/>
-        <location filename="../Sources/ptSettings.cpp" line="290"/>
-        <location filename="../Sources/ptSettings.cpp" line="299"/>
-        <location filename="../Sources/ptSettings.cpp" line="317"/>
-        <location filename="../Sources/ptSettings.cpp" line="327"/>
-        <location filename="../Sources/ptSettings.cpp" line="336"/>
+        <location filename="../Sources/ptSettings.cpp" line="274"/>
+        <location filename="../Sources/ptSettings.cpp" line="283"/>
+        <source>Center X</source>
+        <translation>Centrální X</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="212"/>
+        <location filename="../Sources/ptSettings.cpp" line="238"/>
+        <location filename="../Sources/ptSettings.cpp" line="247"/>
+        <location filename="../Sources/ptSettings.cpp" line="265"/>
+        <location filename="../Sources/ptSettings.cpp" line="275"/>
+        <location filename="../Sources/ptSettings.cpp" line="284"/>
         <source>Center Y</source>
-        <translation type="unfinished">Centrální Y</translation>
+        <translation>Centrální Y</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="215"/>
+        <source>Red multiplicity</source>
+        <translation>Násobení červené</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="216"/>
+        <source>Green multiplicity</source>
+        <translation>Násobení zelené</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="217"/>
+        <source>Blue multiplicity</source>
+        <translation>Násobení modré</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="218"/>
+        <source>Red toning</source>
+        <translation>Tónování červené</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="219"/>
+        <source>Green toning</source>
+        <translation>Tónování zelené</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="220"/>
+        <source>Blue toning</source>
+        <translation>Tónování modré</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="221"/>
+        <location filename="../Sources/ptSettings.cpp" line="225"/>
+        <source>Amount of toning</source>
+        <translation>Rozsah tónování</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="229"/>
+        <source>Main color</source>
+        <translation>Hlavní barva</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="229"/>
+        <source>Intensity of the main color</source>
+        <translation>Intenzita hlavní barvy</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="230"/>
+        <source>Second color</source>
+        <translation>Druhá barva</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="230"/>
+        <source>Intensity of the second color</source>
+        <translation>Intenzita druhé barvy</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="233"/>
+        <location filename="../Sources/ptSettings.cpp" line="242"/>
+        <source>Shape of the mask</source>
+        <translation>Formování masky</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="250"/>
+        <location filename="../Sources/ptSettings.cpp" line="255"/>
+        <location filename="../Sources/ptSettings.cpp" line="271"/>
+        <location filename="../Sources/ptSettings.cpp" line="280"/>
+        <source>Angle</source>
+        <translation>Úhel</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="251"/>
+        <location filename="../Sources/ptSettings.cpp" line="256"/>
+        <location filename="../Sources/ptSettings.cpp" line="268"/>
+        <location filename="../Sources/ptSettings.cpp" line="277"/>
+        <source>Lower Level</source>
+        <translation>Nižší úroveň</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="252"/>
+        <location filename="../Sources/ptSettings.cpp" line="257"/>
+        <location filename="../Sources/ptSettings.cpp" line="269"/>
+        <location filename="../Sources/ptSettings.cpp" line="278"/>
+        <source>Upper Level</source>
+        <translation>Vyžší úroveň</translation>
     </message>
     <message>
         <location filename="../Sources/ptSettings.cpp" line="267"/>
-        <source>Red multiplicity</source>
-        <translation type="unfinished">Násobení červené</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptSettings.cpp" line="268"/>
-        <source>Green multiplicity</source>
-        <translation type="unfinished">Násobení zelené</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptSettings.cpp" line="269"/>
-        <source>Blue multiplicity</source>
-        <translation type="unfinished">Násobení modré</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptSettings.cpp" line="270"/>
-        <source>Red toning</source>
-        <translation type="unfinished">Tónování červené</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptSettings.cpp" line="271"/>
-        <source>Green toning</source>
-        <translation type="unfinished">Tónování zelené</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptSettings.cpp" line="272"/>
-        <source>Blue toning</source>
-        <translation type="unfinished">Tónování modré</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptSettings.cpp" line="273"/>
-        <location filename="../Sources/ptSettings.cpp" line="277"/>
-        <source>Amount of toning</source>
-        <translation type="unfinished">Rozsah tónování</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptSettings.cpp" line="281"/>
-        <source>Main color</source>
-        <translation type="unfinished">Hlavní barva</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptSettings.cpp" line="281"/>
-        <source>Intensity of the main color</source>
-        <translation type="unfinished">Intenzita hlavní barvy</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptSettings.cpp" line="282"/>
-        <source>Second color</source>
-        <translation type="unfinished">Druhá barva</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptSettings.cpp" line="282"/>
-        <source>Intensity of the second color</source>
-        <translation type="unfinished">Intenzita druhé barvy</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptSettings.cpp" line="285"/>
-        <location filename="../Sources/ptSettings.cpp" line="294"/>
-        <source>Shape of the mask</source>
-        <translation type="unfinished">Formování masky</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptSettings.cpp" line="302"/>
-        <location filename="../Sources/ptSettings.cpp" line="307"/>
-        <location filename="../Sources/ptSettings.cpp" line="323"/>
-        <location filename="../Sources/ptSettings.cpp" line="332"/>
-        <source>Angle</source>
-        <translation type="unfinished">Úhel</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptSettings.cpp" line="303"/>
-        <location filename="../Sources/ptSettings.cpp" line="308"/>
-        <location filename="../Sources/ptSettings.cpp" line="320"/>
-        <location filename="../Sources/ptSettings.cpp" line="329"/>
-        <source>Lower Level</source>
-        <translation type="unfinished">Nižší úroveň</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptSettings.cpp" line="304"/>
-        <location filename="../Sources/ptSettings.cpp" line="309"/>
-        <location filename="../Sources/ptSettings.cpp" line="321"/>
-        <location filename="../Sources/ptSettings.cpp" line="330"/>
-        <source>Upper Level</source>
-        <translation type="unfinished">Vyžší úroveň</translation>
-    </message>
-    <message>
-        <location filename="../Sources/ptSettings.cpp" line="319"/>
-        <location filename="../Sources/ptSettings.cpp" line="328"/>
+        <location filename="../Sources/ptSettings.cpp" line="276"/>
         <source>Maximal radius for the blur</source>
-        <translation type="unfinished">Maximální rádius pro rozmazání</translation>
+        <translation>Maximální rádius pro rozmazání</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="340"/>
+        <location filename="../Sources/ptSettings.cpp" line="288"/>
         <source>Contrast</source>
         <translation>Kontrast</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="342"/>
+        <location filename="../Sources/ptSettings.cpp" line="290"/>
         <source>Linearity</source>
         <translation>Lineární</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="353"/>
+        <location filename="../Sources/ptSettings.cpp" line="301"/>
         <source>Quality</source>
-        <translation type="unfinished">Kvalita</translation>
+        <translation>Kvalita</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="354"/>
+        <location filename="../Sources/ptSettings.cpp" line="302"/>
         <source>dpi</source>
         <translation>dpi</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="354"/>
+        <location filename="../Sources/ptSettings.cpp" line="302"/>
         <source>Resolution in dpi</source>
-        <translation type="unfinished">Rozlišení v dpi</translation>
+        <translation>Rozlišení v dpi</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="355"/>
+        <location filename="../Sources/ptSettings.cpp" line="303"/>
         <source>Rating</source>
-        <translation type="unfinished">Hodnocení</translation>
+        <translation>Hodnocení</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="355"/>
+        <location filename="../Sources/ptSettings.cpp" line="303"/>
         <source>Image rating</source>
-        <translation type="unfinished">Hodnocení obrázku</translation>
+        <translation>Hodnocení obrázku</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="361"/>
+        <location filename="../Sources/ptSettings.cpp" line="309"/>
         <source>File for autosaving batch list</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="362"/>
+        <location filename="../Sources/ptSettings.cpp" line="310"/>
         <source>Remember setting level</source>
-        <translation type="unfinished">Zapamatovat nastavení úrovně</translation>
+        <translation>Zapamatovat nastavení úrovně</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="363"/>
+        <location filename="../Sources/ptSettings.cpp" line="311"/>
         <source>Transform camera RGB to working space RGB</source>
-        <translation type="unfinished">Transformovat RGB fotoaparátu do pracovního prostoru RGB</translation>
+        <translation>Transformovat RGB fotoaparátu do pracovního prostoru RGB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="364"/>
-        <location filename="../Sources/ptSettings.cpp" line="368"/>
-        <location filename="../Sources/ptSettings.cpp" line="369"/>
+        <location filename="../Sources/ptSettings.cpp" line="312"/>
+        <location filename="../Sources/ptSettings.cpp" line="316"/>
+        <location filename="../Sources/ptSettings.cpp" line="317"/>
         <source>Intent of the profile</source>
-        <translation type="unfinished">Cíl profilu</translation>
+        <translation>Cíl profilu</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="365"/>
+        <location filename="../Sources/ptSettings.cpp" line="313"/>
         <source>Gamma that was applied before this profile</source>
-        <translation type="unfinished">Gamma byla aplikována před profilem</translation>
+        <translation>Gamma byla aplikována před profilem</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="366"/>
+        <location filename="../Sources/ptSettings.cpp" line="314"/>
         <source>Working colorspace</source>
-        <translation type="unfinished">Pracovní prostor barev</translation>
+        <translation>Pracovní prostor barev</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="367"/>
+        <location filename="../Sources/ptSettings.cpp" line="315"/>
         <source>Color management quality</source>
-        <translation type="unfinished">Kvalita správy barev</translation>
+        <translation>Kvalita správy barev</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="370"/>
+        <location filename="../Sources/ptSettings.cpp" line="318"/>
         <source>Output mode of save button</source>
-        <translation type="unfinished">Výstupní režim tlačítka, Uložit</translation>
+        <translation>Výstupní režim tlačítka, Uložit</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="371"/>
+        <location filename="../Sources/ptSettings.cpp" line="319"/>
         <source>Output mode of reset button</source>
-        <translation type="unfinished">Výstupní režim tlačítka, Reset</translation>
+        <translation>Výstupní režim tlačítka, Reset</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="372"/>
+        <location filename="../Sources/ptSettings.cpp" line="320"/>
         <source>Set the theme.</source>
-        <translation type="unfinished">Nastavit téma.</translation>
+        <translation>Nastavit téma.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="373"/>
+        <location filename="../Sources/ptSettings.cpp" line="321"/>
         <source>Set the highlight color of the theme.</source>
-        <translation type="unfinished">Nastavit barvy zvýraznění tématu.</translation>
+        <translation>Nastavit barvy zvýraznění tématu.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="374"/>
+        <location filename="../Sources/ptSettings.cpp" line="322"/>
         <source>Set the start up mode for the UI.</source>
-        <translation type="unfinished">Nastavte počáteční režimu pro UI.</translation>
+        <translation>Nastavte počáteční režimu pro UI.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="375"/>
+        <location filename="../Sources/ptSettings.cpp" line="323"/>
         <source>Size of image processed vs original.</source>
-        <translation type="unfinished">Velikost zpracovaného obrazu vs. originál.</translation>
+        <translation>Velikost zpracovaného obrazu vs. originál.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="376"/>
+        <location filename="../Sources/ptSettings.cpp" line="324"/>
         <source>Initial pipe size when Photivo starts.</source>
-        <translation type="unfinished">Velikost zpracovaného obrazu při spuštění Photivo.</translation>
+        <translation>Velikost zpracovaného obrazu při spuštění Photivo.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="377"/>
+        <location filename="../Sources/ptSettings.cpp" line="325"/>
         <source>Special preview for image analysis</source>
-        <translation type="unfinished">Speciální náhled obrázku pro analýzu</translation>
+        <translation>Speciální náhled obrázku pro analýzu</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="378"/>
+        <location filename="../Sources/ptSettings.cpp" line="326"/>
         <source>Bad pixels file</source>
-        <translation type="unfinished">Soubor vadných pixelů</translation>
+        <translation>Soubor vadných pixelů</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="379"/>
+        <location filename="../Sources/ptSettings.cpp" line="327"/>
         <source>Darkframe file</source>
-        <translation type="unfinished">Soubor černých rámečků</translation>
+        <translation>Soubor černých rámečků</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="380"/>
+        <location filename="../Sources/ptSettings.cpp" line="328"/>
         <source>WhiteBalance</source>
-        <translation type="unfinished">Vyvážení bílé</translation>
+        <translation>Vyvážení bílé</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="381"/>
+        <location filename="../Sources/ptSettings.cpp" line="329"/>
         <source>CA correction</source>
-        <translation type="unfinished">Korekce chromatické aberace</translation>
+        <translation>Korekce chromatické aberace</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="382"/>
+        <location filename="../Sources/ptSettings.cpp" line="330"/>
         <source>Demosaicing algorithm</source>
-        <translation type="unfinished">Algoritmus demozajkování</translation>
+        <translation>Algoritmus demozajkování</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="383"/>
+        <location filename="../Sources/ptSettings.cpp" line="331"/>
         <source>Denosie on Bayer pattern</source>
-        <translation type="unfinished">Odšumění Bayerovy masky</translation>
+        <translation>Odšumění Bayerovy masky</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="385"/>
+        <location filename="../Sources/ptSettings.cpp" line="333"/>
         <source>Guide lines for crop</source>
-        <translation type="unfinished">Pomocné linky ořezu</translation>
+        <translation>Pomocné linky ořezu</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="386"/>
+        <location filename="../Sources/ptSettings.cpp" line="334"/>
         <source>Dim areas outside the crop rectangle</source>
-        <translation type="unfinished">Tmavé oblasti mimo obdélník</translation>
+        <translation>Tmavé oblasti mimo obdélník</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="387"/>
+        <location filename="../Sources/ptSettings.cpp" line="335"/>
         <source>How to handle clipping</source>
-        <translation type="unfinished">Jak chytit rotaci</translation>
+        <translation>Jak chytit rotaci</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="388"/>
+        <location filename="../Sources/ptSettings.cpp" line="336"/>
         <source>Mathematical model for CA correction</source>
-        <translation type="unfinished">Matematický model pro chromatickou aberaci</translation>
+        <translation>Matematický model pro chromatickou aberaci</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="389"/>
+        <location filename="../Sources/ptSettings.cpp" line="337"/>
         <source>Mathematical model for vignetting correction</source>
-        <translation type="unfinished">Matematický model pro korekci vinětace</translation>
+        <translation>Matematický model pro korekci vinětace</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="390"/>
+        <location filename="../Sources/ptSettings.cpp" line="338"/>
         <source>Geometry of the lens the image was taken with</source>
-        <translation type="unfinished">Geometrie objektivu byla dosažena v</translation>
+        <translation>Geometrie objektivu byla dosažena v</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="391"/>
+        <location filename="../Sources/ptSettings.cpp" line="339"/>
         <source>Convert image to this lens geometry</source>
-        <translation type="unfinished">Převod obrazu na geometrii objektivu</translation>
+        <translation>Převod obrazu na geometrii objektivu</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="392"/>
+        <location filename="../Sources/ptSettings.cpp" line="340"/>
         <source>Mathematical distortion model to apply to the image</source>
-        <translation type="unfinished">Matematický model pro použitípři zkreslení obrazu</translation>
+        <translation>Matematický model pro použitípři zkreslení obrazu</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="393"/>
+        <location filename="../Sources/ptSettings.cpp" line="341"/>
         <source>Energy method for liquid rescale</source>
-        <translation type="unfinished">Energetická metoda pro tekuté škálování</translation>
+        <translation>Energetická metoda pro tekuté škálování</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="394"/>
+        <location filename="../Sources/ptSettings.cpp" line="342"/>
         <source>Scaling method for liquid rescale</source>
-        <translation type="unfinished">Škálovací metoda pro tekuté škálování</translation>
+        <translation>Škálovací metoda pro tekuté škálování</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="395"/>
-        <location filename="../Sources/ptSettings.cpp" line="435"/>
+        <location filename="../Sources/ptSettings.cpp" line="343"/>
+        <location filename="../Sources/ptSettings.cpp" line="379"/>
         <source>Filter to be used for resizing</source>
-        <translation type="unfinished">Filtr pro použití při změně velikosti</translation>
+        <translation>Filtr pro použití při změně velikosti</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="396"/>
-        <location filename="../Sources/ptSettings.cpp" line="434"/>
+        <location filename="../Sources/ptSettings.cpp" line="344"/>
+        <location filename="../Sources/ptSettings.cpp" line="378"/>
         <source>Image dimension the resize value applies to</source>
-        <translation type="unfinished">Hodnota měřítka velikosti snímku odkazuje na</translation>
+        <translation>Hodnota měřítka velikosti snímku odkazuje na</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="397"/>
+        <location filename="../Sources/ptSettings.cpp" line="345"/>
         <source>Flip mode</source>
-        <translation type="unfinished">Obrácený mód</translation>
+        <translation>Obrácený mód</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="398"/>
+        <location filename="../Sources/ptSettings.cpp" line="346"/>
         <source>Aspect width</source>
-        <translation type="unfinished">Poměr šířky</translation>
+        <translation>Poměr šířky</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="399"/>
+        <location filename="../Sources/ptSettings.cpp" line="347"/>
         <source>Aspect height</source>
-        <translation type="unfinished">Poměr výšky</translation>
+        <translation>Poměr výšky</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="400"/>
+        <location filename="../Sources/ptSettings.cpp" line="348"/>
         <source>ChannelMixer</source>
-        <translation type="unfinished">Mixer kanálů</translation>
+        <translation>Mixer kanálů</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="401"/>
+        <location filename="../Sources/ptSettings.cpp" line="349"/>
         <source>Clip mode</source>
-        <translation type="unfinished">Připínací mód</translation>
+        <translation>Připínací mód</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="402"/>
+        <location filename="../Sources/ptSettings.cpp" line="350"/>
         <source>Auto exposure mode</source>
-        <translation type="unfinished">Mód automatické expozice</translation>
+        <translation>Mód automatické expozice</translation>
     </message>
     <message>
         <source>LAB Transform mode</source>
@@ -10220,510 +10406,526 @@ Užitečné, aby nedošlo ke ztrátě obsahu po zkreslení / geometrie nástroje
         <translation type="obsolete">Hodnota pro obnovení</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="403"/>
-        <location filename="../Sources/ptSettings.cpp" line="404"/>
-        <location filename="../Sources/ptSettings.cpp" line="405"/>
-        <location filename="../Sources/ptSettings.cpp" line="406"/>
         <source>Values for microcontrast</source>
-        <translation type="unfinished">Hodnota pro mikrokontrast</translation>
+        <translation type="vanished">Hodnota pro mikrokontrast</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="407"/>
+        <location filename="../Sources/ptSettings.cpp" line="351"/>
         <source>Enable GreyCStoration on L</source>
-        <translation type="unfinished">Povolit GreyCStoration na L</translation>
+        <translation>Povolit GreyCStoration na L</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="408"/>
+        <location filename="../Sources/ptSettings.cpp" line="352"/>
         <source>Shadow mask for denoising</source>
-        <translation type="unfinished">Stínová maska pro odšumění</translation>
+        <translation>Stínová maska pro odšumění</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="409"/>
+        <location filename="../Sources/ptSettings.cpp" line="353"/>
         <source>GREYC Interpolation</source>
-        <translation type="unfinished">Interpolace GREYC</translation>
+        <translation>Interpolace GREYC</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="410"/>
+        <location filename="../Sources/ptSettings.cpp" line="354"/>
         <source>Enable USM sharpening</source>
-        <translation type="unfinished">Povolení USM zaostření</translation>
+        <translation>Povolení USM zaostření</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="411"/>
+        <location filename="../Sources/ptSettings.cpp" line="355"/>
         <source>Enable Highpass sharpening</source>
-        <translation type="unfinished">Povolení Highpass zaostření</translation>
+        <translation>Povolení Highpass zaostření</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="412"/>
-        <location filename="../Sources/ptSettings.cpp" line="414"/>
+        <location filename="../Sources/ptSettings.cpp" line="356"/>
+        <location filename="../Sources/ptSettings.cpp" line="358"/>
         <source>Values for film grain</source>
-        <translation type="unfinished">Hodnota pro filmové zrno</translation>
+        <translation>Hodnota pro filmové zrno</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="413"/>
-        <location filename="../Sources/ptSettings.cpp" line="415"/>
+        <location filename="../Sources/ptSettings.cpp" line="357"/>
+        <location filename="../Sources/ptSettings.cpp" line="359"/>
         <source>Mode for film grain</source>
-        <translation type="unfinished">Mód pro filmové zrno</translation>
+        <translation>Mód pro filmové zrno</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="416"/>
-        <location filename="../Sources/ptSettings.cpp" line="429"/>
+        <location filename="../Sources/ptSettings.cpp" line="360"/>
+        <location filename="../Sources/ptSettings.cpp" line="373"/>
         <source>Mode for Vignette</source>
-        <translation type="unfinished">Mód pro vinětaci</translation>
+        <translation>Mód pro vinětaci</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="417"/>
+        <location filename="../Sources/ptSettings.cpp" line="361"/>
         <source>View seperate LAB channels</source>
-        <translation type="unfinished">Zobrazení oddělených LAB kanálů</translation>
+        <translation>Zobrazení oddělených LAB kanálů</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="418"/>
+        <location filename="../Sources/ptSettings.cpp" line="362"/>
         <source>Film emulation</source>
-        <translation type="unfinished">Emulace filmu</translation>
+        <translation>Emulace filmu</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="419"/>
+        <location filename="../Sources/ptSettings.cpp" line="363"/>
         <source>Color filter emulation</source>
-        <translation type="unfinished">Emulace barevného filtru</translation>
+        <translation>Emulace barevného filtru</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="420"/>
-        <location filename="../Sources/ptSettings.cpp" line="421"/>
+        <location filename="../Sources/ptSettings.cpp" line="364"/>
+        <location filename="../Sources/ptSettings.cpp" line="365"/>
         <source>Values for Toning</source>
-        <translation type="unfinished">Hodnota pro tónování</translation>
+        <translation>Hodnota pro tónování</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="422"/>
+        <location filename="../Sources/ptSettings.cpp" line="366"/>
         <source>Colors for cross processing</source>
-        <translation type="unfinished">Barvy pro křížový proces</translation>
+        <translation>Barvy pro křížový proces</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="423"/>
-        <location filename="../Sources/ptSettings.cpp" line="425"/>
+        <location filename="../Sources/ptSettings.cpp" line="367"/>
+        <location filename="../Sources/ptSettings.cpp" line="369"/>
         <source>Mode for Texture Overlay</source>
-        <translation type="unfinished">Mód pro překrytí textury</translation>
+        <translation>Mód pro překrytí textury</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="424"/>
-        <location filename="../Sources/ptSettings.cpp" line="426"/>
+        <location filename="../Sources/ptSettings.cpp" line="368"/>
+        <location filename="../Sources/ptSettings.cpp" line="370"/>
         <source>Mask for Texture Overlay</source>
-        <translation type="unfinished">Maska pro překrytí textury</translation>
+        <translation>Maska pro překrytí textury</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="427"/>
-        <location filename="../Sources/ptSettings.cpp" line="428"/>
+        <location filename="../Sources/ptSettings.cpp" line="371"/>
+        <location filename="../Sources/ptSettings.cpp" line="372"/>
         <source>Mode for Gradual Overlay</source>
-        <translation type="unfinished">Mód pro postupné překrytí</translation>
+        <translation>Mód pro postupné překrytí</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="430"/>
-        <location filename="../Sources/ptSettings.cpp" line="431"/>
+        <location filename="../Sources/ptSettings.cpp" line="374"/>
+        <location filename="../Sources/ptSettings.cpp" line="375"/>
         <source>Mode for the gradual blur</source>
-        <translation type="unfinished">Mód pro postupné rozmazání</translation>
+        <translation>Mód pro postupné rozmazání</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="432"/>
+        <location filename="../Sources/ptSettings.cpp" line="376"/>
         <source>Mode for Softglow</source>
-        <translation type="unfinished">Režim pro SoftGlow</translation>
+        <translation>Režim pro SoftGlow</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="433"/>
+        <location filename="../Sources/ptSettings.cpp" line="377"/>
         <source>Enable web resizing</source>
-        <translation type="unfinished">Povolení pro změnu velikosti na web</translation>
+        <translation>Povolení pro změnu velikosti na web</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="436"/>
+        <location filename="../Sources/ptSettings.cpp" line="380"/>
         <source>Output format</source>
-        <translation type="unfinished">Výstupní formát</translation>
+        <translation>Výstupní formát</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="437"/>
+        <location filename="../Sources/ptSettings.cpp" line="381"/>
         <source>JPEG color sampling</source>
-        <translation type="unfinished">Vzorkování barev JPEG</translation>
+        <translation>Vzorkování barev JPEG</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="438"/>
+        <location filename="../Sources/ptSettings.cpp" line="382"/>
         <source>Switch to this zoom level when starting to crop.</source>
-        <translation type="unfinished">Přepnout na této úrovni přibližování začátku oříznutí.</translation>
+        <translation>Přepnout na této úrovni přibližování začátku oříznutí.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="444"/>
+        <location filename="../Sources/ptSettings.cpp" line="388"/>
         <source>At most</source>
-        <translation type="unfinished">Nejvýš</translation>
+        <translation>Nejvýš</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="445"/>
+        <location filename="../Sources/ptSettings.cpp" line="389"/>
         <source>Open file manager on startup</source>
-        <translation type="unfinished">Otevřít správce souborů po startu</translation>
+        <translation>Otevřít správce souborů po startu</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="445"/>
+        <location filename="../Sources/ptSettings.cpp" line="389"/>
         <source>Opens the file manager when Photivo starts without an image</source>
-        <translation type="unfinished">Otevřít správce souborů po startu Photiva když se spustí bez obrázku</translation>
+        <translation>Otevřít správce souborů po startu Photiva když se spustí bez obrázku</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="447"/>
+        <location filename="../Sources/ptSettings.cpp" line="391"/>
         <source>Automatically save batch list</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="447"/>
+        <location filename="../Sources/ptSettings.cpp" line="391"/>
         <source>Automatically save current batch list</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="448"/>
+        <location filename="../Sources/ptSettings.cpp" line="392"/>
         <source>Automatically load batch list</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="448"/>
+        <location filename="../Sources/ptSettings.cpp" line="392"/>
         <source>Automatically load previous batch list saved to standard path on startup</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="450"/>
+        <location filename="../Sources/ptSettings.cpp" line="394"/>
         <source>User settings</source>
-        <translation type="unfinished">Uživatelské nastavení</translation>
+        <translation>Uživatelské nastavení</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="450"/>
+        <location filename="../Sources/ptSettings.cpp" line="394"/>
         <source>Load user settings on startup</source>
-        <translation type="unfinished">Načíst uživatelské nastavení po startu</translation>
+        <translation>Načíst uživatelské nastavení po startu</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="451"/>
+        <location filename="../Sources/ptSettings.cpp" line="395"/>
         <source>Reset on new image</source>
-        <translation type="unfinished">Reset do nového obrázku</translation>
+        <translation>Reset do nového obrázku</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="451"/>
+        <location filename="../Sources/ptSettings.cpp" line="395"/>
         <source>Reset to user settings when new image is opened</source>
-        <translation type="unfinished">Obnovit uživatelská nastavení při otevření nového obrázku</translation>
+        <translation>Obnovit uživatelská nastavení při otevření nového obrázku</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="452"/>
+        <location filename="../Sources/ptSettings.cpp" line="396"/>
         <source>Adjust aspect ratio</source>
-        <translation type="unfinished">Upravit poměr stran</translation>
+        <translation>Upravit poměr stran</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="452"/>
+        <location filename="../Sources/ptSettings.cpp" line="396"/>
         <source>Adjust crop aspect ratio to image aspect ratio</source>
-        <translation type="unfinished">Upravit poměr stran podle obrázku</translation>
+        <translation>Upravit poměr stran podle obrázku</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="453"/>
+        <location filename="../Sources/ptSettings.cpp" line="397"/>
         <source>Nonlinear slider response</source>
-        <translation type="unfinished">Nelineární reakce posuvníku</translation>
+        <translation>Nelineární reakce posuvníku</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="453"/>
+        <location filename="../Sources/ptSettings.cpp" line="397"/>
         <source>Alter the slider behaviour</source>
-        <translation type="unfinished">Změnit chování posuvníku</translation>
+        <translation>Změnit chování posuvníku</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="454"/>
+        <location filename="../Sources/ptSettings.cpp" line="398"/>
         <source>Use gimp plugin</source>
-        <translation type="unfinished">Použít plugin Gimpu</translation>
+        <translation>Použít plugin Gimpu</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="454"/>
+        <location filename="../Sources/ptSettings.cpp" line="398"/>
         <source>Use gimp plugin for export</source>
-        <translation type="unfinished">Použít plugin Gimpu pro export</translation>
+        <translation>Použít plugin Gimpu pro export</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="455"/>
+        <location filename="../Sources/ptSettings.cpp" line="399"/>
         <source>Enabled</source>
-        <translation type="unfinished">Povolit</translation>
+        <translation>Povolit</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="455"/>
+        <location filename="../Sources/ptSettings.cpp" line="399"/>
         <source>Show seperate toolboxes</source>
-        <translation type="unfinished">Zobrazit oddělené nástrojové panely</translation>
+        <translation>Zobrazit oddělené nástrojové panely</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="456"/>
+        <location filename="../Sources/ptSettings.cpp" line="400"/>
         <source>Tab mode</source>
-        <translation type="unfinished">Kartový mód</translation>
+        <translation>Kartový mód</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="456"/>
+        <location filename="../Sources/ptSettings.cpp" line="400"/>
         <source>Show the preview after the active tab</source>
-        <translation type="unfinished">Zobrazit náhled po aktivní kartě</translation>
+        <translation>Zobrazit náhled po aktivní kartě</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="457"/>
+        <location filename="../Sources/ptSettings.cpp" line="401"/>
         <source>Override default</source>
-        <translation type="unfinished">Přepsat výchozí</translation>
+        <translation>Přepsat výchozí</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="457"/>
+        <location filename="../Sources/ptSettings.cpp" line="401"/>
         <source>Override the default color</source>
-        <translation type="unfinished">Přepsat výchozí barvy</translation>
+        <translation>Přepsat výchozí barvy</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="458"/>
+        <location filename="../Sources/ptSettings.cpp" line="402"/>
         <source>Display search bar</source>
-        <translation type="unfinished">Zobrazit vyhledávací panel</translation>
+        <translation>Zobrazit vyhledávací panel</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="459"/>
+        <location filename="../Sources/ptSettings.cpp" line="403"/>
         <source>Backup settings</source>
-        <translation type="unfinished">Záloha nastavení</translation>
+        <translation>Záloha nastavení</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="459"/>
+        <location filename="../Sources/ptSettings.cpp" line="403"/>
         <source>Write backup settings during processing</source>
-        <translation type="unfinished">Zapiš nastavení zálohování při zpracování</translation>
+        <translation>Zapiš nastavení zálohování při zpracování</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="460"/>
+        <location filename="../Sources/ptSettings.cpp" line="404"/>
         <source>manual</source>
-        <translation type="unfinished">Manuální</translation>
+        <translation>Manuální</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="460"/>
+        <location filename="../Sources/ptSettings.cpp" line="404"/>
         <source>manual or automatic pipe</source>
-        <translation type="unfinished">Zpracování ruční nebo automatické</translation>
+        <translation>Zpracování ruční nebo automatické</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="461"/>
+        <location filename="../Sources/ptSettings.cpp" line="405"/>
+        <source>Use thumbnail</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="405"/>
+        <source>Use the embedded thumbnail of RAW images</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="406"/>
         <source>Intensify</source>
-        <translation type="unfinished">Intenzita</translation>
+        <translation>Intenzita</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="461"/>
+        <location filename="../Sources/ptSettings.cpp" line="406"/>
         <source>Normalize lowest channel to 1</source>
-        <translation type="unfinished">Normalizuj nižší kanál do 1</translation>
+        <translation>Normalizuj nižší kanál do 1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="462"/>
+        <location filename="../Sources/ptSettings.cpp" line="407"/>
         <source>Manual BP</source>
-        <translation type="unfinished">Manuální černý bod</translation>
+        <translation>Manuální černý bod</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="462"/>
+        <location filename="../Sources/ptSettings.cpp" line="407"/>
         <source>Manual black point setting enabled</source>
-        <translation type="unfinished">Manuální nastavení černého bodu povoleno</translation>
+        <translation>Manuální nastavení černého bodu povoleno</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="463"/>
+        <location filename="../Sources/ptSettings.cpp" line="408"/>
         <source>Manual WP</source>
-        <translation type="unfinished">Manuální bílý bod</translation>
+        <translation>Manuální bílý bod</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="463"/>
+        <location filename="../Sources/ptSettings.cpp" line="408"/>
         <source>Manual white point setting enabled</source>
-        <translation type="unfinished">Manuální nastavení bílého bodu povoleno</translation>
+        <translation>Manuální nastavení bílého bodu povoleno</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="464"/>
+        <location filename="../Sources/ptSettings.cpp" line="409"/>
         <source>Eeci refinement</source>
-        <translation type="unfinished">Efektivní zlepšení barvy interpolace (EECI)</translation>
+        <translation>Efektivní zlepšení barvy interpolace (EECI)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="465"/>
-        <location filename="../Sources/ptSettings.cpp" line="467"/>
+        <location filename="../Sources/ptSettings.cpp" line="410"/>
+        <location filename="../Sources/ptSettings.cpp" line="412"/>
         <source>Auto scale</source>
-        <translation type="unfinished">Automatická škála</translation>
+        <translation>Automatická škála</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="465"/>
+        <location filename="../Sources/ptSettings.cpp" line="410"/>
         <source>Auto scale to avoid black borders after distortion correction or geometry conversion.</source>
-        <translation type="unfinished">Měřítko automaticky, aby se zabránilo černému okraji při zkreslení nebo změně rozměrů.</translation>
+        <translation>Měřítko automaticky, aby se zabránilo černému okraji při zkreslení nebo změně rozměrů.</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="466"/>
+        <location filename="../Sources/ptSettings.cpp" line="411"/>
         <source>Enable</source>
-        <translation type="unfinished">Povolit</translation>
+        <translation>Povolit</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="466"/>
+        <location filename="../Sources/ptSettings.cpp" line="411"/>
         <source>Enable defishing</source>
-        <translation type="unfinished">Povolit defishing</translation>
+        <translation>Povolit defishing</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="467"/>
+        <location filename="../Sources/ptSettings.cpp" line="412"/>
         <source>Auto scale to avoid black borders</source>
-        <translation type="unfinished">Automatické měřítko, aby se zabránilo černému rámečku</translation>
+        <translation>Automatické měřítko, aby se zabránilo černému rámečku</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="468"/>
+        <location filename="../Sources/ptSettings.cpp" line="413"/>
         <source>Grid</source>
-        <translation type="unfinished">Mřížka</translation>
+        <translation>Mřížka</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="468"/>
+        <location filename="../Sources/ptSettings.cpp" line="413"/>
         <source>Enable the overlay grid</source>
-        <translation type="unfinished">Povolit překrytí mřížky</translation>
+        <translation>Povolit překrytí mřížky</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="469"/>
+        <location filename="../Sources/ptSettings.cpp" line="414"/>
         <source>Crop</source>
-        <translation type="unfinished">Ořez</translation>
+        <translation>Ořez</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="469"/>
+        <location filename="../Sources/ptSettings.cpp" line="414"/>
         <source>Enable to make a crop</source>
-        <translation type="unfinished">Povolit ořez</translation>
+        <translation>Povolit ořez</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="470"/>
+        <location filename="../Sources/ptSettings.cpp" line="415"/>
         <source>Aspect Ratio</source>
-        <translation type="unfinished">Proporce</translation>
+        <translation>Proporce</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="470"/>
+        <location filename="../Sources/ptSettings.cpp" line="415"/>
         <source>Crop with a fixed aspect ratio</source>
-        <translation type="unfinished">Ořez podle pevné velikosti</translation>
+        <translation>Ořez podle pevné velikosti</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="471"/>
+        <location filename="../Sources/ptSettings.cpp" line="416"/>
         <source>Vertical first</source>
-        <translation type="unfinished">První vertikálně</translation>
+        <translation>První vertikálně</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="471"/>
+        <location filename="../Sources/ptSettings.cpp" line="416"/>
         <source>Resizing starts with vertical direction</source>
-        <translation type="unfinished">Změna velikosti začíná ve svislém směru</translation>
+        <translation>Změna velikosti začíná ve svislém směru</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="472"/>
+        <location filename="../Sources/ptSettings.cpp" line="417"/>
         <source>Resize</source>
-        <translation type="unfinished">Změna rozměru</translation>
+        <translation>Změna rozměru</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="472"/>
+        <location filename="../Sources/ptSettings.cpp" line="417"/>
         <source>Enable resize</source>
-        <translation type="unfinished">Povolit změnu rozměru</translation>
+        <translation>Povolit změnu rozměru</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="473"/>
+        <location filename="../Sources/ptSettings.cpp" line="418"/>
         <source>Automatic pipe size</source>
-        <translation type="unfinished">Automatické zpracování velikosti</translation>
+        <translation>Automatické zpracování velikosti</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="474"/>
+        <location filename="../Sources/ptSettings.cpp" line="419"/>
         <source>Block pipe</source>
-        <translation type="unfinished">Blok zpracování</translation>
+        <translation>Blok zpracování</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="474"/>
+        <location filename="../Sources/ptSettings.cpp" line="419"/>
         <source>Disable the pipe</source>
-        <translation type="unfinished">Zakázat zpracování</translation>
+        <translation>Zakázat zpracování</translation>
     </message>
     <message>
         <source>Enable Reinhard 05</source>
         <translation type="obsolete">Povolit Reinhard 05</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="475"/>
+        <location filename="../Sources/ptSettings.cpp" line="420"/>
         <source>Enable &apos;fast&apos;</source>
-        <translation type="unfinished">Povolit &apos;Rychle&apos;</translation>
+        <translation>Povolit &apos;Rychle&apos;</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="475"/>
+        <location filename="../Sources/ptSettings.cpp" line="420"/>
         <source>Enable GREYC &apos;fast&apos;</source>
-        <translation type="unfinished">Povolit GREYC &apos;Rychle&apos;</translation>
+        <translation>Povolit GREYC &apos;Rychle&apos;</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="477"/>
+        <location filename="../Sources/ptSettings.cpp" line="422"/>
         <source>Yellow</source>
-        <translation type="unfinished">Žlutá</translation>
+        <translation>Žlutá</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="479"/>
+        <location filename="../Sources/ptSettings.cpp" line="424"/>
         <source>Cyan</source>
-        <translation type="unfinished">Azurová</translation>
+        <translation>Azurová</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="481"/>
+        <location filename="../Sources/ptSettings.cpp" line="426"/>
         <source>Purple</source>
-        <translation type="unfinished">Fialová</translation>
+        <translation>Fialová</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="482"/>
+        <location filename="../Sources/ptSettings.cpp" line="427"/>
         <source>Only edges</source>
-        <translation type="unfinished">Pouze hrany</translation>
+        <translation>Pouze hrany</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="482"/>
+        <location filename="../Sources/ptSettings.cpp" line="427"/>
         <source>Sharpen only edges</source>
-        <translation type="unfinished">Zaostřit pouze hrany</translation>
+        <translation>Zaostřit pouze hrany</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="483"/>
+        <location filename="../Sources/ptSettings.cpp" line="428"/>
         <source>before gamma</source>
-        <translation type="unfinished">Napřed gammą</translation>
+        <translation>Napřed gammą</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="483"/>
+        <location filename="../Sources/ptSettings.cpp" line="428"/>
         <source>Webresizing before gamma compensation</source>
-        <translation type="unfinished">Změna rozměru pro Web před kompenzací gamma</translation>
+        <translation>Změna rozměru pro Web před kompenzací gamma</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="484"/>
+        <location filename="../Sources/ptSettings.cpp" line="429"/>
         <source>sRGB gamma compensation</source>
-        <translation type="unfinished">Kompenzace gamma sRGB</translation>
+        <translation>Kompenzace gamma sRGB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="485"/>
+        <location filename="../Sources/ptSettings.cpp" line="430"/>
         <source>Include metadata</source>
-        <translation type="unfinished">Vložit metadata</translation>
+        <translation>Vložit metadata</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="485"/>
+        <location filename="../Sources/ptSettings.cpp" line="430"/>
         <source>Include metadata (only in jpeg and tiff)</source>
-        <translation type="unfinished">Vložit metadata (pouze jpeg a tiff)</translation>
+        <translation>Vložit metadata (pouze jpeg a tiff)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="486"/>
+        <location filename="../Sources/ptSettings.cpp" line="431"/>
         <source>Erase thumbnail</source>
-        <translation type="unfinished">Vymazat miniatury</translation>
+        <translation>Vymazat miniatury</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="486"/>
+        <location filename="../Sources/ptSettings.cpp" line="431"/>
         <source>Erase the exif thumbnail (only in jpeg and tiff)</source>
-        <translation type="unfinished">Vymazat exif miniatury (pouze jpeg a tiff)</translation>
+        <translation>Vymazat exif miniatury (pouze jpeg a tiff)</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="487"/>
+        <location filename="../Sources/ptSettings.cpp" line="432"/>
         <source>Save image</source>
-        <translation type="unfinished">Uložit obrázek</translation>
+        <translation>Uložit obrázek</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="487"/>
+        <location filename="../Sources/ptSettings.cpp" line="432"/>
         <source>Confirm any action that would discard an unsaved image</source>
-        <translation type="unfinished">Potvrďte všechny kroky, které by se mohly vynechat pro neuložený obrázek</translation>
+        <translation>Potvrďte všechny kroky, které by se mohly vynechat pro neuložený obrázek</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="488"/>
+        <location filename="../Sources/ptSettings.cpp" line="433"/>
+        <source>Autosave settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="433"/>
+        <source>Autosave settings when loading another image (if save confirmation is off)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptSettings.cpp" line="434"/>
         <source>Reset settings</source>
-        <translation type="unfinished">Resetovat nastavení</translation>
+        <translation>Resetovat nastavení</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="488"/>
+        <location filename="../Sources/ptSettings.cpp" line="434"/>
         <source>Confirm resetting settings or dropping a settings file onto an image</source>
-        <translation type="unfinished">Potvrďte nastavení nebo resetování nastavení obrazu souboru při ukončení</translation>
+        <translation>Potvrďte nastavení nebo resetování nastavení obrazu souboru při ukončení</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="489"/>
+        <location filename="../Sources/ptSettings.cpp" line="435"/>
         <source>Switch to 1:1 pipe</source>
-        <translation type="unfinished">Přepni do 1:1 souboru</translation>
+        <translation>Přepni do 1:1 souboru</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="489"/>
+        <location filename="../Sources/ptSettings.cpp" line="435"/>
         <source>Confirm switch to the full sized pipe</source>
-        <translation type="unfinished">Potvrdit, že lze přepnout na zpracování plné velikosti</translation>
+        <translation>Potvrdit přepnutí na zpracování plné velikosti</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="490"/>
+        <location filename="../Sources/ptSettings.cpp" line="436"/>
         <source>Esc key exits Photivo</source>
-        <translation type="unfinished">ESC ukočí Photivo</translation>
+        <translation>ESC ukočí Photivo</translation>
     </message>
     <message>
-        <location filename="../Sources/ptSettings.cpp" line="490"/>
+        <location filename="../Sources/ptSettings.cpp" line="436"/>
         <source>Use the Esc key not only to exit special view modes (e.g. full screen) but also to close Photivo.</source>
-        <translation type="unfinished">Pomocí klávesy Esc se nejen ukončí speciální režim zobrazení, tj. celá obrazovka, ale také celé Photivo.</translation>
+        <translation>Pomocí klávesy Esc se nejen ukončí speciální režim zobrazení, tj. celá obrazovka, ale také celé Photivo.</translation>
     </message>
 </context>
 <context>
@@ -10731,7 +10933,7 @@ Užitečné, aby nedošlo ke ztrátě obsahu po zkreslení / geometrie nástroje
     <message>
         <location filename="../Sources/filemgmt/ptSingleDirModel.cpp" line="158"/>
         <source>My Computer</source>
-        <translation type="unfinished">Můj počítač</translation>
+        <translation>Můj počítač</translation>
     </message>
 </context>
 <context>
@@ -10743,28 +10945,28 @@ Užitečné, aby nedošlo ke ztrátě obsahu po zkreslení / geometrie nástroje
     </message>
     <message>
         <location filename="../Sources/filters/imagespot/ptSpotListWidget.ui" line="87"/>
-        <location filename="../Sources/filters/imagespot/ptSpotListWidget.cpp" line="146"/>
+        <location filename="../Sources/filters/imagespot/ptSpotListWidget.cpp" line="145"/>
         <source>Append spot mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../Sources/filters/imagespot/ptSpotListWidget.ui" line="108"/>
-        <location filename="../Sources/filters/imagespot/ptSpotListWidget.cpp" line="175"/>
+        <location filename="../Sources/filters/imagespot/ptSpotListWidget.cpp" line="174"/>
         <source>Edit spots</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/filters/imagespot/ptSpotListWidget.cpp" line="159"/>
+        <location filename="../Sources/filters/imagespot/ptSpotListWidget.cpp" line="158"/>
         <source>Exit append spot mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/filters/imagespot/ptSpotListWidget.cpp" line="189"/>
+        <location filename="../Sources/filters/imagespot/ptSpotListWidget.cpp" line="188"/>
         <source>Leave edit mode</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/filters/imagespot/ptSpotListWidget.cpp" line="238"/>
+        <location filename="../Sources/filters/imagespot/ptSpotListWidget.cpp" line="237"/>
         <source>Spot</source>
         <translation type="unfinished">Bodový</translation>
     </message>
@@ -10774,258 +10976,313 @@ Užitečné, aby nedošlo ke ztrátě obsahu po zkreslení / geometrie nástroje
     <message>
         <location filename="../Sources/ptToolBox.cpp" line="148"/>
         <source>Open help page in web browser.</source>
-        <translation type="unfinished">Otevři na webu stránku s nápovědou.</translation>
+        <translation>Otevři na webu stránku s nápovědou.</translation>
     </message>
     <message>
         <location filename="../Sources/ptToolBox.cpp" line="154"/>
         <source>Complex filter. Might be slow.</source>
-        <translation type="unfinished">Komplexní filtr. Může být pomalý.</translation>
+        <translation>Komplexní filtr. Může být pomalý.</translation>
     </message>
     <message>
         <location filename="../Sources/ptToolBox.cpp" line="241"/>
         <source>&amp;Reset</source>
-        <translation type="unfinished">&amp;Reset</translation>
+        <translation>&amp;Reset</translation>
     </message>
     <message>
         <location filename="../Sources/ptToolBox.cpp" line="245"/>
         <source>&amp;Save preset</source>
-        <translation type="unfinished">Ulož na&amp;stavení</translation>
+        <translation>Ulož na&amp;stavení</translation>
     </message>
     <message>
         <location filename="../Sources/ptToolBox.cpp" line="249"/>
         <source>&amp;Append preset</source>
-        <translation type="unfinished">&amp;Načti nastavení</translation>
+        <translation>&amp;Načti nastavení</translation>
     </message>
     <message>
         <location filename="../Sources/ptToolBox.cpp" line="257"/>
         <source>&amp;Hide</source>
-        <translation type="unfinished">S&amp;krýt</translation>
+        <translation>S&amp;krýt</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptToolBox.cpp" line="275"/>
+        <source>All&amp;ow</source>
+        <translation type="unfinished">P&amp;ovolit</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptToolBox.cpp" line="278"/>
+        <source>Bl&amp;ock</source>
+        <translation type="unfinished">&amp;Blokuj</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptToolBox.cpp" line="295"/>
+        <source>Remove from &amp;favourites</source>
+        <translation type="unfinished">Vymazat z oblí&amp;bených</translation>
     </message>
     <message>
         <location filename="../Sources/ptToolBox.cpp" line="298"/>
         <source>Add to &amp;favourites</source>
-        <translation type="unfinished">Přidat do &amp;oblíbených</translation>
+        <translation>Přidat do &amp;oblíbených</translation>
     </message>
 </context>
 <context>
     <name>ptViewWindow</name>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="184"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="187"/>
         <source>Fit</source>
-        <translation type="unfinished">Celý</translation>
+        <translation>Celý</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="648"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="652"/>
+        <source>Copy settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptViewWindow.cpp" line="652"/>
+        <source>Ctrl+Shift+C</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptViewWindow.cpp" line="655"/>
+        <source>Paste settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptViewWindow.cpp" line="655"/>
+        <source>Ctrl+Shift+V</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptViewWindow.cpp" line="658"/>
+        <source>Reset settings</source>
+        <translation type="unfinished">Resetovat nastavení</translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptViewWindow.cpp" line="658"/>
+        <source>Ctrl+Shift+R</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptViewWindow.cpp" line="661"/>
+        <source>Reset settings to last saved</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptViewWindow.cpp" line="661"/>
+        <source>Ctrl+Shift+U</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../Sources/ptViewWindow.cpp" line="664"/>
         <source>Zoom &amp;in</source>
-        <translation type="unfinished">Zvětš&amp;it</translation>
+        <translation>Zvětš&amp;it</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="648"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="664"/>
         <source>1</source>
         <translation>1</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="652"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="668"/>
         <source>Zoom &amp;100%</source>
-        <translation type="unfinished">Zoom &amp;100%</translation>
+        <translation>Zoom &amp;100%</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="652"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="668"/>
         <source>2</source>
         <translation>2</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="656"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="672"/>
         <source>Zoom &amp;out</source>
-        <translation type="unfinished">&amp;Zmenšit</translation>
+        <translation>&amp;Zmenšit</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="656"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="672"/>
         <source>3</source>
         <translation>3</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="660"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="676"/>
         <source>Zoom &amp;fit</source>
-        <translation type="unfinished">&amp;Přispůsobit</translation>
+        <translation>&amp;Přispůsobit</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="660"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="676"/>
         <source>4</source>
         <translation>4</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="665"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="681"/>
         <source>&amp;RGB</source>
         <translation>&amp;RGB</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="665"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="681"/>
         <source>0</source>
         <translation>0</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="669"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="685"/>
         <source>&amp;Structure</source>
         <translation>&amp;Struktura</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="669"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="685"/>
         <source>9</source>
         <translation>9</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="673"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="689"/>
         <source>&amp;L*</source>
         <translation>&amp;L*</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="673"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="689"/>
         <source>8</source>
         <translation>8</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="677"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="693"/>
         <source>&amp;a*</source>
         <translation>&amp;a*</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="677"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="693"/>
         <source>7</source>
         <translation>7</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="681"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="697"/>
         <source>&amp;b*</source>
         <translation>&amp;b*</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="681"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="697"/>
         <source>6</source>
         <translation>6</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="685"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="701"/>
         <source>&amp;Gradient</source>
         <translation>&amp;Gradient</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="685"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="701"/>
         <source>5</source>
         <translation>5</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="697"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="713"/>
         <source>&amp;disabled</source>
-        <translation type="unfinished">Z&amp;akaž</translation>
+        <translation>Z&amp;akaž</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="701"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="717"/>
         <source>&amp;linear</source>
-        <translation type="unfinished">&amp;Lineární</translation>
+        <translation>&amp;Lineární</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="705"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="721"/>
         <source>&amp;preview</source>
-        <translation type="unfinished">&amp;Náhled</translation>
+        <translation>&amp;Náhled</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="720"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="736"/>
         <source>Highlight &amp;clipped pixels</source>
-        <translation type="unfinished">Světlo &amp;oříznutých pixelů</translation>
+        <translation>Světlo &amp;oříznutých pixelů</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="720"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="736"/>
         <source>C</source>
         <translation>C</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="725"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="741"/>
         <source>&amp;Over exposure</source>
-        <translation type="unfinished">&amp;Přeexponované</translation>
+        <translation>&amp;Přeexponované</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="730"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="746"/>
         <source>&amp;Under exposure</source>
-        <translation type="unfinished">Po&amp;dexponované</translation>
+        <translation>Po&amp;dexponované</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="735"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="751"/>
         <source>&amp;R</source>
         <translation>&amp;R</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="740"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="756"/>
         <source>&amp;G</source>
         <translation>&amp;G</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="745"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="761"/>
         <source>&amp;B</source>
         <translation>&amp;B</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="750"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="766"/>
         <source>&amp;Sensor</source>
-        <translation type="unfinished">Se&amp;znzor</translation>
+        <translation>Se&amp;znzor</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="757"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="773"/>
         <source>Show &amp;bottom bar</source>
-        <translation type="unfinished">Zob&amp;razit dolní panel</translation>
+        <translation>Zob&amp;razit dolní panel</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="762"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="778"/>
         <source>Show &amp;tool pane</source>
-        <translation type="unfinished">Zobraz okno nás&amp;trojů</translation>
+        <translation>Zobraz okno nás&amp;trojů</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="762"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="778"/>
         <source>Space</source>
-        <translation type="unfinished">Prostor</translation>
+        <translation>Prostor</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="768"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="784"/>
         <source>Open file m&amp;anager</source>
-        <translation type="unfinished">Otevřít souborový m&amp;anažer</translation>
+        <translation>Otevřít souborový m&amp;anažer</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="768"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="784"/>
         <source>Ctrl+M</source>
         <translation>Ctrl+M</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="772"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="788"/>
         <source>Open &amp;batch processing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="772"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="788"/>
         <source>Ctrl+B</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="775"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="791"/>
         <source>Full&amp;screen</source>
         <translation>Celá obrazovka</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="775"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="791"/>
         <source>F11</source>
         <translation>F11</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="790"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="806"/>
         <source>Display &amp;mode</source>
-        <translation type="unfinished">Display &amp;mode</translation>
+        <translation>Display &amp;mode</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="800"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="816"/>
         <source>Show &amp;clipping</source>
-        <translation type="unfinished">Zobraz &amp;výstřižek</translation>
+        <translation>Zobraz &amp;výstřižek</translation>
     </message>
     <message>
-        <location filename="../Sources/ptViewWindow.cpp" line="812"/>
+        <location filename="../Sources/ptViewWindow.cpp" line="828"/>
         <source>Pixel values</source>
         <translation>Hodnoty pixelů</translation>
     </message>

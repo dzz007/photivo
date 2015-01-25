@@ -54,27 +54,27 @@ ptFilterBase *ptFilter_Drc::createDrc() {
 //==============================================================================
 
 void ptFilter_Drc::doDefineControls() {
-  FCfgItems = QList<ptCfgItem>()
+  FConfig.initStores(TCfgItemList()
     //            Id                   Type                      Default     Min           Max           Step        Decimals, commonConnect, storeable, caption, tooltip
     << ptCfgItem({CStrength,           ptCfgItem::Slider,        1.0,        0.0,          1.0,          0.05,       2,        true, true, tr("Strength"), tr("")})
     << ptCfgItem({CBias,               ptCfgItem::Slider,        0.0,        0.0,          1.0,          0.01,       2,        true, true, tr("Bias"), tr("")})
     << ptCfgItem({CColorAdapt,         ptCfgItem::Slider,        0.25,       0.0,          1.0,          0.05,       2,        true, true, tr("Color adaption"), tr("")})
-  ;
+  );
 }
 
 //==============================================================================
 
 bool ptFilter_Drc::doCheckHasActiveCfg() {
-  return FConfig->getValue(CStrength).toFloat() != 1.0f;
+  return FConfig.value(CStrength).toFloat() != 1.0f;
 }
 
 //==============================================================================
 
 void ptFilter_Drc::doRunFilter(ptImage *AImage) const {
   AImage->toLab();
-  AImage->DRC(FConfig->getValue(CBias).toFloat(),
-              FConfig->getValue(CStrength).toFloat(),
-              FConfig->getValue(CColorAdapt).toFloat() );
+  AImage->DRC(FConfig.value(CBias).toFloat(),
+              FConfig.value(CStrength).toFloat(),
+              FConfig.value(CColorAdapt).toFloat() );
 }
 
 //==============================================================================

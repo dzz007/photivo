@@ -4,6 +4,7 @@
 **
 ** Copyright (C) 2012 Michael Munzert <mail@mm-log.com>
 ** Copyright (C) 2012 Bernd Schoeler <brjohn@brother-john.net>
+** Copyright (C) 2013 Alexander Tzyganenko <tz@fast-report.com>
 **
 ** This file is part of Photivo.
 **
@@ -21,23 +22,25 @@
 **
 *******************************************************************************/
 
-#include <QSettings>
-
 #include "ptFilterDM.h"
 #include "ptFilterFactory.h"
 #include "ptFilterUids.h"
-#include <ptDefines.h>
-#include <ptInfo.h>
-#include <ptTempFile.h>
+#include "../ptDefines.h"
+#include "../ptInfo.h"
+#include "../ptTempFile.h"
+#include "../batch/ptBatchWindow.h"
 
 // deprecated: To be removed when transition to new settings system is complete.
 #include "../ptSettings.h"
 #include "../ptCurve.h"
-#include "../ptChannelMixer.h"
 #include "../ptMainWindow.h"
 #include "../ptError.h"
 #include "../ptMessageBox.h"
 // end of deprecated
+
+#include <QFileDialog>
+#include <QSettings>
+#include <cassert>
 
 //==============================================================================
 
@@ -81,8 +84,6 @@ void ptFilterDM::ToOldPreset(QSettings *APreset) {
 // Job files contain additional information about the files to process.
 // Preset files contain just information about filters, no string
 // correction will be needed.
-void   UpdateComboboxes(const QString Key);
-extern ptChannelMixer* ChannelMixer;
 extern ptMainWindow* MainWindow;
 void   PreCalcTransforms();
 
@@ -101,7 +102,7 @@ bool ptFilterDM::ReadPresetFile(const QString &AFileName, short &ANextPhase) {
   {
     ptLogError(ptError_FileFormat,
                "'%s' has wrong format\n",
-               AFileName.toAscii().data());
+               AFileName.toLocal8Bit().data());
     return ptError_FileFormat;
   }
 
@@ -302,34 +303,6 @@ bool ptFilterDM::ReadPresetFile(const QString &AFileName, short &ANextPhase) {
   if (hPreset.contains("NextPhase"))
     ANextPhase = hPreset.value("NextPhase").toInt();
 
-  // Update display of comboboxes
-  // This also clears non-existing files
-  QStringList ListCombos;
-  ListCombos << "ChannelMixer";
-  for (int i = 0; i < ListCombos.size(); i++ )
-    UpdateComboboxes(ListCombos.at(i));
-
-  // Load channelmixer
-  if (Settings->GetInt("ChannelMixer")>1) {
-    if (ChannelMixer->ReadChannelMixer(
-         (Settings->GetStringList("ChannelMixerFileNames"))
-           [Settings->GetInt("ChannelMixer")-ptChannelMixerChoice_File].
-             toAscii().data())) {
-      assert(0);
-    }
-  }
-
-  // ChannelMixer
-  ChannelMixer->m_Mixer[0][0] = Settings->GetDouble("ChannelMixerR2R");
-  ChannelMixer->m_Mixer[0][1] = Settings->GetDouble("ChannelMixerG2R");
-  ChannelMixer->m_Mixer[0][2] = Settings->GetDouble("ChannelMixerB2R");
-  ChannelMixer->m_Mixer[1][0] = Settings->GetDouble("ChannelMixerR2G");
-  ChannelMixer->m_Mixer[1][1] = Settings->GetDouble("ChannelMixerG2G");
-  ChannelMixer->m_Mixer[1][2] = Settings->GetDouble("ChannelMixerB2G");
-  ChannelMixer->m_Mixer[2][0] = Settings->GetDouble("ChannelMixerR2B");
-  ChannelMixer->m_Mixer[2][1] = Settings->GetDouble("ChannelMixerG2B");
-  ChannelMixer->m_Mixer[2][2] = Settings->GetDouble("ChannelMixerB2B");
-
   // Color space transformations precalc
   if (NeedRecalcTransforms == 1) PreCalcTransforms();
 
@@ -414,7 +387,8 @@ bool ptFilterDM::WriteJobFile() {
 
   // And finally a dialog to obtain the output job file.
   QFileInfo PathInfo(InputFileNames[0]);
-  QString SuggestedJobFileName = PathInfo.dir().path() + "/" + PathInfo.completeBaseName() + ".ptj";
+  QString SuggestedJobFileName = PathInfo.dir().path() + "/" + PathInfo.completeBaseName() +
+                                 Settings->GetString("OutputFileNameSuffix") + ".ptj";
 
   QString JobFileName =
     QFileDialog::getSaveFileName(NULL,
@@ -427,6 +401,32 @@ bool ptFilterDM::WriteJobFile() {
   if (JobFileName.size() == 0) return false;
 
   return PerformWritePreset(JobFileName, false, true, true, nullptr);
+}
+
+//==============================================================================
+
+extern ptBatchWindow *BatchWindow;
+bool ptFilterDM::SendToBatch(const QString &AFileName) {
+  QString hSuggestion = AFileName + "pts";
+  QString hFileName = hSuggestion;
+
+  if (Settings->GetInt("SaveConfirmation") != 0) {
+    QString hSaveCaption = QObject::tr("Save settings file");
+    hFileName = QFileDialog::getSaveFileName(
+                        nullptr,
+                        hSaveCaption,
+                        hSuggestion,
+                        SettingsFilePattern,
+                        nullptr);
+
+    // Empty file name means user aborted
+    if (hFileName.isEmpty())
+      return false;
+  }
+
+  bool result = PerformWritePreset(hFileName, false, true, false, nullptr);
+  BatchWindow->AddJobToList(hFileName, Settings->GetStringList("InputFileNameList").first());
+  return result;
 }
 
 //==============================================================================
@@ -658,7 +658,7 @@ void ptFilterDM::TranslatePreset(QSettings *APreset, const bool AOldToNew) {
 //==============================================================================
 
 void ptFilterDM::TranslateNormalToNew(QSettings *APreset, QStringList *AKeys) {
-  for (QString hFromKey: *AKeys) {
+  for (const QString& hFromKey: *AKeys) {
     QString hToKey = FNameMap.value(hFromKey, "<invalid>");
 
     if (hToKey != "<invalid>") {
@@ -666,7 +666,6 @@ void ptFilterDM::TranslateNormalToNew(QSettings *APreset, QStringList *AKeys) {
       APreset->remove(hFromKey);
     }
   }
-
 }
 
 //==============================================================================
@@ -718,7 +717,8 @@ void ptFilterDM::TranslateCurvesToNew(QSettings *APreset, QStringList *AKeys) {
     auto hNewCurveId = FCurveNameMap.value(hOldCurveId);
     int  hLastSep    = hNewCurveId.lastIndexOf("/");
     APreset->setValue(hNewCurveId.left(hLastSep)+"/CustomStores",
-                      QStringList(hNewCurveId.mid(hLastSep+1)));
+                      APreset->value(hNewCurveId.left(hLastSep)+"/CustomStores").toStringList() <<
+                      hNewCurveId.mid(hLastSep+1));
 
     // channel mask (only exists for some)
     auto hOldMask = FCurveMap.key(hNewCurveId+"/Mask"); // get old key
@@ -831,6 +831,32 @@ void ptFilterDM::TranslateCurvesToOld(QSettings *APreset, QStringList *AKeys) {
 void ptFilterDM::TranslateSpecialToNew(QSettings *APreset, QStringList *AKeys) {
   AKeys->removeAll("Magic");
 
+  /***** Channel mixer *****
+    Filter had a combobox with fixed "None" and "Manual" entries. It got extended
+    dynamically by the names of all manually loaded mixer files. For some reason
+    this whole construction was saved to PTS in addition to the actual mix factors.
+    Here we need to take care of obsolete keys ChannelMixer, ChannelMixerFileNames.
+  */
+  // "ChannelMixer" holds the combobox index. 0=None, 1=Manual, >1=File
+  // If >1 read the filename list to fill the new-style mixer name entry.
+  int chmixerMode = APreset->value("ChannelMixer").toInt();
+  if (chmixerMode > 1) {
+    const QStringList chmixerFiles = APreset->value("ChannelMixerFileNames").toStringList();
+    const int chmixerIdx = chmixerMode - 2;
+
+    if (chmixerIdx < chmixerFiles.size()) {
+      APreset->setValue(
+          "ChannelMixer/"+Fuid::ChannelMixer_RGB+"/MixerName/MixerName",
+          QFileInfo(chmixerFiles[chmixerIdx]).baseName());
+    }
+  }
+
+  APreset->remove("ChannelMixer");
+  APreset->remove("ChannelMixerFileNames");
+  AKeys->removeAll("ChannelMixer");
+  AKeys->removeAll("ChannelMixerFileNames");
+
+
   /***** Tone adjustment *****
     Filter unnecessarily had two off conditions: mask type "disabled" or amount 0.0.
     Removed the "disabled" mask type, i.e. old mask type values are off by +1.
@@ -842,9 +868,9 @@ void ptFilterDM::TranslateSpecialToNew(QSettings *APreset, QStringList *AKeys) {
       // key not present in settings object
       continue;
     }
-    if (hComboIdx == ptMaskType_None) {
+    if (static_cast<TMaskType>(hComboIdx) == TMaskType::Disabled) {
       // Old filter was disabled via mask type. Ensure amount 0.0 to keep it disabled.
-      hComboIdx = ptMaskType_Shadows;
+      hComboIdx = static_cast<int>(TMaskType::Shadows);
       auto hOldAmountKey = QString("LABToneAdjust%1Amount").arg(hOldMaskKey.at(13));
       APreset->setValue(FNameMap.value(hOldAmountKey), 0.0);
       APreset->remove(hOldAmountKey);
@@ -858,8 +884,12 @@ void ptFilterDM::TranslateSpecialToNew(QSettings *APreset, QStringList *AKeys) {
 
 //==============================================================================
 
-void ptFilterDM::TranslateSpecialToOld(QSettings */*APreset*/) {
-  // nothing to do atm
+void ptFilterDM::TranslateSpecialToOld(QSettings *APreset) {
+  /***** Channel mixer *****/
+  APreset->setValue(
+      "ChannelMixer",
+      static_cast<int>(GFilterDM->GetFilterFromName(Fuid::ChannelMixer_RGB)->isActive()));
+  APreset->setValue("ChannelMixerFileNames", QVariant());
 }
 
 //==============================================================================
@@ -905,6 +935,8 @@ void ptFilterDM::FillNameMap() {
   FCurveMap.insert("CurveFileNamesB",                 "BToneCurve/"+Fuid::BTone_EyeCandy+"/Curve/FileName");
   FCurveMap.insert("CurveFileNamesBase",              "RgbCurve/"+Fuid::RgbCurve_Out+"/Curve/FileName");
   FCurveMap.insert("CurveFileNamesBase2",             "AfterGammaCurve/"+Fuid::AfterGammaCurve_Out+"/Curve/FileName");
+
+  FNameMap.reserve(600);
 
   // ptCurve related stuff that does not need special handling
   FNameMap.insert("CurveRGBType",                    "RgbCurve/"+Fuid::RgbCurve_RGB+"/Curve/Interpolation");
@@ -1001,15 +1033,15 @@ void ptFilterDM::FillNameMap() {
   FNameMap.insert("LevelsWhitePoint",                "LevelsRgb/"+Fuid::Levels_RGB+"/Whitepoint");
   FNameMap.insert("LabLevelsBlackPoint",             "LevelsLab/"+Fuid::Levels_LabCC+"/Blackpoint");
   FNameMap.insert("LabLevelsWhitePoint",             "LevelsLab/"+Fuid::Levels_LabCC+"/Whitepoint");
-//  FNameMap.insert("ChannelMixerR2R",                 "");
-//  FNameMap.insert("ChannelMixerG2R",                 "");
-//  FNameMap.insert("ChannelMixerB2R",                 "");
-//  FNameMap.insert("ChannelMixerR2G",                 "");
-//  FNameMap.insert("ChannelMixerG2G",                 "");
-//  FNameMap.insert("ChannelMixerB2G",                 "");
-//  FNameMap.insert("ChannelMixerR2B",                 "");
-//  FNameMap.insert("ChannelMixerG2B",                 "");
-//  FNameMap.insert("ChannelMixerB2B",                 "");
+  FNameMap.insert("ChannelMixerR2R",                 "ChannelMixer/"+Fuid::ChannelMixer_RGB+"/Red2Red");
+  FNameMap.insert("ChannelMixerG2R",                 "ChannelMixer/"+Fuid::ChannelMixer_RGB+"/Green2Red");
+  FNameMap.insert("ChannelMixerB2R",                 "ChannelMixer/"+Fuid::ChannelMixer_RGB+"/Blue2Red");
+  FNameMap.insert("ChannelMixerR2G",                 "ChannelMixer/"+Fuid::ChannelMixer_RGB+"/Red2Green");
+  FNameMap.insert("ChannelMixerG2G",                 "ChannelMixer/"+Fuid::ChannelMixer_RGB+"/Green2Green");
+  FNameMap.insert("ChannelMixerB2G",                 "ChannelMixer/"+Fuid::ChannelMixer_RGB+"/Blue2Green");
+  FNameMap.insert("ChannelMixerR2B",                 "ChannelMixer/"+Fuid::ChannelMixer_RGB+"/Red2Blue");
+  FNameMap.insert("ChannelMixerG2B",                 "ChannelMixer/"+Fuid::ChannelMixer_RGB+"/Green2Blue");
+  FNameMap.insert("ChannelMixerB2B",                 "ChannelMixer/"+Fuid::ChannelMixer_RGB+"/Blue2Blue");
   FNameMap.insert("Vibrance",                        "ColorIntensity/"+Fuid::ColorIntensity_RGB+"/Vibrance");
   FNameMap.insert("IntensityRed",                    "ColorIntensity/"+Fuid::ColorIntensity_RGB+"/Red");
   FNameMap.insert("IntensityGreen",                  "ColorIntensity/"+Fuid::ColorIntensity_RGB+"/Green");
@@ -1036,26 +1068,26 @@ void ptFilterDM::FillNameMap() {
   FNameMap.insert("LMHLightRecovery2LowerLimit",     "LMHRecoveryRgb/"+Fuid::LMHRecovery_RGB+"/LowerLimit2");
   FNameMap.insert("LMHLightRecovery2UpperLimit",     "LMHRecoveryRgb/"+Fuid::LMHRecovery_RGB+"/UpperLimit2");
   FNameMap.insert("LMHLightRecovery2Softness",       "LMHRecoveryRgb/"+Fuid::LMHRecovery_RGB+"/Softness2");
-//  FNameMap.insert("RGBTextureContrastAmount",        "");
-//  FNameMap.insert("RGBTextureContrastThreshold",     "");
-//  FNameMap.insert("RGBTextureContrastSoftness",      "");
-//  FNameMap.insert("RGBTextureContrastOpacity",       "");
-//  FNameMap.insert("RGBTextureContrastEdgeControl",   "");
-//  FNameMap.insert("RGBTextureContrastMasking",       "");
-//  FNameMap.insert("Microcontrast1Radius",            "");
-//  FNameMap.insert("Microcontrast1Amount",            "");
-//  FNameMap.insert("Microcontrast1Opacity",           "");
-//  FNameMap.insert("Microcontrast1HaloControl",       "");
-//  FNameMap.insert("Microcontrast1LowerLimit",        "");
-//  FNameMap.insert("Microcontrast1UpperLimit",        "");
-//  FNameMap.insert("Microcontrast1Softness",          "");
-//  FNameMap.insert("Microcontrast2Radius",            "");
-//  FNameMap.insert("Microcontrast2Amount",            "");
-//  FNameMap.insert("Microcontrast2Opacity",           "");
-//  FNameMap.insert("Microcontrast2HaloControl",       "");
-//  FNameMap.insert("Microcontrast2LowerLimit",        "");
-//  FNameMap.insert("Microcontrast2UpperLimit",        "");
-//  FNameMap.insert("Microcontrast2Softness",          "");
+  FNameMap.insert("RGBTextureContrastAmount",        "TextureContrastRgb/"+Fuid::TextureContrast_RGB+"/Strength");
+  FNameMap.insert("RGBTextureContrastThreshold",     "TextureContrastRgb/"+Fuid::TextureContrast_RGB+"/Threshold");
+  FNameMap.insert("RGBTextureContrastSoftness",      "TextureContrastRgb/"+Fuid::TextureContrast_RGB+"/Softness");
+  FNameMap.insert("RGBTextureContrastOpacity",       "TextureContrastRgb/"+Fuid::TextureContrast_RGB+"/Opacity");
+  FNameMap.insert("RGBTextureContrastEdgeControl",   "TextureContrastRgb/"+Fuid::TextureContrast_RGB+"/EdgeControl");
+  FNameMap.insert("RGBTextureContrastMasking",       "TextureContrastRgb/"+Fuid::TextureContrast_RGB+"/Masking");
+  FNameMap.insert("Microcontrast1Radius",            "LocalContrastRgb/"+Fuid::LocalContrast1_RGB+"/Radius");
+  FNameMap.insert("Microcontrast1Amount",            "LocalContrastRgb/"+Fuid::LocalContrast1_RGB+"/Strength");
+  FNameMap.insert("Microcontrast1Opacity",           "LocalContrastRgb/"+Fuid::LocalContrast1_RGB+"/Opacity");
+  FNameMap.insert("Microcontrast1HaloControl",       "LocalContrastRgb/"+Fuid::LocalContrast1_RGB+"/HaloControl");
+  FNameMap.insert("Microcontrast1LowerLimit",        "LocalContrastRgb/"+Fuid::LocalContrast1_RGB+"/LowerLimit");
+  FNameMap.insert("Microcontrast1UpperLimit",        "LocalContrastRgb/"+Fuid::LocalContrast1_RGB+"/UpperLimit");
+  FNameMap.insert("Microcontrast1Softness",          "LocalContrastRgb/"+Fuid::LocalContrast1_RGB+"/Softness");
+  FNameMap.insert("Microcontrast2Radius",            "LocalContrastRgb/"+Fuid::LocalContrast2_RGB+"/Radius");
+  FNameMap.insert("Microcontrast2Amount",            "LocalContrastRgb/"+Fuid::LocalContrast2_RGB+"/Strength");
+  FNameMap.insert("Microcontrast2Opacity",           "LocalContrastRgb/"+Fuid::LocalContrast2_RGB+"/Opacity");
+  FNameMap.insert("Microcontrast2HaloControl",       "LocalContrastRgb/"+Fuid::LocalContrast2_RGB+"/HaloControl");
+  FNameMap.insert("Microcontrast2LowerLimit",        "LocalContrastRgb/"+Fuid::LocalContrast2_RGB+"/LowerLimit");
+  FNameMap.insert("Microcontrast2UpperLimit",        "LocalContrastRgb/"+Fuid::LocalContrast2_RGB+"/UpperLimit");
+  FNameMap.insert("Microcontrast2Softness",          "LocalContrastRgb/"+Fuid::LocalContrast2_RGB+"/Softness");
   FNameMap.insert("ShadowsHighlightsFine",           "ShadowsHighlights/"+Fuid::ShadowsHighlights_LabCC+"/FineDetail");
   FNameMap.insert("ShadowsHighlightsCoarse",         "ShadowsHighlights/"+Fuid::ShadowsHighlights_LabCC+"/CoarseDetail");
   FNameMap.insert("ShadowsHighlightsRadius",         "ShadowsHighlights/"+Fuid::ShadowsHighlights_LabCC+"/Scale");
@@ -1070,40 +1102,40 @@ void ptFilterDM::FillNameMap() {
   FNameMap.insert("LabLMHLightRecovery2LowerLimit",  "LMHRecoveryLab/"+Fuid::LMHRecovery_LabCC+"/LowerLimit2");
   FNameMap.insert("LabLMHLightRecovery2UpperLimit",  "LMHRecoveryLab/"+Fuid::LMHRecovery_LabCC+"/UpperLimit2");
   FNameMap.insert("LabLMHLightRecovery2Softness",    "LMHRecoveryLab/"+Fuid::LMHRecovery_LabCC+"/Softness2");
-//  FNameMap.insert("TextureContrast1Amount",          "");
-//  FNameMap.insert("TextureContrast1Threshold",       "");
-//  FNameMap.insert("TextureContrast1Softness",        "");
-//  FNameMap.insert("TextureContrast1Opacity",         "");
-//  FNameMap.insert("TextureContrast1EdgeControl",     "");
-//  FNameMap.insert("TextureContrast1Masking",         "");
-//  FNameMap.insert("TextureContrast2Amount",          "");
-//  FNameMap.insert("TextureContrast2Threshold",       "");
-//  FNameMap.insert("TextureContrast2Softness",        "");
-//  FNameMap.insert("TextureContrast2Opacity",         "");
-//  FNameMap.insert("TextureContrast2EdgeControl",     "");
-//  FNameMap.insert("TextureContrast2Masking",         "");
-//  FNameMap.insert("LabMicrocontrast1Radius",         "");
-//  FNameMap.insert("LabMicrocontrast1Amount",         "");
-//  FNameMap.insert("LabMicrocontrast1Opacity",        "");
-//  FNameMap.insert("LabMicrocontrast1HaloControl",    "");
-//  FNameMap.insert("LabMicrocontrast1LowerLimit",     "");
-//  FNameMap.insert("LabMicrocontrast1UpperLimit",     "");
-//  FNameMap.insert("LabMicrocontrast1Softness",       "");
-//  FNameMap.insert("LabMicrocontrast2Radius",         "");
-//  FNameMap.insert("LabMicrocontrast2Amount",         "");
-//  FNameMap.insert("LabMicrocontrast2Opacity",        "");
-//  FNameMap.insert("LabMicrocontrast2HaloControl",    "");
-//  FNameMap.insert("LabMicrocontrast2LowerLimit",     "");
-//  FNameMap.insert("LabMicrocontrast2UpperLimit",     "");
-//  FNameMap.insert("LabMicrocontrast2Softness",       "");
-//  FNameMap.insert("LC1Radius",                       "");
-//  FNameMap.insert("LC1Feather",                      "");
-//  FNameMap.insert("LC1Opacity",                      "");
-//  FNameMap.insert("LC1m",                            "");
-//  FNameMap.insert("LC2Radius",                       "");
-//  FNameMap.insert("LC2Feather",                      "");
-//  FNameMap.insert("LC2Opacity",                      "");
-//  FNameMap.insert("LC2m",                            "");
+  FNameMap.insert("TextureContrast1Amount",          "TextureContrastLab/"+Fuid::TextureContrast1_LabCC+"/Strength");
+  FNameMap.insert("TextureContrast1Threshold",       "TextureContrastLab/"+Fuid::TextureContrast1_LabCC+"/Threshold");
+  FNameMap.insert("TextureContrast1Softness",        "TextureContrastLab/"+Fuid::TextureContrast1_LabCC+"/Softness");
+  FNameMap.insert("TextureContrast1Opacity",         "TextureContrastLab/"+Fuid::TextureContrast1_LabCC+"/Opacity");
+  FNameMap.insert("TextureContrast1EdgeControl",     "TextureContrastLab/"+Fuid::TextureContrast1_LabCC+"/EdgeControl");
+  FNameMap.insert("TextureContrast1Masking",         "TextureContrastLab/"+Fuid::TextureContrast1_LabCC+"/Masking");
+  FNameMap.insert("TextureContrast2Amount",          "TextureContrastLab/"+Fuid::TextureContrast2_LabCC+"/Strength");
+  FNameMap.insert("TextureContrast2Threshold",       "TextureContrastLab/"+Fuid::TextureContrast2_LabCC+"/Threshold");
+  FNameMap.insert("TextureContrast2Softness",        "TextureContrastLab/"+Fuid::TextureContrast2_LabCC+"/Softness");
+  FNameMap.insert("TextureContrast2Opacity",         "TextureContrastLab/"+Fuid::TextureContrast2_LabCC+"/Opacity");
+  FNameMap.insert("TextureContrast2EdgeControl",     "TextureContrastLab/"+Fuid::TextureContrast2_LabCC+"/EdgeControl");
+  FNameMap.insert("TextureContrast2Masking",         "TextureContrastLab/"+Fuid::TextureContrast2_LabCC+"/Masking");
+  FNameMap.insert("LabMicrocontrast1Radius",         "LocalContrastLab/"+Fuid::LocalContrast1_LabCC+"/Radius");
+  FNameMap.insert("LabMicrocontrast1Amount",         "LocalContrastLab/"+Fuid::LocalContrast1_LabCC+"/Strength");
+  FNameMap.insert("LabMicrocontrast1Opacity",        "LocalContrastLab/"+Fuid::LocalContrast1_LabCC+"/Opacity");
+  FNameMap.insert("LabMicrocontrast1HaloControl",    "LocalContrastLab/"+Fuid::LocalContrast1_LabCC+"/HaloControl");
+  FNameMap.insert("LabMicrocontrast1LowerLimit",     "LocalContrastLab/"+Fuid::LocalContrast1_LabCC+"/LowerLimit");
+  FNameMap.insert("LabMicrocontrast1UpperLimit",     "LocalContrastLab/"+Fuid::LocalContrast1_LabCC+"/UpperLimit");
+  FNameMap.insert("LabMicrocontrast1Softness",       "LocalContrastLab/"+Fuid::LocalContrast1_LabCC+"/Softness");
+  FNameMap.insert("LabMicrocontrast2Radius",         "LocalContrastLab/"+Fuid::LocalContrast2_LabCC+"/Radius");
+  FNameMap.insert("LabMicrocontrast2Amount",         "LocalContrastLab/"+Fuid::LocalContrast2_LabCC+"/Strength");
+  FNameMap.insert("LabMicrocontrast2Opacity",        "LocalContrastLab/"+Fuid::LocalContrast2_LabCC+"/Opacity");
+  FNameMap.insert("LabMicrocontrast2HaloControl",    "LocalContrastLab/"+Fuid::LocalContrast2_LabCC+"/HaloControl");
+  FNameMap.insert("LabMicrocontrast2LowerLimit",     "LocalContrastLab/"+Fuid::LocalContrast2_LabCC+"/LowerLimit");
+  FNameMap.insert("LabMicrocontrast2UpperLimit",     "LocalContrastLab/"+Fuid::LocalContrast2_LabCC+"/UpperLimit");
+  FNameMap.insert("LabMicrocontrast2Softness",       "LocalContrastLab/"+Fuid::LocalContrast2_LabCC+"/Softness");
+  FNameMap.insert("LC1Radius",                       "LocalContrastStretch/"+Fuid::LocalContrastStretch1_LabCC+"/Radius");
+  FNameMap.insert("LC1Feather",                      "LocalContrastStretch/"+Fuid::LocalContrastStretch1_LabCC+"/Feather");
+  FNameMap.insert("LC1Opacity",                      "LocalContrastStretch/"+Fuid::LocalContrastStretch1_LabCC+"/Opacity");
+  FNameMap.insert("LC1m",                            "LocalContrastStretch/"+Fuid::LocalContrastStretch1_LabCC+"/Masking");
+  FNameMap.insert("LC2Radius",                       "LocalContrastStretch/"+Fuid::LocalContrastStretch2_LabCC+"/Radius");
+  FNameMap.insert("LC2Feather",                      "LocalContrastStretch/"+Fuid::LocalContrastStretch2_LabCC+"/Feather");
+  FNameMap.insert("LC2Opacity",                      "LocalContrastStretch/"+Fuid::LocalContrastStretch2_LabCC+"/Opacity");
+  FNameMap.insert("LC2m",                            "LocalContrastStretch/"+Fuid::LocalContrastStretch2_LabCC+"/Masking");
   FNameMap.insert("ColorcontrastOpacity",            "ColorContrast/"+Fuid::ColorContrast_LabEyeCandy+"/Opacity");
   FNameMap.insert("ColorcontrastRadius",             "ColorContrast/"+Fuid::ColorContrast_LabEyeCandy+"/Radius");
   FNameMap.insert("ColorcontrastAmount",             "ColorContrast/"+Fuid::ColorContrast_LabEyeCandy+"/Strength");
@@ -1118,83 +1150,83 @@ void ptFilterDM::FillNameMap() {
   FNameMap.insert("SaturationAmount",                "Saturation/"+Fuid::Saturation_LabCC+"/Strength");
   FNameMap.insert("ColorBoostValueA",                "ColorBoost/"+Fuid::ColorBoost_LabCC+"/StrengthA");
   FNameMap.insert("ColorBoostValueB",                "ColorBoost/"+Fuid::ColorBoost_LabCC+"/StrengthB");
-//  FNameMap.insert("EAWMaster",                       "");
-//  FNameMap.insert("ImpulseDenoiseThresholdL",        "");
-//  FNameMap.insert("ImpulseDenoiseThresholdAB",       "");
-//  FNameMap.insert("EAWLevel1",                       "");
-//  FNameMap.insert("EAWLevel2",                       "");
-//  FNameMap.insert("EAWLevel3",                       "");
-//  FNameMap.insert("EAWLevel4",                       "");
-//  FNameMap.insert("EAWLevel5",                       "");
-//  FNameMap.insert("EAWLevel6",                       "");
-//  FNameMap.insert("GREYCLabOpacity",                 "");
-//  FNameMap.insert("GREYCLabAmplitude",               "");
-//  FNameMap.insert("GREYCLabIterations",              "");
-//  FNameMap.insert("GREYCLabSharpness",               "");
-//  FNameMap.insert("GREYCLabAnisotropy",              "");
-//  FNameMap.insert("GREYCLabAlpha",                   "");
-//  FNameMap.insert("GREYCLabSigma",                   "");
-//  FNameMap.insert("GREYCLabdl",                      "");
-//  FNameMap.insert("GREYCLabda",                      "");
-//  FNameMap.insert("GREYCLabGaussPrecision",          "");
-//  FNameMap.insert("DefringeRadius",                  "");
-//  FNameMap.insert("DefringeThreshold",               "");
-//  FNameMap.insert("DefringeShift",                   "");
-//  FNameMap.insert("PyrDenoiseLAmount",               "");
-//  FNameMap.insert("PyrDenoiseABAmount",              "");
-//  FNameMap.insert("PyrDenoiseGamma",                 "");
-//  FNameMap.insert("PyrDenoiseLevels",                "");
-//  FNameMap.insert("BilateralLOpacity",               "");
-//  FNameMap.insert("BilateralLUseMask",               "");
-//  FNameMap.insert("BilateralLSigmaS",                "");
-//  FNameMap.insert("BilateralLSigmaR",                "");
-//  FNameMap.insert("BilateralASigmaR",                "");
-//  FNameMap.insert("BilateralASigmaS",                "");
-//  FNameMap.insert("BilateralBSigmaR",                "");
-//  FNameMap.insert("BilateralBSigmaS",                "");
+  FNameMap.insert("ImpulseDenoiseThresholdL",        "ImpulseNR/"+Fuid::ImpulseNR_LabSN+"/ThresholdL");
+  FNameMap.insert("ImpulseDenoiseThresholdAB",       "ImpulseNR/"+Fuid::ImpulseNR_LabSN+"/ThresholdAB");
+  FNameMap.insert("EAWMaster",                       "EAWavelets/"+Fuid::EAWavelets_LabSN+"/Master");
+  FNameMap.insert("EAWLevel1",                       "EAWavelets/"+Fuid::EAWavelets_LabSN+"/Level1");
+  FNameMap.insert("EAWLevel2",                       "EAWavelets/"+Fuid::EAWavelets_LabSN+"/Level2");
+  FNameMap.insert("EAWLevel3",                       "EAWavelets/"+Fuid::EAWavelets_LabSN+"/Level3");
+  FNameMap.insert("EAWLevel4",                       "EAWavelets/"+Fuid::EAWavelets_LabSN+"/Level4");
+  FNameMap.insert("EAWLevel5",                       "EAWavelets/"+Fuid::EAWavelets_LabSN+"/Level5");
+  FNameMap.insert("EAWLevel6",                       "EAWavelets/"+Fuid::EAWavelets_LabSN+"/Level6");
+  FNameMap.insert("GREYCLabOpacity",                 "GreyCStoration/"+Fuid::GreyCStoration_LabSN+"/Opacity");
+  FNameMap.insert("GREYCLabAmplitude",               "GreyCStoration/"+Fuid::GreyCStoration_LabSN+"/Amplitude");
+  FNameMap.insert("GREYCLabIterations",              "GreyCStoration/"+Fuid::GreyCStoration_LabSN+"/Iterations");
+  FNameMap.insert("GREYCLabSharpness",               "GreyCStoration/"+Fuid::GreyCStoration_LabSN+"/Sharpness");
+  FNameMap.insert("GREYCLabAnisotropy",              "GreyCStoration/"+Fuid::GreyCStoration_LabSN+"/Anisotropy");
+  FNameMap.insert("GREYCLabAlpha",                   "GreyCStoration/"+Fuid::GreyCStoration_LabSN+"/GradientSmooth");
+  FNameMap.insert("GREYCLabSigma",                   "GreyCStoration/"+Fuid::GreyCStoration_LabSN+"/TensorSmooth");
+  FNameMap.insert("GREYCLabdl",                      "GreyCStoration/"+Fuid::GreyCStoration_LabSN+"/SpacialPrec");
+  FNameMap.insert("GREYCLabda",                      "GreyCStoration/"+Fuid::GreyCStoration_LabSN+"/AngularPrec");
+  FNameMap.insert("GREYCLabGaussPrecision",          "GreyCStoration/"+Fuid::GreyCStoration_LabSN+"/ValuePrec");
+  FNameMap.insert("DefringeRadius",                  "Defringe/"+Fuid::Defringe_LabSN+"/Radius");
+  FNameMap.insert("DefringeThreshold",               "Defringe/"+Fuid::Defringe_LabSN+"/Threshold");
+  FNameMap.insert("DefringeShift",                   "Defringe/"+Fuid::Defringe_LabSN+"/MaskTuning");
+  FNameMap.insert("PyrDenoiseLAmount",               "PyramidDenoise/"+Fuid::PyramidDenoise_LabSN+"/LumaStrength");
+  FNameMap.insert("PyrDenoiseABAmount",              "PyramidDenoise/"+Fuid::PyramidDenoise_LabSN+"/ChromaStrength");
+  FNameMap.insert("PyrDenoiseGamma",                 "PyramidDenoise/"+Fuid::PyramidDenoise_LabSN+"/Gamma");
+  FNameMap.insert("PyrDenoiseLevels",                "PyramidDenoise/"+Fuid::PyramidDenoise_LabSN+"/Levels");
+  FNameMap.insert("BilateralLOpacity",               "LumaDenoise/"+Fuid::LumaDenoise_LabSN+"/Opacity");
+  FNameMap.insert("BilateralLUseMask",               "LumaDenoise/"+Fuid::LumaDenoise_LabSN+"/EdgeThreshold");
+  FNameMap.insert("BilateralLSigmaS",                "LumaDenoise/"+Fuid::LumaDenoise_LabSN+"/LScale");
+  FNameMap.insert("BilateralLSigmaR",                "LumaDenoise/"+Fuid::LumaDenoise_LabSN+"/LStrength");
+  FNameMap.insert("BilateralBSigmaR",                "ColorDenoise/"+Fuid::ColorDenoise_LabSN+"/AStrength");
+  FNameMap.insert("BilateralASigmaS",                "ColorDenoise/"+Fuid::ColorDenoise_LabSN+"/AScale");
+  FNameMap.insert("BilateralASigmaR",                "ColorDenoise/"+Fuid::ColorDenoise_LabSN+"/BStrength");
+  FNameMap.insert("BilateralBSigmaS",                "ColorDenoise/"+Fuid::ColorDenoise_LabSN+"/BScale");
   FNameMap.insert("DenoiseCurveSigmaS",              "LumaDenoiseCurve/"+Fuid::LumaDenoiseCurve_LabSN+"/LScale");
   FNameMap.insert("DenoiseCurveSigmaR",              "LumaDenoiseCurve/"+Fuid::LumaDenoiseCurve_LabSN+"/LStrength");
-//  FNameMap.insert("WaveletDenoiseL",                 "");
-//  FNameMap.insert("WaveletDenoiseLSoftness",         "");
-//  FNameMap.insert("WaveletDenoiseLSharpness",        "");
-//  FNameMap.insert("WaveletDenoiseLAnisotropy",       "");
-//  FNameMap.insert("WaveletDenoiseLAlpha",            "");
-//  FNameMap.insert("WaveletDenoiseLSigma",            "");
-//  FNameMap.insert("WaveletDenoiseA",                 "");
-//  FNameMap.insert("WaveletDenoiseASoftness",         "");
-//  FNameMap.insert("WaveletDenoiseB",                 "");
-//  FNameMap.insert("WaveletDenoiseBSoftness",         "");
-//  FNameMap.insert("GradientSharpenPasses",           "");
-//  FNameMap.insert("GradientSharpenStrength",         "");
+  FNameMap.insert("WaveletDenoiseL",                 "WaveletDenoise/"+Fuid::WaveletDenoise_LabSN+"/LStrength");
+  FNameMap.insert("WaveletDenoiseLSoftness",         "WaveletDenoise/"+Fuid::WaveletDenoise_LabSN+"/LSoftness");
+  FNameMap.insert("WaveletDenoiseLSharpness",        "WaveletDenoise/"+Fuid::WaveletDenoise_LabSN+"/Sharpness");
+  FNameMap.insert("WaveletDenoiseLAnisotropy",       "WaveletDenoise/"+Fuid::WaveletDenoise_LabSN+"/Anisotropy");
+  FNameMap.insert("WaveletDenoiseLAlpha",            "WaveletDenoise/"+Fuid::WaveletDenoise_LabSN+"/GradientSmooth");
+  FNameMap.insert("WaveletDenoiseLSigma",            "WaveletDenoise/"+Fuid::WaveletDenoise_LabSN+"/TensorSmooth");
+  FNameMap.insert("WaveletDenoiseA",                 "WaveletDenoise/"+Fuid::WaveletDenoise_LabSN+"/AStrength");
+  FNameMap.insert("WaveletDenoiseASoftness",         "WaveletDenoise/"+Fuid::WaveletDenoise_LabSN+"/ASoftness");
+  FNameMap.insert("WaveletDenoiseB",                 "WaveletDenoise/"+Fuid::WaveletDenoise_LabSN+"/BStrength");
+  FNameMap.insert("WaveletDenoiseBSoftness",         "WaveletDenoise/"+Fuid::WaveletDenoise_LabSN+"/BSoftness");
   FNameMap.insert("DetailCurveScaling",              "DetailCurve/"+Fuid::DetailCurve_LabSN+"/HaloControl");
   FNameMap.insert("DetailCurveWeight",               "DetailCurve/"+Fuid::DetailCurve_LabSN+"/Weight");
   FNameMap.insert("DetailCurveHotpixel",             "DetailCurve/"+Fuid::DetailCurve_LabSN+"/AntiBadpixel");
-//  FNameMap.insert("MLMicroContrastStrength",         "");
-//  FNameMap.insert("MLMicroContrastScaling",          "");
-//  FNameMap.insert("MLMicroContrastWeight",           "");
-//  FNameMap.insert("LabHotpixel",                     "");
+  FNameMap.insert("GradientSharpenPasses",           "GradientSharpen/"+Fuid::GradientSharpen_LabSN+"/Passes");
+  FNameMap.insert("GradientSharpenStrength",         "GradientSharpen/"+Fuid::GradientSharpen_LabSN+"/Strength");
+  FNameMap.insert("MLMicroContrastStrength",         "GradientSharpen/"+Fuid::GradientSharpen_LabSN+"/Microcontrast");
+  FNameMap.insert("MLMicroContrastScaling",          "GradientSharpen/"+Fuid::GradientSharpen_LabSN+"/HaloControl");
+  FNameMap.insert("MLMicroContrastWeight",           "GradientSharpen/"+Fuid::GradientSharpen_LabSN+"/Weight");
+  FNameMap.insert("LabHotpixel",                     "GradientSharpen/"+Fuid::GradientSharpen_LabSN+"/Cleanup");
   FNameMap.insert("WienerFilterAmount",              "Wiener/"+Fuid::Wiener_LabSN+"/Strength");
   FNameMap.insert("WienerFilterGaussian",            "Wiener/"+Fuid::Wiener_LabSN+"/Gaussian");
   FNameMap.insert("WienerFilterBox",                 "Wiener/"+Fuid::Wiener_LabSN+"/Box");
   FNameMap.insert("WienerFilterLensBlur",            "Wiener/"+Fuid::Wiener_LabSN+"/LensBlur");
-//  FNameMap.insert("InverseDiffusionIterations",      "");
-//  FNameMap.insert("InverseDiffusionAmplitude",       "");
-//  FNameMap.insert("USMRadius",                       "");
-//  FNameMap.insert("USMAmount",                       "");
-//  FNameMap.insert("USMThreshold",                    "");
-//  FNameMap.insert("HighpassRadius",                  "");
-//  FNameMap.insert("HighpassAmount",                  "");
-//  FNameMap.insert("HighpassDenoise",                 "");
-//  FNameMap.insert("Grain1Strength",                  "");
-//  FNameMap.insert("Grain1Radius",                    "");
-//  FNameMap.insert("Grain1Opacity",                   "");
-//  FNameMap.insert("Grain1LowerLimit",                "");
-//  FNameMap.insert("Grain1UpperLimit",                "");
-//  FNameMap.insert("Grain2Strength",                  "");
-//  FNameMap.insert("Grain2Radius",                    "");
-//  FNameMap.insert("Grain2Opacity",                   "");
-//  FNameMap.insert("Grain2LowerLimit",                "");
-//  FNameMap.insert("Grain2UpperLimit",                "");
+  FNameMap.insert("InverseDiffusionIterations",      "InvDiffSharpen/"+Fuid::InvDiffSharpen_LabSN+"/Iterations");
+  FNameMap.insert("InverseDiffusionAmplitude",       "InvDiffSharpen/"+Fuid::InvDiffSharpen_LabSN+"/Amplitude");
+  FNameMap.insert("USMRadius",                       "UnsharpMask/"+Fuid::Usm_LabSN+"/Radius");
+  FNameMap.insert("USMAmount",                       "UnsharpMask/"+Fuid::Usm_LabSN+"/Strength");
+  FNameMap.insert("USMThreshold",                    "UnsharpMask/"+Fuid::Usm_LabSN+"/Threshold");
+  FNameMap.insert("HighpassAmount",                  "HighpassSharpen/"+Fuid::HighpassSharpen_LabSN+"/Strength");
+  FNameMap.insert("HighpassRadius",                  "HighpassSharpen/"+Fuid::HighpassSharpen_LabSN+"/Radius");
+  FNameMap.insert("HighpassDenoise",                 "HighpassSharpen/"+Fuid::HighpassSharpen_LabSN+"/Denoise");
+  FNameMap.insert("Grain1Strength",                  "FilmGrain/"+Fuid::FilmGrain_LabSN+"/Strength1");
+  FNameMap.insert("Grain1Radius",                    "FilmGrain/"+Fuid::FilmGrain_LabSN+"/Radius1");
+  FNameMap.insert("Grain1Opacity",                   "FilmGrain/"+Fuid::FilmGrain_LabSN+"/Opacity1");
+  FNameMap.insert("Grain1LowerLimit",                "FilmGrain/"+Fuid::FilmGrain_LabSN+"/LowerLimit1");
+  FNameMap.insert("Grain1UpperLimit",                "FilmGrain/"+Fuid::FilmGrain_LabSN+"/UpperLimit1");
+  FNameMap.insert("Grain2Strength",                  "FilmGrain/"+Fuid::FilmGrain_LabSN+"/Strength2");
+  FNameMap.insert("Grain2Radius",                    "FilmGrain/"+Fuid::FilmGrain_LabSN+"/Radius2");
+  FNameMap.insert("Grain2Opacity",                   "FilmGrain/"+Fuid::FilmGrain_LabSN+"/Opacity2");
+  FNameMap.insert("Grain2LowerLimit",                "FilmGrain/"+Fuid::FilmGrain_LabSN+"/LowerLimit2");
+  FNameMap.insert("Grain2UpperLimit",                "FilmGrain/"+Fuid::FilmGrain_LabSN+"/UpperLimit2");
   FNameMap.insert("OutlineWeight",                   "Outline/"+Fuid::Outline_LabEyeCandy+"/ColorWeight");
   FNameMap.insert("OutlineBlurRadius",               "Outline/"+Fuid::Outline_LabEyeCandy+"/BlurRadius");
   FNameMap.insert("LABToneAdjust1Saturation",        "ToneAdjust/"+Fuid::ToneAdjust1_LabEyeCandy+"/Saturation");
@@ -1249,9 +1281,9 @@ void ptFilterDM::FillNameMap() {
 //  FNameMap.insert("BWStylerMultR",                   "");
 //  FNameMap.insert("BWStylerMultG",                   "");
 //  FNameMap.insert("BWStylerMultB",                   "");
-//  FNameMap.insert("SimpleToneR",                     "");
-//  FNameMap.insert("SimpleToneG",                     "");
-//  FNameMap.insert("SimpleToneB",                     "");
+  FNameMap.insert("SimpleToneR",                     "SimpleTone/"+Fuid::SimpleTone_EyeCandy+"/ChannelR");
+  FNameMap.insert("SimpleToneG",                     "SimpleTone/"+Fuid::SimpleTone_EyeCandy+"/ChannelG");
+  FNameMap.insert("SimpleToneB",                     "SimpleTone/"+Fuid::SimpleTone_EyeCandy+"/ChannelB");
 //  FNameMap.insert("Tone1Amount",                     "");
 //  FNameMap.insert("Tone1LowerLimit",                 "");
 //  FNameMap.insert("Tone1UpperLimit",                 "");
@@ -1377,29 +1409,28 @@ void ptFilterDM::FillNameMap() {
 //  FNameMap.insert("FlipMode",                        "");
 //  FNameMap.insert("AspectRatioW",                    "");
 //  FNameMap.insert("AspectRatioH",                    "");
-//  FNameMap.insert("ChannelMixer",                    "");
 //  FNameMap.insert("ExposureClipMode",                "");
 //  FNameMap.insert("AutoExposure",                    "");
   FNameMap.insert("LABTransform",                    "LabTransform/"+Fuid::LabTransform_LabCC+"/Mode");
   FNameMap.insert("LMHLightRecovery1MaskType",       "LMHRecoveryRgb/"+Fuid::LMHRecovery_RGB+"/MaskType1");
   FNameMap.insert("LMHLightRecovery2MaskType",       "LMHRecoveryRgb/"+Fuid::LMHRecovery_RGB+"/MaskType2");
-//  FNameMap.insert("Microcontrast1MaskType",          "");
-//  FNameMap.insert("Microcontrast2MaskType",          "");
+  FNameMap.insert("Microcontrast1MaskType",          "LocalContrastRgb/"+Fuid::LocalContrast1_RGB+"/MaskType");
+  FNameMap.insert("Microcontrast2MaskType",          "LocalContrastRgb/"+Fuid::LocalContrast2_RGB+"/MaskType");
   FNameMap.insert("LabLMHLightRecovery1MaskType",    "LMHRecoveryLab/"+Fuid::LMHRecovery_LabCC+"/MaskType1");
   FNameMap.insert("LabLMHLightRecovery2MaskType",    "LMHRecoveryLab/"+Fuid::LMHRecovery_LabCC+"/MaskType2");
-//  FNameMap.insert("LabMicrocontrast1MaskType",       "");
-//  FNameMap.insert("LabMicrocontrast2MaskType",       "");
-//  FNameMap.insert("GREYCLab",                        "");
-//  FNameMap.insert("GREYCLabMaskType",                "");
-//  FNameMap.insert("GREYCLabInterpolation",           "");
-//  FNameMap.insert("USM",                             "");
-//  FNameMap.insert("Highpass",                        "");
-//  FNameMap.insert("Grain1MaskType",                  "");
-//  FNameMap.insert("Grain1Mode",                      "");
-//  FNameMap.insert("Grain2MaskType",                  "");
-//  FNameMap.insert("Grain2Mode",                      "");
+  FNameMap.insert("LabMicrocontrast1MaskType",       "LocalContrastLab/"+Fuid::LocalContrast1_LabCC+"/MaskType");
+  FNameMap.insert("LabMicrocontrast2MaskType",       "LocalContrastLab/"+Fuid::LocalContrast2_LabCC+"/MaskType");
+  FNameMap.insert("GREYCLab",                        "GreyCStoration/"+Fuid::GreyCStoration_LabSN+"/Mode");
+  FNameMap.insert("GREYCLabMaskType",                "GreyCStoration/"+Fuid::GreyCStoration_LabSN+"/MaskType");
+  FNameMap.insert("GREYCLabInterpolation",           "GreyCStoration/"+Fuid::GreyCStoration_LabSN+"/Interpolation");
+  FNameMap.insert("USM",                             "UnsharpMask/"+Fuid::Usm_LabSN+"/Mode");
+  FNameMap.insert("Highpass",                        "HighpassSharpen/"+Fuid::HighpassSharpen_LabSN+"/Mode");
+  FNameMap.insert("Grain1MaskType",                  "FilmGrain/"+Fuid::FilmGrain_LabSN+"/MaskType1");
+  FNameMap.insert("Grain1Mode",                      "FilmGrain/"+Fuid::FilmGrain_LabSN+"/GrainType1");
+  FNameMap.insert("Grain2MaskType",                  "FilmGrain/"+Fuid::FilmGrain_LabSN+"/MaskType2");
+  FNameMap.insert("Grain2Mode",                      "FilmGrain/"+Fuid::FilmGrain_LabSN+"/GrainType2");
 //  FNameMap.insert("LabVignetteMode",                 "");
-//  FNameMap.insert("ViewLAB",                         "");
+  FNameMap.insert("ViewLAB",                         "LabChannelView/"+Fuid::ViewLab_LabSN+"/ChannelSelection");
   FNameMap.insert("OutlineMode",                     "Outline/"+Fuid::Outline_LabEyeCandy+"/OverlayMode");
   FNameMap.insert("OutlineGradientMode",             "Outline/"+Fuid::Outline_LabEyeCandy+"/GradientMode");
   FNameMap.insert("LABToneAdjust1MaskType",          "ToneAdjust/"+Fuid::ToneAdjust1_LabEyeCandy+"/MaskMode");
@@ -1457,16 +1488,16 @@ void ptFilterDM::FillNameMap() {
 //  FNameMap.insert("AutomaticPipeSize",               "");
 //  FNameMap.insert("GeometryBlock",                   "");
   FNameMap.insert("Reinhard05",                      "ReinhardBrighten/"+Fuid::ReinhardBrighten_RGB+"/Enabled");
-//  FNameMap.insert("GREYCLabFast",                    "");
-//  FNameMap.insert("DefringeColor1",                  "");
-//  FNameMap.insert("DefringeColor2",                  "");
-//  FNameMap.insert("DefringeColor3",                  "");
-//  FNameMap.insert("DefringeColor4",                  "");
-//  FNameMap.insert("DefringeColor5",                  "");
-//  FNameMap.insert("DefringeColor6",                  "");
+  FNameMap.insert("GREYCLabFast",                    "GreyCStoration/"+Fuid::GreyCStoration_LabSN+"/FastGauss");
+  FNameMap.insert("DefringeColor1",                  "Defringe/"+Fuid::Defringe_LabSN+"/ColorRed");
+  FNameMap.insert("DefringeColor2",                  "Defringe/"+Fuid::Defringe_LabSN+"/ColorYellow");
+  FNameMap.insert("DefringeColor3",                  "Defringe/"+Fuid::Defringe_LabSN+"/ColorGreen");
+  FNameMap.insert("DefringeColor4",                  "Defringe/"+Fuid::Defringe_LabSN+"/ColorCyan");
+  FNameMap.insert("DefringeColor5",                  "Defringe/"+Fuid::Defringe_LabSN+"/ColorBlue");
+  FNameMap.insert("DefringeColor6",                  "Defringe/"+Fuid::Defringe_LabSN+"/ColorPurple");
   FNameMap.insert("WienerFilter",                    "Wiener/"+Fuid::Wiener_LabSN+"/Enabled");
   FNameMap.insert("WienerFilterUseEdgeMask",         "Wiener/"+Fuid::Wiener_LabSN+"/OnlyEdges");
-//  FNameMap.insert("InverseDiffusionUseEdgeMask",     "");
+  FNameMap.insert("InverseDiffusionUseEdgeMask",     "InvDiffSharpen/"+Fuid::InvDiffSharpen_LabSN+"/OnlyEdges");
   FNameMap.insert("OutlineSwitchLayer",              "Outline/"+Fuid::Outline_LabEyeCandy+"/ImageOnTop");
 //  FNameMap.insert("WebResizeBeforeGamma",            "");
 //  FNameMap.insert("OutputGammaCompensation",         "");
@@ -1475,9 +1506,11 @@ void ptFilterDM::FillNameMap() {
 //  FNameMap.insert("IncludeExif",                     "");
 //  FNameMap.insert("EraseExifThumbnail",              "");
 //  FNameMap.insert("SaveConfirmation",                "");
+//  FNameMap.insert("AutosaveSettings",                "");
 //  FNameMap.insert("ResetSettingsConfirmation",       "");
 //  FNameMap.insert("FullPipeConfirmation",            "");
 //  FNameMap.insert("EscToExit",                       "");
+//  FNameMap.insert("LoadTags",                       "");
 
     // former non-gui elements
 //  FNameMap.insert("PipeIsRunning",                   "");
@@ -1496,7 +1529,6 @@ void ptFilterDM::FillNameMap() {
 //  FNameMap.insert("UIDirectory",                     "");
 //  FNameMap.insert("TranslationsDirectory",           "");
 //  FNameMap.insert("CurvesDirectory",                 "");
-//  FNameMap.insert("ChannelMixersDirectory",          "");
 //  FNameMap.insert("PresetDirectory",                 "");
 //  FNameMap.insert("CameraColorProfilesDirectory",    "");
 //  FNameMap.insert("PreviewColorProfilesDirectory",   "");
@@ -1529,7 +1561,6 @@ void ptFilterDM::FillNameMap() {
 //  FNameMap.insert("RotateW",                         "");
 //  FNameMap.insert("RotateH",                         "");
 //  FNameMap.insert("ExposureNormalization",           "");
-//  FNameMap.insert("ChannelMixerFileNames",           "");
 //  FNameMap.insert("OutputFileName",                  "");
 //  FNameMap.insert("JobMode",                         "");
 //  FNameMap.insert("InputFileNameList",               "");

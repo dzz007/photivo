@@ -21,6 +21,25 @@
 **
 *******************************************************************************/
 
+#include "ptDcRaw.h"
+
+#include "ptCalloc.h"
+#include "ptConstants.h"
+#include "ptError.h"
+#include "ptInfo.h"
+#include "ptImage.h"
+#include "ptMessageBox.h"
+#include "ptResizeFilters.h"
+#include "ptCurve.h"
+#include "ptKernel.h"
+#include "ptConstants.h"
+#include "ptRefocusMatrix.h"
+#include "ptCimg.h"
+#include "fastbilateral/fast_lbf.h"
+
+#include <QString>
+#include <QTime>
+
 #include <algorithm>
 #include <parallel/algorithm>
 #include <stack>
@@ -30,8 +49,6 @@
 #include <cstdlib>
 #include <cstdio>
 
-#include <QString>
-#include <QTime>
 #include <functional>
 
 #ifdef _OPENMP
@@ -46,30 +63,16 @@
 #ifdef __cplusplus
   // This hack copes with jpeglib.h that does or doesnt provide the
   // extern internally.
-  #define ptraw_saved_cplusplus __cplusplus
+  #pragma push_macro("__cplusplus")
   #undef __cplusplus
   extern "C" {
   #include <jpeglib.h>
   }
-  #define __cplusplus ptraw_saved_cplusplus
+  #pragma pop_macro("__cplusplus")
 #else
   #include <jpeglib.h>
 #endif
 #endif
-
-#include "ptCalloc.h"
-#include "ptConstants.h"
-#include "ptError.h"
-#include "ptInfo.h"
-#include "ptImage.h"
-#include "ptMessageBox.h"
-#include "ptResizeFilters.h"
-#include "ptCurve.h"
-#include "ptKernel.h"
-#include "ptConstants.h"
-#include "ptRefocusMatrix.h"
-#include "ptCimg.h"
-#include "ptFastBilateral.h"
 
 extern cmsCIExyY       D65;
 extern cmsCIExyY       D50;
@@ -1148,7 +1151,7 @@ ptImage* ptImage::Set(const ptDcRaw*  DcRawObject,
   m_Height = DcRawObject->m_Height;
 
   // Temp image for later flip
-  std::vector<std::array<uint16_t, 3> > PreFlip;
+  TImage16Data PreFlip;
   PreFlip.resize((size_t)m_Width*m_Height);
 
   if (!ProfileName) {
@@ -1390,7 +1393,7 @@ ptImage* ptImage::Set(const ptDcRaw*  DcRawObject,
   m_ColorSpace = TargetSpace;
 
   // Temp image for later flip
-  std::vector<std::array<uint16_t, 3> > PreFlip;
+  TImage16Data PreFlip;
   PreFlip.resize((size_t)m_Width*m_Height);
 
   // Convert the image.
@@ -1634,11 +1637,11 @@ ptImage* ptImage::Expose(const double Exposure,
         m_Image[i][Color] = Pixel[Color];
       }
     } else {
-      if (ExposureClipMode == NoExposureClip) {
+      if (ExposureClipMode == ptExposureClipMode_None) {
         for (short Color=0; Color<NrChannels; Color++) {
           m_Image[i][Color] = CLIP((int32_t)Pixel[Color]);
         }
-      } else if (ExposureClipMode == RatioExposureClip) {
+      } else if (ExposureClipMode == ptExposureClipMode_Ratio) {
         for (short Color=0; Color<NrChannels; Color++) {
           m_Image[i][Color] = CLIP((int32_t)(Pixel[Color]*(float)0xFFFF/Highest));
         }
@@ -1707,7 +1710,7 @@ ptImage* ptImage::ApplyCurve(const ptCurve *Curve,
   if (ChannelMask & 1) Channel.push_back(0);
   if (ChannelMask & 2) Channel.push_back(1);
   if (ChannelMask & 4) Channel.push_back(2);
-  __gnu_parallel::for_each (m_Data.begin(), m_Data.end(), [&](std::array<uint16_t, 3> &Pixel) {
+  __gnu_parallel::for_each (m_Data.begin(), m_Data.end(), [&](TPixel16 &Pixel) {
     std::for_each (Channel.begin(), Channel.end(), [&](const short &Value){
       Pixel[Value] = Curve->Curve[ Pixel[Value] ];
     });
@@ -1731,7 +1734,7 @@ ptImage* ptImage::ApplyLByHueCurve(const ptCurve *Curve) {
   // neutral value for a* and b* channel
   const float WPH = 0x8080;
 
-  __gnu_parallel::for_each (m_Data.begin(), m_Data.end(), [&](std::array<uint16_t, 3> &Pixel) {
+  __gnu_parallel::for_each (m_Data.begin(), m_Data.end(), [&](TPixel16 &Pixel) {
     // Factor by hue
     float ValueA = (float)Pixel[1]-WPH;
     float ValueB = (float)Pixel[2]-WPH;
@@ -1912,7 +1915,7 @@ ptImage* ptImage::ApplySaturationCurve(const ptCurve *Curve,
 ptImage* ptImage::ApplyTextureCurve(const ptCurve *Curve, const short Scaling) {
   assert (m_ColorSpace == ptSpace_Lab);
 
-  const short ChannelMask = 1;
+  const TChannelMask ChannelMask = ChMask_L;
 
   const float Threshold   = 10.0/pow(2,Scaling);
   const float Softness    = 0.01;
@@ -1926,7 +1929,7 @@ ptImage* ptImage::ApplyTextureCurve(const ptCurve *Curve, const short Scaling) {
   ptImage *ContrastLayer = new ptImage;
   ContrastLayer->Set(this);
 
-  ptFastBilateralChannel(ContrastLayer, Threshold, Softness, 2, ChannelMask);
+  ContrastLayer->fastBilateralChannel(Threshold, Softness, 2, ChannelMask);
 
   if (Curve->mask() == ptCurve::ChromaMask) {
 #pragma omp parallel for schedule(static) private(hValueA, hValueB, m)
@@ -2581,12 +2584,14 @@ ptImage* ptImage::Reinhard05(const float Brightness,
       Y[i] = ToFloatTable[RGB_2_L(m_Image[i])];
     }
 
-  float max_lum = 0.0;
-  float min_lum = 0.0;
-  float world_lum = 0.0;
-  float Cav[] = { 0.0f, 0.0f, 0.0f};
-  float Cav1,Cav2,Cav3;
-  float Lav = 0.0f;
+  float max_lum   = 0.0f;
+  float min_lum   = 0.0f;
+  float world_lum = 0.0f;
+  float Cav[]     = {0.0f, 0.0f, 0.0f};
+  float Cav1      = 0.0f;
+  float Cav2      = 0.0f;
+  float Cav3      = 0.0f;
+  float Lav       = 0.0f;
 
 #pragma omp parallel
 {
@@ -2689,8 +2694,8 @@ ptImage* ptImage::Reinhard05(const float Brightness,
 
 //------------------------------------------------------------------------------
 
-ptImage *ptImage::ColorIntensity(int AVibrance, int ARed, int AGreen, int ABlue) {
-  float hMixer[3][3];
+ptImage* ptImage::ColorIntensity(int AVibrance, int ARed, int AGreen, int ABlue) {
+  TChannelMatrix hMixer;
 
   if (AVibrance != 0) {
     hMixer[0][0] = 1.0 + (AVibrance/150.0);
@@ -2703,7 +2708,7 @@ ptImage *ptImage::ColorIntensity(int AVibrance, int ARed, int AGreen, int ABlue)
     hMixer[2][1] = hMixer[0][1];
     hMixer[2][2] = hMixer[0][0];
 
-    this->MixChannels(hMixer);
+    this->mixChannels(hMixer);
   }
 
   if ((ARed != 0) || (AGreen != 0) || (ABlue != 0)) {
@@ -2717,7 +2722,7 @@ ptImage *ptImage::ColorIntensity(int AVibrance, int ARed, int AGreen, int ABlue)
     hMixer[2][1] = hMixer[2][0];
     hMixer[2][2] = 1.0+(ABlue/150.0);
 
-    this->MixChannels(hMixer);
+    this->mixChannels(hMixer);
   }
 
   return this;
@@ -2980,11 +2985,11 @@ ptImage* ptImage::ColorEnhance(const float AShadows,
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-ptImage* ptImage::LMHRecovery(const short  MaskType,
-                                   const float  Amount,
-                                   const float  LowerLimit,
-                                   const float  UpperLimit,
-                                   const float  Softness)
+ptImage* ptImage::LMHRecovery(const TMaskType MaskType,
+                              const float  Amount,
+                              const float  LowerLimit,
+                              const float  UpperLimit,
+                              const float  Softness)
 {
   const float ExposureFactor = pow(2,Amount);
   const float InverseExposureFactor = 1/ExposureFactor;
@@ -3028,7 +3033,7 @@ ptImage* ptImage::LMHRecovery(const short  MaskType,
       // dependent. TODO
       RGB_2_L(m_Image[i]))*ptInvWP;
     switch(MaskType) {
-      case ptMaskType_Shadows:
+      case TMaskType::Shadows:
         // Mask is an inverted luminance mask, normalized 0..1 and
         // shifted over the limits such that it clips beyond the limits.
         // The Mask varies from 1 at LowerLimit to 0 at UpperLimit
@@ -3037,7 +3042,7 @@ ptImage* ptImage::LMHRecovery(const short  MaskType,
         // image.
         Mask = 1.0f-LIM((Mask-LowerLimit)*ReciprocalRange,0.0f,1.0f);
         break;
-      case ptMaskType_Midtones:
+      case TMaskType::Midtones:
         // Not fully understood but generates a useful and nice
         // midtone luminance mask.
         Mask = 1.0f -
@@ -3045,7 +3050,7 @@ ptImage* ptImage::LMHRecovery(const short  MaskType,
                LIM((Mask-UpperLimit)*ReciprocalUpperMargin,0.0f,1.0f);
         Mask = LIM(Mask,0.0f,1.0f);
         break;
-      case ptMaskType_Highlights:
+      case TMaskType::Highlights:
         // Mask is a luminance mask, normalized 0..1 and
         // shifted over the limits such that it clips beyond the limits.
         // The Mask varies from 0 at LowerLimit to 1 at UpperLimit
@@ -3053,12 +3058,12 @@ ptImage* ptImage::LMHRecovery(const short  MaskType,
         // more of the darkened image.
         Mask = LIM((Mask-LowerLimit)*ReciprocalRange,0.0f,1.0f);
         break;
-      case ptMaskType_All:
+      case TMaskType::All:
         Mask = 1.0f;
         break;
 
       default:
-        GInfo->Raise("Unknown mask type: " + MaskType, AT);
+        GInfo->Raise(QString("Unknown mask type: ") + QString::number(static_cast<int>(MaskType)), AT);
     }
 
     // Softening the mask
@@ -3094,7 +3099,7 @@ ptImage* ptImage::Highpass(const double Radius,
 
   const double WPH = 0x7fff; // WPH=WP/2
   const short NrChannels = (m_ColorSpace == ptSpace_Lab)?1:3;
-  const short ChannelMask = (m_ColorSpace == ptSpace_Lab)?1:7;
+  const TChannelMask ChannelMask = (m_ColorSpace == ptSpace_Lab) ? ChMask_L : ChMask_RGB;
 
   ptImage *HighpassLayer = new ptImage;
   HighpassLayer->Set(this);
@@ -3113,13 +3118,14 @@ ptImage* ptImage::Highpass(const double Radius,
   HighpassLayer->ApplyCurve(AmpCurve,ChannelMask);
   delete AmpCurve;
 
-  if (Denoise)
-    ptFastBilateralChannel(HighpassLayer, 4.0, Denoise/3.0, 1, 1);
+  if (Denoise) {
+    HighpassLayer->fastBilateralChannel(4.0, Denoise/3.0, 1, ChMask_L);
+  }
 
   float (*Mask);
   Mask = (m_ColorSpace == ptSpace_Lab)?
-  GetMask(ptMaskType_Midtones, LowerLimit, UpperLimit, Softness,1,0,0):
-  GetMask(ptMaskType_Midtones, LowerLimit, UpperLimit, Softness);
+  GetMask(TMaskType::Midtones, LowerLimit, UpperLimit, Softness,1,0,0):
+  GetMask(TMaskType::Midtones, LowerLimit, UpperLimit, Softness);
 
   Overlay(HighpassLayer->m_Image,0.5,Mask);
   delete HighpassLayer;
@@ -3463,7 +3469,7 @@ ptImage* ptImage::ShadowsHighlights(const ptCurve *Curve,
     CoarseLayer[i] = m_Image[i][0];
   }
 
-  ptFastBilateralChannel(this,Radius,0.14,2,1);
+  this->fastBilateralChannel(Radius, 0.14, 2, ChMask_L);
 
 #pragma omp parallel for default(shared)
   for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
@@ -3471,7 +3477,7 @@ ptImage* ptImage::ShadowsHighlights(const ptCurve *Curve,
     CoarseLayer[i] = m_Image[i][0];
   }
 
-  ptFastBilateralChannel(this,4*Radius,0.14,2,1);
+  this->fastBilateralChannel(4*Radius, 0.14, 2, ChMask_L);
 
 #pragma omp parallel for default(shared)
   for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
@@ -3528,7 +3534,7 @@ ptImage* ptImage::Microcontrast(const double Radius,
         const double Amount,
         const double Opacity,
         const double HaloControl,
-        const short MaskType,
+        const TMaskType MaskType,
         const double LowerLimit,
         const double UpperLimit,
         const double Softness) {
@@ -3637,10 +3643,10 @@ ptImage* ptImage::BilateralDenoise(const double Threshold,
   ptImage *DenoiseLayer = new ptImage;
   DenoiseLayer->Set(this);
   const short NrChannels = (m_ColorSpace == ptSpace_Lab)?1:3;
-  const short ChannelMask = (m_ColorSpace == ptSpace_Lab)?1:7;
+  const TChannelMask ChannelMask = (m_ColorSpace == ptSpace_Lab) ? ChMask_L : ChMask_RGB;
   const double WPH = 0x7fff;
 
-  ptFastBilateralChannel(DenoiseLayer, Threshold, Softness, 2, ChannelMask);
+  DenoiseLayer->fastBilateralChannel(Threshold, Softness, 2, ChannelMask);
 
   if (UseMask){
 
@@ -3688,7 +3694,7 @@ ptImage* ptImage::BilateralDenoise(const double Threshold,
     delete Curve;
 
     float (*Mask);
-    Mask = MaskLayer->GetMask(ptMaskType_Shadows, 0.0, 1.0, 0.0, 1,0,0);
+    Mask = MaskLayer->GetMask(TMaskType::Shadows, 0.0, 1.0, 0.0, 1,0,0);
     Overlay(DenoiseLayer->m_Image,Opacity,Mask,ptOverlayMode_Normal);
     FREE(Mask);
     delete MaskLayer;
@@ -3715,10 +3721,10 @@ ptImage* ptImage::ApplyDenoiseCurve(const double Threshold,
   ptImage *DenoiseLayer = new ptImage;
   DenoiseLayer->Set(this);
   const short NrChannels = (m_ColorSpace == ptSpace_Lab)?1:3;
-  const short ChannelMask = (m_ColorSpace == ptSpace_Lab)?1:7;
+  const TChannelMask ChannelMask = (m_ColorSpace == ptSpace_Lab) ? ChMask_L : ChMask_RGB;
   float WPH = 0x7fff;
 
-  ptFastBilateralChannel(DenoiseLayer, Threshold, Softness, 2, ChannelMask);
+  DenoiseLayer->fastBilateralChannel(Threshold, Softness, 2, ChannelMask);
 
   double UseMask = 50.0;
 
@@ -3764,7 +3770,7 @@ ptImage* ptImage::ApplyDenoiseCurve(const double Threshold,
   delete Curve;
 
   float (*Mask);
-  Mask = MaskLayer->GetMask(ptMaskType_Shadows, 0.0, 1.0, 0.0, 1,0,0);
+  Mask = MaskLayer->GetMask(TMaskType::Shadows, 0.0, 1.0, 0.0, 1,0,0);
   delete MaskLayer;
   Overlay(DenoiseLayer->m_Image,1.0f,Mask,ptOverlayMode_Normal);
   FREE(Mask);
@@ -3832,12 +3838,12 @@ ptImage* ptImage::TextureContrast(const double Threshold,
 
   const int32_t WPH = 0x7fff; // WPH=WP/2
   const short NrChannels = (m_ColorSpace == ptSpace_Lab)?1:3;
-  const short ChannelMask = (m_ColorSpace == ptSpace_Lab)?1:7;
+  const TChannelMask ChannelMask = (m_ColorSpace == ptSpace_Lab) ? ChMask_L : ChMask_RGB;
 
   ptImage *ContrastLayer = new ptImage;
   ContrastLayer->Set(this);
 
-  ptFastBilateralChannel(ContrastLayer, Threshold, Softness, 2, ChannelMask);
+  ContrastLayer->fastBilateralChannel(Threshold, Softness, 2, ChannelMask);
 
 #pragma omp parallel for default(shared) schedule(static)
   for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
@@ -3878,7 +3884,7 @@ ptImage* ptImage::TextureContrast(const double Threshold,
     delete Curve;
 
     float (*Mask);
-    Mask = MaskLayer->GetMask(ptMaskType_Highlights, 0.0, 1.0, 0.0, 1,0,0);
+    Mask = MaskLayer->GetMask(TMaskType::Highlights, 0.0, 1.0, 0.0, 1,0,0);
     Overlay(ContrastLayer->m_Image,Opacity,Mask);
     FREE(Mask);
     delete MaskLayer;
@@ -4072,10 +4078,10 @@ ptImage* ptImage::Localcontrast(const int Radius1, const double Opacity, const d
 ////////////////////////////////////////////////////////////////////////////////
 
 ptImage* ptImage::Grain(const double Sigma, // 0-1
-                        const short NoiseType, // 0-5, Gaussian, uniform, salt&pepper
+                        const TGrainType NoiseType, // 0-5, Gaussian, uniform, salt&pepper
                         const double Radius, // 0-20
                         const double Opacity,
-                        const short MaskType,
+                        const TMaskType MaskType,
                         const double LowerLimit,
                         const double UpperLimit,
                         const short ScaleFactor) { // 0, 1 or 2 depending on pipe size
@@ -4085,7 +4091,7 @@ ptImage* ptImage::Grain(const double Sigma, // 0-1
   ptImage *NoiseLayer = new ptImage;
   NoiseLayer->Set(this);  // allocation of free layer faster? TODO!
   float (*Mask);
-  short Noise = LIM((int)NoiseType,0,5);
+  short Noise = LIM(static_cast<int>(NoiseType),0,5);
   Noise = (Noise > 2) ? (Noise - 3) : Noise;
   short ScaledRadius = Radius/powf(2.0,(float)ScaleFactor);
 
@@ -4104,7 +4110,7 @@ ptImage* ptImage::Grain(const double Sigma, // 0-1
   }
 
   Mask = GetMask(MaskType, LowerLimit, UpperLimit, 0.0);
-  if (NoiseType < 3) {
+  if (Noise < 3) {
     Overlay(NoiseLayer->m_Image,Opacity,Mask,ptOverlayMode_SoftLight);
   } else {
     Overlay(NoiseLayer->m_Image,Opacity,Mask,ptOverlayMode_GrainMerge);
@@ -4128,7 +4134,7 @@ ptImage* ptImage::BWStyler(const short FilmType,
          const double MultB,
          const double Opacity) {
 
-  float Mixer[3][3];
+  TChannelMatrix Mixer;
   double R = 0,G = 0,B = 0;
   double FR = 0, FG = 0, FB = 0;
   switch (FilmType) {
@@ -4266,9 +4272,9 @@ ptImage* ptImage::BWStyler(const short FilmType,
   Mixer[2][2] = B;
 
   if (Opacity == 1)
-    MixChannels(Mixer);
+    mixChannels(Mixer);
   else {
-    BWLayer->MixChannels(Mixer);
+    BWLayer->mixChannels(Mixer);
     Overlay(BWLayer->m_Image,Opacity,NULL,ptOverlayMode_Normal);
     delete BWLayer;
   }
@@ -4395,7 +4401,7 @@ ptImage* ptImage::LABTransform(const short Mode) {
 ptImage* ptImage::LABTone(const double Amount,
                           const double Hue,
                           const double Saturation, /* 0 */
-                          const short MaskType, /* ptMaskType_All */
+                          const TMaskType MaskType, /* TMaskType::All */
                           const short ManualMask, /* 0 */
                           const double LowerLevel, /* 0 */
                           const double UpperLevel, /* 1 */
@@ -4418,7 +4424,7 @@ ptImage* ptImage::LABTone(const double Amount,
                                      TAnchor(0.5-0.1*b, 0.5+0.1*b),
                                      TAnchor(1.0,       1.0)} );
 
-  if (MaskType == ptMaskType_All) {
+  if (MaskType == TMaskType::All) {
     if (Saturation != 1) ColorBoost(Saturation, Saturation);
     if (Amount) {
       ApplyCurve(Temp1Curve,2);
@@ -4434,21 +4440,21 @@ ptImage* ptImage::LABTone(const double Amount,
     }
     float (*Mask);
 
-    if (MaskType == ptMaskType_Shadows)
+    if (MaskType == TMaskType::Shadows)
       if (ManualMask)
-        Mask = GetMask(ptMaskType_Shadows, LowerLevel, UpperLevel, Softness,1,0,0);
+        Mask = GetMask(TMaskType::Shadows, LowerLevel, UpperLevel, Softness,1,0,0);
       else
-        Mask = GetMask(ptMaskType_Shadows, 0,0.5,0,1,0,0);
-    else if (MaskType == ptMaskType_Midtones)
+        Mask = GetMask(TMaskType::Shadows, 0,0.5,0,1,0,0);
+    else if (MaskType == TMaskType::Midtones)
       if (ManualMask)
-        Mask = GetMask(ptMaskType_Midtones, LowerLevel, UpperLevel, Softness,1,0,0);
+        Mask = GetMask(TMaskType::Midtones, LowerLevel, UpperLevel, Softness,1,0,0);
       else
-        Mask = GetMask(ptMaskType_Midtones, 0.5,0.5,0,1,0,0);
+        Mask = GetMask(TMaskType::Midtones, 0.5,0.5,0,1,0,0);
     else
       if (ManualMask)
-        Mask = GetMask(ptMaskType_Highlights, LowerLevel, UpperLevel, Softness,1,0,0);
+        Mask = GetMask(TMaskType::Highlights, LowerLevel, UpperLevel, Softness,1,0,0);
       else
-        Mask = GetMask(ptMaskType_Highlights, 0.5,1,0,1,0,0);
+        Mask = GetMask(TMaskType::Highlights, 0.5,1,0,1,0,0);
 
 #pragma omp parallel for
     for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++)
@@ -4479,7 +4485,7 @@ ptImage* ptImage::Tone(const uint16_t R,
                        const uint16_t G,
                        const uint16_t B,
                        const double   Amount,
-                       const short    MaskType,
+                       const TMaskType MaskType,
                        const double   LowerLimit,
                        const double   UpperLimit,
                        const double   Softness) {
@@ -4490,10 +4496,10 @@ ptImage* ptImage::Tone(const uint16_t R,
   ptMemoryError(ToneImage,__FILE__,__LINE__);
 
   float (*Mask);
-  if (MaskType <= ptMaskType_All)
+  if (MaskType <= TMaskType::All)
     Mask=GetMask(MaskType, LowerLimit, UpperLimit, Softness);
   else
-    Mask=GetMask(ptMaskType_Midtones, LowerLimit, UpperLimit, Softness);
+    Mask=GetMask(TMaskType::Midtones, LowerLimit, UpperLimit, Softness);
 #pragma omp parallel for
   for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
     ToneImage[i][0] = R;
@@ -4501,15 +4507,15 @@ ptImage* ptImage::Tone(const uint16_t R,
     ToneImage[i][2] = B;
   }
 
-  if (MaskType <= ptMaskType_All)
+  if (MaskType <= TMaskType::All)
     Overlay(ToneImage, Amount, Mask);
-  else if (MaskType == ptMaskType_Screen)
+  else if (MaskType == TMaskType::Screen)
     Overlay(ToneImage, Amount, Mask, ptOverlayMode_Screen);
-  else if (MaskType == ptMaskType_Multiply)
+  else if (MaskType == TMaskType::Multiply)
     Overlay(ToneImage, Amount, Mask, ptOverlayMode_Multiply);
-  else if (MaskType == ptOverlayMode_GammaDark)
+  else if (MaskType == TMaskType::GammaDark)
     Overlay(ToneImage, Amount, Mask, ptOverlayMode_GammaDark);
-  else if (MaskType == ptOverlayMode_GammaBright)
+  else if (MaskType == TMaskType::GammaBright)
     Overlay(ToneImage, Amount, Mask, ptOverlayMode_GammaBright);
 
   FREE(Mask);
@@ -4616,7 +4622,7 @@ float *ptImage::GetGradualMask(const double Angle,
     Length = (((float)m_Width) + ((float)m_Height)/tan((180.0-fabs(Angle))/180.0*ptPI))*sin((180.0-fabs(Angle))/180.0*ptPI);
   }
 
-  boolean Switch = UpperLevel < LowerLevel;
+  bool Switch = UpperLevel < LowerLevel;
 
   float Eps = 0.0001f;
 
@@ -4725,61 +4731,60 @@ ptImage* ptImage::GradualOverlay(const uint16_t R,
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-ptImage* ptImage::Vignette(const TVignetteMask AVignetteMask,
-                           const short  AExponent,
-                           const double AStrength,
-                           const double AInnerRadius,
-                           const double AOuterRadius,
-                           const double ARoundness,
-                           const double ACenterX,
-                           const double ACenterY,
-                           const double ASoftness)
-{
+ptImage* ptImage::Vignette(const short VignetteMode,
+                           const short Exponent,
+                           const double Amount,
+                           const double InnerRadius,
+                           const double OuterRadius,
+                           const double Roundness,
+                           const double CenterX,
+                           const double CenterY,
+                           const double Softness) {
+
   float *VignetteMask;
+
   VignetteMask = GetVignetteMask(0,
-                                 AExponent,
-                                 AInnerRadius,
-                                 AOuterRadius,
-                                 ARoundness,
-                                 ACenterX,
-                                 ACenterY,
-                                 ASoftness);
+                                 Exponent,
+                                 InnerRadius,
+                                 OuterRadius,
+                                 Roundness,
+                                 CenterX,
+                                 CenterY,
+                                 Softness);
 
   switch (VignetteMode) {
-    case SoftVignetteMask:
-    case HardVignetteMask:
+    case ptVignetteMode_Soft:
+    case ptVignetteMode_Hard:
       {
         uint16_t (*ToneImage)[3] = (uint16_t (*)[3]) CALLOC(m_Width*m_Height,sizeof(*ToneImage));
         ptMemoryError(ToneImage,__FILE__,__LINE__);
         uint16_t hColor = 0;
         short    hMode  = ptOverlayMode_SoftLight;
-        if (AStrength > 0) {
+        if (Amount > 0) {
           hColor = 0;
-          if (VignetteMode == HardVignetteMask)
-            hMode = ptOverlayMode_Multiply;
+          if (VignetteMode == ptVignetteMode_Hard) hMode = ptOverlayMode_Multiply;
         } else {
           hColor = 0xffff;
-          if (VignetteMode == HardVignetteMask)
-            hMode = ptOverlayMode_Screen;
-        }
+          if (VignetteMode == ptVignetteMode_Hard) hMode = ptOverlayMode_Screen;
+      }
 
 #pragma omp parallel for schedule(static) default(shared)
           for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
           ToneImage[i][0] = ToneImage[i][1] = ToneImage[i][2] = hColor;
         }
 
-        Overlay(ToneImage, fabs(AStrength), VignetteMask, hMode);
+        Overlay(ToneImage, fabs(Amount), VignetteMask, hMode);
         FREE(ToneImage);
       }
       break;
 
-    case FancyVignetteMask:
+    case ptVignetteMode_Fancy:
       {
         ptImage *VignetteLayer = new ptImage;
         VignetteLayer->Set(this);
-        VignetteLayer->Expose(pow(2,-AStrength*5), ptExposureClipMode_None);
+        VignetteLayer->Expose(pow(2,-Amount*5), ptExposureClipMode_None);
         ptCurve* VignetteContrastCurve = new ptCurve();
-        VignetteContrastCurve->setFromFunc(ptCurve::Sigmoidal,0.5,fabs(AStrength)*10);
+        VignetteContrastCurve->setFromFunc(ptCurve::Sigmoidal,0.5,fabs(Amount)*10);
         VignetteLayer->ApplyCurve(VignetteContrastCurve, (m_ColorSpace == ptSpace_Lab) ? 1 : 7);
         delete VignetteContrastCurve;
         Overlay(VignetteLayer->m_Image, 1, VignetteMask, ptOverlayMode_Normal);
@@ -4787,7 +4792,7 @@ ptImage* ptImage::Vignette(const TVignetteMask AVignetteMask,
       }
       break;
 
-    case MaskVignetteMask:
+    case ptVignetteMode_Mask:
       if (m_ColorSpace == ptSpace_Lab) {
 #pragma omp parallel for schedule(static) default(shared)
         for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
@@ -4807,12 +4812,6 @@ ptImage* ptImage::Vignette(const TVignetteMask AVignetteMask,
   FREE(VignetteMask);
   return this;
 }
-
-
-
-
-
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -4849,7 +4848,7 @@ ptImage* ptImage::Softglow(const short SoftglowMode,
   // Desaturate
   if (Saturation != 0) {
     int Value = Saturation;
-    float VibranceMixer[3][3];
+    TChannelMatrix VibranceMixer;
     VibranceMixer[0][0] = 1.0+(Value/150.0);
     VibranceMixer[0][1] = -(Value/300.0);
     VibranceMixer[0][2] = VibranceMixer[0][1];
@@ -4859,7 +4858,7 @@ ptImage* ptImage::Softglow(const short SoftglowMode,
     VibranceMixer[2][0] = VibranceMixer[0][1];
     VibranceMixer[2][1] = VibranceMixer[0][1];
     VibranceMixer[2][2] = VibranceMixer[0][0];
-    BlurLayer->MixChannels(VibranceMixer);
+    BlurLayer->mixChannels(VibranceMixer);
   }
   // Overlay
   switch (SoftglowMode) {
@@ -4894,7 +4893,7 @@ ptImage* ptImage::Softglow(const short SoftglowMode,
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-float *ptImage::GetMask(const short MaskType,
+float *ptImage::GetMask(const TMaskType MaskType,
                         const double LowerLimit,
                         const double UpperLimit,
                         const double Softness,
@@ -4923,18 +4922,20 @@ float *ptImage::GetMask(const short MaskType,
 #pragma omp for schedule(static)
   for (int32_t i=0; i<0x10000; i++) {
     switch(MaskType) {
-    case ptMaskType_All: // All values
+    case TMaskType::All: // All values
       MaskTable[i] = WP;
         break;
-    case ptMaskType_Shadows: // Shadows
+    case TMaskType::Shadows: // Shadows
         MaskTable[i] = WP - CLIP((int32_t)(i*m+t));
         break;
-    case ptMaskType_Midtones: // Midtones
+    case TMaskType::Midtones: // Midtones
       MaskTable[i] = WP - CLIP((int32_t)(i*m1+WP)) - CLIP((int32_t)(i*m2+t2));
         break;
-    case ptMaskType_Highlights: // Highlights
+    case TMaskType::Highlights: // Highlights
          MaskTable[i] = CLIP((int32_t)(i*m+t));
          break;
+    default:
+      assert("Unexpected mask type");
     }
     if (Soft>1.0) {
       MaskTable[i] = ptBound((float)(pow(MaskTable[i]/0xffff,Soft)), 0.0f, 1.0f);
@@ -4983,8 +4984,8 @@ void fill4stack(float         *AMask,
     hStack.pop();
 
     // array bounds
-    if (hX < 0 || hX >= AWidth ||
-        hY < 0 || hY >= AHeight ) continue;
+    // hX, hY >= 0 by design
+    if (hX >= AWidth || hY >= AHeight ) continue;
 
     // already processed?
     if (AMask[hY*AWidth + hX] != 0.0f) continue;
@@ -4996,12 +4997,19 @@ void fill4stack(float         *AMask,
 
       hStack.push(hX);
       hStack.push(hY + 1);
-      hStack.push(hX);
-      hStack.push(hY - 1);
+
+      if (hY > 0) {
+        hStack.push(hX);
+        hStack.push(hY - 1);
+      }
+
       hStack.push(hX + 1);
       hStack.push(hY);
-      hStack.push(hX - 1);
-      hStack.push(hY);
+
+      if (hX > 0) {
+        hStack.push(hX - 1);
+        hStack.push(hY);
+      }
     }
   }
 }
@@ -5025,7 +5033,6 @@ float *ptImage::FillMask(const uint16_t APointX,
   float hThresholdHalf = AThreshold*0x2AAA;
   float hThreshold     = AThreshold*0x5555;
   float hRadiusOut     = ptSqr((float)AMaxRadius);
-  float hRadiusIn      = ptSqr(AMaxRadius/3.0f);
   float hLumaWeight    = 1.0f - AColorWeight;
   float hColorWeight   = AColorWeight*(float)0x7FFF;
 
@@ -5151,7 +5158,7 @@ float *ptImage::GetVignetteMask(const short  Inverted,
 
   float Radius = MIN(m_Width, m_Height)/2;
 
-  boolean Switch = OuterRadius < InnerRadius;
+  bool Switch = OuterRadius < InnerRadius;
 
   float OR = Radius*(Switch?InnerRadius:OuterRadius);
   float IR = Radius*(Switch?OuterRadius:InnerRadius);
@@ -5321,7 +5328,7 @@ ptImage* ptImage::Box(const uint16_t MaxRadius, float* Mask) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-ptImage* ptImage::ViewLAB(const short Channel) {
+ptImage* ptImage::ViewLab(const TViewLabChannel Channel) {
 
   assert (m_ColorSpace == ptSpace_Lab);
 
@@ -5331,17 +5338,16 @@ ptImage* ptImage::ViewLAB(const short Channel) {
   ptCurve* MyContrastCurve = new ptCurve();
 
   switch(Channel) {
-
-    case ptViewLAB_L:
-#pragma omp parallel for schedule(static)
+    case TViewLabChannel::L:
+#     pragma omp parallel for schedule(static)
       for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
         m_Image[i][1]=0x8080;
         m_Image[i][2]=0x8080;
       }
       break;
 
-    case ptViewLAB_A:
-#pragma omp parallel for schedule(static)
+    case TViewLabChannel::a:
+#     pragma omp parallel for schedule(static)
       for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
         m_Image[i][0]=m_Image[i][1];
         m_Image[i][1]=0x8080;
@@ -5349,8 +5355,8 @@ ptImage* ptImage::ViewLAB(const short Channel) {
       }
       break;
 
-    case ptViewLAB_B:
-#pragma omp parallel for schedule(static)
+    case TViewLabChannel::b:
+#     pragma omp parallel for schedule(static)
       for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
         m_Image[i][0]=m_Image[i][2];
         m_Image[i][1]=0x8080;
@@ -5358,29 +5364,28 @@ ptImage* ptImage::ViewLAB(const short Channel) {
       }
       break;
 
-    case ptViewLAB_L_Grad:
+    case TViewLabChannel::LStructure:
       ContrastLayer->Set(this);
-      ptFastBilateralChannel(ContrastLayer, 4, 0.2, 2, 1);
+      ContrastLayer->fastBilateralChannel(4, 0.2, 2, ChMask_L);
 
-#pragma omp parallel for default(shared) schedule(static)
+#     pragma omp parallel for default(shared) schedule(static)
       for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
         m_Image[i][0] = CLIP((int32_t) ((WPH-(int32_t)ContrastLayer->m_Image[i][0])+m_Image[i][0]));
       }
       MyContrastCurve->setFromFunc(ptCurve::Sigmoidal,0.5,30);
       ApplyCurve(MyContrastCurve,1);
 
-      //~ ptCimgEdgeDetection(this,1);
-#pragma omp parallel for schedule(static)
+#     pragma omp parallel for schedule(static)
       for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
         m_Image[i][1]=0x8080;
         m_Image[i][2]=0x8080;
       }
       break;
 
-    case ptViewLAB_C:
+    case TViewLabChannel::C:
       ContrastLayer->Set(this);
       ContrastLayer->LabToLch();
-#pragma omp parallel for schedule(static)
+#     pragma omp parallel for schedule(static)
       for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
         m_Image[i][0]=CLIP((int32_t)(2.0f*ContrastLayer->m_ImageC[i]));
         m_Image[i][1]=0x8080;
@@ -5388,10 +5393,10 @@ ptImage* ptImage::ViewLAB(const short Channel) {
       }
       break;
 
-    case ptViewLAB_H:
+    case TViewLabChannel::H:
       ContrastLayer->Set(this);
       ContrastLayer->LabToLch();
-#pragma omp parallel for schedule(static)
+#     pragma omp parallel for schedule(static)
       for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
         m_Image[i][0]=CLIP((int32_t)(ContrastLayer->m_ImageH[i]/pt2PI*(float)0xffff));
         m_Image[i][1]=0x8080;
@@ -5400,7 +5405,7 @@ ptImage* ptImage::ViewLAB(const short Channel) {
       break;
 
     default:
-      break;
+      assert("unexpected ViewLab channel mode");
   }
 
   delete MyContrastCurve;
@@ -5479,9 +5484,9 @@ ptImage* ptImage::SpecialPreview(const short Mode, const int Intent) {
     }
     m_ColorSpace = ptSpace_Lab;
     // ViewLAB
-    if (Mode == ptSpecialPreview_L) ViewLAB(ptViewLAB_L);
-    if (Mode == ptSpecialPreview_A) ViewLAB(ptViewLAB_A);
-    if (Mode == ptSpecialPreview_B) ViewLAB(ptViewLAB_B);
+    if (Mode == ptSpecialPreview_L) ViewLab(TViewLabChannel::L);
+    if (Mode == ptSpecialPreview_A) ViewLab(TViewLabChannel::a);
+    if (Mode == ptSpecialPreview_B) ViewLab(TViewLabChannel::b);
 
     // to RGB
     Transform = cmsCreateTransform(LabProfile,
@@ -5511,7 +5516,7 @@ ptImage* ptImage::SpecialPreview(const short Mode, const int Intent) {
     const double WPH = 0x7fff; // WPH=WP/2
     ptImage *ContrastLayer = new ptImage;
     ContrastLayer->Set(this);
-    ptFastBilateralChannel(ContrastLayer, 4, 0.2, 2, 1);
+    ContrastLayer->fastBilateralChannel(4, 0.2, 2, ChMask_L);
 #pragma omp parallel for default(shared) schedule(static)
     for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
       m_Image[i][0] = CLIP((int32_t) ((WPH-(int32_t)ContrastLayer->m_Image[i][0]) + m_Image[i][0]));
@@ -5541,28 +5546,22 @@ ptImage* ptImage::SpecialPreview(const short Mode, const int Intent) {
   return this;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// MixChannels
-// MixFactors[To][From]
-//
-////////////////////////////////////////////////////////////////////////////////
+// -----------------------------------------------------------------------------
 
-ptImage* ptImage::MixChannels(const float MixFactors[3][3]) {
-
+ptImage* ptImage::mixChannels(const TChannelMatrix mixFactors) {
   assert (m_ColorSpace != ptSpace_Lab);
-  double Value[3];
+  double value[3];
 
-#pragma omp parallel for default(shared) private(Value)
-  for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
-    for (short To=0; To<3; To++) {
-       Value[To] = 0;
-       for ( short From=0; From<3; From++) {
-          Value[To] += MixFactors[To][From] * m_Image[i][From];
+# pragma omp parallel for default(shared) private(value)
+  for (uint32_t px = 0; px < static_cast<uint32_t>(m_Height*m_Width); ++px) {
+    for (int to = 0; to < 3; ++to) {
+       value[to] = 0;
+       for (int from = 0; from < 3; ++from) {
+          value[to] += mixFactors[to][from] * m_Image[px][from];
        }
     }
-    for (short To=0; To<3; To++) {
-      m_Image[i][To] = CLIP((int32_t)Value[To]);
+    for (int to = 0; to < 3; ++to) {
+      m_Image[px][to] = CLIP(static_cast<int32_t>(value[to]));
     }
   }
   return this;
@@ -5665,8 +5664,8 @@ short ptImage::WriteAsPpm(const char*  FileName,
     if (16 == BitsPerColor && htons(0x55aa) != 0x55aa) {
       swab((char *)PpmRow,(char *)PpmRow,m_Width*m_Colors*2);
     }
-    assert
-      (m_Width == fwrite(PpmRow,m_Colors*BitsPerColor/8,m_Width,OutputFile));
+    uint16_t w = fwrite(PpmRow,m_Colors*BitsPerColor/8,m_Width,OutputFile);
+    assert(m_Width == w);
   }
 
   FREE(PpmRow);
@@ -6013,3 +6012,53 @@ short ptImage::getCurrentRGB()
   return CurrentRGBMode;
 }
 
+// -----------------------------------------------------------------------------
+
+typedef Array_2D<float> image_type;
+extern float ToFloatTable[0x10000];
+
+// From the theoretical part, the bilateral filter should blur more when values
+// are closer together. Since we use it with linear data, an additional gamma
+// correction could give better results.
+
+ptImage* ptImage::fastBilateralChannel(
+    const float Sigma_s,
+    const float Sigma_r,
+    const int Iterations,
+    const TChannelMask ChannelMask)
+{
+  uint16_t Width  = m_Width;
+  uint16_t Height = m_Height;
+  int32_t  hIdx   = 0;
+
+  image_type InImage(Width,Height);
+  image_type FilteredImage(Width,Height);
+
+  for (short Channel = 0; Channel<3; Channel++) {
+    // Is it a channel we are supposed to handle ?
+    if  (! (ChannelMask & (1<<Channel))) continue;
+#pragma omp parallel for default(shared) schedule(static) private(hIdx)
+    for (uint16_t Row=0; Row<m_Height; Row++) {
+      hIdx = Row*Width;
+      for (uint16_t Col=0; Col<m_Width; Col++) {
+        InImage(Col,Row) = ToFloatTable[m_Image[hIdx+Col][Channel]];
+      }
+    }
+
+    for (int i=0;i<Iterations;i++)
+      Image_filter::fast_LBF(InImage,InImage,
+           Sigma_s,Sigma_r,
+           1,
+           &FilteredImage,&FilteredImage);
+
+#pragma omp parallel for default(shared) schedule(static) private(hIdx)
+    for (uint16_t Row=0; Row<m_Height; Row++) {
+      hIdx = Row*Width;
+      for (uint16_t Col=0; Col<m_Width; Col++) {
+        m_Image[hIdx+Col][Channel] = CLIP((int32_t)(FilteredImage(Col,Row)*0xffff));
+      }
+    }
+  }
+
+  return this;
+}

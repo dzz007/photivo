@@ -4,7 +4,7 @@
 **
 ** Copyright (C) 2008-2009 Jos De Laender <jos.de_laender@telenet.be>
 ** Copyright (C) 2009-2012 Michael Munzert <mail@mm-log.com>
-** Copyright (C) 2012 Bernd Schoeler <brjohn@brother-john.net>
+** Copyright (C) 2012-2013 Bernd Schoeler <brjohn@brother-john.net>
 **
 ** This file is part of Photivo.
 **
@@ -21,9 +21,11 @@
 ** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 **
 *******************************************************************************/
-
-#include <vector>
-
+#include "ptCurveWindow.h"
+#include "ptTheme.h"
+#include "ptInfo.h"
+#include "ptSettings.h"
+#include "filters/ptCfgItem.h"
 #include <QPainter>
 #include <QActionGroup>
 #include <QMenu>
@@ -31,15 +33,11 @@
 #include <QMouseEvent>
 #include <QWheelEvent>
 #include <QLabel>
+#include <QFileDialog>
+#include <vector>
 
-#include "ptCurveWindow.h"
-#include "ptTheme.h"
-#include "ptInfo.h"
-#include "ptSettings.h"
-#include <filters/ptCfgItem.h>
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 extern QString CurveFilePattern;
 
 // How many pixels will be considered as 'bingo' for having the anchor ?
@@ -51,24 +49,21 @@ const float CAnchorDelta = 0.005f;
 // Delays in ms before certain actions are triggered
 const int CPipeDelay   = 300;
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 // NOTE: ptCurveWindow would be a good place to use C++11’s ctor delegation.
 // Unfortunately it’s only available in GCC 4.7.
 ptCurveWindow::ptCurveWindow(QWidget *AParent)
 : ptWidget(AParent)
 {}
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 ptCurveWindow::ptCurveWindow(const ptCfgItem &ACfgItem, QWidget *AParent)
 : ptWidget(AParent)
 {
   this->init(ACfgItem);
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 ptCurveWindow::~ptCurveWindow() {
 /*  Resources managed by Qt parent or external objects. Do not delete manually.
       all QAction and QActionGroup
@@ -77,8 +72,7 @@ ptCurveWindow::~ptCurveWindow() {
 */
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptCurveWindow::init(const ptCfgItem &ACfgItem) {
   FCaptionLabel     = nullptr;
   FWheelTimer       = new QTimer(this);
@@ -109,21 +103,19 @@ void ptCurveWindow::init(const ptCfgItem &ACfgItem) {
   this->setCaption(ACfgItem.Caption);
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptCurveWindow::setValue(const QVariant &AValue) {
   GInfo->Assert(AValue.type() == QVariant::Map,
                 QString("%1: Value must be of type QVariant::Map (8), but is (%2).")
                     .arg(this->objectName()).arg(AValue.type()), AT);
 
   auto hTempMap = AValue.toMap();
-  FCurve->setFromFilterConfig(hTempMap);
+  FCurve->loadConfig(hTempMap, "");
   updateView();
   requestPipeRun();
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptCurveWindow::setCaption(const QString &ACaption) {
   if (ACaption.isEmpty()) {
     DelAndNull(FCaptionLabel);
@@ -140,8 +132,7 @@ void ptCurveWindow::setCaption(const QString &ACaption) {
   }
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptCurveWindow::setMaskType() {
   auto hOldMask = FCurve->mask();
 
@@ -162,8 +153,7 @@ void ptCurveWindow::setMaskType() {
   requestPipeRun();
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptCurveWindow::setInterpolationType() {
   auto hOldIPol = FCurve->interpolType();
 
@@ -180,10 +170,8 @@ void ptCurveWindow::setInterpolationType() {
   requestPipeRun();
 }
 
-//==============================================================================
-
-void ptCurveWindow::openCurveFile()
-{
+//------------------------------------------------------------------------------
+void ptCurveWindow::openCurveFile() {
   QString CurveFileName = QFileDialog::getOpenFileName(nullptr,
                                                        QObject::tr("Open Curve"),
                                                        Settings->GetString("CurvesDirectory"),
@@ -199,8 +187,7 @@ void ptCurveWindow::openCurveFile()
   }
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptCurveWindow::setBWGradient(ptImage8* AImage) {
   int Width  = width();
   int Height = height();
@@ -210,15 +197,14 @@ void ptCurveWindow::setBWGradient(ptImage8* AImage) {
     for (uint16_t Row = Height-Height/20;
          Row <= Height-2;
          Row++) {
-      AImage->m_Image[Row*Width+i][0] = Value;
-      AImage->m_Image[Row*Width+i][1] = Value;
-      AImage->m_Image[Row*Width+i][2] = Value;
+      AImage->image()[Row*Width+i][0] = Value;
+      AImage->image()[Row*Width+i][1] = Value;
+      AImage->image()[Row*Width+i][2] = Value;
     }
   }
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptCurveWindow::setBWGammaGradient(ptImage8* AImage) {
   int Width  = width();
   int Height = height();
@@ -228,15 +214,14 @@ void ptCurveWindow::setBWGammaGradient(ptImage8* AImage) {
     for (uint16_t Row = Height-Height/20;
          Row <= Height-2;
          Row++) {
-      AImage->m_Image[Row*Width+i][0] = Value;
-      AImage->m_Image[Row*Width+i][1] = Value;
-      AImage->m_Image[Row*Width+i][2] = Value;
+      AImage->image()[Row*Width+i][0] = Value;
+      AImage->image()[Row*Width+i][1] = Value;
+      AImage->image()[Row*Width+i][2] = Value;
     }
   }
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptCurveWindow::setColorGradient(ptImage8* AImage) {
   int Width  = width();
   int Height = height();
@@ -261,15 +246,14 @@ void ptCurveWindow::setColorGradient(ptImage8* AImage) {
     for (uint16_t Row = Height-Height/20;
          Row <= Height-2;
          Row++) {
-      AImage->m_Image[Row*Width+i][0] = ValueB;
-      AImage->m_Image[Row*Width+i][1] = ValueG;
-      AImage->m_Image[Row*Width+i][2] = ValueR;
+      AImage->image()[Row*Width+i][0] = ValueB;
+      AImage->image()[Row*Width+i][1] = ValueG;
+      AImage->image()[Row*Width+i][2] = ValueR;
     }
   }
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptCurveWindow::setColorBlocks(const QColor &ATopLeftColor, const QColor &ABottomRightColor) {
   int hWidth  = this->width();
   int hHeight = this->height();
@@ -278,9 +262,9 @@ void ptCurveWindow::setColorBlocks(const QColor &ATopLeftColor, const QColor &AB
   for (uint16_t i=1;  i < 3*(hHeight-1)/10;  ++i) {
     for (uint16_t Row = 1;  Row < 2*(hWidth-1)/10+1;  ++Row) {
       int hImgIdx = Row*hWidth+i;
-      FCanvas.m_Image[hImgIdx][0] = ATopLeftColor.blue();
-      FCanvas.m_Image[hImgIdx][1] = ATopLeftColor.green();
-      FCanvas.m_Image[hImgIdx][2] = ATopLeftColor.red();
+      FCanvas.image()[hImgIdx][0] = ATopLeftColor.blue();
+      FCanvas.image()[hImgIdx][1] = ATopLeftColor.green();
+      FCanvas.image()[hImgIdx][2] = ATopLeftColor.red();
     }
   }
 
@@ -288,15 +272,15 @@ void ptCurveWindow::setColorBlocks(const QColor &ATopLeftColor, const QColor &AB
   for (uint16_t i = 7*(hHeight-1)/10+1;  i < hWidth; ++i) {
     for (uint16_t Row = 8*(hWidth-1)/10+1;  Row < hHeight;  ++Row) {
       int hImgIdx = Row*hWidth+i;
-      FCanvas.m_Image[hImgIdx][0] = ABottomRightColor.blue();
-      FCanvas.m_Image[hImgIdx][1] = ABottomRightColor.green();
-      FCanvas.m_Image[hImgIdx][2] = ABottomRightColor.red();
+      FCanvas.image()[hImgIdx][0] = ABottomRightColor.blue();
+      FCanvas.image()[hImgIdx][1] = ABottomRightColor.green();
+      FCanvas.image()[hImgIdx][2] = ABottomRightColor.red();
     }
   }
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
+// Calculate the GUI representation of the curve as a ptImage8.
 void ptCurveWindow::calcCurveImage() {
   // Viewport dimensions are needed very often -> local variables for quicker access.
   int hWidth  = this->width();
@@ -305,7 +289,8 @@ void ptCurveWindow::calcCurveImage() {
   if (hHeight == 0 || hWidth == 0)
     return;
 
-  FCanvas.setSize(hWidth, hHeight, 3);  // image is completely black afterwards
+  FCanvas.setSize(hWidth, hHeight, 3);
+  FCanvas.fillColor(0, 0, 0, 0);
 
   QColor hCurveColor = QColor(200,200,200);
   QColor hGridColor  = QColor(53,53,53);
@@ -328,9 +313,9 @@ void ptCurveWindow::calcCurveImage() {
   {
     uint32_t Temp = Row*hWidth;
     for (uint16_t i=0;i<hWidth;i++) {
-      FCanvas.m_Image[Temp][0] = hGridColor.blue();
-      FCanvas.m_Image[Temp][1] = hGridColor.green();
-      FCanvas.m_Image[Temp][2] = hGridColor.red();
+      FCanvas.image()[Temp][0] = hGridColor.blue();
+      FCanvas.image()[Temp][1] = hGridColor.green();
+      FCanvas.image()[Temp][2] = hGridColor.red();
       ++Temp;
     }
   }
@@ -340,9 +325,9 @@ void ptCurveWindow::calcCurveImage() {
   {
     uint32_t Temp = Column;
     for (uint16_t i=0;i<hHeight;i++) {
-      FCanvas.m_Image[Temp][0] = hGridColor.blue();
-      FCanvas.m_Image[Temp][1] = hGridColor.green();
-      FCanvas.m_Image[Temp][2] = hGridColor.red();
+      FCanvas.image()[Temp][0] = hGridColor.blue();
+      FCanvas.image()[Temp][1] = hGridColor.green();
+      FCanvas.image()[Temp][2] = hGridColor.red();
       Temp += hWidth;
     }
   }
@@ -366,9 +351,9 @@ void ptCurveWindow::calcCurveImage() {
     uint32_t Temp     = i+kStart*hWidth;
 
     for(uint16_t k=kStart;k<=kEnd;k++) {
-      FCanvas.m_Image[Temp][0] = hCurveColor.blue();
-      FCanvas.m_Image[Temp][1] = hCurveColor.green();
-      FCanvas.m_Image[Temp][2] = hCurveColor.red();
+      FCanvas.image()[Temp][0] = hCurveColor.blue();
+      FCanvas.image()[Temp][1] = hCurveColor.green();
+      FCanvas.image()[Temp][2] = hCurveColor.red();
       Temp += hWidth;
     }
   }
@@ -388,35 +373,37 @@ void ptCurveWindow::calcCurveImage() {
            if (Column >= hWidth) continue;
            if (Column <  0)      continue;
            int hImgIdx = Row*hWidth+Column;
-           FCanvas.m_Image[hImgIdx][0] = hCurveColor.blue();
-           FCanvas.m_Image[hImgIdx][1] = hCurveColor.green();
-           FCanvas.m_Image[hImgIdx][2] = hCurveColor.red();
+           FCanvas.image()[hImgIdx][0] = hCurveColor.blue();
+           FCanvas.image()[hImgIdx][1] = hCurveColor.green();
+           FCanvas.image()[hImgIdx][2] = hCurveColor.red();
         }
       }
     }
   }
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
+/*! This is an overloaded function. Assigns a new \c ptCurve object to the curve window,
+    then recalcs the curve window image and repaints the viewport. Does *not* trigger a pipe run.
+ */
 void ptCurveWindow::updateView(const std::shared_ptr<ptCurve> ANewCurve) {
   FCurve = ANewCurve;
   updateView();
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
+/*! Recalcs the curve window image and repaints the viewport. Does *not* trigger a pipe run. */
 void ptCurveWindow::updateView() {
   calcCurveImage();
 
   // grey out when curve windows is disabled
   if (!this->isEnabled()) {
-    for (uint16_t j = 0; j < FCanvas.m_Width; j++) {
-      for (uint16_t i = 0; i < FCanvas.m_Height; i++) {
-        int hImgIdx = i*FCanvas.m_Width+j;
-        FCanvas.m_Image[hImgIdx][0] >>= 1;
-        FCanvas.m_Image[hImgIdx][1] >>= 1;
-        FCanvas.m_Image[hImgIdx][2] >>= 1;
+    for (uint16_t j = 0; j < FCanvas.width(); j++) {
+      for (uint16_t i = 0; i < FCanvas.height(); i++) {
+        int hImgIdx = i*FCanvas.width()+j;
+        FCanvas.image()[hImgIdx][0] >>= 1;
+        FCanvas.image()[hImgIdx][1] >>= 1;
+        FCanvas.image()[hImgIdx][2] >>= 1;
       }
     }
   }
@@ -424,38 +411,37 @@ void ptCurveWindow::updateView() {
   // Prepare the curve image for display. We take the detour QImage=>QPixmap instead of drawing
   // the QImage directly because QPixmap has HW accelerated drawing. Unfortunately the internal
   // layout of ptImage8 is not suited to be loaded into a QPixmap directly.
-  FDisplayImage = QPixmap::fromImage(QImage((const uchar*) FCanvas.m_Image,
-                                            FCanvas.m_Width,
-                                            FCanvas.m_Height,
+  FDisplayImage = QPixmap::fromImage(QImage((const uchar*) FCanvas.image().data(),
+                                            FCanvas.width(),
+                                            FCanvas.height(),
                                             QImage::Format_RGB32));
   repaint();
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptCurveWindow::resizeEvent(QResizeEvent *) {
   updateView();
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptCurveWindow::changeEvent(QEvent* Event) {
   // react on enable/disable
   if (Event->type() == QEvent::EnabledChange)
     updateView();   // No pipe request!
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptCurveWindow::paintEvent(QPaintEvent*) {
   QPainter Painter(this);
   Painter.drawPixmap(0, 0, FDisplayImage);
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptCurveWindow::mousePressEvent(QMouseEvent *AEvent) {
   if (!FCurve) return;
+
+  if (FMouseAction != NoAction) return;
+
   FMouseAction  = NoAction;
   FMovingAnchor = -1;
 
@@ -518,8 +504,7 @@ void ptCurveWindow::mousePressEvent(QMouseEvent *AEvent) {
   }
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptCurveWindow::mouseReleaseEvent(QMouseEvent*) {
   if (!FCurve) return;
   if (FMouseAction == NoAction) return;
@@ -533,8 +518,7 @@ void ptCurveWindow::mouseReleaseEvent(QMouseEvent*) {
   requestPipeRun();
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 TAnchor ptCurveWindow::clampMovingAnchor(const TAnchor &APoint,
                                          const QPoint &AMousePos)
 {
@@ -562,8 +546,7 @@ TAnchor ptCurveWindow::clampMovingAnchor(const TAnchor &APoint,
                  ptBound(0.0, APoint.second, 1.0));
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptCurveWindow::mouseMoveEvent(QMouseEvent *AEvent) {
   if (!FCurve) return;
   if (FMouseAction == DragAction && FMovingAnchor > -1) {
@@ -589,16 +572,14 @@ void ptCurveWindow::mouseMoveEvent(QMouseEvent *AEvent) {
   }
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptCurveWindow::wheelTimerExpired() {
   FMouseAction  = NoAction;
   FMovingAnchor = -1;
   requestPipeRun();
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 int ptCurveWindow::hasCaughtAnchor(const QPoint APos) {
   int hResult = -1;
 
@@ -616,20 +597,17 @@ int ptCurveWindow::hasCaughtAnchor(const QPoint APos) {
   return hResult;
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 bool ptCurveWindow::isCyclicCurve() {
   return FCurve->mask() == ptCurve::ChromaMask;
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptCurveWindow::requestPipeRun() {
-  emit valueChanged(this->objectName(), FCurve->filterConfig());
+  emit valueChanged(this->objectName(), FCurve->storeConfig(""));
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptCurveWindow::execContextMenu(const QPoint APos) {
   createMenuActions();
 
@@ -643,7 +621,8 @@ void ptCurveWindow::execContextMenu(const QPoint APos) {
     case ptCurve::LinearInterpol: FLinearIpolAction->setChecked(true); break;
     case ptCurve::SplineInterpol: FSplineIpolAction->setChecked(true); break;
     case ptCurve::CosineInterpol: FCosineIpolAction->setChecked(true); break;
-    default: GInfo->Raise("Unhandled curve interpolation type: " + (int)FCurve->interpolType(), AT);
+  default:
+    GInfo->Raise(QString("Unhandled curve interpolation type: ") + QString::number((int)FCurve->interpolType()), AT);
   }
 
   if (FCurve->supportedMasks() == (ptCurve::LumaMask | ptCurve::ChromaMask)) {
@@ -652,7 +631,8 @@ void ptCurveWindow::execContextMenu(const QPoint APos) {
     switch (FCurve->mask()) {
       case ptCurve::LumaMask: FByLumaAction->setChecked(true); break;
       case ptCurve::ChromaMask: FByChromaAction->setChecked(true); break;
-      default: GInfo->Raise("Unhandled curve mask type: " + (int)FCurve->mask(), AT);
+    default:
+      GInfo->Raise(QString("Unhandled curve mask type: ") + QString::number((int)FCurve->mask()), AT);
     }
   }
 
@@ -662,8 +642,7 @@ void ptCurveWindow::execContextMenu(const QPoint APos) {
   hMenu.exec(APos);
 }
 
-//==============================================================================
-
+//------------------------------------------------------------------------------
 void ptCurveWindow::createMenuActions() {
   if (FByLumaAction) return;  // actions already created
 
@@ -705,6 +684,4 @@ void ptCurveWindow::createMenuActions() {
   FOpenCurveAction->setStatusTip(tr("Open anchor curve file"));
   connect(FOpenCurveAction, SIGNAL(triggered()), this, SLOT(openCurveFile()));
 }
-
-//==============================================================================
 

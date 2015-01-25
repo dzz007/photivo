@@ -23,9 +23,9 @@
 #include "ptFilter_Outline.h"
 #include "ui_ptFilter_Outline.h"
 #include "ptCfgItem.h"
-#include <ptImage.h>
-#include <ptCurve.h>
-#include <ptConstants.h>
+#include "../ptImage.h"
+#include "../ptCurve.h"
+#include "../ptConstants.h"
 
 //==============================================================================
 
@@ -79,7 +79,7 @@ void ptFilter_Outline::doDefineControls() {
   hGradientModes.append({tr("Rotation invariant masks"), ptGradientMode_RotInv, "rotinv"});
   hGradientModes.append({tr("Deriche recursive filter"), ptGradientMode_Deriche, "deriche"});
 
-  FCfgItems = QList<ptCfgItem>()                                         //--- Combo: list of entries               ---//
+  FConfig.initStores(TCfgItemList()                                      //--- Combo: list of entries               ---//
                                                                          //--- Check: not available                 ---//
     //            Id               Type                      Default     Min           Max           Step        Decimals, commonConnect, storeable, caption, tooltip
     << ptCfgItem({COverlayMode,    ptCfgItem::Combo,         ptOverlayMode_None, hOverlayModes,                            true, true, tr("Overlay mode"),   tr("")})
@@ -91,7 +91,7 @@ void ptFilter_Outline::doDefineControls() {
                                                                                        ptCurve::NoMask,
                                                                                        ptCurve::NoMask,
                                                                                        ptCurve::SplineInterpol),                tr("")})
-      ;
+  );
 }
 
 //==============================================================================
@@ -109,19 +109,19 @@ QWidget *ptFilter_Outline::doCreateGui() {
 //==============================================================================
 
 bool ptFilter_Outline::doCheckHasActiveCfg() {
-  return FConfig->getValue(COverlayMode).toInt() != 0;
+  return FConfig.value(COverlayMode).toInt() != 0;
 }
 
 //==============================================================================
 
 void ptFilter_Outline::doRunFilter(ptImage *AImage) const {
   AImage->toLab();
-  AImage->Outline(FConfig->getValue(COverlayMode).toInt(),
-                  FConfig->getValue(CGradientMode).toInt(),
-                  FCfgItems[cfgIdx(CCurve)].Curve.get(),
-                  FConfig->getValue(CColorWeight).toDouble(),
-                  FConfig->getValue(CBlurRadius).toDouble(),
-                  FConfig->getValue(CImageOnTop).toBool());
+  AImage->Outline(FConfig.value(COverlayMode).toInt(),
+                  FConfig.value(CGradientMode).toInt(),
+                  FConfig.items()[cfgIdx(CCurve)].Curve.get(),
+                  FConfig.value(CColorWeight).toDouble(),
+                  FConfig.value(CBlurRadius).toDouble(),
+                  FConfig.value(CImageOnTop).toBool());
 }
 
 //==============================================================================

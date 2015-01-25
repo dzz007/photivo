@@ -25,10 +25,10 @@
 
 //==============================================================================
 
-#include <QGraphicsView>
-
 #include "../ptSettings.h"
 #include "ptGridThumbnailLayouter.h"
+
+#include <QGraphicsView>
 
 extern ptSettings* Settings;
 

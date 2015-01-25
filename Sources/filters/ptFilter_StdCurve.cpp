@@ -20,16 +20,17 @@
 **
 *******************************************************************************/
 
-#include <QVBoxLayout>
 
 #include "ptFilter_StdCurve.h"
 #include "ptCfgItem.h"
-#include <ptImage.h>
-#include <ptCurveWindow.h>
+#include "../ptImage.h"
+#include "../ptCurveWindow.h"
 
 // TODO: Needed for access to m_ScaleFactor. Find a way to avoid when modernising the processor.
-#include <ptProcessor.h>
+#include "../ptProcessor.h"
 extern ptProcessor* TheProcessor;
+
+#include <QVBoxLayout>
 
 //==============================================================================
 
@@ -52,7 +53,9 @@ ptFilter_StdCurve::ptFilter_StdCurve(std::shared_ptr<ptCurve> ACurve)
 {
   // Create the config item for the curve. ptFilterBase is smart enough to distinguish
   // between default store widgets and widgets with their own custom store.
-  FCfgItems << ptCfgItem({CCurveObject, ptCfgItem::CurveWin, ACurve, ""});
+  FConfig.initStores(TCfgItemList()
+    << ptCfgItem({CCurveObject, ptCfgItem::CurveWin, ACurve, ""})
+  );
 
   internalInit();
 }
@@ -62,46 +65,46 @@ ptFilter_StdCurve::ptFilter_StdCurve(std::shared_ptr<ptCurve> ACurve)
 void ptFilter_StdCurve::doRunFilter(ptImage *AImage) const {
   if (FFilterName =="RgbCurve") {
     AImage->toRGB();
-    AImage->ApplyCurve(FCfgItems[0].Curve.get(), ChMask_RGB);
+    AImage->ApplyCurve(FConfig.items()[0].Curve.get(), ChMask_RGB);
 
   } else if (FFilterName == "TextureCurve") {
     AImage->toLab();
-    AImage->ApplyTextureCurve(FCfgItems[0].Curve.get(),
+    AImage->ApplyTextureCurve(FConfig.items()[0].Curve.get(),
                               (int) (logf(TheProcessor->m_ScaleFactor)/logf(0.5)));
 
   } else if (FFilterName == "LumaByHueCurve") {
     AImage->toLab();
-    AImage->ApplyLByHueCurve(FCfgItems[0].Curve.get());
+    AImage->ApplyLByHueCurve(FConfig.items()[0].Curve.get());
 
   } else if (FFilterName == "HueCurve") {
     AImage->toLab();
-    AImage->ApplyHueCurve(FCfgItems[0].Curve.get());
+    AImage->ApplyHueCurve(FConfig.items()[0].Curve.get());
 
   } else if (FFilterName == "LCurve") {
     AImage->toLab();
-    AImage->ApplyCurve(FCfgItems[0].Curve.get(), ChMask_L);
+    AImage->ApplyCurve(FConfig.items()[0].Curve.get(), ChMask_L);
 
   } else if (FFilterName == "RToneCurve") {
     AImage->toRGB();
-    AImage->ApplyCurve(FCfgItems[0].Curve.get(), ChMask_R);
+    AImage->ApplyCurve(FConfig.items()[0].Curve.get(), ChMask_R);
 
   } else if (FFilterName == "GToneCurve") {
     AImage->toRGB();
-    AImage->ApplyCurve(FCfgItems[0].Curve.get(), ChMask_G);
+    AImage->ApplyCurve(FConfig.items()[0].Curve.get(), ChMask_G);
 
   } else if (FFilterName == "BToneCurve") {
     AImage->toRGB();
-    AImage->ApplyCurve(FCfgItems[0].Curve.get(), ChMask_B);
+    AImage->ApplyCurve(FConfig.items()[0].Curve.get(), ChMask_B);
 
   } else if (FFilterName == "AfterGammaCurve") {
-    AImage->ApplyCurve(FCfgItems[0].Curve.get(), ChMask_RGB);
+    AImage->ApplyCurve(FConfig.items()[0].Curve.get(), ChMask_RGB);
   }
 }
 
 //==============================================================================
 
 bool ptFilter_StdCurve::doCheckHasActiveCfg() {
-  return !FCfgItems[0].Curve->isNull();
+  return !FConfig.items()[0].Curve->isNull();
 }
 
 //==============================================================================

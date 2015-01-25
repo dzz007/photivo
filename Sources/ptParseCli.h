@@ -42,6 +42,7 @@ struct ptCliCommands {
   ptCliMode Mode;
   QString Filename;
   QString PtsFilename;
+  QString Sidecar;
   bool NewInstance;
   bool NoOpenFileMgr;
 };

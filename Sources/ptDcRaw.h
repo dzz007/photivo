@@ -33,14 +33,19 @@
 #define DLDCDRAW_H
 
 // Adaptation of dcraw.c stuff.
-#define DCRAW_VERSION "dcraw v9.16"    // Update along with dcraw syncing ...
-// $Revision: 1.452 $
-// $Date: 2012/07/23 04:28:00 $
+#define DCRAW_VERSION "dcraw v9.17"    // Update along with dcraw syncing ...
+// $Revision: 1.454 $
+// $Date: 2012/12/23 19:25:36 $
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE
 #endif
 
+#include "ptDefines.h"
+
+#include <QString>
+
 #define _USE_MATH_DEFINES
+#include <vector>
 #include <cctype>
 #include <cerrno>
 #include <cfloat>
@@ -63,12 +68,12 @@
 #ifdef __cplusplus
   // This hack copes with jpeglib.h that does or doesnt provide the
   // extern internally.
-  #define ptraw_saved_cplusplus __cplusplus
+  #pragma push_macro("__cplusplus")
   #undef __cplusplus
   extern "C" {
   #include <jpeglib.h>
   }
-  #define __cplusplus ptraw_saved_cplusplus
+  #pragma pop_macro("__cplusplus")
 #else
   #include <jpeglib.h>
 #endif
@@ -119,11 +124,6 @@ typedef unsigned long long UINT64;
 #define LONG_BIT (8 * sizeof (long))
 #endif
 
-#include <QDataStream>
-#include <QByteArray>
-#include <QPixmap>
-
-#include "ptDefines.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -311,7 +311,7 @@ public:
   void  ptRebuildHighlights(const short Effort);
   void  ptBlendHighlights();
   void  ptCrop();
-  bool  thumbnail(QByteArray*& thumbnail);
+  TImage8RawData thumbnail();
 
 
   /*************************************************************************
@@ -322,8 +322,7 @@ public:
   The lower ones are questionable if they should be of interest to the user.
   *************************************************************************/
 
-  QDataStream* m_ThumbStream;
-  QByteArray*  m_ThumbData;
+  TImage8RawData m_Thumb;
 
   // The image !
   uint16_t    (*m_Image)[4];

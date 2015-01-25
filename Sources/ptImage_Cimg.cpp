@@ -20,13 +20,14 @@
 **
 *******************************************************************************/
 
-#include <cmath>
-#include <QMessageBox>
 #include "ptImage.h"
 #include "ptConstants.h"
 #include "ptError.h"
 #include "ptCalloc.h"
 #include "ptSettings.h"
+
+#include <QMessageBox>
+#include <cmath>
 
 #ifdef _OPENMP
   #include <omp.h>
@@ -176,7 +177,7 @@ ptImage* ptImage::ptCIPerspective(const float RotateAngle,
   const float nangle = CImod(RotateAngle,360.0f);
   uint16_t NewWidth = 0, NewHeight = 0;
 
-  std::vector<std::array<uint16_t, 3> > TempData;
+  TImage16Data TempData;
   uint16_t (*TempImage)[3];
 
   if (CImod(nangle,90.0f)==0 &&

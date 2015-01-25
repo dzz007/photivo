@@ -24,9 +24,11 @@
 #ifndef DLHISTOGRAMWINDOW_H
 #define DLHISTOGRAMWINDOW_H
 
-#include <QtGui>
-
 #include "ptImage8.h"
+
+#include <QAction>
+#include <QTimer>
+#include <QLabel>
 
 //==============================================================================
 
@@ -79,7 +81,7 @@ public slots:
   void PixelInfoHide();
 
 private:
-  const ptImage8* m_Image8;
+  ptImage8        m_Image8;
   QPixmap*        m_QPixmap;
   short           m_RecalcNeeded;
   uint32_t        m_HistoMax;
@@ -104,10 +106,12 @@ private:
   void CalculateHistogram();
   void FillLookUp();
   void InitOverlay();
+  void setInfoIconState(bool AIsActive);
 
   QLabel*         m_PixelInfoR;
   QLabel*         m_PixelInfoG;
   QLabel*         m_PixelInfoB;
+  QLabel*         m_InfoIcon;
   QTimer*         m_PixelInfoTimer;
   QPalette*       m_OverlayPalette;
 };

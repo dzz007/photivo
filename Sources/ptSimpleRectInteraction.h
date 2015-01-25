@@ -25,12 +25,12 @@
 
 //==============================================================================
 
+#include "ptAbstractInteraction.h"
+
 #include <QRectF>
 #include <QLine>
 #include <QGraphicsRectItem>
 #include <QMouseEvent>
-
-#include "ptAbstractInteraction.h"
 
 //==============================================================================
 

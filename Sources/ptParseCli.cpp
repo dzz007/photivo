@@ -23,10 +23,13 @@
 #include "ptParseCli.h"
 #include <QStringList>
 #include <QFileInfo>
+#include <iostream>
+using namespace std;
 
 struct Entities {
   QString   Filename;
   QString   PtsFilename;
+  QString   Sidecar;
   int       LoadFile;
   int       JobMode;
   int       DelInputFile;
@@ -37,8 +40,8 @@ struct Entities {
 
 
 ptCliCommands ParseCli(int argc, char *argv[]) {
-  Entities cli = { "", "", 0, 0, 0, 0, 0, false };
-  ptCliCommands result = { cliNoAction, "", "", false, false };
+  Entities cli = Entities();
+  ptCliCommands result = ptCliCommands();
 
   if (argc == 1) {
     return result;
@@ -46,18 +49,19 @@ ptCliCommands ParseCli(int argc, char *argv[]) {
 
   QStringList params;
   params << "-i" << "-j" << "--load-and-delete" << "--pts" << "--new-instance" << "--no-fmgr" << "-p"
-         << "-h" << "--help" << "-help";
+         << "-h" << "--help" << "-help" << "--sidecar";
 
   int i = 1;
   bool MustBeFilename = false;
   bool MustBePtsName  = false;
+  bool MustBeSidecar  = false;
   while (i < argc) {
-    QString current = argv[i];
+    QString current = QString::fromLocal8Bit(argv[i]);
     int whichParam = params.indexOf(current.toLower());
 
     if (MustBeFilename) {
       if (whichParam > -1 || cli.Filename != "") {
-        cli.ShowHelp++;
+        cli.ShowHelp = true;
         break;
       } else {
         cli.Filename = current;
@@ -69,11 +73,23 @@ ptCliCommands ParseCli(int argc, char *argv[]) {
 
     if (MustBePtsName) {
       if (whichParam > -1 || cli.PtsFilename != "") {
-        cli.ShowHelp++;
+        cli.ShowHelp = true;
         break;
       } else {
         cli.PtsFilename = current;
         MustBePtsName = false;
+        i++;
+        continue;
+      }
+    }
+
+    if (MustBeSidecar) {
+      if (whichParam > -1 || cli.Sidecar != "") {
+        cli.ShowHelp = true;
+        break;
+      } else {
+        cli.Sidecar = current;
+        MustBeSidecar = false;
         i++;
         continue;
       }
@@ -95,8 +111,10 @@ ptCliCommands ParseCli(int argc, char *argv[]) {
     } else if (whichParam == 5 || whichParam == 6) {
       cli.NoOpenFileMgr++;
     } else if (whichParam == 7 || whichParam == 8 || whichParam == 9) {
-      cli.ShowHelp++;
+      cli.ShowHelp = true;
       break;
+    } else if (whichParam == 10) { // --sidecar
+      MustBeSidecar = true;
     } else if (whichParam == -1) {  // can only be image file without -i param
       if (QFileInfo(current).suffix().toLower() == "pts") {
         MustBePtsName = true;
@@ -107,8 +125,8 @@ ptCliCommands ParseCli(int argc, char *argv[]) {
       continue;
     }
 
-    if ((MustBeFilename || MustBePtsName) && (i >= argc - 1)) {
-      cli.ShowHelp++;
+    if ((MustBeFilename || MustBePtsName || MustBeSidecar) && (i >= argc - 1)) {
+      cli.ShowHelp = true;
       break;
     }
 
@@ -128,6 +146,7 @@ ptCliCommands ParseCli(int argc, char *argv[]) {
     result.PtsFilename   = cli.PtsFilename;
     result.NewInstance   = cli.NewInstance > 0;
     result.NoOpenFileMgr = cli.NoOpenFileMgr;
+    result.Sidecar       = cli.Sidecar;
 
     if (cli.LoadFile > 0) {
       result.Mode = cliLoadImage;

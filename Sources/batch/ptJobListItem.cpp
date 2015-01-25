@@ -20,10 +20,11 @@
 **
 *******************************************************************************/
 
+#include "ptJobListItem.h"
+
 #include <QFileInfo>
 #include <QProcess>
 #include <QSettings>
-#include "ptJobListItem.h"
 
 //==============================================================================
 
@@ -37,6 +38,7 @@ ptJobListItem::ptJobListItem(const QString &file /* = QString()*/)
 
 //==============================================================================
 
+extern QStringList FileExtsRaw;
 void ptJobListItem::InitFromFile(const QString &file)
 {
   QSettings jobFile(file, QSettings::IniFormat);
@@ -90,12 +92,21 @@ ptJobListItem::~ptJobListItem()
 
 //==============================================================================
 
+void ptJobListItem::SetInputFiles(const QStringList &inputFiles)
+{
+  m_InputFiles = inputFiles;
+}
+
+//==============================================================================
+
 void ptJobListItem::SetStatus(ptJobStatus status)
 {
   m_Status = status;
 //  we save the time when processing started, if it's succeded
   if (status == jsFinished)
     m_lastProcessing = m_ProcessingStarted;
+  else
+    m_lastProcessing = QDateTime();
   emit itemChanged();
 }
 
@@ -119,6 +130,28 @@ void ptJobListItem::UpdateStatusByTime()
     else
       m_Status = jsFinished;
   }
+}
+
+//==============================================================================
+
+void ptJobListItem::UpdateFromJobItem(ptJobListItem *item)
+{
+  Q_ASSERT(item->FileName() == m_FileName);
+
+  if (item->InputFiles() != m_InputFiles) {
+    m_InputFiles = item->InputFiles();
+    SetStatus(jsWaiting);
+  }
+  if (item->OutputPath() != m_OutputPath) {
+    m_OutputPath = item->OutputPath();
+    SetStatus(jsWaiting);
+  }
+  if (item->OutputFileSuffix() != m_OutputFileSuffix) {
+    m_OutputFileSuffix = item->OutputFileSuffix();
+    SetStatus(jsWaiting);
+  }
+  if (m_lastProcessing.isValid() && QFileInfo(item->FileName()).lastModified() > m_lastProcessing)
+    SetStatus(jsWaiting);
 }
 
 //==============================================================================
@@ -150,6 +183,8 @@ const QString ptJobListItem::CreateTempJobFile()
     return QString();
 
 //  create a temporary file being a copy of m_FileName
+  if (!QFileInfo(m_FileName).exists())
+    throw ptJobExeption();
   m_TempFile = new ptTempFile(m_FileName);
   QSettings job(m_TempFile->fileName(), QSettings::IniFormat);
 
@@ -228,6 +263,66 @@ void ptJobListItem::LoadFromSettings(QSettings *settings)
 bool ptJobListItem::operator ==(const ptJobListItem &item) const
 {
   return (m_FileName == item.FileName());
+}
+
+//==============================================================================
+
+bool SortByFileName(ptJobListItem *i1, ptJobListItem *i2)
+{
+  return i1->FileName() < i2->FileName();
+}
+
+bool ReverseSortByFileName(ptJobListItem *i1, ptJobListItem *i2)
+{
+  return i1->FileName() > i2->FileName();
+}
+
+//==============================================================================
+
+bool SortByStatus(ptJobListItem *i1, ptJobListItem *i2)
+{
+  return i1->Status() < i2->Status();
+}
+
+bool ReverseSortByStatus(ptJobListItem *i1, ptJobListItem *i2)
+{
+  return i1->Status() > i2->Status();
+}
+
+//==============================================================================
+
+bool SortByOutputPath(ptJobListItem *i1, ptJobListItem *i2)
+{
+  return i1->OutputPath() < i2->OutputPath();
+}
+
+bool ReverseSortByOutputPath(ptJobListItem *i1, ptJobListItem *i2)
+{
+  return i1->OutputPath() > i2->OutputPath();
+}
+
+//==============================================================================
+
+bool SortByOutputFileSuffix(ptJobListItem *i1, ptJobListItem *i2)
+{
+  return i1->OutputFileSuffix() < i2->OutputFileSuffix();
+}
+
+bool ReverseSortByOutputFileSuffix(ptJobListItem *i1, ptJobListItem *i2)
+{
+  return i1->OutputFileSuffix() > i2->OutputFileSuffix();
+}
+
+//==============================================================================
+
+bool SortByInputFiles(ptJobListItem *i1, ptJobListItem *i2)
+{
+  return i1->InputFiles().first() < i2->InputFiles().first();
+}
+
+bool ReverseSortByInputFiles(ptJobListItem *i1, ptJobListItem *i2)
+{
+  return i1->InputFiles().first() > i2->InputFiles().first();
 }
 
 //==============================================================================

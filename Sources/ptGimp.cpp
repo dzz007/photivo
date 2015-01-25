@@ -121,7 +121,8 @@ void ptRun(const gchar*     Name,
     printf("FileName2    : '%s'\n",Parameter[2].data.d_string);
 
     QFile GimpFile(Parameter[1].data.d_string);
-    assert(GimpFile.open(QIODevice::ReadOnly | QIODevice::Text));
+    bool result = GimpFile.open(QIODevice::ReadOnly | QIODevice::Text);
+    assert(result);
 
     QTextStream In(&GimpFile);
 
@@ -130,9 +131,9 @@ void ptRun(const gchar*     Name,
     QString ICCFileName   = In.readLine();
 
     // Read image
-    FILE *InputFile = fopen(ImageFileName.toAscii().data(),"rb");
+    FILE *InputFile = fopen(ImageFileName.toLocal8Bit().data(),"rb");
     if (!InputFile) {
-      ptLogError(1,ImageFileName.toAscii().data());
+      ptLogError(1,ImageFileName.toLocal8Bit().data());
       return; // ptError_FileOpen;
     }
 
@@ -143,14 +144,18 @@ void ptRun(const gchar*     Name,
     char     Buffer[128];
 
     // Extremely naive. Probably just enough for testcases.
-    assert ( fgets(Buffer,127,InputFile) );
-    assert ( 1 == sscanf(Buffer,"P%hd",&Colors) );
+    char *s = fgets(Buffer,127,InputFile);
+    assert ( s );
+    int n = sscanf(Buffer,"P%hd",&Colors);
+    assert ( 1 == n );
     assert(Colors == 6 );
     do {
-      assert ( fgets(Buffer,127,InputFile) );
+      s = fgets(Buffer,127,InputFile);
+      assert ( s );
     } while (Buffer[0] == '#');
     sscanf(Buffer,"%hd %hd",&Width,&Height);
-    assert ( fgets(Buffer,127,InputFile) );
+    s = fgets(Buffer,127,InputFile);
+    assert ( s );
     sscanf(Buffer,"%hd",&BitsPerColor);
     assert(BitsPerColor == 0xffff);
 
@@ -183,7 +188,8 @@ void ptRun(const gchar*     Name,
     FCLOSE(InputFile);
 
     QFile ExifFile(ExifFileName);
-    assert(ExifFile.open(QIODevice::ReadOnly));
+    result = ExifFile.open(QIODevice::ReadOnly);
+    assert(result);
     qint64 FileSize = ExifFile.size();
     QDataStream ExifIn(&ExifFile);
     char* ExifBuffer = (char *) MALLOC2(FileSize);
@@ -192,7 +198,8 @@ void ptRun(const gchar*     Name,
     ExifFile.close();
 
     QFile ICCFile(ICCFileName);
-    assert(ICCFile.open(QIODevice::ReadOnly));
+    result = ICCFile.open(QIODevice::ReadOnly);
+    assert(result);
     qint64 FileSize2 = ICCFile.size();
     QDataStream ICCIn(&ICCFile);
     char* ICCBuffer = (char *) MALLOC2(FileSize2);

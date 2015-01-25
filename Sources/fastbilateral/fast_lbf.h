@@ -77,7 +77,7 @@ namespace Image_filter{
     typedef Mixed_vector<data_type,base_type> mixed_type;
     typedef unsigned int                      size_type;
     
-    typedef Base_array           base_array_2D_type;
+//    typedef Base_array           base_array_2D_type;
     typedef Array_3D<mixed_type> mixed_array_3D_type;
 
     const size_type width  = input.x_size();

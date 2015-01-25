@@ -26,11 +26,11 @@
 
 //==============================================================================
 
+#include "ptAbstractInteraction.h"
+
 #include <QMouseEvent>
 #include <QLine>
 #include <QGraphicsLineItem>
-
-#include "ptAbstractInteraction.h"
 
 //==============================================================================
 

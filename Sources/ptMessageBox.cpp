@@ -20,10 +20,10 @@
 **
 *******************************************************************************/
 
-#include <QMessageBox>
-
 #include "ptMessageBox.h"
 #include "ptTheme.h"
+
+#include <QMessageBox>
 
 extern ptTheme* Theme;
 

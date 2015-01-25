@@ -56,11 +56,11 @@ void ptFilter_SigContrast::doDefineControls() {
 
   /* NOTE: No floats for now. The old custom widgets enforce double and it’s too much of
      a hassle to change. */
-  FCfgItems = QList<ptCfgItem>()
+  FConfig.initStores(TCfgItemList()
     //            Id                       Type                      Default     Min           Max           Step        Decimals, commonConnect, storeable, caption, tooltip
     << ptCfgItem({CStrengthId,             ptCfgItem::Slider,        0.0,        -20.0,        20.0,         0.5,        1,  true,  true,  tr("Strength"), tr("")})
     << ptCfgItem({CThresholdId,            ptCfgItem::Slider,        ThreshDef,  0.05,         0.95,         0.05,       2,  true,  true,  tr("Threshold"), tr("")})
-  ;
+  );
 }
 
 //==============================================================================
@@ -68,22 +68,22 @@ void ptFilter_SigContrast::doDefineControls() {
 bool ptFilter_SigContrast::doCheckHasActiveCfg() {
   // The filter is off when the contrast slider sits at 0.0. Position of other
   // controls does not matter.
-  return (FConfig->getValue(CStrengthId).toFloat() != 0.0f);
+  return (FConfig.value(CStrengthId).toFloat() != 0.0f);
 }
 
 //==============================================================================
 
 void ptFilter_SigContrast::doRunFilter(ptImage *AImage) const {
   if (FColorSpace == TColorSpace::Rgb) {
-    if (!AImage->m_ColorSpace == ptSpace_Profiled)
+    if (!(AImage->m_ColorSpace == ptSpace_Profiled))
       AImage->toRGB();
-    AImage->SigmoidalContrast(FConfig->getValue(CStrengthId).toFloat(),
-                              FConfig->getValue(CThresholdId).toFloat(),
+    AImage->SigmoidalContrast(FConfig.value(CStrengthId).toFloat(),
+                              FConfig.value(CThresholdId).toFloat(),
                               ChMask_RGB);
   } else if (FColorSpace == TColorSpace::Lab) {
     AImage->toLab();
-    AImage->SigmoidalContrast(FConfig->getValue(CStrengthId).toFloat(),
-                              FConfig->getValue(CThresholdId).toFloat(),
+    AImage->SigmoidalContrast(FConfig.value(CStrengthId).toFloat(),
+                              FConfig.value(CThresholdId).toFloat(),
                               ChMask_L);
   }
 }

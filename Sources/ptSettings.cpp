@@ -4,6 +4,7 @@
 **
 ** Copyright (C) 2008 Jos De Laender <jos.de_laender@telenet.be>
 ** Copyright (C) 2010-2011 Michael Munzert <mail@mm-log.com>
+** Copyright (C) 2013 Alexander Tzyganenko <tz@fast-report.com>
 **
 ** This file is part of Photivo.
 **
@@ -21,14 +22,15 @@
 **
 *******************************************************************************/
 
-#include <cassert>
-
 #include "ptSettings.h"
 #include "ptError.h"
+#include "ptDcRaw.h"
 #include "ptRGBTemperature.h"
 #include "ptGuiOptions.h"
 #include "filemgmt/ptFileMgrConstants.h"
 #include <filters/ptFilterUids.h>
+
+#include <cassert>
 
 //==============================================================================
 
@@ -37,7 +39,7 @@
   if (m_Hash.contains(Key)) {                              \
     ptLogError(ptError_Argument,                           \
                "Inserting an existing key (%s)",           \
-               Key.toAscii().data());                      \
+               Key.toLocal8Bit().data());                      \
     assert (!m_Hash.contains(Key));                        \
   }                                                        \
   m_Hash[Key] = Item;
@@ -58,8 +60,9 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     // Unique Name              uiElement,InitLevel,InJobFile,HasDefault  Default     Min       Max       Step    Decimals  Label,ToolTip
     {"FileMgrThumbnailSize"          ,ptGT_InputSlider     ,1,0,1 ,100  ,50   ,500   ,25   ,0 ,tr("Thumbnail size")     ,tr("Thumbnail size in pixel")},
     {"FileMgrThumbnailPadding"       ,ptGT_InputSlider     ,1,0,1 ,8    ,0    ,50    ,2    ,0 ,tr("Thumbnail padding")  ,tr("Thumbnail padding in pixel")},
-    {"FileMgrThumbMaxRowCol"         ,ptGT_Input           ,1,0,1 ,3    ,1    ,1000  ,1    ,0 ,tr("Thumbnails in a row/column"), tr("Maximum number of thumbnails that should be placed in a row or column.")},
-    {"FileMgrThumbSaveSize"          ,ptGT_InputSlider     ,1,0,1 ,1000 ,50   ,8000  ,100  ,0 ,tr("Thumbnail export size")     ,tr("Thumbnail export size in pixel")},
+    {"FileMgrThumbMaxRowCol"         ,ptGT_Input           ,1,0,1 ,3    ,1    ,1000  ,1    ,0 ,tr("Thumbnails in a row/column") ,tr("Maximum number of thumbnails that should be placed in a row or column.")},
+    {"FileMgrThumbSaveSize"          ,ptGT_InputSlider     ,1,0,1 ,1000 ,50   ,8000  ,100  ,0 ,tr("Thumbnail export size")      ,tr("Thumbnail export size in pixel")},
+    {"FileMgrThumbCacheSize"         ,ptGT_InputSlider     ,1,0,1 ,250  ,0    ,2000  ,100  ,0 ,tr("Thumbnail cache (MB)")       ,tr("Maximum size of thumbnail cache in MBytes.\nRequires a restart to take effect.")},
     {"MemoryTest"                    ,ptGT_InputSlider     ,9,0,1 ,0    ,0    ,500   ,50   ,0 ,tr("MB")                 ,tr("MB to waste")},
     {"TabStatusIndicator"            ,ptGT_Input           ,1,0,1 ,8    ,0    ,16    ,1    ,0 ,tr("Pixel")              ,tr("Size of the LED")},
     {"SliderWidth"                   ,ptGT_Input           ,1,0,1 ,0    ,0    ,500   ,50   ,0 ,tr("Maximum slider width") ,tr("Maximum slider width. Enter 0 to remove restriction")},
@@ -120,148 +123,23 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"LqrVertScale"                  ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.2  ,2.0   ,0.02 ,3 ,tr("Vertical scale")     ,tr("Vertical scale")},
     {"LqrWidth"                      ,ptGT_Input           ,1,1,1 ,1200  ,200 ,6000  ,100  ,0 ,tr("Width")              ,tr("Width")},
     {"LqrHeight"                     ,ptGT_Input           ,1,1,1 ,800   ,200 ,6000  ,100  ,0 ,tr("Height")             ,tr("Height")},
-    {"ResizeScale"                   ,ptGT_Input           ,1,1,1 ,1200  ,200 ,6000  ,100  ,0 ,tr("pixels")               ,tr("Image size")},
-    {"ChannelMixerR2R"               ,ptGT_Input           ,2,1,1 ,1.0  ,-2.0 ,2.0   ,0.01 ,2 ,tr("")                   ,tr("Contribution of red to red")},
-    {"ChannelMixerG2R"               ,ptGT_Input           ,2,1,1 ,0.0  ,-2.0 ,2.0   ,0.01 ,2 ,tr("")                   ,tr("Contribution of green to red")},
-    {"ChannelMixerB2R"               ,ptGT_Input           ,2,1,1 ,0.0  ,-2.0 ,2.0   ,0.01 ,2 ,tr("")                   ,tr("Contribution of blue to red")},
-    {"ChannelMixerR2G"               ,ptGT_Input           ,2,1,1 ,0.0  ,-2.0 ,2.0   ,0.01 ,2 ,tr("")                   ,tr("Contribution of red to green")},
-    {"ChannelMixerG2G"               ,ptGT_Input           ,2,1,1 ,1.0  ,-2.0 ,2.0   ,0.01 ,2 ,tr("")                   ,tr("Contribution of green to green")},
-    {"ChannelMixerB2G"               ,ptGT_Input           ,2,1,1 ,0.0  ,-2.0 ,2.0   ,0.01 ,2 ,tr("")                   ,tr("Contribution of blue to green")},
-    {"ChannelMixerR2B"               ,ptGT_Input           ,2,1,1 ,0.0  ,-2.0 ,2.0   ,0.01 ,2 ,tr("")                   ,tr("Contribution of red to blue")},
-    {"ChannelMixerG2B"               ,ptGT_Input           ,2,1,1 ,0.0  ,-2.0 ,2.0   ,0.01 ,2 ,tr("")                   ,tr("Contribution of green to blue")},
-    {"ChannelMixerB2B"               ,ptGT_Input           ,2,1,1 ,1.0  ,-2.0 ,2.0   ,0.01 ,2 ,tr("")                   ,tr("Contribution of blue to blue")},
+    {"ResizeScale"                   ,ptGT_Input           ,1,1,1 ,1200  ,200 ,6000  ,100  ,0 ,tr("Pixels")             ,tr("Image size")},
+    {"ResizeHeight"                  ,ptGT_Input           ,1,1,1 ,800   ,200 ,6000  ,100  ,0 ,tr("Height")             ,tr("Image height")},
     {"WhiteFraction"                 ,ptGT_InputSlider     ,2,1,1 ,10   ,1    ,50    ,1    ,0 ,tr("% white")             ,tr("Percentage of white aimed at")},
     {"WhiteLevel"                    ,ptGT_InputSlider     ,2,1,1 ,90   ,50   ,99    ,1    ,0 ,tr("WhiteLevel")         ,tr("WhiteLevel")},
     {"Exposure"                      ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-5.0 ,5.0   ,0.1 ,2 ,tr("EV")                 ,tr("Exposure in EV")},
-    {"RGBTextureContrastAmount"      ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-10.0  ,40.0   ,1.0,1 ,tr("Amount")           ,tr("Amount")},
-    {"RGBTextureContrastThreshold"   ,ptGT_InputSlider     ,2,1,1 ,20.0  ,0.0  ,50.0   ,4.0,1 ,tr("Scale")        ,tr("Scale")},
-    {"RGBTextureContrastSoftness"    ,ptGT_InputSlider     ,2,1,1 ,0.14  ,0.0  ,1.0    ,0.01,2 ,tr("Threshold")         ,tr("Threshold")},
-    {"RGBTextureContrastOpacity"     ,ptGT_InputSlider     ,2,1,1 ,0.5  ,0.0  ,1.0   ,0.1,1 ,tr("Opacity")           ,tr("Opacity")},
-    {"RGBTextureContrastEdgeControl" ,ptGT_InputSlider     ,2,1,1 ,0.0   ,0.0  ,10.0   ,0.1,1 ,tr("Denoise")           ,tr("Don't amplify noise")},
-    {"RGBTextureContrastMasking"     ,ptGT_InputSlider     ,2,1,1 ,100.0 ,0.0  ,100.0  ,10.0,0  ,tr("Masking")           ,tr("Don't amplify noise")},
-    {"Microcontrast1Radius"          ,ptGT_InputSlider     ,2,1,1 ,100    ,0    ,500  ,25  ,0 ,tr("Radius")             ,tr("Radius")},
-    {"Microcontrast1Amount"          ,ptGT_InputSlider     ,2,1,1 ,8.0  ,-10.0  ,20.0   ,1.0,1 ,tr("Amount")        ,tr("Amount")},
-    {"Microcontrast1Opacity"         ,ptGT_InputSlider     ,2,1,1 ,0.2  ,0.0  ,1.0   ,0.1,1 ,tr("Opacity")        ,tr("Opacity")},
-    {"Microcontrast1HaloControl"     ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0, 1.0   ,0.1 ,1 ,tr("Halo Control")             ,tr("Halo Control")},
-    {"Microcontrast1LowerLimit"      ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,1.0   ,0.05,3 ,tr("Lower Limit")        ,tr("Lower Limit")},
-    {"Microcontrast1UpperLimit"      ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,1.0   ,0.05,3 ,tr("Upper Limit")        ,tr("Upper Limit")},
-    {"Microcontrast1Softness"        ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-2.0 ,2.0   ,0.1  ,1 ,tr("Softness")           ,tr("Softness")},
-    {"Microcontrast2Radius"          ,ptGT_InputSlider     ,2,1,1 ,500    ,0    ,1000  ,50  ,0 ,tr("Radius")             ,tr("Radius")},
-    {"Microcontrast2Amount"          ,ptGT_InputSlider     ,2,1,1 ,8.0  ,-10.0  ,20.0   ,1.0,1 ,tr("Amount")        ,tr("Amount")},
-    {"Microcontrast2Opacity"         ,ptGT_InputSlider     ,2,1,1 ,0.2  ,0.0  ,1.0   ,0.1,1 ,tr("Opacity")        ,tr("Opacity")},
-    {"Microcontrast2HaloControl"     ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0, 1.0   ,0.1 ,1 ,tr("Halo Control")             ,tr("Halo Control")},
-    {"Microcontrast2LowerLimit"      ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,1.0   ,0.05,3 ,tr("Lower Limit")        ,tr("Lower Limit")},
-    {"Microcontrast2UpperLimit"      ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,1.0   ,0.05,3 ,tr("Upper Limit")        ,tr("Upper Limit")},
-    {"Microcontrast2Softness"        ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-2.0 ,2.0   ,0.1  ,1 ,tr("Softness")           ,tr("Softness")},
-    {"TextureContrast1Amount"        ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-10.0  ,40.0   ,1.0,1 ,tr("Amount")           ,tr("Amount")},
-    {"TextureContrast1Threshold"     ,ptGT_InputSlider     ,2,1,1 ,20.0  ,0.0  ,50.0   ,4.0,1 ,tr("Scale")        ,tr("Scale")},
-    {"TextureContrast1Softness"      ,ptGT_InputSlider     ,2,1,1 ,0.14  ,0.0  ,1.0    ,0.01,2 ,tr("Threshold")         ,tr("Threshold")},
-    {"TextureContrast1Opacity"       ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,1.0   ,0.1,1 ,tr("Opacity")           ,tr("Opacity")},
-    {"TextureContrast1EdgeControl"   ,ptGT_InputSlider     ,2,1,1 ,0.0   ,0.0  ,10.0   ,0.1,1 ,tr("Denoise")           ,tr("Don't amplify noise")},
-    {"TextureContrast1Masking"       ,ptGT_InputSlider     ,2,1,1 ,100.0 ,0.0  ,100.0  ,10.0,0  ,tr("Masking")           ,tr("Don't amplify noise")},
-    {"TextureContrast2Amount"        ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-10.0  ,40.0   ,1.0,1 ,tr("Amount")           ,tr("Amount")},
-    {"TextureContrast2Threshold"     ,ptGT_InputSlider     ,2,1,1 ,100.0  ,0.0  ,400.0   ,4.0,1 ,tr("Scale")        ,tr("Scale")},
-    {"TextureContrast2Softness"      ,ptGT_InputSlider     ,2,1,1 ,0.14  ,0.0  ,1.0    ,0.01,2 ,tr("Threshold")         ,tr("Threshold")},
-    {"TextureContrast2Opacity"       ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,1.0   ,0.1,1 ,tr("Opacity")           ,tr("Opacity")},
-    {"TextureContrast2EdgeControl"   ,ptGT_InputSlider     ,2,1,1 ,0.0   ,0.0  ,10.0   ,0.1,1 ,tr("Denoise")           ,tr("Don't amplify noise")},
-    {"TextureContrast2Masking"       ,ptGT_InputSlider     ,2,1,1 ,100.0 ,0.0  ,100.0  ,10.0,0  ,tr("Masking")           ,tr("Don't amplify noise")},
-    {"LabMicrocontrast1Radius"       ,ptGT_InputSlider     ,2,1,1 ,100    ,0    ,500  ,25  ,0 ,tr("Radius")             ,tr("Radius")},
-    {"LabMicrocontrast1Amount"       ,ptGT_InputSlider     ,2,1,1 ,4.0  ,-10.0  ,20.0   ,1.0,1 ,tr("Amount")        ,tr("Amount")},
-    {"LabMicrocontrast1Opacity"      ,ptGT_InputSlider     ,2,1,1 ,0.2  ,0.0  ,1.0   ,0.1,1 ,tr("Opacity")        ,tr("Opacity")},
-    {"LabMicrocontrast1HaloControl"  ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0, 1.0   ,0.1 ,1 ,tr("Halo Control")             ,tr("Halo Control")},
-    {"LabMicrocontrast1LowerLimit"   ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,1.0   ,0.05,3 ,tr("Lower Limit")        ,tr("Lower Limit")},
-    {"LabMicrocontrast1UpperLimit"   ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,1.0   ,0.05,3 ,tr("Upper Limit")        ,tr("Upper Limit")},
-    {"LabMicrocontrast1Softness"     ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-2.0 ,2.0   ,0.1  ,1 ,tr("Softness")           ,tr("Softness")},
-    {"LabMicrocontrast2Radius"       ,ptGT_InputSlider     ,2,1,1 ,500    ,0    ,1000  ,50  ,0 ,tr("Radius")             ,tr("Radius")},
-    {"LabMicrocontrast2Amount"       ,ptGT_InputSlider     ,2,1,1 ,4.0  ,-10.0  ,20.0   ,1.0,1 ,tr("Amount")        ,tr("Amount")},
-    {"LabMicrocontrast2Opacity"      ,ptGT_InputSlider     ,2,1,1 ,0.2  ,0.0  ,1.0   ,0.1,1 ,tr("Opacity")        ,tr("Opacity")},
-    {"LabMicrocontrast2HaloControl"  ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0, 1.0   ,0.1 ,1 ,tr("Halo Control")             ,tr("Halo Control")},
-    {"LabMicrocontrast2LowerLimit"   ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,1.0   ,0.05,3 ,tr("Lower Limit")        ,tr("Lower Limit")},
-    {"LabMicrocontrast2UpperLimit"   ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,1.0   ,0.05,3 ,tr("Upper Limit")        ,tr("Upper Limit")},
-    {"LabMicrocontrast2Softness"     ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-2.0 ,2.0   ,0.1  ,1 ,tr("Softness")           ,tr("Softness")},
-    {"LC1Radius"                     ,ptGT_InputSlider     ,2,1,1 ,400  ,0  ,1000   ,20 ,0 ,tr("Radius")              ,tr("Radius")},
-    {"LC1Feather"                    ,ptGT_InputSlider     ,2,1,1 ,-0.3  ,-1.0  ,1.0   ,0.1 ,2 ,tr("Feather")              ,tr("Feather")},
-    {"LC1Opacity"                    ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,1.0   ,0.1 ,2 ,tr("Opacity")              ,tr("Opacity")},
-    {"LC1m"                          ,ptGT_InputSlider     ,2,1,1 ,1.0  ,-1.0  ,1.0   ,0.1 ,2 ,tr("Masking")              ,tr("Masking")},
-    {"LC2Radius"                     ,ptGT_InputSlider     ,2,1,1 ,800  ,0  ,1000   ,40 ,0 ,tr("Radius")              ,tr("Radius")},
-    {"LC2Feather"                    ,ptGT_InputSlider     ,2,1,1 ,-0.3  ,-1.0  ,1.0   ,0.1 ,2 ,tr("Feather")              ,tr("Feather")},
-    {"LC2Opacity"                    ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,1.0   ,0.1 ,2 ,tr("Opacity")              ,tr("Opacity")},
-    {"LC2m"                          ,ptGT_InputSlider     ,2,1,1 ,1.0  ,-1.0  ,1.0   ,0.1 ,2 ,tr("Masking")              ,tr("Masking")},
-    {"EAWMaster"                     ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0  ,0.05 ,2 ,tr("Master")              ,tr("Quick setup for the levels")},
-    {"ImpulseDenoiseThresholdL"      ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,5.0  ,0.2  ,1 ,tr("Threshold on L")      ,tr("Threshold on L")},
-    {"ImpulseDenoiseThresholdAB"     ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,5.0  ,0.2  ,1 ,tr("Threshold on color")  ,tr("Threshold on color")},
-    {"EAWLevel1"                     ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0  ,0.05 ,2 ,tr("Level 1")             ,tr("Boosting of level 1")},
-    {"EAWLevel2"                     ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0  ,0.05 ,2 ,tr("Level 2")             ,tr("Boosting of level 2")},
-    {"EAWLevel3"                     ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0  ,0.05 ,2 ,tr("Level 3")             ,tr("Boosting of level 3")},
-    {"EAWLevel4"                     ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0  ,0.05 ,2 ,tr("Level 4")             ,tr("Boosting of level 4")},
-    {"EAWLevel5"                     ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0  ,0.05 ,2 ,tr("Level 5")             ,tr("Boosting of level 5")},
-    {"EAWLevel6"                     ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0  ,0.05 ,2 ,tr("Level 6")             ,tr("Boosting of level 6")},
-    {"GREYCLabOpacity"               ,ptGT_InputSlider     ,2,1,1 ,1.0 ,0.0 ,1.0  ,0.1  ,1 ,tr("Opacity")          ,tr("Opacity")},
-    {"GREYCLabAmplitude"             ,ptGT_InputSlider     ,2,1,1 ,45.0 ,0.0 ,500.0  ,5.0  ,1 ,tr("Amplitude")          ,tr("Amplitude")},
-    {"GREYCLabIterations"            ,ptGT_Input           ,2,1,1 ,1    ,1    ,10    ,1    ,0 ,tr("Iterations")         ,tr("Iterations")},
-    {"GREYCLabSharpness"             ,ptGT_InputSlider     ,2,1,1 ,0.6  ,0.0  ,2.0   ,0.05 ,2 ,tr("Sharpness")          ,tr("Sharpness")},
-    {"GREYCLabAnisotropy"            ,ptGT_InputSlider     ,2,1,1 ,0.5  ,0.0  ,1.0   ,0.05 ,2 ,tr("Anisotropy")         ,tr("Anisotropy")},
-    {"GREYCLabAlpha"                 ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,20.0   ,0.1  ,1 ,tr("Gradient smoothness")              ,tr("Alpha")},
-    {"GREYCLabSigma"                 ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,20.0   ,0.1  ,1 ,tr("Tensor smoothness")              ,tr("Sigma")},
-    {"GREYCLabdl"                    ,ptGT_InputSlider     ,2,1,1 ,0.8  ,0.0  ,2.0   ,0.01 ,2 ,tr("Spacial precision")                 ,tr("dl")},
-    {"GREYCLabda"                    ,ptGT_InputSlider     ,2,1,1 ,30   ,0    ,180    ,1    ,0 ,tr("Angular precision")                 ,tr("da")},
-    {"GREYCLabGaussPrecision"        ,ptGT_InputSlider     ,2,1,1 ,2.0  ,0.0  ,5.0   ,0.1  ,1 ,tr("Value precision")              ,tr("Gauss")},
-    {"DefringeRadius"                ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,10.0  ,0.5  ,1 ,tr("Radius")             ,tr("Radius")},
-    {"DefringeThreshold"             ,ptGT_InputSlider     ,2,1,1 ,25   ,0    ,100   ,5    ,0 ,tr("Threshold")          ,tr("Threshold")},
-    {"DefringeShift"                 ,ptGT_InputSlider     ,1,1,1 ,0.0  ,-1.0 ,1.0   ,0.1  ,2 ,tr("Tune masks")          ,tr("Fine tune the color masks")},
-    {"PyrDenoiseLAmount"             ,ptGT_InputSlider     ,2,1,1 ,0      ,0   ,150   ,5    ,0 ,tr("L amount")        ,tr("Denoise amount on L")},
-    {"PyrDenoiseABAmount"            ,ptGT_InputSlider     ,2,1,1 ,0      ,0   ,150   ,5    ,0 ,tr("Color amount")    ,tr("Denoise amount on AB")},
-    {"PyrDenoiseGamma"               ,ptGT_InputSlider     ,2,1,1 ,2.0    ,1.0 ,4.0   ,0.1  ,1 ,tr("Gamma")           ,tr("Gamma")},
-    {"PyrDenoiseLevels"              ,ptGT_Input           ,2,1,1 ,5      ,3   ,7     ,1    ,0 ,tr("Levels")          ,tr("Levels")},
-    {"BilateralLOpacity"             ,ptGT_InputSlider     ,2,1,1 ,0.0    ,0.0 ,1.0   ,0.10 ,2 ,tr("Opacity")         ,tr("Opacity of denoising on L")},
-    {"BilateralLUseMask"             ,ptGT_InputSlider     ,2,1,1 ,50.0   ,0.0 ,50.0  ,10.0 ,0 ,tr("Edge Threshold")  ,tr("Edge thresholding for denoising on L")},
-    {"BilateralLSigmaS"              ,ptGT_InputSlider     ,2,1,1 ,8.0    ,4.0 ,50.0  ,4.0  ,1 ,tr("L scale")         ,tr("Denoise scale on L")},
-    {"BilateralLSigmaR"              ,ptGT_InputSlider     ,2,1,1 ,0.3    ,0.0 ,3.0   ,0.02 ,2 ,tr("L amount")         ,tr("Denoise on L")},
-    {"BilateralASigmaR"              ,ptGT_InputSlider     ,2,1,1 ,0.0    ,0.0 ,3.0   ,0.02 ,2 ,tr("A amount")         ,tr("Color A denoise")},
-    {"BilateralASigmaS"              ,ptGT_InputSlider     ,2,1,1 ,8.0    ,4.0 ,50.0  ,4.0  ,1 ,tr("A scale")         ,tr("Denoise scale on A")},
-    {"BilateralBSigmaR"              ,ptGT_InputSlider     ,2,1,1 ,0.0    ,0.0 ,3.0   ,0.02 ,2 ,tr("B amount")         ,tr("Color B denoise")},
-    {"BilateralBSigmaS"              ,ptGT_InputSlider     ,2,1,1 ,8.0    ,4.0 ,50.0  ,4.0  ,1 ,tr("B scale")         ,tr("Denoise scale on B")},
-    {"WaveletDenoiseL"               ,ptGT_InputSlider     ,2,1,1 ,0.0    ,0.0 ,10.0  ,0.1  ,1 ,tr("L amount")             ,tr("Threshold for wavelet L denoise (with edge mask)")},
-    {"WaveletDenoiseLSoftness"       ,ptGT_InputSlider     ,2,1,1 ,0.2    ,0.0 ,1.0   ,0.01 ,2 ,tr("L softness")           ,tr("Softness for wavelet L denoise (with edge mask)")},
-    {"WaveletDenoiseLSharpness"      ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,2.0   ,0.1  ,1 ,tr("Sharpness")          ,tr("Sharpness")},
-    {"WaveletDenoiseLAnisotropy"     ,ptGT_InputSlider     ,2,1,1 ,0.2  ,0.0  ,1.0   ,0.01 ,2 ,tr("Anisotropy")         ,tr("Anisotropy")},
-    {"WaveletDenoiseLAlpha"          ,ptGT_InputSlider     ,2,1,1 ,0.5  ,0.0  ,5.0   ,0.10 ,1 ,tr("Gradient smoothness")              ,tr("Alpha")},
-    {"WaveletDenoiseLSigma"          ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,5.0   ,0.1  ,1 ,tr("Tensor smoothness")              ,tr("Sigma")},
-    {"WaveletDenoiseA"               ,ptGT_InputSlider     ,2,1,1 ,0.0    ,0.0 ,10.0  ,0.1  ,1 ,tr("A amount")             ,tr("Threshold for wavelet A denoise")},
-    {"WaveletDenoiseASoftness"       ,ptGT_InputSlider     ,2,1,1 ,0.2    ,0.0 ,1.0   ,0.01 ,2 ,tr("A softness")           ,tr("Softness for wavelet A denoise")},
-    {"WaveletDenoiseB"               ,ptGT_InputSlider     ,2,1,1 ,0.0    ,0.0 ,10.0  ,0.1  ,1 ,tr("B amount")             ,tr("Threshold for wavelet B denoise")},
-    {"WaveletDenoiseBSoftness"       ,ptGT_InputSlider     ,2,1,1 ,0.2    ,0.0 ,1.0   ,0.01 ,2 ,tr("B softness")           ,tr("Softness for wavelet B denoise")},
-    {"GradientSharpenPasses"         ,ptGT_Input           ,2,1,1 ,0      ,0   ,10    ,1   ,0 ,tr("Passes")             ,tr("Number of passes")},
-    {"GradientSharpenStrength"       ,ptGT_InputSlider     ,2,1,1 ,0.4    ,0.0 ,1.0  ,0.05 ,2 ,tr("Strength")           ,tr("Strength")},
-    {"MLMicroContrastStrength"       ,ptGT_InputSlider     ,2,1,1 ,0.0    ,-0.1,0.5 ,0.05  ,2 ,tr("Microcontrast")      ,tr("Microcontrast strength")},
-    {"MLMicroContrastScaling"        ,ptGT_InputSlider     ,2,1,1 ,40.0   ,1.0 ,200.0,10.0 ,0 ,tr("Halo control")       ,tr("Microcontrast Halo control")},
-    {"MLMicroContrastWeight"         ,ptGT_InputSlider     ,2,1,1 ,0.5    ,0.0 ,1.0 ,0.05  ,2 ,tr("Weight")             ,tr("Microcontrast weight")},
-    {"LabHotpixel"                   ,ptGT_InputSlider     ,2,1,1 ,0.0    ,0.0 ,1.0 ,0.1   ,2 ,tr("Clean up")           ,tr("Automatic badpixel reduction")},
-    {"InverseDiffusionIterations"    ,ptGT_Input           ,2,1,1 ,0      ,0   ,5     ,1   ,0 ,tr("Iterations")         ,tr("Number of iterations")},
-    {"InverseDiffusionAmplitude"     ,ptGT_InputSlider     ,2,1,1 ,0.2    ,0.0 ,2.0 ,0.05  ,2 ,tr("Amplitude")          ,tr("Amplitude")},
-    {"USMRadius"                     ,ptGT_InputSlider     ,2,1,1 ,2.0  ,0.1  ,10.0  ,0.1  ,1 ,tr("Radius")             ,tr("Radius for USM")},
-    {"USMAmount"                     ,ptGT_InputSlider     ,2,1,1 ,0.5  ,0.1  ,5.0   ,0.1  ,1 ,tr("Amount")             ,tr("Amount for USM")},
-    {"USMThreshold"                  ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.00 ,0.20  ,0.01 ,2 ,tr("Threshold")          ,tr("Threshold for USM")},
-    {"HighpassRadius"                ,ptGT_InputSlider     ,2,1,1 ,2.0  ,0.0  ,10.0  ,0.5  ,1 ,tr("Radius")             ,tr("Radius for Highpass")},
-    {"HighpassAmount"                ,ptGT_InputSlider     ,2,1,1 ,4.0  ,0.0  ,20.0  ,0.5  ,1 ,tr("Amount")             ,tr("Amount for Highpass")},
-    {"HighpassDenoise"               ,ptGT_InputSlider     ,2,1,1 ,0.2  ,0.0  ,10.0  ,0.1  ,1 ,tr("Denoise")            ,tr("Denoise for Highpass")},
-    {"Grain1Strength"                ,ptGT_InputSlider     ,2,1,1 ,0.3  ,0.0  ,1.0   ,0.1  ,2 ,tr("Strength")           ,tr("Strength for film grain")},
-    {"Grain1Radius"                  ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,10.0  ,1.0  ,1 ,tr("Radius")             ,tr("Radius for film grain")},
-    {"Grain1Opacity"                 ,ptGT_InputSlider     ,2,1,1 ,0.3  ,0.0  ,1.0   ,0.1  ,2 ,tr("Opacity")            ,tr("Opacity for film grain")},
-    {"Grain1LowerLimit"              ,ptGT_InputSlider     ,2,1,1 ,0.1  ,0.0  ,1.0   ,0.002,3 ,tr("Lower Limit")        ,tr("Lower Limit")},
-    {"Grain1UpperLimit"              ,ptGT_InputSlider     ,2,1,1 ,0.4  ,0.0  ,1.0   ,0.002,3 ,tr("Upper Limit")        ,tr("Upper Limit")},
-    {"Grain2Strength"                ,ptGT_InputSlider     ,2,1,1 ,0.3  ,0.0  ,1.0   ,0.1  ,2 ,tr("Strength")           ,tr("Strength for film grain")},
-    {"Grain2Radius"                  ,ptGT_InputSlider     ,2,1,1 ,2.0  ,0.0  ,10.0  ,1.0  ,1 ,tr("Radius")             ,tr("Radius for film grain")},
-    {"Grain2Opacity"                 ,ptGT_InputSlider     ,2,1,1 ,0.2  ,0.0  ,1.0   ,0.1  ,2 ,tr("Opacity")            ,tr("Opacity for film grain")},
-    {"Grain2LowerLimit"              ,ptGT_InputSlider     ,2,1,1 ,0.1  ,0.0  ,1.0   ,0.002,3 ,tr("Lower Limit")        ,tr("Lower Limit")},
-    {"Grain2UpperLimit"              ,ptGT_InputSlider     ,2,1,1 ,0.4  ,0.0  ,1.0   ,0.002,3 ,tr("Upper Limit")        ,tr("Upper Limit")},
+    {"LabVignette"                   ,ptGT_Input           ,2,1,1 ,2    ,1    ,10    ,1    ,0  ,tr("Shape")             ,tr("Shape of the vignette")},
+    {"LabVignetteAmount"             ,ptGT_InputSlider     ,2,1,1 ,0.3  ,-1.0  ,1.0   ,0.1  ,2 ,tr("Amount")            ,tr("Amount")},
+    {"LabVignetteInnerRadius"        ,ptGT_InputSlider     ,2,1,1 ,0.7  ,0.0  ,3.0   ,0.1  ,2  ,tr("Inner Radius")      ,tr("Inner Radius")},
+    {"LabVignetteOuterRadius"        ,ptGT_InputSlider     ,2,1,1 ,2.2  ,0.0  ,3.0   ,0.1  ,2  ,tr("Outer Radius")      ,tr("Outer Radius")},
+    {"LabVignetteRoundness"          ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0  ,1.0   ,0.05  ,2,tr("Roundness")         ,tr("Roundness")},
+    {"LabVignetteCenterX"            ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0  ,1.0   ,0.1  ,2 ,tr("Center X")          ,tr("Center X")},
+    {"LabVignetteCenterY"            ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0  ,1.0   ,0.1  ,2 ,tr("Center Y")          ,tr("Center Y")},
+    {"LabVignetteSoftness"           ,ptGT_InputSlider     ,2,1,1 ,0.06 ,0.0   ,1.0   ,0.1  ,2 ,tr("Softness")          ,tr("Softness")},
     {"BWStylerOpacity"               ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0   ,1.0   ,0.05 ,2 ,tr("Opacity")            ,tr("Opacity")},
     {"BWStylerMultR"                 ,ptGT_InputSlider     ,2,1,1 ,0.5  ,-1.0  ,1.0   ,0.1 ,2 ,tr("Red")                ,tr("Red multiplicity")},
     {"BWStylerMultG"                 ,ptGT_InputSlider     ,2,1,1 ,0.5  ,-1.0  ,1.0   ,0.1 ,2 ,tr("Green")              ,tr("Green multiplicity")},
     {"BWStylerMultB"                 ,ptGT_InputSlider     ,2,1,1 ,0.5  ,-1.0  ,1.0   ,0.1 ,2 ,tr("Blue")               ,tr("Blue multiplicity")},
-    {"SimpleToneR"                   ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0  ,1.0   ,0.1,2  ,tr("Red")                ,tr("Red toning")},
-    {"SimpleToneG"                   ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0  ,1.0   ,0.1,2  ,tr("Green")              ,tr("Green toning")},
-    {"SimpleToneB"                   ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0  ,1.0   ,0.1,2  ,tr("Blue")               ,tr("Blue toning")},
     {"Tone1Amount"                   ,ptGT_InputSlider     ,2,1,1 ,0.5  ,0.0  ,1.0   ,0.1  ,2 ,tr("Amount")             ,tr("Amount of toning")},
     {"Tone1LowerLimit"               ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,1.0   ,0.1  ,2 ,tr("Lower Limit")        ,tr("Lower Limit")},
     {"Tone1UpperLimit"               ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,1.0   ,0.1  ,2 ,tr("Upper Limit")        ,tr("Upper Limit")},
@@ -300,6 +178,14 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"GradualOverlay2LowerLevel"     ,ptGT_InputSlider     ,2,1,1 ,0.5  ,0.0  ,3.0   ,0.1  ,2 ,tr("Lower Level")        ,tr("Lower Level")},
     {"GradualOverlay2UpperLevel"     ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,3.0   ,0.1  ,2 ,tr("Upper Level")        ,tr("Upper Level")},
     {"GradualOverlay2Softness"       ,ptGT_InputSlider     ,2,1,1 ,0.15  ,0.0  ,1.0   ,0.1  ,2 ,tr("Softness")        ,tr("Softness")},
+    {"Vignette"                      ,ptGT_Input           ,2,1,1 ,2    ,1    ,10    ,1    ,0 ,tr("Shape")             ,tr("Shape of the vignette")},
+    {"VignetteAmount"                ,ptGT_InputSlider     ,2,1,1 ,0.5  ,-1.0  ,1.0   ,0.1  ,2 ,tr("Amount")        ,tr("Amount")},
+    {"VignetteInnerRadius"           ,ptGT_InputSlider     ,2,1,1 ,0.7  ,0.0  ,3.0   ,0.1  ,2 ,tr("Inner Radius")        ,tr("Inner Radius")},
+    {"VignetteOuterRadius"           ,ptGT_InputSlider     ,2,1,1 ,2.2  ,0.0  ,3.0   ,0.1  ,2 ,tr("Outer Radius")        ,tr("Outer Radius")},
+    {"VignetteRoundness"             ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0  ,1.0   ,0.05  ,2 ,tr("Roundness")        ,tr("Roundness")},
+    {"VignetteCenterX"               ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0  ,1.0   ,0.1  ,2 ,tr("Center X")        ,tr("Center X")},
+    {"VignetteCenterY"               ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0  ,1.0   ,0.1  ,2 ,tr("Center Y")        ,tr("Center Y")},
+    {"VignetteSoftness"              ,ptGT_InputSlider     ,2,1,1 ,0.15  ,0.0  ,1.0   ,0.1  ,2 ,tr("Softness")        ,tr("Softness")},
     {"GradBlur1Radius"               ,ptGT_InputSlider     ,2,1,1 ,0.0 ,0.0  ,200.0 ,5.0  ,0 ,tr("Radius")             ,tr("Maximal radius for the blur")},
     {"GradBlur1LowerLevel"           ,ptGT_InputSlider     ,2,1,1 ,0.3  ,0.0  ,10.0  ,0.1  ,2 ,tr("Lower Level")        ,tr("Lower Level")},
     {"GradBlur1UpperLevel"           ,ptGT_InputSlider     ,2,1,1 ,1.5  ,0.0  ,10.0  ,0.1  ,2 ,tr("Upper Level")        ,tr("Upper Level")},
@@ -325,15 +211,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"OutputGamma"                   ,ptGT_InputSlider     ,1,1,1 ,0.33  ,0.1  ,1.0   ,0.01 ,3 ,tr("Gamma")              ,tr("Gamma")},
     {"OutputLinearity"               ,ptGT_InputSlider     ,1,1,1 ,0.06  ,0.0  ,1.0   ,0.01 ,3 ,tr("Linearity")          ,tr("Linearity")},
     {"WebResizeScale"                ,ptGT_Input           ,1,1,1 ,1200  ,200 ,2600  ,100  ,0 ,tr("pixels")             ,tr("Image size")},
-    //{"GREYCAmplitude"                ,ptGT_Input           ,2,1,1 ,60.0 ,20.0 ,80.0  ,0.1  ,1 ,tr("Amplitude")          ,tr("Amplitude")},
-    //{"GREYCIterations"               ,ptGT_Input           ,2,1,1 ,1    ,1    ,10    ,1    ,0 ,tr("Iterations")         ,tr("Iterations")},
-    //{"GREYCSharpness"                ,ptGT_Input           ,2,1,1 ,0.8  ,0.0  ,5.0   ,0.1  ,1 ,tr("Sharpness")          ,tr("Sharpness")},
-    //{"GREYCAnisotropy"               ,ptGT_Input           ,2,1,1 ,0.8  ,0.0  ,1.0   ,0.01 ,2 ,tr("Anisotropy")         ,tr("Anisotropy")},
-    //{"GREYCAlpha"                    ,ptGT_Input           ,2,1,1 ,0.6  ,0.0  ,5.0   ,0.10 ,1 ,tr("Alpha")              ,tr("Alpha")},
-    //{"GREYCdl"                       ,ptGT_Input           ,2,1,1 ,0.8  ,0.0  ,1.0   ,0.01 ,2 ,tr("dl")                 ,tr("dl")},
-    //{"GREYCda"                       ,ptGT_Input           ,2,1,1 ,30   ,0    ,90    ,1    ,0 ,tr("da")                 ,tr("da")},
-    //{"GREYCSigma"                    ,ptGT_Input           ,2,1,1 ,1.1  ,0.0  ,5.0   ,0.1  ,1 ,tr("Sigma")              ,tr("Sigma")},
-    //{"GREYCGaussPrecision"           ,ptGT_Input           ,2,1,1 ,2.0  ,0.0  ,5.0   ,0.1  ,1 ,tr("Gauss")              ,tr("Gauss")},
     {"SaveQuality"                   ,ptGT_Input           ,1,1,1 ,97   ,25   ,100   ,1    ,0 ,tr("Quality")            ,tr("Quality")},
     {"SaveResolution"                ,ptGT_Input           ,1,1,1 ,300  ,25   ,1200  ,100  ,0 ,tr("dpi")                ,tr("Resolution in dpi")},
     {"ImageRating"                   ,ptGT_Input           ,2,1,1 ,0    ,0    ,5     ,1    ,0 ,tr("Rating")             ,tr("Image rating")}
@@ -381,23 +258,9 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"FlipMode"                    ,ptGT_Choice       ,2,1,1 ,ptFlipMode_None             ,GuiOptions->FlipMode                  ,tr("Flip mode")},
     {"AspectRatioW"                ,ptGT_Choice       ,2,0,0 ,3                           ,GuiOptions->AspectRatio               ,tr("Aspect width")},
     {"AspectRatioH"                ,ptGT_Choice       ,2,0,0 ,2                           ,GuiOptions->AspectRatio               ,tr("Aspect height")},
-    {"ChannelMixer"                ,ptGT_Choice       ,2,1,1 ,ptChannelMixerChoice_None   ,GuiOptions->ChannelMixer              ,tr("ChannelMixer")},
-    {"ExposureClipMode"            ,ptGT_Choice       ,1,1,1 ,0    ,GuiOptions->ExposureClipMode          ,tr("Clip mode")},
+    {"ExposureClipMode"            ,ptGT_Choice       ,1,1,1 ,ptExposureClipMode_Curve    ,GuiOptions->ExposureClipMode          ,tr("Clip mode")},
     {"AutoExposure"                ,ptGT_Choice       ,1,1,1 ,ptAutoExposureMode_Zero     ,GuiOptions->AutoExposureMode          ,tr("Auto exposure mode")},
-    {"Microcontrast1MaskType"      ,ptGT_Choice       ,2,1,1 ,ptMaskType_None             ,GuiOptions->LMHLightRecoveryMaskType  ,tr("Values for microcontrast")},
-    {"Microcontrast2MaskType"      ,ptGT_Choice       ,2,1,1 ,ptMaskType_None             ,GuiOptions->LMHLightRecoveryMaskType  ,tr("Values for microcontrast")},
-    {"LabMicrocontrast1MaskType"   ,ptGT_Choice       ,2,1,1 ,ptMaskType_None             ,GuiOptions->LMHLightRecoveryMaskType  ,tr("Values for microcontrast")},
-    {"LabMicrocontrast2MaskType"   ,ptGT_Choice       ,2,1,1 ,ptMaskType_None             ,GuiOptions->LMHLightRecoveryMaskType  ,tr("Values for microcontrast")},
-    {"GREYCLab"                    ,ptGT_Choice       ,2,1,1 ,ptEnable_None               ,GuiOptions->EnableGreyC               ,tr("Enable GreyCStoration on L")},
-    {"GREYCLabMaskType"            ,ptGT_Choice       ,2,1,1 ,ptDenoiseMask_Shadows3      ,GuiOptions->DenoiseMask               ,tr("Shadow mask for denoising")},
-    {"GREYCLabInterpolation"       ,ptGT_Choice       ,2,1,1 ,ptGREYCInterpolation_NearestNeighbour,GuiOptions->GREYCInterpolation, tr("GREYC Interpolation")},
-    {"USM"                         ,ptGT_Choice       ,2,1,1 ,ptEnable_None               ,GuiOptions->Enable                    ,tr("Enable USM sharpening")},
-    {"Highpass"                    ,ptGT_Choice       ,2,1,1 ,ptEnable_None               ,GuiOptions->Enable                    ,tr("Enable Highpass sharpening")},
-    {"Grain1MaskType"              ,ptGT_Choice       ,2,1,1 ,ptMaskType_None             ,GuiOptions->GrainMaskType             ,tr("Values for film grain")},
-    {"Grain1Mode"                  ,ptGT_Choice       ,2,1,1 ,ptGrainMode_SoftGaussian    ,GuiOptions->GrainMode                 ,tr("Mode for film grain")},
-    {"Grain2MaskType"              ,ptGT_Choice       ,2,1,1 ,ptMaskType_None             ,GuiOptions->GrainMaskType             ,tr("Values for film grain")},
-    {"Grain2Mode"                  ,ptGT_Choice       ,2,1,1 ,ptGrainMode_SoftGaussian    ,GuiOptions->GrainMode                 ,tr("Mode for film grain")},
-    {"ViewLAB"                     ,ptGT_Choice       ,2,1,1 ,ptViewLAB_LAB               ,GuiOptions->ViewLAB                   ,tr("View seperate LAB channels")},
+    {"LabVignetteMode"             ,ptGT_Choice       ,2,1,1 ,ptVignetteMode_None         ,GuiOptions->VignetteMode              ,tr("Mode for Vignette")},
     {"BWStylerFilmType"            ,ptGT_Choice       ,2,1,1 ,ptFilmType_Luminance        ,GuiOptions->FilmType                  ,tr("Film emulation")},
     {"BWStylerColorFilterType"     ,ptGT_Choice       ,2,1,1 ,ptColorFilterType_None      ,GuiOptions->ColorFilterType           ,tr("Color filter emulation")},
     {"Tone1MaskType"               ,ptGT_Choice       ,2,1,1 ,ptMaskType_None             ,GuiOptions->MaskType                  ,tr("Values for Toning")},
@@ -409,11 +272,12 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"TextureOverlay2Mask"         ,ptGT_Choice       ,2,1,1 ,ptOverlayMaskMode_FullImage ,GuiOptions->OverlayMaskMode           ,tr("Mask for Texture Overlay")},
     {"GradualOverlay1"             ,ptGT_Choice       ,2,1,1 ,ptOverlayMode_None          ,GuiOptions->OverlayMode               ,tr("Mode for Gradual Overlay")},
     {"GradualOverlay2"             ,ptGT_Choice       ,2,1,1 ,ptOverlayMode_None          ,GuiOptions->OverlayMode               ,tr("Mode for Gradual Overlay")},
+    {"VignetteMode"                ,ptGT_Choice       ,2,1,1 ,ptVignetteMode_None         ,GuiOptions->VignetteMode              ,tr("Mode for Vignette")},
     {"GradBlur1"                   ,ptGT_Choice       ,1,1,1 ,ptGradualBlur_Linear        ,GuiOptions->GradualBlurMode           ,tr("Mode for the gradual blur")},
     {"GradBlur2"                   ,ptGT_Choice       ,1,1,1 ,ptGradualBlur_Linear        ,GuiOptions->GradualBlurMode           ,tr("Mode for the gradual blur")},
     {"SoftglowMode"                ,ptGT_Choice       ,2,1,1 ,ptSoftglowMode_None         ,GuiOptions->SoftglowMode              ,tr("Mode for Softglow")},
     {"WebResize"                   ,ptGT_Choice       ,2,1,1 ,ptEnable_None               ,GuiOptions->Enable                    ,tr("Enable web resizing")},
-    {"WebResizeDimension"          ,ptGT_Choice       ,2,1,1 ,ptResizeDimension_LongerEdge,GuiOptions->ResizeDimension           ,tr("Image dimension the resize value applies to")},
+    {"WebResizeDimension"          ,ptGT_Choice       ,2,1,1 ,ptResizeDimension_LongerEdge,GuiOptions->WebResizeDimension        ,tr("Image dimension the resize value applies to")},
     {"WebResizeFilter"             ,ptGT_Choice       ,1,1,1 ,ptIMFilter_Lanczos          ,GuiOptions->IMResizeFilter            ,tr("Filter to be used for resizing")},
     {"SaveFormat"                  ,ptGT_Choice       ,1,1,1 ,ptSaveFormat_JPEG           ,GuiOptions->SaveFormat                ,tr("Output format")},
     {"SaveSampling"                ,ptGT_Choice       ,1,1,1 ,ptSaveSampling_211          ,GuiOptions->SaveSampling              ,tr("JPEG color sampling")},
@@ -440,6 +304,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"SearchBarEnable"            ,ptGT_Check ,1,0,1,tr("Display search bar"),tr("Display search bar")},
     {"WriteBackupSettings"        ,ptGT_Check ,1,0,0,tr("Backup settings") ,tr("Write backup settings during processing")},
     {"RunMode"                    ,ptGT_Check ,1,0,0,tr("manual")          ,tr("manual or automatic pipe")},
+    {"UseThumbnail"               ,ptGT_Check ,1,1,0,tr("Use thumbnail")   ,tr("Use the embedded thumbnail of RAW images")},
     {"MultiplierEnhance"          ,ptGT_Check ,1,1,0,tr("Intensify")       ,tr("Normalize lowest channel to 1")},
     {"ManualBlackPoint"           ,ptGT_Check ,2,1,0,tr("Manual BP")       ,tr("Manual black point setting enabled")},
     {"ManualWhitePoint"           ,ptGT_Check ,2,1,0,tr("Manual WP")       ,tr("Manual white point setting enabled")},
@@ -454,22 +319,16 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"Resize"                     ,ptGT_Check ,9,1,0,tr("Resize")          ,tr("Enable resize")},
     {"AutomaticPipeSize"          ,ptGT_Check ,1,1,0,tr("Automatic pipe size") ,tr("Automatic pipe size")},
     {"GeometryBlock"              ,ptGT_Check ,9,0,0,tr("Block pipe")      ,tr("Disable the pipe")},
-    {"GREYCLabFast"               ,ptGT_Check ,2,1,1,tr("Enable 'fast'")   ,tr("Enable GREYC 'fast'")},
-    {"DefringeColor1"             ,ptGT_Check ,1,1,1,tr("Red")             ,tr("Red")},
-    {"DefringeColor2"             ,ptGT_Check ,1,1,1,tr("Yellow")          ,tr("Yellow")},
-    {"DefringeColor3"             ,ptGT_Check ,1,1,1,tr("Green")           ,tr("Green")},
-    {"DefringeColor4"             ,ptGT_Check ,1,1,1,tr("Cyan")            ,tr("Cyan")},
-    {"DefringeColor5"             ,ptGT_Check ,1,1,1,tr("Blue")            ,tr("Blue")},
-    {"DefringeColor6"             ,ptGT_Check ,1,1,1,tr("Purple")          ,tr("Purple")},
-    {"InverseDiffusionUseEdgeMask",ptGT_Check ,2,1,1,tr("Only edges")      ,tr("Sharpen only edges")},
     {"WebResizeBeforeGamma"       ,ptGT_Check ,1,1,0,tr("before gamma")    ,tr("Webresizing before gamma compensation")},
     {"OutputGammaCompensation"    ,ptGT_Check ,1,1,0,tr("sRGB gamma compensation")    ,tr("sRGB gamma compensation")},
     {"IncludeExif"                ,ptGT_Check ,2,1,1,tr("Include metadata"),tr("Include metadata (only in jpeg and tiff)")},
     {"EraseExifThumbnail"         ,ptGT_Check ,2,1,1,tr("Erase thumbnail") ,tr("Erase the exif thumbnail (only in jpeg and tiff)")},
     {"SaveConfirmation"           ,ptGT_Check ,1,0,1,tr("Save image")      ,tr("Confirm any action that would discard an unsaved image")},
+    {"AutosaveSettings"           ,ptGT_Check ,1,0,1,tr("Autosave settings"),tr("Autosave settings when loading another image (if save confirmation is off)")},
     {"ResetSettingsConfirmation"  ,ptGT_Check, 1,0,1,tr("Reset settings")  ,tr("Confirm resetting settings or dropping a settings file onto an image")},
     {"FullPipeConfirmation"       ,ptGT_Check ,1,0,1,tr("Switch to 1:1 pipe"), tr("Confirm switch to the full sized pipe")},
-    {"EscToExit"                  ,ptGT_Check ,1,0,0,tr("Esc key exits Photivo"),tr("Use the Esc key not only to exit special view modes (e.g. full screen) but also to close Photivo.")}
+    {"EscToExit"                  ,ptGT_Check ,1,0,0,tr("Esc key exits Photivo"),tr("Use the Esc key not only to exit special view modes (e.g. full screen) but also to close Photivo.")},
+    {"LoadTags"                   ,ptGT_Check ,1,0,0,tr("Load tags from sidecar files"),tr("Load tags from sidecar XMP files when opening an image.")}
   };
 
   // Load in the non gui elements
@@ -509,6 +368,7 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"BadPixelsFileName"                    ,1    ,""                                    ,1},
     {"HaveDarkFrame"                        ,1    ,0                                     ,1},
     {"DarkFrameFileName"                    ,1    ,""                                    ,1},
+    {"Sidecar"                              ,1    ,""                                    ,1},
     {"VisualSelectionX"                     ,9    ,0                                     ,1},
     {"VisualSelectionY"                     ,9    ,0                                     ,1},
     {"VisualSelectionWidth"                 ,9    ,0                                     ,1},
@@ -524,7 +384,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"RotateW"                              ,9    ,0                                     ,1},
     {"RotateH"                              ,9    ,0                                     ,1},
     {"ExposureNormalization"                ,9    ,0.0                                   ,0},
-    {"ChannelMixerFileNames"                ,0    ,QStringList()                         ,1},
     {"CurveFileNamesRGB"                    ,0    ,QStringList()                         ,1},
     {"CurveFileNamesR"                      ,0    ,QStringList()                         ,1},
     {"CurveFileNamesG"                      ,0    ,QStringList()                         ,1},
@@ -620,7 +479,8 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"FileMgrShowImageView"                 ,1    ,1                                     ,0},
     {"FileMgrShowSidebar"                   ,1    ,1                                     ,0},
     {"FileMgrThumbLayoutType"               ,1    ,tlVerticalByRow                       ,0},
-
+    {"FileMgrShowRAWs"                      ,1    ,1                                     ,0},
+    {"FileMgrShowBitmaps"                   ,1    ,1                                     ,0},
     {"BatchIsOpen"                          ,9    ,0                                     ,0},
     {"BatchLogIsVisible"                    ,1    ,0                                     ,0}
   };
@@ -767,11 +627,11 @@ ptSettings::~ptSettings() {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-const QVariant ptSettings::GetValue(const QString Key) {
+const QVariant ptSettings::GetValue(const QString Key) const {
   if (!m_Hash.contains(Key)) {
     ptLogError(ptError_Argument,
                "(%s,%d) Could not find key '%s'\n",
-               __FILE__,__LINE__,Key.toAscii().data());
+               __FILE__,__LINE__,Key.toLocal8Bit().data());
     assert (m_Hash.contains(Key));
   }
   return m_Hash[Key]->Value;
@@ -783,7 +643,7 @@ const QVariant ptSettings::GetValue(const QString Key) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-int ptSettings::GetInt(const QString Key) {
+int ptSettings::GetInt(const QString Key) const {
   // Remark : UInt and Int are mixed here.
   // The only settings related type where u is important is uint16_t
   // (dimensions). uint16_t fits in an integer which is 32 bit.
@@ -791,11 +651,11 @@ int ptSettings::GetInt(const QString Key) {
   if (Tmp.type() != QVariant::Int && Tmp.type() != QVariant::UInt) {
     ptLogError(ptError_Argument,
                "Expected 'QVariant::(U)Int' but got '%d' for key '%s'\n",
-               Tmp.type(),Key.toAscii().data());
+               Tmp.type(),Key.toLocal8Bit().data());
     if (Tmp.type() == QVariant::String) {
       ptLogError(ptError_Argument,
                  "Additionally : it's a string '%s'\n",
-                 Tmp.toString().toAscii().data());
+                 Tmp.toString().toLocal8Bit().data());
     }
     assert(Tmp.type() == QVariant::Int);
   }
@@ -808,14 +668,14 @@ int ptSettings::GetInt(const QString Key) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-double ptSettings::GetDouble(const QString Key) {
+double ptSettings::GetDouble(const QString Key) const {
   QVariant Tmp = GetValue(Key);
   if (static_cast<QMetaType::Type>(Tmp.type()) == QMetaType::Float)
     Tmp.convert(QVariant::Double);
   if (Tmp.type() != QVariant::Double) {
     ptLogError(ptError_Argument,
                "Expected 'QVariant::Double' but got '%d' for key '%s'\n",
-               Tmp.type(),Key.toAscii().data());
+               Tmp.type(),Key.toLocal8Bit().data());
     assert(Tmp.type() == QVariant::Double);
   }
   return Tmp.toDouble();
@@ -827,12 +687,12 @@ double ptSettings::GetDouble(const QString Key) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-const QString ptSettings::GetString(const QString Key) {
+const QString ptSettings::GetString(const QString Key) const {
   QVariant Tmp = GetValue(Key);
   if (Tmp.type() != QVariant::String) {
     ptLogError(ptError_Argument,
                "Expected 'QVariant::String' but got '%d' for key '%s'\n",
-               Tmp.type(),Key.toAscii().data());
+               Tmp.type(),Key.toLocal8Bit().data());
     assert(Tmp.type() == QVariant::String);
   }
   return Tmp.toString();
@@ -844,12 +704,12 @@ const QString ptSettings::GetString(const QString Key) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-const QStringList ptSettings::GetStringList(const QString Key) {
+const QStringList ptSettings::GetStringList(const QString Key) const {
   QVariant Tmp = GetValue(Key);
   if (Tmp.type() != QVariant::StringList) {
     ptLogError(ptError_Argument,
                "Expected 'QVariant::StringList' but got '%d' for key '%s'\n",
-               Tmp.type(),Key.toAscii().data());
+               Tmp.type(),Key.toLocal8Bit().data());
     assert(Tmp.type() == QVariant::StringList);
   }
   return Tmp.toStringList();
@@ -866,7 +726,7 @@ void ptSettings::SetValue(const QString Key, const QVariant Value) {
   if (!m_Hash.contains(Key)) {
     ptLogError(ptError_Argument,
                "(%s,%d) Could not find key '%s'\n",
-               __FILE__,__LINE__,Key.toAscii().data());
+               __FILE__,__LINE__,Key.toLocal8Bit().data());
     assert (m_Hash.contains(Key));
   }
   m_Hash[Key]->Value = Value;
@@ -902,7 +762,7 @@ void ptSettings::SetEnabled(const QString Key, const short Enabled) {
   if (!m_Hash.contains(Key)) {
     ptLogError(ptError_Argument,
                "(%s,%d) Could not find key '%s'\n",
-               __FILE__,__LINE__,Key.toAscii().data());
+               __FILE__,__LINE__,Key.toLocal8Bit().data());
     assert (m_Hash.contains(Key));
   }
   switch (m_Hash[Key]->GuiType) {
@@ -920,7 +780,7 @@ void ptSettings::SetEnabled(const QString Key, const short Enabled) {
     default:
       ptLogError(ptError_Argument,
                  "%s is no (expected) gui element.",
-                 Key.toAscii().data());
+                 Key.toLocal8Bit().data());
       assert(m_Hash[Key]->GuiType); // Should have gui type !
       break;
   }
@@ -937,13 +797,13 @@ void ptSettings::SetMaximum(const QString Key, const QVariant Maximum) {
   if (!m_Hash.contains(Key)) {
     ptLogError(ptError_Argument,
                "Could not find key '%s'\n",
-               Key.toAscii().data());
+               Key.toLocal8Bit().data());
     assert (m_Hash.contains(Key));
   }
   if (!m_Hash[Key]->GuiInput) {
     ptLogError(ptError_Argument,
                "Key '%s' has no initialized GuiInput\n",
-               Key.toAscii().data());
+               Key.toLocal8Bit().data());
     assert (m_Hash[Key]->GuiChoice);
   }
   return m_Hash[Key]->GuiInput->SetMaximum(Maximum);
@@ -960,7 +820,7 @@ void  ptSettings::Show(const QString Key, const short Show) {
   if (!m_Hash.contains(Key)) {
     ptLogError(ptError_Argument,
                "(%s,%d) Could not find key '%s'\n",
-               __FILE__,__LINE__,Key.toAscii().data());
+               __FILE__,__LINE__,Key.toLocal8Bit().data());
     assert (m_Hash.contains(Key));
   }
   switch (m_Hash[Key]->GuiType) {
@@ -978,7 +838,7 @@ void  ptSettings::Show(const QString Key, const short Show) {
     default:
       ptLogError(ptError_Argument,
                  "%s is no (expected) gui element.",
-                 Key.toAscii().data());
+                 Key.toLocal8Bit().data());
       assert(m_Hash[Key]->GuiType);
       break;
   }
@@ -999,13 +859,13 @@ void ptSettings::AddOrReplaceOption(const QString  Key,
   if (!m_Hash.contains(Key)) {
     ptLogError(ptError_Argument,
                "Could not find key '%s'\n",
-               Key.toAscii().data());
+               Key.toLocal8Bit().data());
     assert (m_Hash.contains(Key));
   }
   if (!m_Hash[Key]->GuiChoice) {
     ptLogError(ptError_Argument,
                "Key '%s' has no initialized GuiChoice\n",
-               Key.toAscii().data());
+               Key.toLocal8Bit().data());
     assert (m_Hash[Key]->GuiChoice);
   }
   m_Hash[Key]->GuiChoice->AddOrReplaceItem(Text,Value);
@@ -1024,13 +884,13 @@ void ptSettings::ClearOptions(const QString  Key, const short WithDefault) {
   if (!m_Hash.contains(Key)) {
     ptLogError(ptError_Argument,
                "Could not find key '%s'\n",
-               Key.toAscii().data());
+               Key.toLocal8Bit().data());
     assert (m_Hash.contains(Key));
   }
   if (!m_Hash[Key]->GuiChoice) {
     ptLogError(ptError_Argument,
                "Key '%s' has no initialized GuiChoice\n",
-               Key.toAscii().data());
+               Key.toLocal8Bit().data());
     assert (m_Hash[Key]->GuiChoice);
   }
   m_Hash[Key]->GuiChoice->Clear(WithDefault);
@@ -1047,13 +907,13 @@ int ptSettings::GetNrOptions(const QString Key) {
   if (!m_Hash.contains(Key)) {
     ptLogError(ptError_Argument,
                "Could not find key '%s'\n",
-               Key.toAscii().data());
+               Key.toLocal8Bit().data());
     assert (m_Hash.contains(Key));
   }
   if (!m_Hash[Key]->GuiChoice) {
     ptLogError(ptError_Argument,
                "Key '%s' has no initialized GuiChoice\n",
-               Key.toAscii().data());
+               Key.toLocal8Bit().data());
     assert (m_Hash[Key]->GuiChoice);
   }
   return m_Hash[Key]->GuiChoice->Count();
@@ -1070,13 +930,13 @@ const QVariant ptSettings::GetOptionsValue(const QString Key,const int Index){
   if (!m_Hash.contains(Key)) {
     ptLogError(ptError_Argument,
                "Could not find key '%s'\n",
-               Key.toAscii().data());
+               Key.toLocal8Bit().data());
     assert (m_Hash.contains(Key));
   }
   if (!m_Hash[Key]->GuiChoice) {
     ptLogError(ptError_Argument,
                "Key '%s' has no initialized GuiChoice\n",
-               Key.toAscii().data());
+               Key.toLocal8Bit().data());
     assert (m_Hash[Key]->GuiChoice);
   }
   return m_Hash[Key]->GuiChoice->GetItemData(Index);
@@ -1093,13 +953,13 @@ const QString ptSettings::GetCurrentText(const QString Key){
   if (!m_Hash.contains(Key)) {
     ptLogError(ptError_Argument,
                "Could not find key '%s'\n",
-               Key.toAscii().data());
+               Key.toLocal8Bit().data());
     assert (m_Hash.contains(Key));
   }
   if (!m_Hash[Key]->GuiChoice) {
     ptLogError(ptError_Argument,
                "Key '%s' has no initialized GuiChoice\n",
-               Key.toAscii().data());
+               Key.toLocal8Bit().data());
     assert (m_Hash[Key]->GuiChoice);
   }
   return m_Hash[Key]->GuiChoice->CurrentText();
@@ -1115,7 +975,7 @@ void ptSettings::SetGuiInput(const QString Key, ptInput* Value) {
   if (!m_Hash.contains(Key)) {
     ptLogError(ptError_Argument,
                "(%s,%d) Could not find key '%s'\n",
-               __FILE__,__LINE__,Key.toAscii().data());
+               __FILE__,__LINE__,Key.toLocal8Bit().data());
     assert (m_Hash.contains(Key));
   }
   m_Hash[Key]->GuiInput  = Value;
@@ -1133,7 +993,7 @@ void ptSettings::SetGuiChoice(const QString Key, ptChoice* Value) {
   if (!m_Hash.contains(Key)) {
     ptLogError(ptError_Argument,
                "(%s,%d) Could not find key '%s'\n",
-               __FILE__,__LINE__,Key.toAscii().data());
+               __FILE__,__LINE__,Key.toLocal8Bit().data());
     assert (m_Hash.contains(Key));
   }
   m_Hash[Key]->GuiInput  = NULL;
@@ -1151,7 +1011,7 @@ void ptSettings::SetGuiCheck(const QString Key, ptCheck* Value) {
   if (!m_Hash.contains(Key)) {
     ptLogError(ptError_Argument,
                "(%s,%d) Could not find key '%s'\n",
-               __FILE__,__LINE__,Key.toAscii().data());
+               __FILE__,__LINE__,Key.toLocal8Bit().data());
     assert (m_Hash.contains(Key));
   }
   m_Hash[Key]->GuiInput  = NULL;
@@ -1170,7 +1030,7 @@ QWidget* ptSettings::GetGuiWidget(const QString Key) {
   if (!m_Hash.contains(Key)) {
     ptLogError(ptError_Argument,
                "(%s,%d) Could not find key '%s'\n",
-               __FILE__,__LINE__,Key.toAscii().data());
+               __FILE__,__LINE__,Key.toLocal8Bit().data());
     assert (m_Hash.contains(Key));
   }
   if (m_Hash[Key]->GuiInput) {
@@ -1205,9 +1065,9 @@ void ptSettings::ToDcRaw(ptDcRaw* TheDcRaw) {
   QString InputFileName = GetStringList("InputFileNameList")[0];
   FREE(TheDcRaw->m_UserSetting_InputFileName);
   TheDcRaw->m_UserSetting_InputFileName =
-    (char*) MALLOC(1+strlen(InputFileName.toAscii().data()));
+    (char*) MALLOC(1+strlen(InputFileName.toLocal8Bit().data()));
   ptMemoryError(TheDcRaw->m_UserSetting_InputFileName,__FILE__,__LINE__);
-  strcpy(TheDcRaw->m_UserSetting_InputFileName,InputFileName.toAscii().data());
+  strcpy(TheDcRaw->m_UserSetting_InputFileName,InputFileName.toLocal8Bit().data());
 
   // Detail view
   TheDcRaw->m_UserSetting_DetailView = Settings->GetInt("DetailViewActive");
@@ -1334,11 +1194,11 @@ void ptSettings::ToDcRaw(ptDcRaw* TheDcRaw) {
       FREE(TheDcRaw->m_UserSetting_BadPixelsFileName);
       TheDcRaw->m_UserSetting_BadPixelsFileName = (char *)
         MALLOC(1+
-             strlen(GetString("BadPixelsFileName").toAscii().data()));
+             strlen(GetString("BadPixelsFileName").toLocal8Bit().data()));
       ptMemoryError(TheDcRaw->m_UserSetting_BadPixelsFileName,
                     __FILE__,__LINE__);
       strcpy(TheDcRaw->m_UserSetting_BadPixelsFileName,
-             GetString("BadPixelsFileName").toAscii().data());
+             GetString("BadPixelsFileName").toLocal8Bit().data());
       break;
     default :
       assert(0);
@@ -1356,11 +1216,11 @@ void ptSettings::ToDcRaw(ptDcRaw* TheDcRaw) {
       FREE(TheDcRaw->m_UserSetting_DarkFrameFileName);
       TheDcRaw->m_UserSetting_DarkFrameFileName = (char *)
         MALLOC(1+
-             strlen(GetString("DarkFrameFileName").toAscii().data()));
+             strlen(GetString("DarkFrameFileName").toLocal8Bit().data()));
       ptMemoryError(TheDcRaw->m_UserSetting_DarkFrameFileName,
                     __FILE__,__LINE__);
       strcpy(TheDcRaw->m_UserSetting_DarkFrameFileName,
-             GetString("DarkFrameFileName").toAscii().data());
+             GetString("DarkFrameFileName").toLocal8Bit().data());
       break;
     default :
       assert(0);
@@ -1502,6 +1362,13 @@ void ptSettings::FromDcRaw(ptDcRaw* TheDcRaw) {
   TRACEKEYVALS("ExposureNorm(EV)","%f", GetDouble("ExposureNormalization"));
 }
 
+//==============================================================================
+
+bool ptSettings::useRAWHandling() const
+{
+  return (GetInt("IsRAW") == 1) && (GetInt("UseThumbnail") == 0);
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Tool Info
@@ -1528,10 +1395,10 @@ sToolInfo ToolInfo (const QString GuiName) {
     Info.Name = "Vignetting (Lensfun)";
     Info.IsActive = Settings->GetInt("LfunVignetteModel") != 0;
   } else if (GuiName == "TabLensfunDistortion") {
-    Info.Name == "Lens Distortion (Lensfun)";
+    Info.Name = "Lens Distortion (Lensfun)";
     Info.IsActive = Settings->GetInt("LfunDistModel") != 0;
   } else if (GuiName == "TabLensfunGeometry") {
-    Info.Name == "Geometry Conversion (Lensfun)";
+    Info.Name = "Geometry Conversion (Lensfun)";
     Info.IsActive = Settings->GetInt("LfunSrcGeo") != Settings->GetInt("LfunTargetGeo");
   } else if (GuiName == "TabDefish") {
       Info.Name = "Defish";
@@ -1561,114 +1428,20 @@ sToolInfo ToolInfo (const QString GuiName) {
                       Settings->GetInt("GeometryBlock");
   }
   // Tab RGB
-  else if (GuiName == "TabChannelMixer") {
-      Info.Name = "Channel mixer";
-      Info.IsActive = Settings->GetInt("ChannelMixer");
-  } else if (GuiName == "TabRGBTextureContrast") {
-      Info.Name = "RGB texture contrast";
-      Info.IsActive = (Settings->GetDouble("RGBTextureContrastAmount")!=0.0 &&
-                       Settings->GetDouble("RGBTextureContrastOpacity")!=0.0)!=0?1:0;
-  } else if (GuiName == "TabRGBLocalContrast1") {
-      Info.Name = "RGB Local Contrast 1";
-      Info.IsActive = Settings->GetInt("Microcontrast1MaskType");
-  } else if (GuiName == "TabRGBLocalContrast2") {
-      Info.Name = "RGB Local Contrast 2";
-      Info.IsActive = Settings->GetInt("Microcontrast2MaskType");
+  else if (GuiName == "TabExposure") {
+      Info.Name = "Exposure";
+      Info.IsActive = Settings->GetDouble("Exposure")!=0.0?1:0;
   }
-  // Lab Color and Contrast
-  else if (GuiName == "TabLABTexture1") {
-      Info.Name = "Lab Texture Contrast 1";
-      Info.IsActive = (Settings->GetDouble("TextureContrast1Amount")!=0.0 &&
-                      Settings->GetDouble("TextureContrast1Opacity")!=0.0)?1:0;
-  } else if (GuiName == "TabLABTexture2") {
-      Info.Name = "Lab Texture Contrast 2";
-      Info.IsActive = (Settings->GetDouble("TextureContrast2Amount")!=0.0 &&
-                      Settings->GetDouble("TextureContrast2Opacity")!=0.0)?1:0;
-  } else if (GuiName == "TabLABLocalContrast1") {
-      Info.Name = "Lab Local Contrast 1";
-      Info.IsActive = Settings->GetInt("LabMicrocontrast1MaskType");
-  } else if (GuiName == "TabLABLocalContrast2") {
-      Info.Name = "Lab Local Contrast 2";
-      Info.IsActive = Settings->GetInt("LabMicrocontrast2MaskType");
-  } else if (GuiName == "TabLABLCStretch1") {
-      Info.Name = "Lab Local Contrast Stretch 1";
-      Info.IsActive = Settings->GetDouble("LC1Opacity")!=0.0?1:0;
-  } else if (GuiName == "TabLABLCStretch2") {
-      Info.Name = "Lab Local Contrast Stretch 2";
-      Info.IsActive = Settings->GetDouble("LC2Opacity")!=0.0?1:0;
-  }
-  // Lab Sharpen and Noise
-  else if (GuiName == "TabLABImpulseDenoise") {
-      Info.Name = "Lab Impulse denoise";
-      Info.IsActive = Settings->GetDouble("ImpulseDenoiseThresholdL")!=0.0 ||
-                      Settings->GetDouble("ImpulseDenoiseThresholdAB")!=0.0;
-  } else if (GuiName == "TabLABEAW") {
-      Info.Name = "Lab EAW equalizer";
-      Info.IsActive = (Settings->GetDouble("EAWLevel1") != 0.0 ||
-                       Settings->GetDouble("EAWLevel2") != 0.0 ||
-                       Settings->GetDouble("EAWLevel3") != 0.0 ||
-                       Settings->GetDouble("EAWLevel4") != 0.0 ||
-                       Settings->GetDouble("EAWLevel5") != 0.0 ||
-                       Settings->GetDouble("EAWLevel6") != 0.0)?1:0;
-  } else if (GuiName == "TabLABGreyC") {
-      Info.Name = "Lab GreyCStoration";
-      Info.IsActive = ((Settings->GetInt("FullOutput") &&
-                        Settings->GetInt("GREYCLab")) ||
-                       Settings->GetInt("GREYCLab")>=2)!=0?1:0;
-  } else if (GuiName == "TabLABDefringe") {
-      Info.Name = "Lab Defringe";
-      Info.IsActive = Settings->GetDouble("DefringeRadius")!=0.0;
-  } else if (GuiName == "TabWaveletDenoise") {
-      Info.Name = "Lab Wavelet denoise";
-      Info.IsActive = (Settings->GetDouble("WaveletDenoiseL")!=0.0 ||
-                      Settings->GetDouble("WaveletDenoiseA")!=0.0 ||
-                      Settings->GetDouble("WaveletDenoiseB")!=0.0)?1:0;
-  } else if (GuiName == "TabLuminanceDenoise") {
-      Info.Name = "Lab Luminance denoise";
-      Info.IsActive = Settings->GetDouble("BilateralLOpacity")!=0.0?1:0;
-  } else if (GuiName == "TabPyramidDenoise") {
-      Info.Name = "Lab Pyramid denoise";
-      Info.IsActive = (Settings->GetInt("PyrDenoiseLAmount")!=0.0||
-                       Settings->GetInt("PyrDenoiseABAmount"))!=0.0?1:0;
-  } else if (GuiName == "TabColorDenoise") {
-      Info.Name = "Lab Levels";
-      Info.IsActive = (Settings->GetDouble("BilateralASigmaR")!=0.0 ||
-                      Settings->GetDouble("BilateralBSigmaR")!=0.0)?1:0;
-  } else if (GuiName == "TabLABGradientSharpen") {
-      Info.Name = "Lab Gradient Sharpen";
-      Info.IsActive = Settings->GetInt("GradientSharpenPasses") ||
-                      Settings->GetDouble("MLMicroContrastStrength")!=0.0 ||
-                      Settings->GetDouble("LabHotpixel")!=0.0;
-  } else if (GuiName == "TabInverseDiffusion") {
-      Info.Name = "Lab inverse diffusion";
-      Info.IsActive = Settings->GetInt("InverseDiffusionIterations")!=0?1:0;
-  } else if (GuiName == "TabLABUSM") {
-      Info.Name = "Lab USM";
-      Info.IsActive = ((Settings->GetInt("FullOutput") &&
-                        Settings->GetInt("USM")) ||
-                       Settings->GetInt("USM")==2)!=0?1:0;
-  } else if (GuiName == "TabLABHighpass") {
-      Info.Name = "Lab highpass";
-      Info.IsActive = ((Settings->GetInt("FullOutput") &&
-                        Settings->GetInt("Highpass")) ||
-                       Settings->GetInt("Highpass")==2)!=0?1:0;
-  } else if (GuiName == "TabLABFilmGrain") {
-      Info.Name = "Lab film grain";
-      Info.IsActive = (Settings->GetInt("Grain1MaskType") ||
-                      Settings->GetInt("Grain2MaskType"))!=0?1:0;
-  } else if (GuiName == "TabLABViewLab") {
-      Info.Name = "Lab view Lab";
-      Info.IsActive = Settings->GetInt("ViewLAB")!=0?1:0;
+  // Tab Lab EyeCandy
+  else if (GuiName == "TabLABVignette") {
+      Info.Name = "Lab vignette";
+      Info.IsActive = (Settings->GetInt("LabVignetteMode") != 0 &&
+                       Settings->GetDouble("LabVignetteAmount") != 0.0)!=0?1:0;
   }
   // Tab EyeCandy
   else if (GuiName == "TabBW") {
       Info.Name = "Black and White";
       Info.IsActive = Settings->GetDouble("BWStylerOpacity")!=0.0?1:0;
-  } else if (GuiName == "TabSimpleTone") {
-      Info.Name = "Simple toning";
-      Info.IsActive = (Settings->GetDouble("SimpleToneR") !=0.0 ||
-                       Settings->GetDouble("SimpleToneG") !=0.0 ||
-                       Settings->GetDouble("SimpleToneB") !=0.0)!=0?1:0;
   } else if (GuiName == "TabRGBTone1") {
       Info.Name = "RGB Toning 1";
       Info.IsActive = Settings->GetInt("Tone1MaskType")!=0?1:0;
@@ -1694,6 +1467,10 @@ sToolInfo ToolInfo (const QString GuiName) {
       Info.Name = "Gradual Overlay 2";
       Info.IsActive = (Settings->GetInt("GradualOverlay2") &&
                        Settings->GetDouble("GradualOverlay2Amount")!=0.0)!=0?1:0;
+  } else if (GuiName == "TabRGBVignette") {
+      Info.Name = "Eyecandy vignette";
+      Info.IsActive = (Settings->GetInt("VignetteMode") &&
+                       Settings->GetDouble("VignetteAmount")!=0.0)!=0?1:0;
   } else if (GuiName == "TabGradualBlur1") {
       Info.Name = "Gradual blur 1";
       Info.IsActive = Settings->GetDouble("GradBlur1Radius")!=0.0?1:0;
