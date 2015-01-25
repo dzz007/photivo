@@ -1148,13 +1148,10 @@ void ptProcessor::Run(short Phase,
         //***************************************************************************
         // Simple Tone
 
-        if (Settings->ToolIsActive("TabSimpleTone")) {
-
-          m_ReportProgress(tr("Simple Toning"));
-
-          m_Image_AfterEyeCandy->SimpleTone(Settings->GetDouble("SimpleToneR"),
-              Settings->GetDouble("SimpleToneG"),
-              Settings->GetDouble("SimpleToneB"));
+        hFilter = GFilterDM->GetFilterFromName(Fuid::SimpleTone_EyeCandy);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterEyeCandy);
         }
 
 

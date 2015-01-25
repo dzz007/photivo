@@ -372,7 +372,7 @@
                           <enum>QTabWidget::West</enum>
                          </property>
                          <property name="currentIndex">
-                          <number>5</number>
+                          <number>7</number>
                          </property>
                          <property name="iconSize">
                           <size>
@@ -4032,8 +4032,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>426</width>
-                                <height>586</height>
+                                <width>98</width>
+                                <height>438</height>
                                </rect>
                               </property>
                               <layout class="QVBoxLayout" name="LabEyeCandyTabLayout">
@@ -4215,8 +4215,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>408</width>
-                                    <height>217</height>
+                                    <width>98</width>
+                                    <height>174</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -4334,22 +4334,22 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>98</width>
-                                <height>573</height>
+                                <width>426</width>
+                                <height>586</height>
                                </rect>
                               </property>
                               <layout class="QVBoxLayout" name="EyeCandyTabLayout">
                                <item>
                                 <widget class="QToolBox" name="ToolBoxEyeCandy">
                                  <property name="currentIndex">
-                                  <number>0</number>
+                                  <number>1</number>
                                  </property>
                                  <widget class="QWidget" name="TabBW">
                                   <property name="geometry">
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
+                                    <width>391</width>
                                     <height>126</height>
                                    </rect>
                                   </property>
@@ -4435,43 +4435,14 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>84</height>
+                                    <width>408</width>
+                                    <height>82</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
-                                   <string>Simple tone</string>
+                                   <string notr="true">3ca8f518-398d-44f4-8e17-6303a0abcdd0</string>
                                   </attribute>
-                                  <layout class="QVBoxLayout" name="verticalLayout_60">
-                                   <item>
-                                    <widget class="QWidget" name="widget_61" native="true">
-                                     <layout class="QVBoxLayout" name="verticalLayout_17">
-                                      <item>
-                                       <widget class="QWidget" name="SimpleToneRWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="SimpleToneGWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="SimpleToneBWidget" native="true"/>
-                                      </item>
-                                     </layout>
-                                    </widget>
-                                   </item>
-                                   <item>
-                                    <spacer name="verticalSpacer_12">
-                                     <property name="orientation">
-                                      <enum>Qt::Vertical</enum>
-                                     </property>
-                                     <property name="sizeHint" stdset="0">
-                                      <size>
-                                       <width>20</width>
-                                       <height>250</height>
-                                      </size>
-                                     </property>
-                                    </spacer>
-                                   </item>
-                                  </layout>
+                                  <layout class="QVBoxLayout" name="verticalLayout_60"/>
                                  </widget>
                                  <widget class="QWidget" name="TabRGBTone1">
                                   <property name="geometry">

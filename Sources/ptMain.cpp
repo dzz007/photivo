@@ -376,6 +376,7 @@ void CreateAllFilters() {
   GFilterDM->NewFilter("SatAdjust",             Fuid::SatAdjust_LabEyeCandy);
   GFilterDM->NewFilter("Tone",                  Fuid::Tone_LabEyeCandy);
   // Eyecandy tab
+  GFilterDM->NewFilter("SimpleTone",            Fuid::SimpleTone_EyeCandy);
   GFilterDM->NewFilter("SigContrastRgb",        Fuid::SigContrastRgb_EyeCandy);
   GFilterDM->NewFilter("ColorIntensity",        Fuid::ColorIntensity_EyeCandy);
   GFilterDM->NewFilter("RToneCurve",            Fuid::RTone_EyeCandy);
@@ -5738,10 +5739,6 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_SetAndRunDispatch(BWStylerMultGInput)
   M_SetAndRunDispatch(BWStylerMultBInput)
   M_SetAndRunDispatch(BWStylerOpacityInput)
-
-  M_SetAndRunDispatch(SimpleToneRInput)
-  M_SetAndRunDispatch(SimpleToneGInput)
-  M_SetAndRunDispatch(SimpleToneBInput)
 
   M_SetAndRunDispatch(Tone1MaskTypeChoice)
   M_SetAndRunDispatch(Tone1AmountInput)

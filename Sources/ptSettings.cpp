@@ -140,9 +140,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"BWStylerMultR"                 ,ptGT_InputSlider     ,2,1,1 ,0.5  ,-1.0  ,1.0   ,0.1 ,2 ,tr("Red")                ,tr("Red multiplicity")},
     {"BWStylerMultG"                 ,ptGT_InputSlider     ,2,1,1 ,0.5  ,-1.0  ,1.0   ,0.1 ,2 ,tr("Green")              ,tr("Green multiplicity")},
     {"BWStylerMultB"                 ,ptGT_InputSlider     ,2,1,1 ,0.5  ,-1.0  ,1.0   ,0.1 ,2 ,tr("Blue")               ,tr("Blue multiplicity")},
-    {"SimpleToneR"                   ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0  ,1.0   ,0.1,2  ,tr("Red")                ,tr("Red toning")},
-    {"SimpleToneG"                   ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0  ,1.0   ,0.1,2  ,tr("Green")              ,tr("Green toning")},
-    {"SimpleToneB"                   ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0  ,1.0   ,0.1,2  ,tr("Blue")               ,tr("Blue toning")},
     {"Tone1Amount"                   ,ptGT_InputSlider     ,2,1,1 ,0.5  ,0.0  ,1.0   ,0.1  ,2 ,tr("Amount")             ,tr("Amount of toning")},
     {"Tone1LowerLimit"               ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,1.0   ,0.1  ,2 ,tr("Lower Limit")        ,tr("Lower Limit")},
     {"Tone1UpperLimit"               ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,1.0   ,0.1  ,2 ,tr("Upper Limit")        ,tr("Upper Limit")},
@@ -1445,11 +1442,6 @@ sToolInfo ToolInfo (const QString GuiName) {
   else if (GuiName == "TabBW") {
       Info.Name = "Black and White";
       Info.IsActive = Settings->GetDouble("BWStylerOpacity")!=0.0?1:0;
-  } else if (GuiName == "TabSimpleTone") {
-      Info.Name = "Simple toning";
-      Info.IsActive = (Settings->GetDouble("SimpleToneR") !=0.0 ||
-                       Settings->GetDouble("SimpleToneG") !=0.0 ||
-                       Settings->GetDouble("SimpleToneB") !=0.0)!=0?1:0;
   } else if (GuiName == "TabRGBTone1") {
       Info.Name = "RGB Toning 1";
       Info.IsActive = Settings->GetInt("Tone1MaskType")!=0?1:0;
