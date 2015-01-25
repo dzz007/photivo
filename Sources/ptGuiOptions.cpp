@@ -23,6 +23,7 @@
 *******************************************************************************/
 
 #include "ptGuiOptions.h"
+#include "ptConstants.h"
 #include <QObject>
 
 // -----------------------------------------------------------------------------
@@ -30,16 +31,16 @@
 namespace pt {
   namespace ComboEntries {
     const ptCfgItem::TComboEntryList FilterModes({
-      {QObject::tr("Disabled"),       static_cast<int>(TMaskedFilterModes::Disabled), "Disabled"},
-      {QObject::tr("Only final run"), static_cast<int>(TMaskedFilterModes::FinalRun), "FinalRun"},
-      {QObject::tr("With preview"),   static_cast<int>(TMaskedFilterModes::AlwaysOn), "AlwaysOn"},
+      {QObject::tr("Disabled"),       static_cast<int>(TFilterMode::Disabled), "Disabled"},
+      {QObject::tr("Only final run"), static_cast<int>(TFilterMode::FinalRun), "FinalRun"},
+      {QObject::tr("With preview"),   static_cast<int>(TFilterMode::AlwaysOn), "AlwaysOn"},
     });
 
     const ptCfgItem::TComboEntryList MaskedFilterModes({
-      {QObject::tr("Disabled"),       static_cast<int>(TMaskedFilterModes::Disabled), "Disabled"},
-      {QObject::tr("Only final run"), static_cast<int>(TMaskedFilterModes::FinalRun), "FinalRun"},
-      {QObject::tr("With preview"),   static_cast<int>(TMaskedFilterModes::AlwaysOn), "AlwaysOn"},
-      {QObject::tr("Show mask"),      static_cast<int>(TMaskedFilterModes::ShowMask), "ShowMask"}
+      {QObject::tr("Disabled"),       static_cast<int>(TFilterMode::Disabled), "Disabled"},
+      {QObject::tr("Only final run"), static_cast<int>(TFilterMode::FinalRun), "FinalRun"},
+      {QObject::tr("With preview"),   static_cast<int>(TFilterMode::AlwaysOn), "AlwaysOn"},
+      {QObject::tr("Show mask"),      static_cast<int>(TFilterMode::ShowMask), "ShowMask"}
     });
 
   } // namespace ComboEntries

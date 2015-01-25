@@ -1210,9 +1210,9 @@ void ptFilterDM::FillNameMap() {
   FNameMap.insert("WienerFilterLensBlur",            "Wiener/"+Fuid::Wiener_LabSN+"/LensBlur");
   FNameMap.insert("InverseDiffusionIterations",      "InvDiffSharpen/"+Fuid::InvDiffSharpen_LabSN+"/Iterations");
   FNameMap.insert("InverseDiffusionAmplitude",       "InvDiffSharpen/"+Fuid::InvDiffSharpen_LabSN+"/Amplitude");
-//  FNameMap.insert("USMRadius",                       "");
-//  FNameMap.insert("USMAmount",                       "");
-//  FNameMap.insert("USMThreshold",                    "");
+  FNameMap.insert("USMRadius",                       "UnsharpMask/"+Fuid::Usm_LabSN+"/Radius");
+  FNameMap.insert("USMAmount",                       "UnsharpMask/"+Fuid::Usm_LabSN+"/Strength");
+  FNameMap.insert("USMThreshold",                    "UnsharpMask/"+Fuid::Usm_LabSN+"/Threshold");
 //  FNameMap.insert("HighpassRadius",                  "");
 //  FNameMap.insert("HighpassAmount",                  "");
 //  FNameMap.insert("HighpassDenoise",                 "");
@@ -1422,7 +1422,7 @@ void ptFilterDM::FillNameMap() {
   FNameMap.insert("GREYCLab",                        "GreyCStoration/"+Fuid::GreyCStoration_LabSN+"/Mode");
   FNameMap.insert("GREYCLabMaskType",                "GreyCStoration/"+Fuid::GreyCStoration_LabSN+"/MaskType");
   FNameMap.insert("GREYCLabInterpolation",           "GreyCStoration/"+Fuid::GreyCStoration_LabSN+"/Interpolation");
-//  FNameMap.insert("USM",                             "");
+  FNameMap.insert("USM",                             "UnsharpMask/"+Fuid::Usm_LabSN+"/Mode");
 //  FNameMap.insert("Highpass",                        "");
 //  FNameMap.insert("Grain1MaskType",                  "");
 //  FNameMap.insert("Grain1Mode",                      "");

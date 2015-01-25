@@ -423,14 +423,14 @@ const short ptViewLAB_L_Grad = 4;
 const short ptViewLAB_C      = 5;
 const short ptViewLAB_H      = 6;
 
-// Enable (DEPRECATED! To be replaced by TMaskedFilterModes)
+// Enable (DEPRECATED! To be replaced by TFilterMode)
 
 const short ptEnable_None      = 0;
 const short ptEnable_NoPreview = 1;
 const short ptEnable_Preview   = 2;
 const short ptEnable_ShowMask  = 3;
 
-enum class TMaskedFilterModes: int {
+enum class TFilterMode: int {
   Disabled,
   FinalRun,
   AlwaysOn,

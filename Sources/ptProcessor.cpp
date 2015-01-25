@@ -923,29 +923,10 @@ void ptProcessor::Run(short Phase,
         //***************************************************************************
         // USM
 
-        if (Settings->ToolIsActive("TabLABUSM")) {
-
-          m_ReportProgress(tr("USM sharpening"));
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabSN->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabSN->RGBToLab();
-
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      FRunTimer.elapsed());
-
-          }
-
-  //        m_Image_AfterLabSN->USM(1,
-  //                              Settings->GetDouble("USMRadius")*m_ScaleFactor,
-  //                              Settings->GetDouble("USMAmount"),
-  //                              Settings->GetDouble("USMThreshold"));
-
-          m_Image_AfterLabSN->ptGMUnsharp(Settings->GetDouble("USMRadius")*m_ScaleFactor,
-                                          Settings->GetDouble("USMAmount"),
-                                          Settings->GetDouble("USMThreshold"));
-
-          TRACEMAIN("Done USM at %d ms.",FRunTimer.elapsed());
+        hFilter = GFilterDM->GetFilterFromName(Fuid::Usm_LabSN);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterLabSN);
         }
 
 
