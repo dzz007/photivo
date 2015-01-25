@@ -91,7 +91,7 @@ void ptFilter_GreyCStoration::doDefineControls() {
   FConfig.initStores(TCfgItemList()                                      //--- Combo: list of entries               ---//
                                                                          //--- Check: not available                 ---//
     //            Id               Type                      Default     Min           Max           Step        Decimals, commonConnect, storeable, caption, tooltip
-    << ptCfgItem({CMode,           ptCfgItem::Combo,         static_cast<int>(TMaskedFilterModes::Disabled),
+    << ptCfgItem({CMode,           ptCfgItem::Combo,         static_cast<int>(TFilterMode::Disabled),
                                                              pt::ComboEntries::MaskedFilterModes,                          true, true, tr("Mode"), tr("")})
     << ptCfgItem({CMaskType,       ptCfgItem::Combo,         static_cast<int>(TGreyCDenoiseMask::Shadows3), denoiseMask,   true, true, tr("Denoise mask"), tr("")})
     << ptCfgItem({CFastGauss,      ptCfgItem::Check,         true,                                                         true, true, tr("Fast Gaussian approximation"), tr("")})
@@ -112,11 +112,11 @@ void ptFilter_GreyCStoration::doDefineControls() {
 //------------------------------------------------------------------------------
 
 bool ptFilter_GreyCStoration::doCheckHasActiveCfg() {
-  auto mode = static_cast<TMaskedFilterModes>(FConfig.value(CMode).toInt());
+  auto mode = static_cast<TFilterMode>(FConfig.value(CMode).toInt());
 
   return
-      (mode >= TMaskedFilterModes::AlwaysOn) ||
-      ((mode == TMaskedFilterModes::FinalRun) && Settings->GetInt("FullOutput"));
+      (mode >= TFilterMode::AlwaysOn) ||
+      ((mode == TFilterMode::FinalRun) && Settings->GetInt("FullOutput"));
 }
 
 //------------------------------------------------------------------------------
@@ -124,7 +124,7 @@ bool ptFilter_GreyCStoration::doCheckHasActiveCfg() {
 void ptFilter_GreyCStoration::doRunFilter(ptImage *AImage) const {
   AImage->toLab();
 
-  if (static_cast<TMaskedFilterModes>(FConfig.value(CMode).toInt()) == TMaskedFilterModes::ShowMask) {
+  if (static_cast<TFilterMode>(FConfig.value(CMode).toInt()) == TFilterMode::ShowMask) {
     ptCimgEdgeTensors(
         AImage,
         FConfig.value(CSharpness).toDouble(),

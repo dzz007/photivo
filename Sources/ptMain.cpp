@@ -358,6 +358,7 @@ void CreateAllFilters() {
   GFilterDM->NewFilter("DetailCurve",           Fuid::DetailCurve_LabSN);
   GFilterDM->NewFilter("Wiener",                Fuid::Wiener_LabSN);
   GFilterDM->NewFilter("InvDiffSharpen",        Fuid::InvDiffSharpen_LabSN);
+  GFilterDM->NewFilter("UnsharpMask",           Fuid::Usm_LabSN);
   // Lab Eyecandy tab
   GFilterDM->NewFilter("Outline",               Fuid::Outline_LabEyeCandy);
   GFilterDM->NewFilter("LumaByHueCurve",        Fuid::LumaByHueCurve_LabEyeCandy);
@@ -4970,40 +4971,6 @@ void CB_ExposureClipModeChoice(const QVariant Value) {
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Callbacks pertaining to the LabSN Tab
-// Partim USM
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_USMChoice(const QVariant Choice) {
-  Settings->SetValue("USM",Choice);
-  Update(ptProcessorPhase_LabSN);
-}
-
-void CB_USMRadiusInput(const QVariant Value) {
-  Settings->SetValue("USMRadius",Value);
-  if (Settings->GetInt("USM")==2) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-
-void CB_USMAmountInput(const QVariant Value) {
-  Settings->SetValue("USMAmount",Value);
-  if (Settings->GetInt("USM")==2) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_USMThresholdInput(const QVariant Value) {
-  Settings->SetValue("USMThreshold",Value);
-  if (Settings->GetInt("USM")==2) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the LabSN Tab
 // Partim Highpass
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -5898,11 +5865,6 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(WhiteLevelInput)
   M_Dispatch(ExposureInput)
   M_Dispatch(ExposureClipModeChoice)
-
-  M_Dispatch(USMChoice)
-  M_Dispatch(USMRadiusInput)
-  M_Dispatch(USMAmountInput)
-  M_Dispatch(USMThresholdInput)
 
   M_SetAndRunDispatch(HighpassChoice)
   M_SetAndRunDispatch(HighpassRadiusInput)

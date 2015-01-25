@@ -128,9 +128,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"WhiteFraction"                 ,ptGT_InputSlider     ,2,1,1 ,10   ,1    ,50    ,1    ,0 ,tr("% white")             ,tr("Percentage of white aimed at")},
     {"WhiteLevel"                    ,ptGT_InputSlider     ,2,1,1 ,90   ,50   ,99    ,1    ,0 ,tr("WhiteLevel")         ,tr("WhiteLevel")},
     {"Exposure"                      ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-5.0 ,5.0   ,0.1 ,2 ,tr("EV")                 ,tr("Exposure in EV")},
-    {"USMRadius"                     ,ptGT_InputSlider     ,2,1,1 ,2.0  ,0.1  ,10.0  ,0.1  ,1 ,tr("Radius")             ,tr("Radius for USM")},
-    {"USMAmount"                     ,ptGT_InputSlider     ,2,1,1 ,0.5  ,0.1  ,5.0   ,0.1  ,1 ,tr("Amount")             ,tr("Amount for USM")},
-    {"USMThreshold"                  ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.00 ,0.20  ,0.01 ,2 ,tr("Threshold")          ,tr("Threshold for USM")},
     {"HighpassRadius"                ,ptGT_InputSlider     ,2,1,1 ,2.0  ,0.0  ,10.0  ,0.5  ,1 ,tr("Radius")             ,tr("Radius for Highpass")},
     {"HighpassAmount"                ,ptGT_InputSlider     ,2,1,1 ,4.0  ,0.0  ,20.0  ,0.5  ,1 ,tr("Amount")             ,tr("Amount for Highpass")},
     {"HighpassDenoise"               ,ptGT_InputSlider     ,2,1,1 ,0.2  ,0.0  ,10.0  ,0.1  ,1 ,tr("Denoise")            ,tr("Denoise for Highpass")},
@@ -279,7 +276,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"AspectRatioH"                ,ptGT_Choice       ,2,0,0 ,2                           ,GuiOptions->AspectRatio               ,tr("Aspect height")},
     {"ExposureClipMode"            ,ptGT_Choice       ,1,1,1 ,ptExposureClipMode_Curve    ,GuiOptions->ExposureClipMode          ,tr("Clip mode")},
     {"AutoExposure"                ,ptGT_Choice       ,1,1,1 ,ptAutoExposureMode_Zero     ,GuiOptions->AutoExposureMode          ,tr("Auto exposure mode")},
-    {"USM"                         ,ptGT_Choice       ,2,1,1 ,ptEnable_None               ,GuiOptions->Enable                    ,tr("Enable USM sharpening")},
     {"Highpass"                    ,ptGT_Choice       ,2,1,1 ,ptEnable_None               ,GuiOptions->Enable                    ,tr("Enable Highpass sharpening")},
     {"Grain1MaskType"              ,ptGT_Choice       ,2,1,1 ,ptMaskType_None             ,GuiOptions->GrainMaskType             ,tr("Values for film grain")},
     {"Grain1Mode"                  ,ptGT_Choice       ,2,1,1 ,ptGrainMode_SoftGaussian    ,GuiOptions->GrainMode                 ,tr("Mode for film grain")},
@@ -1459,12 +1455,7 @@ sToolInfo ToolInfo (const QString GuiName) {
       Info.IsActive = Settings->GetDouble("Exposure")!=0.0?1:0;
   }
   // Lab Sharpen and Noise
-  else if (GuiName == "TabLABUSM") {
-      Info.Name = "Lab USM";
-      Info.IsActive = ((Settings->GetInt("FullOutput") &&
-                        Settings->GetInt("USM")) ||
-                       Settings->GetInt("USM")==2)!=0?1:0;
-  } else if (GuiName == "TabLABHighpass") {
+  else if (GuiName == "TabLABHighpass") {
       Info.Name = "Lab highpass";
       Info.IsActive = ((Settings->GetInt("FullOutput") &&
                         Settings->GetInt("Highpass")) ||

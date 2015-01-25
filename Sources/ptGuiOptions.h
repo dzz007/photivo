@@ -25,7 +25,6 @@
 #ifndef PTGUIOPTIONS_H
 #define PTGUIOPTIONS_H
 
-#include "ptConstants.h"
 #include "filters/ptCfgItem.h"
 #include <QString>
 #include <QVariant>
