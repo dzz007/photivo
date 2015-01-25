@@ -869,9 +869,9 @@ void ptFilterDM::TranslateSpecialToNew(QSettings *APreset, QStringList *AKeys) {
       // key not present in settings object
       continue;
     }
-    if (hComboIdx == ptMaskType_None) {
+    if (static_cast<TMaskType>(hComboIdx) == TMaskType::Disabled) {
       // Old filter was disabled via mask type. Ensure amount 0.0 to keep it disabled.
-      hComboIdx = ptMaskType_Shadows;
+      hComboIdx = static_cast<int>(TMaskType::Shadows);
       auto hOldAmountKey = QString("LABToneAdjust%1Amount").arg(hOldMaskKey.at(13));
       APreset->setValue(FNameMap.value(hOldAmountKey), 0.0);
       APreset->remove(hOldAmountKey);

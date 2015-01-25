@@ -35,6 +35,7 @@ namespace pt {
   namespace ComboEntries {
     extern const ptCfgItem::TComboEntryList FilterModes;
     extern const ptCfgItem::TComboEntryList MaskedFilterModes;
+    extern const ptCfgItem::TComboEntryList MaskTypes;
   }
 
   bool isActiveFilterMode(const QVariant& AFilterMode);
@@ -98,7 +99,6 @@ public:
   static const ptGuiOptionsItem AspectRatio[];
   static const ptGuiOptionsItem ExposureClipMode[];
   static const ptGuiOptionsItem AutoExposureMode[];
-  static const ptGuiOptionsItem LMHLightRecoveryMaskType[];
   static const ptGuiOptionsItem LABTransformMode[];
   static const ptGuiOptionsItem SpecialPreview[];
   static const ptGuiOptionsItem ViewLAB[];
@@ -116,7 +116,6 @@ public:
   static const ptGuiOptionsItem VignetteMode[];
   static const ptGuiOptionsItem SoftglowMode[];
   static const ptGuiOptionsItem Enable[];
-  static const ptGuiOptionsItem EnableGreyC[];
   static const ptGuiOptionsItem SaveFormat[];
   static const ptGuiOptionsItem SaveSampling[];
   static const ptGuiOptionsItem OutputMode[];

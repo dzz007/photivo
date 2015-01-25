@@ -218,23 +218,23 @@ void ptGreycStorationLab(ptImage* Image,
       break;
 
   case TGreyCDenoiseMask::Shadows1:
-      Mask=Image->GetMask(ptMaskType_Shadows, 0.0, 0.5, 0.0);
+      Mask=Image->GetMask(TMaskType::Shadows, 0.0, 0.5, 0.0);
     break;
 
   case TGreyCDenoiseMask::Shadows2:
-      Mask=Image->GetMask(ptMaskType_Shadows, 0.1, 0.6, 0.0);
+      Mask=Image->GetMask(TMaskType::Shadows, 0.1, 0.6, 0.0);
     break;
 
   case TGreyCDenoiseMask::Shadows3:
-      Mask=Image->GetMask(ptMaskType_Shadows, 0.2, 0.7, 0.0);
+      Mask=Image->GetMask(TMaskType::Shadows, 0.2, 0.7, 0.0);
     break;
 
   case TGreyCDenoiseMask::Shadows4:
-      Mask=Image->GetMask(ptMaskType_Shadows, 0.3, 0.8, 0.0);
+      Mask=Image->GetMask(TMaskType::Shadows, 0.3, 0.8, 0.0);
     break;
 
   case TGreyCDenoiseMask::Shadows5:
-      Mask=Image->GetMask(ptMaskType_Shadows, 0.4, 0.9, 0.0);
+      Mask=Image->GetMask(TMaskType::Shadows, 0.4, 0.9, 0.0);
     break;
 
   default:
@@ -277,23 +277,23 @@ void ptCimgEdgeTensors(ptImage* Image,
     break;
 
   case TGreyCDenoiseMask::Shadows1:
-      Mask=Image->GetMask(ptMaskType_Shadows, 0.0, 0.5, 0.0);
+      Mask=Image->GetMask(TMaskType::Shadows, 0.0, 0.5, 0.0);
     break;
 
   case TGreyCDenoiseMask::Shadows2:
-      Mask=Image->GetMask(ptMaskType_Shadows, 0.1, 0.6, 0.0);
+      Mask=Image->GetMask(TMaskType::Shadows, 0.1, 0.6, 0.0);
     break;
 
   case TGreyCDenoiseMask::Shadows3:
-      Mask=Image->GetMask(ptMaskType_Shadows, 0.2, 0.7, 0.0);
+      Mask=Image->GetMask(TMaskType::Shadows, 0.2, 0.7, 0.0);
     break;
 
   case TGreyCDenoiseMask::Shadows4:
-      Mask=Image->GetMask(ptMaskType_Shadows, 0.3, 0.8, 0.0);
+      Mask=Image->GetMask(TMaskType::Shadows, 0.3, 0.8, 0.0);
     break;
 
   case TGreyCDenoiseMask::Shadows5:
-      Mask=Image->GetMask(ptMaskType_Shadows, 0.4, 0.9, 0.0);
+      Mask=Image->GetMask(TMaskType::Shadows, 0.4, 0.9, 0.0);
     break;
 
   default:

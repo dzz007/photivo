@@ -101,28 +101,28 @@ void ptFilter_Tone::doRunFilter(ptImage *AImage) const {
     AImage->LABTone(FConfig.value(CStrengthAll).toFloat(),
                     FConfig.value(CHueAll).toFloat(),
                     FConfig.value(CSaturationAll).toFloat(),
-                    ptMaskType_All);
+                    TMaskType::All);
   }
 
   if ((FConfig.value(CStrengthShad).toFloat() != 0.0f) || (FConfig.value(CSaturationShad).toFloat() != 1.0f)) {
     AImage->LABTone(FConfig.value(CStrengthShad).toFloat(),
                     FConfig.value(CHueShad).toFloat(),
                     FConfig.value(CSaturationShad).toFloat(),
-                    ptMaskType_Shadows);
+                    TMaskType::Shadows);
   }
 
   if ((FConfig.value(CStrengthMid).toFloat() != 0.0f) || (FConfig.value(CSaturationMid).toFloat() != 1.0f)) {
     AImage->LABTone(FConfig.value(CStrengthMid).toFloat(),
                     FConfig.value(CHueMid).toFloat(),
                     FConfig.value(CSaturationMid).toFloat(),
-                    ptMaskType_Midtones);
+                    TMaskType::Midtones);
   }
 
   if ((FConfig.value(CStrengthLights).toFloat() != 0.0f) || (FConfig.value(CSaturationLights).toFloat() != 1.0f)) {
     AImage->LABTone(FConfig.value(CStrengthLights).toFloat(),
                     FConfig.value(CHueLights).toFloat(),
                     FConfig.value(CSaturationLights).toFloat(),
-                    ptMaskType_Highlights);
+                    TMaskType::Highlights);
   }
 }
 

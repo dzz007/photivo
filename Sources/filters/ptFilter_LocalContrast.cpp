@@ -23,6 +23,8 @@
 #include "ptFilter_LocalContrast.h"
 #include "ptFilterUids.h"
 #include "ptCfgItem.h"
+#include "../ptConstants.h"
+#include "../ptGuiOptions.h"
 #include "../ptImage.h"
 
 // TODO: Needed for access to m_ScaleFactor. Find a way to avoid when modernising the processor.
@@ -82,14 +84,6 @@ void ptFilter_LocalContrast::doAfterInit() {
 //------------------------------------------------------------------------------
 
 void ptFilter_LocalContrast::doDefineControls() {
-  QList<ptCfgItem::TComboEntry> maskTypes({
-    {tr("Disabled"),   ptMaskType_None,       "disabled"},
-    {tr("Shadows"),    ptMaskType_Shadows,    "shadows"},
-    {tr("Midtones"),   ptMaskType_Midtones,   "midtones"},
-    {tr("Highlights"), ptMaskType_Highlights, "highlights"},
-    {tr("All values"), ptMaskType_All,        "allvalues"},
-  });
-
   // Values for Fuid::LocalContrast1_RGB
   QVariant radDef      {100};
   QVariant radMax      {500};
@@ -117,7 +111,7 @@ void ptFilter_LocalContrast::doDefineControls() {
 
   FConfig.initStores(TCfgItemList()                                              //--- Combo: list of entries               ---//
     //            Id                       Type                      Default     Min           Max           Step        Decimals, commonConnect, storeable, caption, tooltip
-    << ptCfgItem({CMaskType,               ptCfgItem::Combo,    ptMaskType_None, maskTypes,                                        true, true, tr("Mask type"),    tr("")})
+    << ptCfgItem({CMaskType,               ptCfgItem::Combo,   static_cast<int>(TMaskType::Disabled), pt::ComboEntries::MaskTypes, true, true, tr("Mask type"),    tr("")})
     << ptCfgItem({CRadius,                 ptCfgItem::Slider,        radDef,     0,            radMax,       radStep,    0,        true, true, tr("Radius"),       tr("")})
     << ptCfgItem({CStrength,               ptCfgItem::Slider,   strengthDef,   -10.0,         20.0,          1.0,        1,        true, true, tr("Strength"),     tr("")})
     << ptCfgItem({COpacity,                ptCfgItem::Slider,        0.2,        0.0,          1.0,          0.1,        1,        true, true, tr("Opacity"),      tr("")})
@@ -131,7 +125,7 @@ void ptFilter_LocalContrast::doDefineControls() {
 //------------------------------------------------------------------------------
 
 bool ptFilter_LocalContrast::doCheckHasActiveCfg() {
-  return FConfig.value(CMaskType).toInt() != ptMaskType_None;
+  return static_cast<TMaskType>(FConfig.value(CMaskType).toInt()) != TMaskType::Disabled;
 }
 
 //------------------------------------------------------------------------------
@@ -159,7 +153,7 @@ void ptFilter_LocalContrast::doRunFilter(ptImage *AImage) const {
       FConfig.value(CStrength).toDouble(),
       FConfig.value(COpacity).toDouble(),
       FConfig.value(CHaloControl).toDouble(),
-      FConfig.value(CMaskType).toInt(),
+      static_cast<TMaskType>(FConfig.value(CMaskType).toInt()),
       lowerLimit,
       upperLimit,
       FConfig.value(CSoftness).toDouble());
