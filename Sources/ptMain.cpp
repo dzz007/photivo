@@ -360,6 +360,7 @@ void CreateAllFilters() {
   GFilterDM->NewFilter("InvDiffSharpen",        Fuid::InvDiffSharpen_LabSN);
   GFilterDM->NewFilter("UnsharpMask",           Fuid::Usm_LabSN);
   GFilterDM->NewFilter("HighpassSharpen",       Fuid::HighpassSharpen_LabSN);
+  GFilterDM->NewFilter("FilmGrain",             Fuid::FilmGrain_LabSN);
   // Lab Eyecandy tab
   GFilterDM->NewFilter("Outline",               Fuid::Outline_LabEyeCandy);
   GFilterDM->NewFilter("LumaByHueCurve",        Fuid::LumaByHueCurve_LabEyeCandy);
@@ -4968,108 +4969,6 @@ void CB_ExposureClipModeChoice(const QVariant Value) {
   Update(ptProcessorPhase_RGB);
 }
 
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the LabSN Tab
-// Partim Grain
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_Grain1MaskTypeChoice(const QVariant Choice) {
-  Settings->SetValue("Grain1MaskType",Choice);
-  Update(ptProcessorPhase_LabSN);
-}
-
-void CB_Grain1ModeChoice(const QVariant Choice) {
-  Settings->SetValue("Grain1Mode",Choice);
-  if (Settings->GetInt("Grain1MaskType")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_Grain1StrengthInput(const QVariant Value) {
-  Settings->SetValue("Grain1Strength",Value);
-  if (Settings->GetInt("Grain1MaskType")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_Grain1RadiusInput(const QVariant Value) {
-  Settings->SetValue("Grain1Radius",Value);
-  if (Settings->GetInt("Grain1MaskType")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_Grain1OpacityInput(const QVariant Value) {
-  Settings->SetValue("Grain1Opacity",Value);
-  if (Settings->GetInt("Grain1MaskType")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_Grain1LowerLimitInput(const QVariant Value) {
-  Settings->SetValue("Grain1LowerLimit",Value);
-  if (Settings->GetInt("Grain1MaskType")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_Grain1UpperLimitInput(const QVariant Value) {
-  Settings->SetValue("Grain1UpperLimit",Value);
-  if (Settings->GetInt("Grain1MaskType")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_Grain2MaskTypeChoice(const QVariant Choice) {
-  Settings->SetValue("Grain2MaskType",Choice);
-  Update(ptProcessorPhase_LabSN);
-}
-
-void CB_Grain2ModeChoice(const QVariant Choice) {
-  Settings->SetValue("Grain2Mode",Choice);
-  if (Settings->GetInt("Grain2MaskType")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_Grain2StrengthInput(const QVariant Value) {
-  Settings->SetValue("Grain2Strength",Value);
-  if (Settings->GetInt("Grain2MaskType")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_Grain2RadiusInput(const QVariant Value) {
-  Settings->SetValue("Grain2Radius",Value);
-  if (Settings->GetInt("Grain2MaskType")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_Grain2OpacityInput(const QVariant Value) {
-  Settings->SetValue("Grain2Opacity",Value);
-  if (Settings->GetInt("Grain2MaskType")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_Grain2LowerLimitInput(const QVariant Value) {
-  Settings->SetValue("Grain2LowerLimit",Value);
-  if (Settings->GetInt("Grain2MaskType")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_Grain2UpperLimitInput(const QVariant Value) {
-  Settings->SetValue("Grain2UpperLimit",Value);
-  if (Settings->GetInt("Grain2MaskType")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Callbacks pertaining to the LabSN Tab
@@ -5833,22 +5732,6 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(WhiteLevelInput)
   M_Dispatch(ExposureInput)
   M_Dispatch(ExposureClipModeChoice)
-
-  M_Dispatch(Grain1MaskTypeChoice)
-  M_Dispatch(Grain1ModeChoice)
-  M_Dispatch(Grain1StrengthInput)
-  M_Dispatch(Grain1RadiusInput)
-  M_Dispatch(Grain1OpacityInput)
-  M_Dispatch(Grain1LowerLimitInput)
-  M_Dispatch(Grain1UpperLimitInput)
-
-  M_Dispatch(Grain2MaskTypeChoice)
-  M_Dispatch(Grain2ModeChoice)
-  M_Dispatch(Grain2StrengthInput)
-  M_Dispatch(Grain2RadiusInput)
-  M_Dispatch(Grain2OpacityInput)
-  M_Dispatch(Grain2LowerLimitInput)
-  M_Dispatch(Grain2UpperLimitInput)
 
   M_Dispatch(ViewLABChoice)
 

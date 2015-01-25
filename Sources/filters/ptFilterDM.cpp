@@ -937,6 +937,8 @@ void ptFilterDM::FillNameMap() {
   FCurveMap.insert("CurveFileNamesBase",              "RgbCurve/"+Fuid::RgbCurve_Out+"/Curve/FileName");
   FCurveMap.insert("CurveFileNamesBase2",             "AfterGammaCurve/"+Fuid::AfterGammaCurve_Out+"/Curve/FileName");
 
+  FNameMap.reserve(600);
+
   // ptCurve related stuff that does not need special handling
   FNameMap.insert("CurveRGBType",                    "RgbCurve/"+Fuid::RgbCurve_RGB+"/Curve/Interpolation");
   FNameMap.insert("CurveShadowsHighlightsType",      "ShadowsHighlights/"+Fuid::ShadowsHighlights_LabCC+"/Curve/Interpolation");
@@ -1216,16 +1218,16 @@ void ptFilterDM::FillNameMap() {
   FNameMap.insert("HighpassAmount",                  "HighpassSharpen/"+Fuid::HighpassSharpen_LabSN+"/Strength");
   FNameMap.insert("HighpassRadius",                  "HighpassSharpen/"+Fuid::HighpassSharpen_LabSN+"/Radius");
   FNameMap.insert("HighpassDenoise",                 "HighpassSharpen/"+Fuid::HighpassSharpen_LabSN+"/Denoise");
-//  FNameMap.insert("Grain1Strength",                  "");
-//  FNameMap.insert("Grain1Radius",                    "");
-//  FNameMap.insert("Grain1Opacity",                   "");
-//  FNameMap.insert("Grain1LowerLimit",                "");
-//  FNameMap.insert("Grain1UpperLimit",                "");
-//  FNameMap.insert("Grain2Strength",                  "");
-//  FNameMap.insert("Grain2Radius",                    "");
-//  FNameMap.insert("Grain2Opacity",                   "");
-//  FNameMap.insert("Grain2LowerLimit",                "");
-//  FNameMap.insert("Grain2UpperLimit",                "");
+  FNameMap.insert("Grain1Strength",                  "FilmGrain/"+Fuid::FilmGrain_LabSN+"/Strength1");
+  FNameMap.insert("Grain1Radius",                    "FilmGrain/"+Fuid::FilmGrain_LabSN+"/Radius1");
+  FNameMap.insert("Grain1Opacity",                   "FilmGrain/"+Fuid::FilmGrain_LabSN+"/Opacity1");
+  FNameMap.insert("Grain1LowerLimit",                "FilmGrain/"+Fuid::FilmGrain_LabSN+"/LowerLimit1");
+  FNameMap.insert("Grain1UpperLimit",                "FilmGrain/"+Fuid::FilmGrain_LabSN+"/UpperLimit1");
+  FNameMap.insert("Grain2Strength",                  "FilmGrain/"+Fuid::FilmGrain_LabSN+"/Strength2");
+  FNameMap.insert("Grain2Radius",                    "FilmGrain/"+Fuid::FilmGrain_LabSN+"/Radius2");
+  FNameMap.insert("Grain2Opacity",                   "FilmGrain/"+Fuid::FilmGrain_LabSN+"/Opacity2");
+  FNameMap.insert("Grain2LowerLimit",                "FilmGrain/"+Fuid::FilmGrain_LabSN+"/LowerLimit2");
+  FNameMap.insert("Grain2UpperLimit",                "FilmGrain/"+Fuid::FilmGrain_LabSN+"/UpperLimit2");
   FNameMap.insert("OutlineWeight",                   "Outline/"+Fuid::Outline_LabEyeCandy+"/ColorWeight");
   FNameMap.insert("OutlineBlurRadius",               "Outline/"+Fuid::Outline_LabEyeCandy+"/BlurRadius");
   FNameMap.insert("LABToneAdjust1Saturation",        "ToneAdjust/"+Fuid::ToneAdjust1_LabEyeCandy+"/Saturation");
@@ -1424,10 +1426,10 @@ void ptFilterDM::FillNameMap() {
   FNameMap.insert("GREYCLabInterpolation",           "GreyCStoration/"+Fuid::GreyCStoration_LabSN+"/Interpolation");
   FNameMap.insert("USM",                             "UnsharpMask/"+Fuid::Usm_LabSN+"/Mode");
   FNameMap.insert("Highpass",                        "HighpassSharpen/"+Fuid::HighpassSharpen_LabSN+"/Mode");
-//  FNameMap.insert("Grain1MaskType",                  "");
-//  FNameMap.insert("Grain1Mode",                      "");
-//  FNameMap.insert("Grain2MaskType",                  "");
-//  FNameMap.insert("Grain2Mode",                      "");
+  FNameMap.insert("Grain1MaskType",                  "FilmGrain/"+Fuid::FilmGrain_LabSN+"/MaskType1");
+  FNameMap.insert("Grain1Mode",                      "FilmGrain/"+Fuid::FilmGrain_LabSN+"/GrainType1");
+  FNameMap.insert("Grain2MaskType",                  "FilmGrain/"+Fuid::FilmGrain_LabSN+"/MaskType2");
+  FNameMap.insert("Grain2Mode",                      "FilmGrain/"+Fuid::FilmGrain_LabSN+"/GrainType2");
 //  FNameMap.insert("LabVignetteMode",                 "");
 //  FNameMap.insert("ViewLAB",                         "");
   FNameMap.insert("OutlineMode",                     "Outline/"+Fuid::Outline_LabEyeCandy+"/OverlayMode");

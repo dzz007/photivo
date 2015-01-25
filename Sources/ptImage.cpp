@@ -4078,7 +4078,7 @@ ptImage* ptImage::Localcontrast(const int Radius1, const double Opacity, const d
 ////////////////////////////////////////////////////////////////////////////////
 
 ptImage* ptImage::Grain(const double Sigma, // 0-1
-                        const short NoiseType, // 0-5, Gaussian, uniform, salt&pepper
+                        const TGrainType NoiseType, // 0-5, Gaussian, uniform, salt&pepper
                         const double Radius, // 0-20
                         const double Opacity,
                         const TMaskType MaskType,
@@ -4091,7 +4091,7 @@ ptImage* ptImage::Grain(const double Sigma, // 0-1
   ptImage *NoiseLayer = new ptImage;
   NoiseLayer->Set(this);  // allocation of free layer faster? TODO!
   float (*Mask);
-  short Noise = LIM((int)NoiseType,0,5);
+  short Noise = LIM(static_cast<int>(NoiseType),0,5);
   Noise = (Noise > 2) ? (Noise - 3) : Noise;
   short ScaledRadius = Radius/powf(2.0,(float)ScaleFactor);
 
@@ -4110,7 +4110,7 @@ ptImage* ptImage::Grain(const double Sigma, // 0-1
   }
 
   Mask = GetMask(MaskType, LowerLimit, UpperLimit, 0.0);
-  if (NoiseType < 3) {
+  if (Noise < 3) {
     Overlay(NoiseLayer->m_Image,Opacity,Mask,ptOverlayMode_SoftLight);
   } else {
     Overlay(NoiseLayer->m_Image,Opacity,Mask,ptOverlayMode_GrainMerge);
