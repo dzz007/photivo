@@ -933,26 +933,10 @@ void ptProcessor::Run(short Phase,
         //***************************************************************************
         // Highpass
 
-        if (Settings->ToolIsActive("TabLABHighpass")) {
-
-
-          m_ReportProgress(tr("Highpass"));
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabSN->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabSN->RGBToLab();
-
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      FRunTimer.elapsed());
-
-          }
-
-          m_Image_AfterLabSN->Highpass(Settings->GetDouble("HighpassRadius")*m_ScaleFactor,
-                                     Settings->GetDouble("HighpassAmount"),
-                                     -0.3,
-                                     Settings->GetDouble("HighpassDenoise")/((logf(m_ScaleFactor)/logf(0.5))+1.0));
-
-          TRACEMAIN("Done Highpass at %d ms.",FRunTimer.elapsed());
+        hFilter = GFilterDM->GetFilterFromName(Fuid::HighpassSharpen_LabSN);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterLabSN);
         }
 
 

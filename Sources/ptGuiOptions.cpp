@@ -24,6 +24,7 @@
 
 #include "ptGuiOptions.h"
 #include "ptConstants.h"
+#include "ptSettings.h"
 #include <QObject>
 
 // -----------------------------------------------------------------------------
@@ -43,7 +44,24 @@ namespace pt {
       {QObject::tr("Show mask"),      static_cast<int>(TFilterMode::ShowMask), "ShowMask"}
     });
 
-  } // namespace ComboEntries
+  }
+
+  /*!
+   * Checks the activation state for filters that are enabled/disabled via a FilterModes
+   * or MaskedFilterModes combobox.
+   * \pre AFilterMode must contain an integer that can be cast to a valid TFilterMode value.
+   * \returns true if active, false otherwise.
+   */
+  bool isActiveFilterMode(const QVariant& AFilterMode) {
+    Q_ASSERT(AFilterMode.type() == QVariant::Int);
+    auto mode = static_cast<TFilterMode>(AFilterMode.toInt());
+
+    return
+        (mode >= TFilterMode::AlwaysOn) ||
+        ((mode == TFilterMode::FinalRun) && Settings->GetInt("FullOutput"));
+  }
+
+  // namespace ComboEntries
 } // namespace pt
 
 ////////////////////////////////////////////////////////////////////////////////

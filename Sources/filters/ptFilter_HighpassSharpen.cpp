@@ -20,7 +20,7 @@
 **
 *******************************************************************************/
 
-#include "ptFilter_UnsharpMask.h"
+#include "ptFilter_HighpassSharpen.h"
 #include "ptCfgItem.h"
 #include "../ptConstants.h"
 #include "../ptGuiOptions.h"
@@ -32,16 +32,16 @@ extern ptProcessor* TheProcessor;
 
 //------------------------------------------------------------------------------
 
-const QString CUnsharpMaskId = "UnsharpMask";
+const QString CHighpassSharpenId = "HighpassSharpen";
 
-const QString CMode      = "Mode";
-const QString CStrength  = "Strength";
-const QString CRadius    = "Radius";
-const QString CThreshold = "Threshold";
+const QString CMode     = "Mode";
+const QString CStrength = "Strength";
+const QString CRadius   = "Radius";
+const QString CDenoise  = "Denoise";
 
 //------------------------------------------------------------------------------
 
-ptFilter_UnsharpMask::ptFilter_UnsharpMask():
+ptFilter_HighpassSharpen::ptFilter_HighpassSharpen():
   ptFilterBase()
 {
   this->internalInit();
@@ -49,44 +49,44 @@ ptFilter_UnsharpMask::ptFilter_UnsharpMask():
 
 //------------------------------------------------------------------------------
 
-ptFilterBase *ptFilter_UnsharpMask::createUnsharpMask() {
-  auto hInstance         = new ptFilter_UnsharpMask;
-  hInstance->FFilterName = CUnsharpMaskId;
-  hInstance->FCaption    = tr("Unsharp mask (USM)");
+ptFilterBase* ptFilter_HighpassSharpen::createHighpassSharpen() {
+  auto hInstance         = new ptFilter_HighpassSharpen;
+  hInstance->FFilterName = CHighpassSharpenId;
+  hInstance->FCaption    = tr("Highpass sharpen");
   return hInstance;
 }
 
 //------------------------------------------------------------------------------
 
-void ptFilter_UnsharpMask::doDefineControls() {
-  FConfig.initStores(TCfgItemList()                                  //--- Combo: list of entries               ---//
-    //            Id           Type                      Default     Min           Max           Step        Decimals, commonConnect, storeable, caption, tooltip
-    << ptCfgItem({CMode,       ptCfgItem::Combo,         static_cast<int>(TFilterMode::Disabled),
-                                                         pt::ComboEntries::FilterModes,                                true, true, tr("Mode"), tr("")})
-    << ptCfgItem({CStrength,   ptCfgItem::Slider,        2.0,        0.1,         10.0,          0.1,        1,        true, true, tr("Strength"), tr("")})
-    << ptCfgItem({CRadius,     ptCfgItem::Slider,        0.5,        0.1,          5.0,          0.1,        1,        true, true, tr("Radius"), tr("")})
-    << ptCfgItem({CThreshold,  ptCfgItem::Slider,        0.0,        0.0,          0.2,          0.01,       2,        true, true, tr("Threshold"), tr("")})
+void ptFilter_HighpassSharpen::doDefineControls() {
+  FConfig.initStores(TCfgItemList()                           //--- Combo: list of entries               ---//
+    //            Id          Type                Default     Min           Max           Step        Decimals, commonConnect, storeable, caption, tooltip
+    << ptCfgItem({CMode,      ptCfgItem::Combo,   static_cast<int>(TFilterMode::Disabled), pt::ComboEntries::FilterModes, true, true, tr("Mode"),     tr("")})
+    << ptCfgItem({CStrength,  ptCfgItem::Slider,  4.0,        0.0,          20.0,         0.5,        1,        true, true, tr("Strength"),           tr("")})
+    << ptCfgItem({CRadius,    ptCfgItem::Slider,  2.0,        0.0,          10.0,         0.5,        1,        true, true, tr("Radius"),             tr("")})
+    << ptCfgItem({CDenoise,   ptCfgItem::Slider,  0.2,        0.0,          10.0,         0.1,        1,        true, true, tr("Denoising strength"), tr("")})
   );
 }
 
 //------------------------------------------------------------------------------
 
-bool ptFilter_UnsharpMask::doCheckHasActiveCfg() {
+bool ptFilter_HighpassSharpen::doCheckHasActiveCfg() {
   return pt::isActiveFilterMode(FConfig.value(CMode));
 }
 
 //------------------------------------------------------------------------------
 
-void ptFilter_UnsharpMask::doRunFilter(ptImage *AImage) const {
+void ptFilter_HighpassSharpen::doRunFilter(ptImage *AImage) const {
   AImage->toLab();
-  AImage->ptGMUnsharp(
+  AImage->Highpass(
       FConfig.value(CRadius).toDouble() * TheProcessor->m_ScaleFactor,
       FConfig.value(CStrength).toDouble(),
-      FConfig.value(CThreshold).toDouble());
+      -0.3,
+      FConfig.value(CDenoise).toDouble()/((log(TheProcessor->m_ScaleFactor)/log(0.5))+1.0));
 }
 
 //------------------------------------------------------------------------------
 
-RegisterHelper UnsharpMaskRegister(&ptFilter_UnsharpMask::createUnsharpMask, CUnsharpMaskId);
+RegisterHelper HighpassSharpenRegister(&ptFilter_HighpassSharpen::createHighpassSharpen, CHighpassSharpenId);
 
 //------------------------------------------------------------------------------

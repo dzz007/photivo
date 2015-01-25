@@ -359,6 +359,7 @@ void CreateAllFilters() {
   GFilterDM->NewFilter("Wiener",                Fuid::Wiener_LabSN);
   GFilterDM->NewFilter("InvDiffSharpen",        Fuid::InvDiffSharpen_LabSN);
   GFilterDM->NewFilter("UnsharpMask",           Fuid::Usm_LabSN);
+  GFilterDM->NewFilter("HighpassSharpen",       Fuid::HighpassSharpen_LabSN);
   // Lab Eyecandy tab
   GFilterDM->NewFilter("Outline",               Fuid::Outline_LabEyeCandy);
   GFilterDM->NewFilter("LumaByHueCurve",        Fuid::LumaByHueCurve_LabEyeCandy);
@@ -4971,39 +4972,6 @@ void CB_ExposureClipModeChoice(const QVariant Value) {
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Callbacks pertaining to the LabSN Tab
-// Partim Highpass
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_HighpassChoice(const QVariant Choice) {
-  Settings->SetValue("Highpass",Choice);
-  Update(ptProcessorPhase_LabSN);
-}
-
-void CB_HighpassRadiusInput(const QVariant Value) {
-  Settings->SetValue("HighpassRadius",Value);
-  if (Settings->GetInt("Highpass")==2) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_HighpassAmountInput(const QVariant Value) {
-  Settings->SetValue("HighpassAmount",Value);
-  if (Settings->GetInt("Highpass")==2) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_HighpassDenoiseInput(const QVariant Value) {
-  Settings->SetValue("HighpassDenoise",Value);
-  if (Settings->GetInt("Highpass")==2) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the LabSN Tab
 // Partim Grain
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -5865,11 +5833,6 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(WhiteLevelInput)
   M_Dispatch(ExposureInput)
   M_Dispatch(ExposureClipModeChoice)
-
-  M_SetAndRunDispatch(HighpassChoice)
-  M_SetAndRunDispatch(HighpassRadiusInput)
-  M_SetAndRunDispatch(HighpassAmountInput)
-  M_SetAndRunDispatch(HighpassDenoiseInput)
 
   M_Dispatch(Grain1MaskTypeChoice)
   M_Dispatch(Grain1ModeChoice)

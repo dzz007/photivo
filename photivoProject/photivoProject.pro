@@ -302,7 +302,8 @@ HEADERS += \
     ../Sources/filters/ptFilter_Defringe.h \
     ../Sources/filters/ptFilter_WaveletDenoise.h \
     ../Sources/filters/ptFilter_InvDiffSharpen.h \
-    ../Sources/filters/ptFilter_UnsharpMask.h
+    ../Sources/filters/ptFilter_UnsharpMask.h \
+    ../Sources/filters/ptFilter_HighpassSharpen.h
 
 SOURCES += \
     ../Sources/batch/ptBatchWindow.cpp \
@@ -451,7 +452,8 @@ SOURCES += \
     ../Sources/filters/ptFilter_Defringe.cpp \
     ../Sources/filters/ptFilter_WaveletDenoise.cpp \
     ../Sources/filters/ptFilter_InvDiffSharpen.cpp \
-    ../Sources/filters/ptFilter_UnsharpMask.cpp
+    ../Sources/filters/ptFilter_UnsharpMask.cpp \
+    ../Sources/filters/ptFilter_HighpassSharpen.cpp
 
 FORMS += \
     ../Sources/batch/ptBatchWindow.ui \
