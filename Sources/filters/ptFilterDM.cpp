@@ -1213,9 +1213,9 @@ void ptFilterDM::FillNameMap() {
   FNameMap.insert("USMRadius",                       "UnsharpMask/"+Fuid::Usm_LabSN+"/Radius");
   FNameMap.insert("USMAmount",                       "UnsharpMask/"+Fuid::Usm_LabSN+"/Strength");
   FNameMap.insert("USMThreshold",                    "UnsharpMask/"+Fuid::Usm_LabSN+"/Threshold");
-//  FNameMap.insert("HighpassRadius",                  "");
-//  FNameMap.insert("HighpassAmount",                  "");
-//  FNameMap.insert("HighpassDenoise",                 "");
+  FNameMap.insert("HighpassAmount",                  "HighpassSharpen/"+Fuid::HighpassSharpen_LabSN+"/Strength");
+  FNameMap.insert("HighpassRadius",                  "HighpassSharpen/"+Fuid::HighpassSharpen_LabSN+"/Radius");
+  FNameMap.insert("HighpassDenoise",                 "HighpassSharpen/"+Fuid::HighpassSharpen_LabSN+"/Denoise");
 //  FNameMap.insert("Grain1Strength",                  "");
 //  FNameMap.insert("Grain1Radius",                    "");
 //  FNameMap.insert("Grain1Opacity",                   "");
@@ -1423,7 +1423,7 @@ void ptFilterDM::FillNameMap() {
   FNameMap.insert("GREYCLabMaskType",                "GreyCStoration/"+Fuid::GreyCStoration_LabSN+"/MaskType");
   FNameMap.insert("GREYCLabInterpolation",           "GreyCStoration/"+Fuid::GreyCStoration_LabSN+"/Interpolation");
   FNameMap.insert("USM",                             "UnsharpMask/"+Fuid::Usm_LabSN+"/Mode");
-//  FNameMap.insert("Highpass",                        "");
+  FNameMap.insert("Highpass",                        "HighpassSharpen/"+Fuid::HighpassSharpen_LabSN+"/Mode");
 //  FNameMap.insert("Grain1MaskType",                  "");
 //  FNameMap.insert("Grain1Mode",                      "");
 //  FNameMap.insert("Grain2MaskType",                  "");

@@ -27,8 +27,6 @@
 #include "../ptImage.h"
 #include "ptCimg.h"
 
-#include "../ptSettings.h"
-
 // TODO: Needed for access to m_ReportProgress. Find a way to avoid when modernising the processor.
 #include "../ptProcessor.h"
 extern ptProcessor* TheProcessor;
@@ -112,11 +110,7 @@ void ptFilter_GreyCStoration::doDefineControls() {
 //------------------------------------------------------------------------------
 
 bool ptFilter_GreyCStoration::doCheckHasActiveCfg() {
-  auto mode = static_cast<TFilterMode>(FConfig.value(CMode).toInt());
-
-  return
-      (mode >= TFilterMode::AlwaysOn) ||
-      ((mode == TFilterMode::FinalRun) && Settings->GetInt("FullOutput"));
+  return pt::isActiveFilterMode(FConfig.value(CMode));
 }
 
 //------------------------------------------------------------------------------

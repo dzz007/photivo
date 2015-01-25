@@ -128,9 +128,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"WhiteFraction"                 ,ptGT_InputSlider     ,2,1,1 ,10   ,1    ,50    ,1    ,0 ,tr("% white")             ,tr("Percentage of white aimed at")},
     {"WhiteLevel"                    ,ptGT_InputSlider     ,2,1,1 ,90   ,50   ,99    ,1    ,0 ,tr("WhiteLevel")         ,tr("WhiteLevel")},
     {"Exposure"                      ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-5.0 ,5.0   ,0.1 ,2 ,tr("EV")                 ,tr("Exposure in EV")},
-    {"HighpassRadius"                ,ptGT_InputSlider     ,2,1,1 ,2.0  ,0.0  ,10.0  ,0.5  ,1 ,tr("Radius")             ,tr("Radius for Highpass")},
-    {"HighpassAmount"                ,ptGT_InputSlider     ,2,1,1 ,4.0  ,0.0  ,20.0  ,0.5  ,1 ,tr("Amount")             ,tr("Amount for Highpass")},
-    {"HighpassDenoise"               ,ptGT_InputSlider     ,2,1,1 ,0.2  ,0.0  ,10.0  ,0.1  ,1 ,tr("Denoise")            ,tr("Denoise for Highpass")},
     {"Grain1Strength"                ,ptGT_InputSlider     ,2,1,1 ,0.3  ,0.0  ,1.0   ,0.1  ,2 ,tr("Strength")           ,tr("Strength for film grain")},
     {"Grain1Radius"                  ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,10.0  ,1.0  ,1 ,tr("Radius")             ,tr("Radius for film grain")},
     {"Grain1Opacity"                 ,ptGT_InputSlider     ,2,1,1 ,0.3  ,0.0  ,1.0   ,0.1  ,2 ,tr("Opacity")            ,tr("Opacity for film grain")},
@@ -276,7 +273,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"AspectRatioH"                ,ptGT_Choice       ,2,0,0 ,2                           ,GuiOptions->AspectRatio               ,tr("Aspect height")},
     {"ExposureClipMode"            ,ptGT_Choice       ,1,1,1 ,ptExposureClipMode_Curve    ,GuiOptions->ExposureClipMode          ,tr("Clip mode")},
     {"AutoExposure"                ,ptGT_Choice       ,1,1,1 ,ptAutoExposureMode_Zero     ,GuiOptions->AutoExposureMode          ,tr("Auto exposure mode")},
-    {"Highpass"                    ,ptGT_Choice       ,2,1,1 ,ptEnable_None               ,GuiOptions->Enable                    ,tr("Enable Highpass sharpening")},
     {"Grain1MaskType"              ,ptGT_Choice       ,2,1,1 ,ptMaskType_None             ,GuiOptions->GrainMaskType             ,tr("Values for film grain")},
     {"Grain1Mode"                  ,ptGT_Choice       ,2,1,1 ,ptGrainMode_SoftGaussian    ,GuiOptions->GrainMode                 ,tr("Mode for film grain")},
     {"Grain2MaskType"              ,ptGT_Choice       ,2,1,1 ,ptMaskType_None             ,GuiOptions->GrainMaskType             ,tr("Values for film grain")},
@@ -1455,12 +1451,7 @@ sToolInfo ToolInfo (const QString GuiName) {
       Info.IsActive = Settings->GetDouble("Exposure")!=0.0?1:0;
   }
   // Lab Sharpen and Noise
-  else if (GuiName == "TabLABHighpass") {
-      Info.Name = "Lab highpass";
-      Info.IsActive = ((Settings->GetInt("FullOutput") &&
-                        Settings->GetInt("Highpass")) ||
-                       Settings->GetInt("Highpass")==2)!=0?1:0;
-  } else if (GuiName == "TabLABFilmGrain") {
+  else if (GuiName == "TabLABFilmGrain") {
       Info.Name = "Lab film grain";
       Info.IsActive = (Settings->GetInt("Grain1MaskType") ||
                       Settings->GetInt("Grain2MaskType"))!=0?1:0;

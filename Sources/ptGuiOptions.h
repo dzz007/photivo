@@ -36,6 +36,8 @@ namespace pt {
     extern const ptCfgItem::TComboEntryList FilterModes;
     extern const ptCfgItem::TComboEntryList MaskedFilterModes;
   }
+
+  bool isActiveFilterMode(const QVariant& AFilterMode);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
