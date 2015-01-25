@@ -425,15 +425,15 @@ const short ptLABTransform_R  = 1;
 const short ptLABTransform_G  = 2;
 const short ptLABTransform_B  = 3;
 
-// ViewLAB
-
-const short ptViewLAB_LAB    = 0;
-const short ptViewLAB_L      = 1;
-const short ptViewLAB_A      = 2;
-const short ptViewLAB_B      = 3;
-const short ptViewLAB_L_Grad = 4;
-const short ptViewLAB_C      = 5;
-const short ptViewLAB_H      = 6;
+enum class TViewLabChannel: int {
+  Lab,
+  L,
+  a,
+  b,
+  LStructure,
+  C,
+  H
+};
 
 // Enable (DEPRECATED! To be replaced by TFilterMode)
 

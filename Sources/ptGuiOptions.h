@@ -102,7 +102,6 @@ public:
   static const ptGuiOptionsItem AutoExposureMode[];
   static const ptGuiOptionsItem LABTransformMode[];
   static const ptGuiOptionsItem SpecialPreview[];
-  static const ptGuiOptionsItem ViewLAB[];
   static const ptGuiOptionsItem FilmType[];
   static const ptGuiOptionsItem ColorFilterType[];
   static const ptGuiOptionsItem GradualBlurMode[];

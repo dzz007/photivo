@@ -949,23 +949,17 @@ void ptProcessor::Run(short Phase,
 
 
         //***************************************************************************
-        // View LAB
+        // View Lab
 
-        if (Settings->ToolIsActive("TabLABViewLab")) {
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabSN->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabSN->RGBToLab();
-
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      FRunTimer.elapsed());
-          }
-          m_ReportProgress(tr("View LAB"));
-
-          m_Image_AfterLabSN->ViewLAB(Settings->GetInt("ViewLAB"));
+        hFilter = GFilterDM->GetFilterFromName(Fuid::ViewLab_LabSN);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterLabSN);
         }
 
-      case ptProcessorPhase_LabEyeCandy : // Run everything in LABSN.
+
+        //***************************************************************************
+      case ptProcessorPhase_LabEyeCandy : // Run everything in Lab eyecandy.
 
         if (Settings->GetInt("JobMode")) {
           m_Image_AfterLabEyeCandy = m_Image_AfterLabSN; // Job mode -> no cache
