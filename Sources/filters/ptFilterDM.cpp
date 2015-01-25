@@ -658,7 +658,7 @@ void ptFilterDM::TranslatePreset(QSettings *APreset, const bool AOldToNew) {
 //==============================================================================
 
 void ptFilterDM::TranslateNormalToNew(QSettings *APreset, QStringList *AKeys) {
-  for (QString hFromKey: *AKeys) {
+  for (const QString& hFromKey: *AKeys) {
     QString hToKey = FNameMap.value(hFromKey, "<invalid>");
 
     if (hToKey != "<invalid>") {
@@ -666,7 +666,6 @@ void ptFilterDM::TranslateNormalToNew(QSettings *APreset, QStringList *AKeys) {
       APreset->remove(hFromKey);
     }
   }
-
 }
 
 //==============================================================================
@@ -1431,7 +1430,7 @@ void ptFilterDM::FillNameMap() {
   FNameMap.insert("Grain2MaskType",                  "FilmGrain/"+Fuid::FilmGrain_LabSN+"/MaskType2");
   FNameMap.insert("Grain2Mode",                      "FilmGrain/"+Fuid::FilmGrain_LabSN+"/GrainType2");
 //  FNameMap.insert("LabVignetteMode",                 "");
-//  FNameMap.insert("ViewLAB",                         "");
+  FNameMap.insert("ViewLAB",                         "LabChannelView/"+Fuid::ViewLab_LabSN+"/ChannelSelection");
   FNameMap.insert("OutlineMode",                     "Outline/"+Fuid::Outline_LabEyeCandy+"/OverlayMode");
   FNameMap.insert("OutlineGradientMode",             "Outline/"+Fuid::Outline_LabEyeCandy+"/GradientMode");
   FNameMap.insert("LABToneAdjust1MaskType",          "ToneAdjust/"+Fuid::ToneAdjust1_LabEyeCandy+"/MaskMode");

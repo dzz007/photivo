@@ -523,7 +523,7 @@ ptImage* MaskedColorAdjust(const int       Ax,
                           const double Sigma = 1.1);
 
   // View LAB
-  ptImage* ViewLAB(const short Channel);
+  ptImage* ViewLab(const TViewLabChannel Channel);
 
   // Special Preview
   ptImage* SpecialPreview(const short Mode, const int Intent = 0);

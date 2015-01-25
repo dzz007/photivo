@@ -5328,7 +5328,7 @@ ptImage* ptImage::Box(const uint16_t MaxRadius, float* Mask) {
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-ptImage* ptImage::ViewLAB(const short Channel) {
+ptImage* ptImage::ViewLab(const TViewLabChannel Channel) {
 
   assert (m_ColorSpace == ptSpace_Lab);
 
@@ -5338,17 +5338,16 @@ ptImage* ptImage::ViewLAB(const short Channel) {
   ptCurve* MyContrastCurve = new ptCurve();
 
   switch(Channel) {
-
-    case ptViewLAB_L:
-#pragma omp parallel for schedule(static)
+    case TViewLabChannel::L:
+#     pragma omp parallel for schedule(static)
       for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
         m_Image[i][1]=0x8080;
         m_Image[i][2]=0x8080;
       }
       break;
 
-    case ptViewLAB_A:
-#pragma omp parallel for schedule(static)
+    case TViewLabChannel::a:
+#     pragma omp parallel for schedule(static)
       for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
         m_Image[i][0]=m_Image[i][1];
         m_Image[i][1]=0x8080;
@@ -5356,8 +5355,8 @@ ptImage* ptImage::ViewLAB(const short Channel) {
       }
       break;
 
-    case ptViewLAB_B:
-#pragma omp parallel for schedule(static)
+    case TViewLabChannel::b:
+#     pragma omp parallel for schedule(static)
       for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
         m_Image[i][0]=m_Image[i][2];
         m_Image[i][1]=0x8080;
@@ -5365,29 +5364,28 @@ ptImage* ptImage::ViewLAB(const short Channel) {
       }
       break;
 
-    case ptViewLAB_L_Grad:
+    case TViewLabChannel::LStructure:
       ContrastLayer->Set(this);
       ContrastLayer->fastBilateralChannel(4, 0.2, 2, ChMask_L);
 
-#pragma omp parallel for default(shared) schedule(static)
+#     pragma omp parallel for default(shared) schedule(static)
       for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
         m_Image[i][0] = CLIP((int32_t) ((WPH-(int32_t)ContrastLayer->m_Image[i][0])+m_Image[i][0]));
       }
       MyContrastCurve->setFromFunc(ptCurve::Sigmoidal,0.5,30);
       ApplyCurve(MyContrastCurve,1);
 
-      //~ ptCimgEdgeDetection(this,1);
-#pragma omp parallel for schedule(static)
+#     pragma omp parallel for schedule(static)
       for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
         m_Image[i][1]=0x8080;
         m_Image[i][2]=0x8080;
       }
       break;
 
-    case ptViewLAB_C:
+    case TViewLabChannel::C:
       ContrastLayer->Set(this);
       ContrastLayer->LabToLch();
-#pragma omp parallel for schedule(static)
+#     pragma omp parallel for schedule(static)
       for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
         m_Image[i][0]=CLIP((int32_t)(2.0f*ContrastLayer->m_ImageC[i]));
         m_Image[i][1]=0x8080;
@@ -5395,10 +5393,10 @@ ptImage* ptImage::ViewLAB(const short Channel) {
       }
       break;
 
-    case ptViewLAB_H:
+    case TViewLabChannel::H:
       ContrastLayer->Set(this);
       ContrastLayer->LabToLch();
-#pragma omp parallel for schedule(static)
+#     pragma omp parallel for schedule(static)
       for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
         m_Image[i][0]=CLIP((int32_t)(ContrastLayer->m_ImageH[i]/pt2PI*(float)0xffff));
         m_Image[i][1]=0x8080;
@@ -5407,7 +5405,7 @@ ptImage* ptImage::ViewLAB(const short Channel) {
       break;
 
     default:
-      break;
+      assert("unexpected ViewLab channel mode");
   }
 
   delete MyContrastCurve;
@@ -5486,9 +5484,9 @@ ptImage* ptImage::SpecialPreview(const short Mode, const int Intent) {
     }
     m_ColorSpace = ptSpace_Lab;
     // ViewLAB
-    if (Mode == ptSpecialPreview_L) ViewLAB(ptViewLAB_L);
-    if (Mode == ptSpecialPreview_A) ViewLAB(ptViewLAB_A);
-    if (Mode == ptSpecialPreview_B) ViewLAB(ptViewLAB_B);
+    if (Mode == ptSpecialPreview_L) ViewLab(TViewLabChannel::L);
+    if (Mode == ptSpecialPreview_A) ViewLab(TViewLabChannel::a);
+    if (Mode == ptSpecialPreview_B) ViewLab(TViewLabChannel::b);
 
     // to RGB
     Transform = cmsCreateTransform(LabProfile,

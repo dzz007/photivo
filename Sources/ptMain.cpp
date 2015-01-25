@@ -361,6 +361,7 @@ void CreateAllFilters() {
   GFilterDM->NewFilter("UnsharpMask",           Fuid::Usm_LabSN);
   GFilterDM->NewFilter("HighpassSharpen",       Fuid::HighpassSharpen_LabSN);
   GFilterDM->NewFilter("FilmGrain",             Fuid::FilmGrain_LabSN);
+  GFilterDM->NewFilter("LabChannelView",        Fuid::ViewLab_LabSN);
   // Lab Eyecandy tab
   GFilterDM->NewFilter("Outline",               Fuid::Outline_LabEyeCandy);
   GFilterDM->NewFilter("LumaByHueCurve",        Fuid::LumaByHueCurve_LabEyeCandy);
@@ -4969,18 +4970,6 @@ void CB_ExposureClipModeChoice(const QVariant Value) {
   Update(ptProcessorPhase_RGB);
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the LabSN Tab
-// Partim ViewLAB
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_ViewLABChoice(const QVariant Choice) {
-  Settings->SetValue("ViewLAB",Choice);
-  Update(ptProcessorPhase_LabSN);
-}
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -5732,8 +5721,6 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(WhiteLevelInput)
   M_Dispatch(ExposureInput)
   M_Dispatch(ExposureClipModeChoice)
-
-  M_Dispatch(ViewLABChoice)
 
   M_SetAndRunDispatch(LabVignetteModeChoice)
   M_SetAndRunDispatch(LabVignetteInput)

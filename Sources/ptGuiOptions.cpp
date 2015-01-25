@@ -529,16 +529,6 @@ const ptGuiOptionsItem ptGuiOptions::SpecialPreview[] = {
   {ptSpecialPreview_Gradient,   QObject::tr("Gradient") },
   {-1,NULL}};
 
-const ptGuiOptionsItem ptGuiOptions::ViewLAB[] = {
-  {ptViewLAB_LAB,         QObject::tr("LAB") },
-  {ptViewLAB_L,           QObject::tr("L") },
-  {ptViewLAB_L_Grad,      QObject::tr("Structure on L") },
-  {ptViewLAB_A,           QObject::tr("A") },
-  {ptViewLAB_B,           QObject::tr("B") },
-  {ptViewLAB_C,           QObject::tr("C") },
-  {ptViewLAB_H,           QObject::tr("H") },
-  {-1,NULL}};
-
 const ptGuiOptionsItem ptGuiOptions::SaveFormat[] = {
   {ptSaveFormat_PPM8,   QObject::tr("PPM 8-bit")    },
   {ptSaveFormat_PPM16,  QObject::tr("PPM 16-bit")   },

@@ -264,7 +264,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"ExposureClipMode"            ,ptGT_Choice       ,1,1,1 ,ptExposureClipMode_Curve    ,GuiOptions->ExposureClipMode          ,tr("Clip mode")},
     {"AutoExposure"                ,ptGT_Choice       ,1,1,1 ,ptAutoExposureMode_Zero     ,GuiOptions->AutoExposureMode          ,tr("Auto exposure mode")},
     {"LabVignetteMode"             ,ptGT_Choice       ,2,1,1 ,ptVignetteMode_None         ,GuiOptions->VignetteMode              ,tr("Mode for Vignette")},
-    {"ViewLAB"                     ,ptGT_Choice       ,2,1,1 ,ptViewLAB_LAB               ,GuiOptions->ViewLAB                   ,tr("View seperate LAB channels")},
     {"BWStylerFilmType"            ,ptGT_Choice       ,2,1,1 ,ptFilmType_Luminance        ,GuiOptions->FilmType                  ,tr("Film emulation")},
     {"BWStylerColorFilterType"     ,ptGT_Choice       ,2,1,1 ,ptColorFilterType_None      ,GuiOptions->ColorFilterType           ,tr("Color filter emulation")},
     {"Tone1MaskType"               ,ptGT_Choice       ,2,1,1 ,ptMaskType_None             ,GuiOptions->MaskType                  ,tr("Values for Toning")},
@@ -1435,11 +1434,6 @@ sToolInfo ToolInfo (const QString GuiName) {
   else if (GuiName == "TabExposure") {
       Info.Name = "Exposure";
       Info.IsActive = Settings->GetDouble("Exposure")!=0.0?1:0;
-  }
-  // Lab Sharpen and Noise
-  else if (GuiName == "TabLABViewLab") {
-      Info.Name = "Lab view Lab";
-      Info.IsActive = Settings->GetInt("ViewLAB")!=0?1:0;
   }
   // Tab Lab EyeCandy
   else if (GuiName == "TabLABVignette") {
