@@ -36,7 +36,7 @@ extern ptProcessor* TheProcessor;
 const QString CFilmGrainId = "FilmGrain";
 
 const QString CMaskType1   = "MaskType1";
-const QString CNoiseType1  = "NoiseType1";
+const QString CGrainType1  = "GrainType1";
 const QString CStrength1   = "Strength1";
 const QString CRadius1     = "Radius1";
 const QString COpacity1    = "Opacity1";
@@ -44,7 +44,7 @@ const QString CLowerLimit1 = "LowerLimit1";
 const QString CUpperLimit1 = "UpperLimit1";
 
 const QString CMaskType2   = "MaskType2";
-const QString CNoiseType2  = "NoiseType2";
+const QString CGrainType2  = "GrainType2";
 const QString CStrength2   = "Strength2";
 const QString CRadius2     = "Radius2";
 const QString COpacity2    = "Opacity2";
@@ -84,7 +84,7 @@ void ptFilter_FilmGrain::doDefineControls() {
   FConfig.initStores(TCfgItemList()                                              //--- Combo: list of entries               ---//
     //            Id             Type                      Default     Min           Max           Step        Decimals, commonConnect, storeable, caption, tooltip
     << ptCfgItem({CMaskType1,    ptCfgItem::Combo,   static_cast<int>(TMaskType::Disabled), pt::ComboEntries::MaskTypes, true, true, tr("Mask type"),   tr("Mask type")})
-    << ptCfgItem({CNoiseType1,   ptCfgItem::Combo,   static_cast<int>(TGrainType::SoftGaussian), grainTypes,             true, true, tr("Noise type"),  tr("Noise type")})
+    << ptCfgItem({CGrainType1,   ptCfgItem::Combo,   static_cast<int>(TGrainType::SoftGaussian), grainTypes,             true, true, tr("Noise type"),  tr("Noise type")})
     << ptCfgItem({CStrength1,    ptCfgItem::Slider,        0.3,        0.0,          1.0,          0.1,        2,        true, true, tr("Strength"),    tr("")})
     << ptCfgItem({CRadius1,      ptCfgItem::Slider,        1.0,        0.0,         10.0,          1.0,        1,        true, true, tr("Radius"),      tr("")})
     << ptCfgItem({COpacity1,     ptCfgItem::Slider,        0.3,        0.0,          1.0,          0.1,        2,        true, true, tr("Opacity"),     tr("")})
@@ -92,7 +92,7 @@ void ptFilter_FilmGrain::doDefineControls() {
     << ptCfgItem({CUpperLimit1,  ptCfgItem::Slider,        0.4,        0.0,          1.0,          0.002,      3,        true, true, tr("Upper limit"), tr("")})
 
     << ptCfgItem({CMaskType2,    ptCfgItem::Combo,   static_cast<int>(TMaskType::Disabled), pt::ComboEntries::MaskTypes, true, true, tr("Mask type"),   tr("Mask type")})
-    << ptCfgItem({CNoiseType2,   ptCfgItem::Combo,   static_cast<int>(TGrainType::SoftGaussian), grainTypes,             true, true, tr("Noise type"),  tr("Noise type")})
+    << ptCfgItem({CGrainType2,   ptCfgItem::Combo,   static_cast<int>(TGrainType::SoftGaussian), grainTypes,             true, true, tr("Noise type"),  tr("Noise type")})
     << ptCfgItem({CStrength2,    ptCfgItem::Slider,        0.3,        0.0,          1.0,          0.1,        2,        true, true, tr("Strength"),    tr("")})
     << ptCfgItem({CRadius2,      ptCfgItem::Slider,        2.0,        0.0,         10.0,          1.0,        1,        true, true, tr("Radius"),      tr("")})
     << ptCfgItem({COpacity2,     ptCfgItem::Slider,        0.2,        0.0,          1.0,          0.1,        2,        true, true, tr("Opacity"),     tr("")})
@@ -118,7 +118,7 @@ void ptFilter_FilmGrain::doRunFilter(ptImage *AImage) const {
   if (pt::isActiveMaskType(FConfig.value(CMaskType1))) {
     AImage->Grain(
           FConfig.value(CStrength1).toDouble(),
-          static_cast<TGrainType>(FConfig.value(CNoiseType1).toInt()),
+          static_cast<TGrainType>(FConfig.value(CGrainType1).toInt()),
           FConfig.value(CRadius1).toDouble(),
           FConfig.value(COpacity1).toDouble(),
           static_cast<TMaskType>(FConfig.value(CMaskType1).toInt()),
@@ -130,7 +130,7 @@ void ptFilter_FilmGrain::doRunFilter(ptImage *AImage) const {
   if (pt::isActiveMaskType(FConfig.value(CMaskType2))) {
     AImage->Grain(
           FConfig.value(CStrength2).toDouble(),
-          static_cast<TGrainType>(FConfig.value(CNoiseType2).toInt()),
+          static_cast<TGrainType>(FConfig.value(CGrainType2).toInt()),
           FConfig.value(CRadius2).toDouble(),
           FConfig.value(COpacity2).toDouble(),
           static_cast<TMaskType>(FConfig.value(CMaskType2).toInt()),

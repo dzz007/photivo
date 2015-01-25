@@ -60,7 +60,7 @@
           <widget class="ptChoice" name="MaskType1"/>
          </item>
          <item>
-          <widget class="ptChoice" name="NoiseType1"/>
+          <widget class="ptChoice" name="GrainType1"/>
          </item>
          <item>
           <spacer name="horizontalSpacer_2">
@@ -134,7 +134,7 @@
        <widget class="ptChoice" name="MaskType2"/>
       </item>
       <item>
-       <widget class="ptChoice" name="NoiseType2"/>
+       <widget class="ptChoice" name="GrainType2"/>
       </item>
       <item>
        <spacer name="horizontalSpacer">
