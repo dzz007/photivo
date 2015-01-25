@@ -269,11 +269,11 @@ public:
                         const float AHighlights);
 
   // LMHLightRecovery
-  ptImage* LMHRecovery(const short   MaskType,
-                            const float Amount,
-                            const float LowerLimit,
-                            const float UpperLimit,
-                            const float Softness);
+  ptImage* LMHRecovery(const TMaskType MaskType,
+                       const float Amount,
+                       const float LowerLimit,
+                       const float UpperLimit,
+                       const float Softness);
 
   // Highpass
   ptImage* Highpass(const double Radius,
@@ -304,7 +304,7 @@ public:
                          const double Amount,
                          const double Opacity,
                          const double HaloControl,
-                         const short MaskType,
+                         const TMaskType MaskType,
                          const double LowerLimit,
                          const double UpperLimit,
                          const double Softness);
@@ -346,7 +346,7 @@ public:
                  const short NoiseType,
                  const double Radius,
                  const double Opacity,
-                 const short MaskType,
+                 const TMaskType MaskType,
                  const double LowerLimit,
                  const double UpperLimit,
                  const short ScaleFactor);
@@ -385,8 +385,8 @@ public:
   ptImage* LABTone(const double Amount,
                    const double Hue,
                    const double Saturation = 0,
-                   const short MaskType = ptMaskType_All,
-                   const short ManualMask = 0,
+                   const TMaskType MaskType = TMaskType::All,
+                   const short  ManualMask = 0,
                    const double LowerLevel = 0.,
                    const double UpperLevel = 1.,
                    const double Softness = 0.);
@@ -396,10 +396,10 @@ public:
                 const uint16_t G,
                 const uint16_t B,
                 const double   Amount,
-                const short    MaskType,
-          const double   LowerLimit,
-          const double   UpperLimit,
-          const double   Softness);
+                const TMaskType MaskType,
+                const double   LowerLimit,
+                const double   UpperLimit,
+                const double   Softness);
 
   // Crossprocessing
   ptImage* Crossprocess(const short Mode,
@@ -448,7 +448,7 @@ public:
   // 30/59/11 seem to be a standard triple representing the luminance,
   // but this should be color space dependend, so TODO
   // For an image in LAB choose 1/0/0.
-  float *GetMask(const short  MaskType,
+  float *GetMask(const TMaskType MaskType,
                  const double LowerLimit,
                  const double UpperLimit,
                  const double Softness,

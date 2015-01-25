@@ -23,6 +23,8 @@
 #include "ptFilter_LMHRecovery.h"
 #include "ui_ptFilter_LMHRecovery.h"
 #include "ptCfgItem.h"
+#include "../ptConstants.h"
+#include "../ptGuiOptions.h"
 #include "../ptImage.h"
 #include "../ptSettings.h"
 
@@ -72,21 +74,14 @@ ptFilterBase *ptFilter_LMHRecovery::createLMHRecoveryLab() {
 //==============================================================================
 
 void ptFilter_LMHRecovery::doDefineControls() {
-  QList<ptCfgItem::TComboEntry> hMaskEntries;
-  hMaskEntries.append({tr("Disabled"),    ptMaskType_None,       "disabled"});
-  hMaskEntries.append({tr("Shadows"),     ptMaskType_Shadows,    "shadows"});
-  hMaskEntries.append({tr("Midtones"),    ptMaskType_Midtones,   "midtones"});
-  hMaskEntries.append({tr("Highlights"),  ptMaskType_Highlights, "highlights"});
-  hMaskEntries.append({tr("All values"),  ptMaskType_All,        "allvalues"});
-
   FConfig.initStores(TCfgItemList()                                              //--- Combo: list of entries               ---//
     //            Id                       Type                      Default     Min           Max           Step        Decimals, commonConnect, storeable, caption, tooltip
-    << ptCfgItem({CMaskType1,               ptCfgItem::Combo,         ptMaskType_None, hMaskEntries,                                true, true, tr("Mask type"), tr("")})
+    << ptCfgItem({CMaskType1,               ptCfgItem::Combo,         static_cast<int>(TMaskType::Disabled), pt::ComboEntries::MaskTypes, true, true, tr("Mask type"), tr("")})
     << ptCfgItem({CStrength1,               ptCfgItem::Slider,        0.0,       -3.0,          3.0,          0.1,        2,        true, true, tr("Strength"), tr("")})
     << ptCfgItem({CLowerLimit1,             ptCfgItem::Slider,        0.0,        0.0,          1.0,          0.002,      3,        true, true, tr("Lower limit"), tr("")})
     << ptCfgItem({CUpperLimit1,             ptCfgItem::Slider,        1.0,        0.0,          1.0,          0.002,      3,        true, true, tr("Upper limit"), tr("")})
     << ptCfgItem({CSoftness1,               ptCfgItem::Slider,        1.0,       -2.0,          2.0,          0.1,        1,        true, true, tr("Softness"), tr("")})
-    << ptCfgItem({CMaskType2,               ptCfgItem::Combo,         ptMaskType_None, hMaskEntries,                                true, true, tr("Mask type"), tr("")})
+    << ptCfgItem({CMaskType2,               ptCfgItem::Combo,         static_cast<int>(TMaskType::Disabled), pt::ComboEntries::MaskTypes, true, true, tr("Mask type"), tr("")})
     << ptCfgItem({CStrength2,               ptCfgItem::Slider,        0.0,       -3.0,          3.0,          0.1,        2,        true, true, tr("Strength"), tr("")})
     << ptCfgItem({CLowerLimit2,             ptCfgItem::Slider,        0.0,        0.0,          1.0,          0.002,      3,        true, true, tr("Lower limit"), tr("")})
     << ptCfgItem({CUpperLimit2,             ptCfgItem::Slider,        1.0,        0.0,          1.0,          0.002,      3,        true, true, tr("Upper limit"), tr("")})
@@ -97,8 +92,8 @@ void ptFilter_LMHRecovery::doDefineControls() {
 //==============================================================================
 
 bool ptFilter_LMHRecovery::doCheckHasActiveCfg() {
-  return (FConfig.value(CMaskType1).toInt() != ptMaskType_None) ||
-         (FConfig.value(CMaskType2).toInt() != ptMaskType_None);
+  return (static_cast<TMaskType>(FConfig.value(CMaskType1).toInt()) != TMaskType::Disabled) ||
+         (static_cast<TMaskType>(FConfig.value(CMaskType2).toInt()) != TMaskType::Disabled);
 }
 
 //==============================================================================
@@ -106,7 +101,7 @@ bool ptFilter_LMHRecovery::doCheckHasActiveCfg() {
 void ptFilter_LMHRecovery::doRunFilter(ptImage *AImage) const {
   auto hInputFactor = Settings->GetDouble("InputPowerFactor");
 
-  auto hMaskType1   = FConfig.value(CMaskType1).toInt();
+  auto hMaskType1   = static_cast<TMaskType>(FConfig.value(CMaskType1).toInt());
   auto hStrength1   = FConfig.value(CStrength1).toDouble();
   auto hLowerLimit1 = FConfig.value(CLowerLimit1).toDouble();
   auto hUpperLimit1 = FConfig.value(CUpperLimit1).toDouble();
@@ -114,7 +109,7 @@ void ptFilter_LMHRecovery::doRunFilter(ptImage *AImage) const {
   hLowerLimit1 = qMin(hLowerLimit1, hUpperLimit1-0.01);
   hUpperLimit1 = qMax(hUpperLimit1, hLowerLimit1+0.01);
 
-  auto hMaskType2   = FConfig.value(CMaskType2).toInt();
+  auto hMaskType2   = static_cast<TMaskType>(FConfig.value(CMaskType2).toInt());
   auto hStrength2   = FConfig.value(CStrength2).toDouble();
   auto hLowerLimit2 = FConfig.value(CLowerLimit2).toDouble();
   auto hUpperLimit2 = FConfig.value(CUpperLimit2).toDouble();
@@ -132,9 +127,9 @@ void ptFilter_LMHRecovery::doRunFilter(ptImage *AImage) const {
     AImage->toLab();
   }
 
-  if ((hMaskType1 != ptMaskType_None) && (hStrength1 != 0.0))
+  if ((hMaskType1 != TMaskType::Disabled) && (hStrength1 != 0.0))
     AImage->LMHRecovery(hMaskType1, hStrength1, hLowerLimit1, hUpperLimit1, hSoftness1);
-  if ((hMaskType2 != ptMaskType_None) && (hStrength2 != 0.0))
+  if ((hMaskType2 != TMaskType::Disabled) && (hStrength2 != 0.0))
     AImage->LMHRecovery(hMaskType2, hStrength2, hLowerLimit2, hUpperLimit2, hSoftness2);
 }
 

@@ -2985,11 +2985,11 @@ ptImage* ptImage::ColorEnhance(const float AShadows,
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-ptImage* ptImage::LMHRecovery(const short  MaskType,
-                                   const float  Amount,
-                                   const float  LowerLimit,
-                                   const float  UpperLimit,
-                                   const float  Softness)
+ptImage* ptImage::LMHRecovery(const TMaskType MaskType,
+                              const float  Amount,
+                              const float  LowerLimit,
+                              const float  UpperLimit,
+                              const float  Softness)
 {
   const float ExposureFactor = pow(2,Amount);
   const float InverseExposureFactor = 1/ExposureFactor;
@@ -3033,7 +3033,7 @@ ptImage* ptImage::LMHRecovery(const short  MaskType,
       // dependent. TODO
       RGB_2_L(m_Image[i]))*ptInvWP;
     switch(MaskType) {
-      case ptMaskType_Shadows:
+      case TMaskType::Shadows:
         // Mask is an inverted luminance mask, normalized 0..1 and
         // shifted over the limits such that it clips beyond the limits.
         // The Mask varies from 1 at LowerLimit to 0 at UpperLimit
@@ -3042,7 +3042,7 @@ ptImage* ptImage::LMHRecovery(const short  MaskType,
         // image.
         Mask = 1.0f-LIM((Mask-LowerLimit)*ReciprocalRange,0.0f,1.0f);
         break;
-      case ptMaskType_Midtones:
+      case TMaskType::Midtones:
         // Not fully understood but generates a useful and nice
         // midtone luminance mask.
         Mask = 1.0f -
@@ -3050,7 +3050,7 @@ ptImage* ptImage::LMHRecovery(const short  MaskType,
                LIM((Mask-UpperLimit)*ReciprocalUpperMargin,0.0f,1.0f);
         Mask = LIM(Mask,0.0f,1.0f);
         break;
-      case ptMaskType_Highlights:
+      case TMaskType::Highlights:
         // Mask is a luminance mask, normalized 0..1 and
         // shifted over the limits such that it clips beyond the limits.
         // The Mask varies from 0 at LowerLimit to 1 at UpperLimit
@@ -3058,12 +3058,12 @@ ptImage* ptImage::LMHRecovery(const short  MaskType,
         // more of the darkened image.
         Mask = LIM((Mask-LowerLimit)*ReciprocalRange,0.0f,1.0f);
         break;
-      case ptMaskType_All:
+      case TMaskType::All:
         Mask = 1.0f;
         break;
 
       default:
-        GInfo->Raise(QString("Unknown mask type: ") + QString::number(MaskType), AT);
+        GInfo->Raise(QString("Unknown mask type: ") + QString::number(static_cast<int>(MaskType)), AT);
     }
 
     // Softening the mask
@@ -3124,8 +3124,8 @@ ptImage* ptImage::Highpass(const double Radius,
 
   float (*Mask);
   Mask = (m_ColorSpace == ptSpace_Lab)?
-  GetMask(ptMaskType_Midtones, LowerLimit, UpperLimit, Softness,1,0,0):
-  GetMask(ptMaskType_Midtones, LowerLimit, UpperLimit, Softness);
+  GetMask(TMaskType::Midtones, LowerLimit, UpperLimit, Softness,1,0,0):
+  GetMask(TMaskType::Midtones, LowerLimit, UpperLimit, Softness);
 
   Overlay(HighpassLayer->m_Image,0.5,Mask);
   delete HighpassLayer;
@@ -3534,7 +3534,7 @@ ptImage* ptImage::Microcontrast(const double Radius,
         const double Amount,
         const double Opacity,
         const double HaloControl,
-        const short MaskType,
+        const TMaskType MaskType,
         const double LowerLimit,
         const double UpperLimit,
         const double Softness) {
@@ -3694,7 +3694,7 @@ ptImage* ptImage::BilateralDenoise(const double Threshold,
     delete Curve;
 
     float (*Mask);
-    Mask = MaskLayer->GetMask(ptMaskType_Shadows, 0.0, 1.0, 0.0, 1,0,0);
+    Mask = MaskLayer->GetMask(TMaskType::Shadows, 0.0, 1.0, 0.0, 1,0,0);
     Overlay(DenoiseLayer->m_Image,Opacity,Mask,ptOverlayMode_Normal);
     FREE(Mask);
     delete MaskLayer;
@@ -3770,7 +3770,7 @@ ptImage* ptImage::ApplyDenoiseCurve(const double Threshold,
   delete Curve;
 
   float (*Mask);
-  Mask = MaskLayer->GetMask(ptMaskType_Shadows, 0.0, 1.0, 0.0, 1,0,0);
+  Mask = MaskLayer->GetMask(TMaskType::Shadows, 0.0, 1.0, 0.0, 1,0,0);
   delete MaskLayer;
   Overlay(DenoiseLayer->m_Image,1.0f,Mask,ptOverlayMode_Normal);
   FREE(Mask);
@@ -3884,7 +3884,7 @@ ptImage* ptImage::TextureContrast(const double Threshold,
     delete Curve;
 
     float (*Mask);
-    Mask = MaskLayer->GetMask(ptMaskType_Highlights, 0.0, 1.0, 0.0, 1,0,0);
+    Mask = MaskLayer->GetMask(TMaskType::Highlights, 0.0, 1.0, 0.0, 1,0,0);
     Overlay(ContrastLayer->m_Image,Opacity,Mask);
     FREE(Mask);
     delete MaskLayer;
@@ -4081,7 +4081,7 @@ ptImage* ptImage::Grain(const double Sigma, // 0-1
                         const short NoiseType, // 0-5, Gaussian, uniform, salt&pepper
                         const double Radius, // 0-20
                         const double Opacity,
-                        const short MaskType,
+                        const TMaskType MaskType,
                         const double LowerLimit,
                         const double UpperLimit,
                         const short ScaleFactor) { // 0, 1 or 2 depending on pipe size
@@ -4401,7 +4401,7 @@ ptImage* ptImage::LABTransform(const short Mode) {
 ptImage* ptImage::LABTone(const double Amount,
                           const double Hue,
                           const double Saturation, /* 0 */
-                          const short MaskType, /* ptMaskType_All */
+                          const TMaskType MaskType, /* TMaskType::All */
                           const short ManualMask, /* 0 */
                           const double LowerLevel, /* 0 */
                           const double UpperLevel, /* 1 */
@@ -4424,7 +4424,7 @@ ptImage* ptImage::LABTone(const double Amount,
                                      TAnchor(0.5-0.1*b, 0.5+0.1*b),
                                      TAnchor(1.0,       1.0)} );
 
-  if (MaskType == ptMaskType_All) {
+  if (MaskType == TMaskType::All) {
     if (Saturation != 1) ColorBoost(Saturation, Saturation);
     if (Amount) {
       ApplyCurve(Temp1Curve,2);
@@ -4440,21 +4440,21 @@ ptImage* ptImage::LABTone(const double Amount,
     }
     float (*Mask);
 
-    if (MaskType == ptMaskType_Shadows)
+    if (MaskType == TMaskType::Shadows)
       if (ManualMask)
-        Mask = GetMask(ptMaskType_Shadows, LowerLevel, UpperLevel, Softness,1,0,0);
+        Mask = GetMask(TMaskType::Shadows, LowerLevel, UpperLevel, Softness,1,0,0);
       else
-        Mask = GetMask(ptMaskType_Shadows, 0,0.5,0,1,0,0);
-    else if (MaskType == ptMaskType_Midtones)
+        Mask = GetMask(TMaskType::Shadows, 0,0.5,0,1,0,0);
+    else if (MaskType == TMaskType::Midtones)
       if (ManualMask)
-        Mask = GetMask(ptMaskType_Midtones, LowerLevel, UpperLevel, Softness,1,0,0);
+        Mask = GetMask(TMaskType::Midtones, LowerLevel, UpperLevel, Softness,1,0,0);
       else
-        Mask = GetMask(ptMaskType_Midtones, 0.5,0.5,0,1,0,0);
+        Mask = GetMask(TMaskType::Midtones, 0.5,0.5,0,1,0,0);
     else
       if (ManualMask)
-        Mask = GetMask(ptMaskType_Highlights, LowerLevel, UpperLevel, Softness,1,0,0);
+        Mask = GetMask(TMaskType::Highlights, LowerLevel, UpperLevel, Softness,1,0,0);
       else
-        Mask = GetMask(ptMaskType_Highlights, 0.5,1,0,1,0,0);
+        Mask = GetMask(TMaskType::Highlights, 0.5,1,0,1,0,0);
 
 #pragma omp parallel for
     for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++)
@@ -4485,7 +4485,7 @@ ptImage* ptImage::Tone(const uint16_t R,
                        const uint16_t G,
                        const uint16_t B,
                        const double   Amount,
-                       const short    MaskType,
+                       const TMaskType MaskType,
                        const double   LowerLimit,
                        const double   UpperLimit,
                        const double   Softness) {
@@ -4496,10 +4496,10 @@ ptImage* ptImage::Tone(const uint16_t R,
   ptMemoryError(ToneImage,__FILE__,__LINE__);
 
   float (*Mask);
-  if (MaskType <= ptMaskType_All)
+  if (MaskType <= TMaskType::All)
     Mask=GetMask(MaskType, LowerLimit, UpperLimit, Softness);
   else
-    Mask=GetMask(ptMaskType_Midtones, LowerLimit, UpperLimit, Softness);
+    Mask=GetMask(TMaskType::Midtones, LowerLimit, UpperLimit, Softness);
 #pragma omp parallel for
   for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
     ToneImage[i][0] = R;
@@ -4507,15 +4507,15 @@ ptImage* ptImage::Tone(const uint16_t R,
     ToneImage[i][2] = B;
   }
 
-  if (MaskType <= ptMaskType_All)
+  if (MaskType <= TMaskType::All)
     Overlay(ToneImage, Amount, Mask);
-  else if (MaskType == ptMaskType_Screen)
+  else if (MaskType == TMaskType::Screen)
     Overlay(ToneImage, Amount, Mask, ptOverlayMode_Screen);
-  else if (MaskType == ptMaskType_Multiply)
+  else if (MaskType == TMaskType::Multiply)
     Overlay(ToneImage, Amount, Mask, ptOverlayMode_Multiply);
-  else if (MaskType == ptOverlayMode_GammaDark)
+  else if (MaskType == TMaskType::GammaDark)
     Overlay(ToneImage, Amount, Mask, ptOverlayMode_GammaDark);
-  else if (MaskType == ptOverlayMode_GammaBright)
+  else if (MaskType == TMaskType::GammaBright)
     Overlay(ToneImage, Amount, Mask, ptOverlayMode_GammaBright);
 
   FREE(Mask);
@@ -4893,7 +4893,7 @@ ptImage* ptImage::Softglow(const short SoftglowMode,
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-float *ptImage::GetMask(const short MaskType,
+float *ptImage::GetMask(const TMaskType MaskType,
                         const double LowerLimit,
                         const double UpperLimit,
                         const double Softness,
@@ -4922,18 +4922,20 @@ float *ptImage::GetMask(const short MaskType,
 #pragma omp for schedule(static)
   for (int32_t i=0; i<0x10000; i++) {
     switch(MaskType) {
-    case ptMaskType_All: // All values
+    case TMaskType::All: // All values
       MaskTable[i] = WP;
         break;
-    case ptMaskType_Shadows: // Shadows
+    case TMaskType::Shadows: // Shadows
         MaskTable[i] = WP - CLIP((int32_t)(i*m+t));
         break;
-    case ptMaskType_Midtones: // Midtones
+    case TMaskType::Midtones: // Midtones
       MaskTable[i] = WP - CLIP((int32_t)(i*m1+WP)) - CLIP((int32_t)(i*m2+t2));
         break;
-    case ptMaskType_Highlights: // Highlights
+    case TMaskType::Highlights: // Highlights
          MaskTable[i] = CLIP((int32_t)(i*m+t));
          break;
+    default:
+      assert("Unexpected mask type");
     }
     if (Soft>1.0) {
       MaskTable[i] = ptBound((float)(pow(MaskTable[i]/0xffff,Soft)), 0.0f, 1.0f);

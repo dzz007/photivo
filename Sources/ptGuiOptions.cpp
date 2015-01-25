@@ -22,8 +22,8 @@
 **
 *******************************************************************************/
 
-#include "ptGuiOptions.h"
 #include "ptConstants.h"
+#include "ptGuiOptions.h"
 #include "ptSettings.h"
 #include <QObject>
 
@@ -44,7 +44,14 @@ namespace pt {
       {QObject::tr("Show mask"),      static_cast<int>(TFilterMode::ShowMask), "ShowMask"}
     });
 
-  }
+    const ptCfgItem::TComboEntryList MaskTypes({
+      {QObject::tr("Disabled"),   static_cast<int>(TMaskType::Disabled),   "Disabled"},
+      {QObject::tr("Shadows"),    static_cast<int>(TMaskType::Shadows),    "Shadows"},
+      {QObject::tr("Midtones"),   static_cast<int>(TMaskType::Midtones),   "Midtones"},
+      {QObject::tr("Highlights"), static_cast<int>(TMaskType::Highlights), "Highlights"},
+      {QObject::tr("All values"), static_cast<int>(TMaskType::All),        "AllValues"},
+    });
+  } // namespace ComboEntries
 
   /*!
    * Checks the activation state for filters that are enabled/disabled via a FilterModes
@@ -60,14 +67,12 @@ namespace pt {
         (mode >= TFilterMode::AlwaysOn) ||
         ((mode == TFilterMode::FinalRun) && Settings->GetInt("FullOutput"));
   }
-
-  // namespace ComboEntries
 } // namespace pt
 
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Bunch of structured options for the Gui choice elements;
-// DEPRECATED for the new filter-architecture.
+// DEPRECATED for the new filter-architecture. Use TComboEntryList like above.
 //
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -338,14 +343,6 @@ const ptGuiOptionsItem ptGuiOptions::ClipMode[] = {
   {ptClipMode_Rebuild,QObject::tr("Rebuild")             },
   {-1,NULL}};
 
-const ptGuiOptionsItem ptGuiOptions::LMHLightRecoveryMaskType[] = {
-  {ptMaskType_None,              QObject::tr("Disabled") },
-  {ptMaskType_Shadows,           QObject::tr("Shadows") },
-  {ptMaskType_Midtones,          QObject::tr("Midtones") },
-  {ptMaskType_Highlights,        QObject::tr("Highlights") },
-  {ptMaskType_All,               QObject::tr("All values") },
-  {-1,NULL}};
-
 const ptGuiOptionsItem ptGuiOptions::LABTransformMode[] = {
   {ptLABTransform_L,             QObject::tr("Regular L*") },
   {ptLABTransform_R,             QObject::tr("R -> L*") },
@@ -487,13 +484,6 @@ const ptGuiOptionsItem ptGuiOptions::Enable[] = {
   {ptEnable_None,              QObject::tr("Disabled") },
   {ptEnable_NoPreview,         QObject::tr("Only final run") },
   {ptEnable_Preview,           QObject::tr("With Preview") },
-  {-1,NULL}};
-
-const ptGuiOptionsItem ptGuiOptions::EnableGreyC[] = {
-  {ptEnable_None,              QObject::tr("Disabled") },
-  {ptEnable_NoPreview,         QObject::tr("Only final run") },
-  {ptEnable_Preview,           QObject::tr("With Preview") },
-  {ptEnable_ShowMask,          QObject::tr("Show mask") },
   {-1,NULL}};
 
 const ptGuiOptionsItem ptGuiOptions::AspectRatio[] = {
