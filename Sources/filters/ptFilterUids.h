@@ -119,7 +119,7 @@ namespace Fuid {
   const QString Vignette_LabEyeCandy            = "eb2830e7-3782-4b1a-9e14-4fb3b8ad102d"; // not yet ported
 
   const QString BlackWhite_EyeCandy             = "fa677364-4c8c-41bd-9397-94ea42bec595"; // not yet ported
-  const QString SimpleTone_EyeCandy             = "3ca8f518-398d-44f4-8e17-6303a0abcdd0"; // not yet ported
+  const QString SimpleTone_EyeCandy             = "3ca8f518-398d-44f4-8e17-6303a0abcdd0";
   const QString Tone1_EyeCandy                  = "d7e8ce45-5ccd-433f-aefd-00d226b2513e"; // not yet ported
   const QString Tone2_EyeCandy                  = "9ec16c48-5852-4791-ac6d-66ef268e01b7"; // not yet ported
   const QString CrossProcessing_EyeCandy        = "49258677-09d8-4035-9e01-15bdfef4cde5"; // not yet ported

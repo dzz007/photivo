@@ -305,7 +305,8 @@ HEADERS += \
     ../Sources/filters/ptFilter_UnsharpMask.h \
     ../Sources/filters/ptFilter_HighpassSharpen.h \
     ../Sources/filters/ptFilter_FilmGrain.h \
-    ../Sources/filters/ptFilter_ViewLab.h
+    ../Sources/filters/ptFilter_ViewLab.h \
+    ../Sources/filters/ptFilter_SimpleTone.h
 
 SOURCES += \
     ../Sources/batch/ptBatchWindow.cpp \
@@ -457,7 +458,8 @@ SOURCES += \
     ../Sources/filters/ptFilter_UnsharpMask.cpp \
     ../Sources/filters/ptFilter_HighpassSharpen.cpp \
     ../Sources/filters/ptFilter_FilmGrain.cpp \
-    ../Sources/filters/ptFilter_ViewLab.cpp
+    ../Sources/filters/ptFilter_ViewLab.cpp \
+    ../Sources/filters/ptFilter_SimpleTone.cpp
 
 FORMS += \
     ../Sources/batch/ptBatchWindow.ui \

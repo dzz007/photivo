@@ -1281,9 +1281,9 @@ void ptFilterDM::FillNameMap() {
 //  FNameMap.insert("BWStylerMultR",                   "");
 //  FNameMap.insert("BWStylerMultG",                   "");
 //  FNameMap.insert("BWStylerMultB",                   "");
-//  FNameMap.insert("SimpleToneR",                     "");
-//  FNameMap.insert("SimpleToneG",                     "");
-//  FNameMap.insert("SimpleToneB",                     "");
+  FNameMap.insert("SimpleToneR",                     "SimpleTone/"+Fuid::SimpleTone_EyeCandy+"/ChannelR");
+  FNameMap.insert("SimpleToneG",                     "SimpleTone/"+Fuid::SimpleTone_EyeCandy+"/ChannelG");
+  FNameMap.insert("SimpleToneB",                     "SimpleTone/"+Fuid::SimpleTone_EyeCandy+"/ChannelB");
 //  FNameMap.insert("Tone1Amount",                     "");
 //  FNameMap.insert("Tone1LowerLimit",                 "");
 //  FNameMap.insert("Tone1UpperLimit",                 "");
