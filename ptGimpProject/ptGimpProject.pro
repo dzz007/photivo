@@ -36,13 +36,7 @@ CONFIG += silent
 TEMPLATE = app
 TARGET = ptGimp
 
-DEPENDPATH     += .
-INCLUDEPATH    += $${PREFIX}/include
 DESTDIR         = ..
-OBJECTS_DIR     = ../Objects_Gimp
-MOC_DIR         = ../Objects_Gimp
-UI_HEADERS_DIR  = ../Objects_Gimp
-RCC_DIR         = ../Objects_Gimp
 
 #prevent qmake from adding -arch flags
 macx{
@@ -77,8 +71,6 @@ LIBS += $$system(pkg-config --libs-only-L gimp-2.0)
 LIBS += $$system(pkg-config --libs-only-l gtk+-2.0)
 
 unix {
-  QMAKE_CC = ccache /usr/bin/gcc
-  QMAKE_CXX = ccache /usr/bin/g++
 #  QMAKE_POST_LINK=strip $(TARGET)
   QMAKE_CXXFLAGS_DEBUG += $$(CXXFLAGS) -I$$(PREFIX)/include
   QMAKE_CXXFLAGS_RELEASE += $$(CXXFLAGS) -I$$(PREFIX)/include
@@ -95,10 +87,6 @@ win32 {
   QMAKE_LFLAGS_DEBUG += $$(LDFLAGS)
   QMAKE_LFLAGS_RELEASE += $$(LDFLAGS)
   LIBS += -lwsock32 -lexpat -lgdi32
-}
-macx {
-  QMAKE_CC = /usr/bin/gcc
-  QMAKE_CXX = /usr/bin/g++
 }
 
 # Input

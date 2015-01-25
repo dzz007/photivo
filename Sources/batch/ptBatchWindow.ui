@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1010</width>
-    <height>686</height>
+    <width>1008</width>
+    <height>684</height>
    </rect>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
@@ -125,6 +125,48 @@
         <property name="icon">
          <iconset resource="../../qrc/photivo.qrc">
           <normaloff>:/dark/icons/processing-abort.png</normaloff>:/dark/icons/processing-abort.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>16</width>
+          <height>16</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="verticalSpacer_6">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="BTReset">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="toolTip">
+         <string>Reset status</string>
+        </property>
+        <property name="text">
+         <string>Reset</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../../qrc/photivo.qrc">
+          <normaloff>:/dark/icons/reset.png</normaloff>:/dark/icons/reset.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -358,7 +400,7 @@
     </hint>
     <hint type="destinationlabel">
      <x>50</x>
-     <y>687</y>
+     <y>683</y>
     </hint>
    </hints>
   </connection>
@@ -433,8 +475,8 @@
    <slot>OnSaveJobList()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>65</x>
-     <y>236</y>
+     <x>77</x>
+     <y>283</y>
     </hint>
     <hint type="destinationlabel">
      <x>1</x>
@@ -449,12 +491,28 @@
    <slot>OnOpenJobList()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>43</x>
-     <y>270</y>
+     <x>55</x>
+     <y>314</y>
     </hint>
     <hint type="destinationlabel">
-     <x>-2</x>
+     <x>0</x>
      <y>269</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>BTReset</sender>
+   <signal>clicked()</signal>
+   <receiver>ptBatchWindow</receiver>
+   <slot>OnResetStatus()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>47</x>
+     <y>195</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>3</x>
+     <y>199</y>
     </hint>
    </hints>
   </connection>
@@ -467,5 +525,6 @@
   <slot>OnAbortProcessing()</slot>
   <slot>OnSaveJobList()</slot>
   <slot>OnOpenJobList()</slot>
+  <slot>OnResetStatus()</slot>
  </slots>
 </ui>

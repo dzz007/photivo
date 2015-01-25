@@ -30,19 +30,15 @@
 #include <lensfun.h>
 
 #include <QString>
-#include <QMetaType>
 
 //==============================================================================
 
 /* !!!
   IMPORTANT: Photivo uses groups of const short for historical reasons.
-  They are deprecated for new constants groups! Use enums or C++11 enum classes
-  instead.
+  They are deprecated for new constants groups! Instead use enums or, even better,
+  C++11 enum classes.
   Up to at least v2.5 beta Qt Creator does not support enum classes properly.
   Do not let red error underlining impress you. Compiling works fine. ;)
-
-  When you add a new enum also add a Q_DECLARE_METATYPE() declaration so the enum
-  can be used with QVariant.
 !!! */
 
 //==============================================================================
@@ -293,19 +289,10 @@ const short ptLightsOutMode_None    = 0;
 const short ptLightsOutMode_Dimmed  = 1;
 const short ptLightsOutMode_Black   = 2;
 
-// Channel Mixer
-
-const short ptChannelMixerChoice_None   = 0;
-const short ptChannelMixerChoice_Manual = 1;
-const short ptChannelMixerChoice_File   = 2;
-
 // Exposure Clip Modes
-enum TExposureClip {
-  NoExposureClip    = 0,
-  RatioExposureClip = 1,
-  CurveExposureClip = 2
-};
-Q_DECLARE_METATYPE(TExposureClip)
+const short ptExposureClipMode_None  = 0;
+const short ptExposureClipMode_Ratio = 1;
+const short ptExposureClipMode_Curve = 2;
 
 // Auto Exposure Modes
 const short ptAutoExposureMode_Auto     = 0;
@@ -348,20 +335,20 @@ const short ptCurveIT_Spline = 0;
 const short ptCurveIT_Linear = 1;
 const short ptCurveIT_Cosine = 2;
 
-// GREYCstoration
+enum class TGreyCInterpol: int {
+  NearestNeighbour,
+  Linear,
+  RungeKutta
+};
 
-const short ptGREYCInterpolation_NearestNeighbour = 0;
-const short ptGREYCInterpolation_Linear           = 1;
-const short ptGREYCInterpolation_RungeKutta       = 2;
-
-// DenoiseMask
-
-const short ptDenoiseMask_All      = 0;
-const short ptDenoiseMask_Shadows1 = 1;
-const short ptDenoiseMask_Shadows2 = 2;
-const short ptDenoiseMask_Shadows3 = 3;
-const short ptDenoiseMask_Shadows4 = 4;
-const short ptDenoiseMask_Shadows5 = 5;
+enum class TGreyCDenoiseMask: int {
+  All,
+  Shadows1,
+  Shadows2,
+  Shadows3,
+  Shadows4,
+  Shadows5
+};
 
 // FlipModes
 
@@ -377,15 +364,15 @@ const short ptGradualBlur_Vignette     = 2;
 const short ptGradualBlur_MaskLinear   = 3;
 const short ptGradualBlur_MaskVignette = 4;
 
-
-// GrainModes
-
-const short ptGrainMode_SoftGaussian   = 0;
-const short ptGrainMode_SoftUniform    = 1;
-const short ptGrainMode_SoftSaltPepper = 2;
-const short ptGrainMode_HardGaussian   = 3;
-const short ptGrainMode_HardUniform    = 4;
-const short ptGrainMode_HardSaltPepper = 5;
+enum class TGrainType: int {
+  // ptImage::Grain() relies on the integer values! Do not change them!
+  SoftGaussian   = 0,
+  SoftUniform    = 1,
+  SoftSaltPepper = 2,
+  HardGaussian   = 3,
+  HardUniform    = 4,
+  HardSaltPepper = 5
+};
 
 // GradientModes
 
@@ -396,7 +383,7 @@ const short ptGradientMode_Sobel       = 3;
 const short ptGradientMode_RotInv      = 4;
 const short ptGradientMode_Deriche     = 5;
 
-// MaskTypes
+// MaskTypes (DEPRECATED! To be replaced by TMaskType)
 
 const short ptMaskType_None       = 0;
 const short ptMaskType_Shadows    = 1;
@@ -405,6 +392,18 @@ const short ptMaskType_Highlights = 3;
 const short ptMaskType_All        = 4;
 const short ptMaskType_Screen     = 5;
 const short ptMaskType_Multiply   = 6;
+
+enum class TMaskType: int {
+  Disabled    = 0,
+  Shadows     = 1,
+  Midtones    = 2,
+  Highlights  = 3,
+  All         = 4,
+  Screen      = 5,
+  Multiply    = 6,
+  GammaBright = 12, // keep in sync with overlay mode of same name
+  GammaDark   = 13  // keep in sync with overlay mode of same name
+};
 
 const short ptSaturationMode_Absolute = 0;
 const short ptSaturationMode_Adaptive = 1;
@@ -426,22 +425,29 @@ const short ptLABTransform_R  = 1;
 const short ptLABTransform_G  = 2;
 const short ptLABTransform_B  = 3;
 
-// ViewLAB
+enum class TViewLabChannel: int {
+  Lab,
+  L,
+  a,
+  b,
+  LStructure,
+  C,
+  H
+};
 
-const short ptViewLAB_LAB    = 0;
-const short ptViewLAB_L      = 1;
-const short ptViewLAB_A      = 2;
-const short ptViewLAB_B      = 3;
-const short ptViewLAB_L_Grad = 4;
-const short ptViewLAB_C      = 5;
-const short ptViewLAB_H      = 6;
-
-// Enable
+// Enable (DEPRECATED! To be replaced by TFilterMode)
 
 const short ptEnable_None      = 0;
 const short ptEnable_NoPreview = 1;
 const short ptEnable_Preview   = 2;
 const short ptEnable_ShowMask  = 3;
+
+enum class TFilterMode: int {
+  Disabled,
+  FinalRun,
+  AlwaysOn,
+  ShowMask
+};
 
 // FilmType
 
@@ -502,28 +508,13 @@ const short ptOverlayMaskMode_FullImage   = 0;
 const short ptOverlayMaskMode_Vignette    = 1;
 const short ptOverlayMaskMode_InvVignette = 2;
 
-enum TVignetteMask {
-  NoVignetteMask    = 0,
-  SoftVignetteMask  = 1,
-  HardVignetteMask  = 2,
-  FancyVignetteMask = 3,
-  MaskVignetteMask  = 4
-};
-Q_DECLARE_METATYPE(TVignetteMask)
+// VignetteMode
 
-enum TVignetteShape {
-  DiamondVignetteShape = 1,
-  CircleVignetteShape  = 2,
-  Rect1VignetteShape   = 3,
-  Rect2VignetteShape   = 4,
-  Rect3VignetteShape   = 5,
-  Rect4VignetteShape   = 6,
-  Rect5VignetteShape   = 7,
-  Rect6VignetteShape   = 8,
-  Rect7VignetteShape   = 9,
-  Rect8VignetteShape   = 10
-};
-Q_DECLARE_METATYPE(TVignetteShape)
+const short ptVignetteMode_None  = 0;
+const short ptVignetteMode_Soft  = 1;
+const short ptVignetteMode_Hard  = 2;
+const short ptVignetteMode_Fancy = 3;
+const short ptVignetteMode_Mask  = 4;
 
 // SoftglowMode
 
@@ -556,6 +547,7 @@ const short ptOutputMode_Full = 0;
 const short ptOutputMode_Pipe = 1;
 const short ptOutputMode_Jobfile = 2;
 const short ptOutputMode_Settingsfile = 3;
+const short ptOutputMode_Batch = 4;
 
 // Export modes
 
@@ -616,9 +608,10 @@ const short ptIMFilter_Lanczos   = 12;
 //const short ptIMFilter_Sinc      = 14;
 
 // Resize modes
-const short ptResizeDimension_LongerEdge = 0;
-const short ptResizeDimension_Width      = 1;
-const short ptResizeDimension_Height     = 2;
+const short ptResizeDimension_LongerEdge  = 0;
+const short ptResizeDimension_Width       = 1;
+const short ptResizeDimension_Height      = 2;
+const short ptResizeDimension_WidthHeight = 3;
 
 // Liquid rescale energies
 const short ptLqr_Disabled         = 0;

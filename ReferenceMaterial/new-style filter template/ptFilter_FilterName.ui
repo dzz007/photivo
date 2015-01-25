@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>FilterNameForm</class>
+ <widget class="QWidget" name="FilterNameForm">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>513</width>
+    <height>358</height>
+   </rect>
+  </property>
+  <layout class="QVBoxLayout" name="MainLayout">
+   <property name="margin">
+    <number>0</number>
+   </property>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>ptCheck</class>
+   <extends>QCheckBox</extends>
+   <header>ptCheck.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ptInput</class>
+   <extends>QProgressBar</extends>
+   <header>ptInput.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ptInput</class>
+   <extends>QSpinBox</extends>
+   <header>ptInput.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ptChoice</class>
+   <extends>QComboBox</extends>
+   <header>ptChoice.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ptCheck</class>
+   <extends>QCheckBox</extends>
+   <header>ptCheck.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ptCurveWindow</class>
+   <extends>QWidget</extends>
+   <header>ptCurveWindow.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ptSpotListWidget</class>
+   <extends>QWidget</extends>
+   <header>filters/imagespot/ptSpotListWidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

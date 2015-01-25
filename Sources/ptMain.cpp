@@ -5,6 +5,7 @@
 ** Copyright (C) 2008,2009 Jos De Laender <jos.de_laender@telenet.be>
 ** Copyright (C) 2009-2012 Michael Munzert <mail@mm-log.com>
 ** Copyright (C) 2010-2012 Bernd Schoeler <brjohn@brother-john.net>
+** Copyright (C) 2013 Alexander Tzyganenko <tz@fast-report.com>
 **
 ** This file is part of Photivo.
 **
@@ -22,16 +23,6 @@
 **
 *******************************************************************************/
 
-#define QT_CLEAN_NAMESPACE
-
-#include <string>
-#include <csignal>
-#include <exception>
-
-#include <QFileInfo>
-#include <QtGui>
-#include <QtCore>
-
 #include "ptDefines.h"
 #include "ptInfo.h"
 #include "ptCalloc.h"
@@ -45,13 +36,10 @@
 #include "ptHistogramWindow.h"
 #include "ptGuiOptions.h"
 #include "ptSettings.h"
-//#include "ptLensfun.h"    // TODO BJ: implement lensfun DB
 #include "ptError.h"
 #include "ptRGBTemperature.h"
 #include "ptWhiteBalances.h"
-#include "ptChannelMixer.h"
 #include "ptCurve.h"
-#include "ptFastBilateral.h"
 #include "ptTheme.h"
 #include "ptWiener.h"
 #include "ptParseCli.h"
@@ -63,18 +51,32 @@
 #include "filters/ptFilterDM.h"
 #include "filters/ptFilterBase.h"
 #include "ptToolBox.h"
-#include <filters/ptFilterUids.h>
-
-#include <wand/magick_wand.h>
-
-#ifdef Q_OS_MAC
-  #include <QFileOpenEvent>
-#endif
+#include "filters/ptFilterUids.h"
 
 #ifdef Q_OS_WIN
   #include "ptEcWin7.h"
   #include "ptWinApi.h"
 #endif
+
+#include <wand/magick_wand.h>
+
+#define QT_CLEAN_NAMESPACE
+
+#include <QFileInfo>
+#include <QtGui>
+#include <QtCore>
+#include <QFileDialog>
+#include <QColorDialog>
+#include <QInputDialog>
+#include <QTextCodec>
+#include <QDesktopWidget>
+#ifdef Q_OS_MAC
+  #include <QFileOpenEvent>
+#endif
+
+#include <string>
+#include <csignal>
+#include <exception>
 
 using namespace std;
 
@@ -94,14 +96,18 @@ QStringList FileExtsRaw;
 QStringList FileExtsBitmap;
 QString     UserDirectory;
 QString     ShareDirectory;
-
-ptChannelMixer* ChannelMixer = NULL;
+// Sidecar related
+Exiv2::IptcData IptcData;
+Exiv2::XmpData  XmpData;
 
 cmsHPROFILE PreviewColorProfile = NULL;
 cmsCIExyY       D65;
 cmsCIExyY       D50;
 // precalculated color transform
 cmsHTRANSFORM ToPreviewTransform = NULL;
+void ReadSidecar(const QString& Sidecar);
+void SetRatingFromXmp();
+void SetTagsFromXmp();
 
 //
 // The 'tee' towards the display.
@@ -201,6 +207,7 @@ void InitStrings() {
                                                  "*.mos *.MOS *.Mos "
                                                  "*.mrw *.MRW *.Mrw "
                                                  "*.nef *.NEF *.Nef "
+                                                 "*.nrw *.NRW *.Nrw "
                                                  "*.orf *.ORF *.Orf "
                                                  "*.pef *.PEF *.Pef "
                                                  "*.pxn *.PXN *.Pxn "
@@ -222,7 +229,7 @@ void InitStrings() {
                                                  "*.tif *.TIF *.Tif "
                                                  "*.bmp *.BMP *.Bmp "
                                                  "*.png *.PNG *.Png "
-                                                 "*.ppm *.PPm *.Ppm "
+                                                 "*.ppm *.PPm *.Ppm)"
                                                  ";;All files (*.*)");
 
   BitmapPattern =
@@ -258,9 +265,7 @@ void   WriteOut();
 void   UpdatePreviewImage(const ptImage* ForcedImage   = NULL,
                           const short    OnlyHistogram = 0);
 void   UpdateCropToolUI();
-void   InitChannelMixers();
 void   PreCalcTransforms();
-void   CB_ChannelMixerChoice(const QVariant Choice);
 void   CB_ZoomFitButton();
 void   CB_MenuFileOpen(const short HaveFile);
 void   CB_MenuFileExit(const short);
@@ -288,6 +293,18 @@ void copyFolder(QString sourceFolder, QString destFolder);
 void CB_PixelReader(const QPointF Point, const ptPixelReading PixelReading);
 bool GBusy = false;
 
+// undo-redo & clipboard support
+QByteArray ptSettingsToQByteArray();
+void ptQByteArrayToSettings(const QByteArray &arr);
+void ptAddUndo();
+void ptMakeUndo();
+void ptMakeRedo();
+void ptClearUndoRedo();
+void ptMakeFullUndo();
+void ptResetSettingsToDefault();
+void ptCopySettingsToClipboard();
+void ptPasteSettingsFromClipboard();
+
 //==============================================================================
 
 void CreateAllFilters() {
@@ -295,6 +312,7 @@ void CreateAllFilters() {
   // Local Edit tab
   GFilterDM->NewFilter("SpotTuning",            Fuid::SpotTuning_Local);
   // RGB tab
+  GFilterDM->NewFilter("ChannelMixer",          Fuid::ChannelMixer_RGB);
   GFilterDM->NewFilter("Highlights",            Fuid::Highlights_RGB);
   GFilterDM->NewFilter("ColorIntensity",        Fuid::ColorIntensity_RGB);
   GFilterDM->NewFilter("Brightness",            Fuid::Brightness_RGB);
@@ -303,6 +321,9 @@ void CreateAllFilters() {
   GFilterDM->NewFilter("Normalization",         Fuid::Normalization_RGB);
   GFilterDM->NewFilter("ColorEnhancement",      Fuid::ColorEnhancement_RGB);
   GFilterDM->NewFilter("LMHRecoveryRgb",        Fuid::LMHRecovery_RGB);
+  GFilterDM->NewFilter("TextureContrastRgb",    Fuid::TextureContrast_RGB);
+  GFilterDM->NewFilter("LocalContrastRgb",      Fuid::LocalContrast1_RGB,           " I");
+  GFilterDM->NewFilter("LocalContrastRgb",      Fuid::LocalContrast2_RGB,           " II");
   GFilterDM->NewFilter("SigContrastRgb",        Fuid::SigContrastRgb_RGB);
   GFilterDM->NewFilter("LevelsRgb",             Fuid::Levels_RGB);
   GFilterDM->NewFilter("RgbCurve",              Fuid::RgbCurve_RGB);
@@ -313,14 +334,34 @@ void CreateAllFilters() {
   GFilterDM->NewFilter("Drc",                   Fuid::Drc_LabCC);
   GFilterDM->NewFilter("SigContrastLab",        Fuid::SigContrastLab_LabCC);
   GFilterDM->NewFilter("TextureCurve",          Fuid::TextureCurve_LabCC);
+  GFilterDM->NewFilter("TextureContrastLab",    Fuid::TextureContrast1_LabCC,       " I");
+  GFilterDM->NewFilter("TextureContrastLab",    Fuid::TextureContrast2_LabCC,       " II");
+  GFilterDM->NewFilter("LocalContrastLab",      Fuid::LocalContrast1_LabCC,         " I");
+  GFilterDM->NewFilter("LocalContrastLab",      Fuid::LocalContrast2_LabCC,         " II");
+  GFilterDM->NewFilter("LocalContrastStretch",  Fuid::LocalContrastStretch1_LabCC,  " I");
+  GFilterDM->NewFilter("LocalContrastStretch",  Fuid::LocalContrastStretch2_LabCC,  " II");
   GFilterDM->NewFilter("Saturation",            Fuid::Saturation_LabCC);
   GFilterDM->NewFilter("ColorBoost",            Fuid::ColorBoost_LabCC);
   GFilterDM->NewFilter("LevelsLab",             Fuid::Levels_LabCC);
   // Lab sharpen/noise tab
+  GFilterDM->NewFilter("ImpulseNR",             Fuid::ImpulseNR_LabSN);
+  GFilterDM->NewFilter("EAWavelets",            Fuid::EAWavelets_LabSN);
+  GFilterDM->NewFilter("GreyCStoration",        Fuid::GreyCStoration_LabSN);
+  GFilterDM->NewFilter("Defringe",              Fuid::Defringe_LabSN);
+  GFilterDM->NewFilter("WaveletDenoise",        Fuid::WaveletDenoise_LabSN);
+  GFilterDM->NewFilter("LumaDenoise",           Fuid::LumaDenoise_LabSN);
   GFilterDM->NewFilter("LumaDenoiseCurve",      Fuid::LumaDenoiseCurve_LabSN);
   GFilterDM->NewFilter("LumaDenoiseCurve",      Fuid::LumaDenoiseCurve2_LabSN,      " II");
+  GFilterDM->NewFilter("PyramidDenoise",        Fuid::PyramidDenoise_LabSN);
+  GFilterDM->NewFilter("ColorDenoise",          Fuid::ColorDenoise_LabSN);
+  GFilterDM->NewFilter("GradientSharpen",       Fuid::GradientSharpen_LabSN);
   GFilterDM->NewFilter("DetailCurve",           Fuid::DetailCurve_LabSN);
   GFilterDM->NewFilter("Wiener",                Fuid::Wiener_LabSN);
+  GFilterDM->NewFilter("InvDiffSharpen",        Fuid::InvDiffSharpen_LabSN);
+  GFilterDM->NewFilter("UnsharpMask",           Fuid::Usm_LabSN);
+  GFilterDM->NewFilter("HighpassSharpen",       Fuid::HighpassSharpen_LabSN);
+  GFilterDM->NewFilter("FilmGrain",             Fuid::FilmGrain_LabSN);
+  GFilterDM->NewFilter("LabChannelView",        Fuid::ViewLab_LabSN);
   // Lab Eyecandy tab
   GFilterDM->NewFilter("Outline",               Fuid::Outline_LabEyeCandy);
   GFilterDM->NewFilter("LumaByHueCurve",        Fuid::LumaByHueCurve_LabEyeCandy);
@@ -334,10 +375,9 @@ void CreateAllFilters() {
   GFilterDM->NewFilter("LumaAdjust",            Fuid::LumaAdjust_LabEyeCandy);
   GFilterDM->NewFilter("SatAdjust",             Fuid::SatAdjust_LabEyeCandy);
   GFilterDM->NewFilter("Tone",                  Fuid::Tone_LabEyeCandy);
-  GFilterDM->NewFilter("VignetteLab",           Fuid::Vignette_LabEyeCandy);
-  // RGB Eyecandy tab
+  // Eyecandy tab
+  GFilterDM->NewFilter("SimpleTone",            Fuid::SimpleTone_EyeCandy);
   GFilterDM->NewFilter("SigContrastRgb",        Fuid::SigContrastRgb_EyeCandy);
-  GFilterDM->NewFilter("VignetteRgb",           Fuid::Vignette_EyeCandy);
   GFilterDM->NewFilter("ColorIntensity",        Fuid::ColorIntensity_EyeCandy);
   GFilterDM->NewFilter("RToneCurve",            Fuid::RTone_EyeCandy);
   GFilterDM->NewFilter("GToneCurve",            Fuid::GTone_EyeCandy);
@@ -361,7 +401,7 @@ void CreateAllFilters() {
 ////////////////////////////////////////////////////////////////////////////////
 
 void ReportProgress(const QString Message) {
-  printf("Progress : %s\n",Message.toAscii().data());
+  printf("Progress : %s\n",Message.toLocal8Bit().data());
   if (!MainWindow) return;
   MainWindow->StatusLabel->setText(Message);
   MainWindow->StatusLabel->repaint();
@@ -382,6 +422,7 @@ short   JobMode = 0;
 QString JobFileName = "";
 QString ImageFileToOpen = "";
 QString PtsFileToOpen = "";
+QString Sidecar = "";
 #ifdef Q_OS_MAC
     bool MacGotFileEvent=false;
 #endif
@@ -400,10 +441,23 @@ void SegfaultAbort(int) {
 }
 
 int main(int Argc, char *Argv[]) {
+#ifdef Q_OS_WIN
+  WinApi::AttachToParentConsole();
+#endif
+
   int RV = photivoMain(Argc,Argv);
   DestroyMagick();
   DelAndNull(SegfaultErrorBox);
   CleanupResources(); // Not necessary , for debug.
+
+#ifdef Q_OS_WIN
+  // Close output channels to a possibly attached console and detach from it.
+  // Not sure if this is strictly necessary, but it does not hurt either.
+  fclose(stdout);
+  fclose(stderr);
+  FreeConsole();
+#endif
+
   return RV;
 }
 #endif
@@ -454,12 +508,9 @@ QtSingleApplication* TheApplication;
 
 int photivoMain(int Argc, char *Argv[]) {
   QString VerTemp(TOSTRING(APPVERSION));    //also used for the cli syntax error msg below!
-  printf("Photivo version %s\n", VerTemp.toAscii().data());
+  printf("Photivo version %s\n", VerTemp.toLocal8Bit().data());
 
   InitializeMagick(*Argv);
-
-  // TextCodec
-  QTextCodec::setCodecForCStrings(QTextCodec::codecForLocale());
 
   //QApplication TheApplication(Argc,Argv);
   QStringList environment = QProcess::systemEnvironment();
@@ -498,7 +549,7 @@ int photivoMain(int Argc, char *Argv[]) {
         "Fatal error: Wrong GraphicsMagick quantum depth!\n"
         "Found quantum depth %1. Photivo needs at least %2.\n")
         .arg(QDepth).arg(MinQD);
-    fprintf(stderr,"%s", WrongQDepthMsg.toAscii().data());
+    fprintf(stderr,"%s", WrongQDepthMsg.toLocal8Bit().data());
     ptMessageBox::critical(0, QObject::tr("Photivo: Fatal Error"), WrongQDepthMsg);
     exit(EXIT_FAILURE);
   }
@@ -506,8 +557,9 @@ int photivoMain(int Argc, char *Argv[]) {
 
   // Handle cli arguments
   QString PhotivoCliUsageMsg = "<pre>" + QObject::tr(
-"Syntax: photivo [inputfile | -i imagefile | -j jobfile | -g imagefile]\n"
-"                [-h] [--new-instance]\n"
+"Syntax: photivo [inputfile | -i imagefile | -j jobfile |\n"
+"                 --load-and-delete imagefile]\n"
+"                [--pts ptsfile] [--sidecar sidecarfile] [-h] [--new-instance]\n"
 "Options:\n"
 "inputfile\n"
 "      Specify the image or settings file to load. Works like -i for image files\n"
@@ -523,6 +575,8 @@ int photivoMain(int Argc, char *Argv[]) {
 "--pts ptsfile\n"
 "      Specify settings file to load with the image. Must be used together\n"
 "      with -i.\n"
+"--sidecar sidecarfile\n"
+"      Specify sidecar file to load with the image.\n"
 "--new-instance\n"
 "      Allow opening another Photivo instance instead of using a currently\n"
 "      running Photivo. Job files are always opened in a new instance.\n"
@@ -533,7 +587,7 @@ int photivoMain(int Argc, char *Argv[]) {
 "For more documentation visit the wiki: http://photivo.org/photivo/start\n"
   ) + "</pre>";
 
-  ptCliCommands cli = { cliNoAction, "", "", false, false };
+  ptCliCommands cli = { cliNoAction, "", "", "", false, false };
 
 #ifdef Q_OS_MAC
 //Just Skip if engaged by QFileOpenEvent
@@ -547,7 +601,7 @@ int photivoMain(int Argc, char *Argv[]) {
   #ifdef Q_OS_WIN
     ptMessageBox::critical(0, QObject::tr("Photivo"), PhotivoCliUsageMsg);
   #else
-    fprintf(stderr,"%s",PhotivoCliUsageMsg.toAscii().data());
+    fprintf(stderr,"%s",PhotivoCliUsageMsg.toLocal8Bit().data());
   #endif
     exit(EXIT_FAILURE);
   }
@@ -560,6 +614,11 @@ int photivoMain(int Argc, char *Argv[]) {
     JobFileName = cli.Filename;
   } else {
     ImageFileToOpen = cli.Filename;
+  }
+
+  
+  if (cli.Sidecar != "" ) {
+    Sidecar = cli.Sidecar;
   }
 
   // QtSingleInstance, add CLI-Switch to skip and allow multiple instances
@@ -576,6 +635,9 @@ int photivoMain(int Argc, char *Argv[]) {
         } else {
           TheApplication->sendMessage("::img::" + ImageFileToOpen);
         }
+      }
+      if (Sidecar != ""){
+        TheApplication->sendMessage("::sidecar::" + Sidecar);
       }
       TheApplication->activateWindow();
       exit(0);
@@ -612,6 +674,7 @@ int photivoMain(int Argc, char *Argv[]) {
               << "*.mos" << "*.MOS" << "*.Mos"
               << "*.mrw" << "*.MRW" << "*.Mrw"
               << "*.nef" << "*.NEF" << "*.Nef"
+              << "*.nrw" << "*.NRW" << "*.Nrw"
               << "*.orf" << "*.ORF" << "*.Orf"
               << "*.pef" << "*.PEF" << "*.Pef"
               << "*.pxn" << "*.PXN" << "*.Pxn"
@@ -688,13 +751,13 @@ int photivoMain(int Argc, char *Argv[]) {
       // photivo was initialized
 //      NeedInitialization = 0;
       FirstStart = 0;
-      printf("Existing settingsfile '%s'\n",SettingsFileName.toAscii().data());
+      printf("Existing settingsfile '%s'\n",SettingsFileName.toLocal8Bit().data());
   } else {
-      printf("New settingsfile '%s'\n",SettingsFileName.toAscii().data());
+      printf("New settingsfile '%s'\n",SettingsFileName.toLocal8Bit().data());
   }
 
-  printf("User directory: '%s'; \n",UserDirectory.toAscii().data());
-  printf("Share directory: '%s'; \n",NewShareDirectory.toAscii().data());
+  printf("User directory: '%s'; \n",UserDirectory.toLocal8Bit().data());
+  printf("Share directory: '%s'; \n",NewShareDirectory.toLocal8Bit().data());
 
   // We need to load the translation before the ptSettings
   QSettings* TempSettings = new QSettings(SettingsFileName, QSettings::IniFormat);
@@ -754,7 +817,7 @@ int photivoMain(int Argc, char *Argv[]) {
           TheApplication->installTranslator(&appTranslator);
           qtTranslator.load("qt_" + UiLanguages[LangIdx], UserDirectory + "Translations");
           TheApplication->installTranslator(&qtTranslator);
-          printf("Enabled translation: \"%s\".\n", UiLanguages[LangIdx].toAscii().data());
+          printf("Enabled translation: \"%s\".\n", UiLanguages[LangIdx].toLocal8Bit().data());
       }
   }
 
@@ -771,6 +834,7 @@ int photivoMain(int Argc, char *Argv[]) {
   Settings->SetValue("UserDirectory", UserDirectory);
   Settings->SetValue("ShareDirectory",NewShareDirectory);
   Settings->SetValue("MainDirectory",QCoreApplication::applicationDirPath().append("/"));
+  Settings->SetValue("Sidecar", Sidecar);
 
   // Set paths once with first start
   if (FirstStart == 1) {
@@ -799,15 +863,12 @@ int photivoMain(int Argc, char *Argv[]) {
   CreateAllFilters();
 
   // Load also the LensfunDatabase.
-  printf("Lensfun database: '%s'; \n",Settings->GetString("LensfunDatabaseDirectory").toAscii().data());
+  printf("Lensfun database: '%s'; \n",Settings->GetString("LensfunDatabaseDirectory").toLocal8Bit().data());
   //  LensfunData = new ptLensfun;    // TODO BJ: implement lensfun DB
 
   // Instantiate the processor. Spot models are not set here because we
   // do not yet know if we are in GUI or batch mode.
   TheProcessor = new ptProcessor(ReportProgress);
-
-  // ChannelMixer instance.
-  ChannelMixer = new (ptChannelMixer); // Automatically a identity mixer
 
   // First check if we are maybe started as a command line with options.
   // (And thus have to run a batch job)
@@ -830,11 +891,11 @@ int photivoMain(int Argc, char *Argv[]) {
 
   // Open and keep open the profile for previewing.
   PreviewColorProfile = cmsOpenProfileFromFile(
-          Settings->GetString("PreviewColorProfile").toAscii().data(),
+          Settings->GetString("PreviewColorProfile").toLocal8Bit().data(),
           "r");
   if (!PreviewColorProfile) {
       ptLogError(ptError_FileOpen,
-              Settings->GetString("PreviewColorProfile").toAscii().data());
+              Settings->GetString("PreviewColorProfile").toLocal8Bit().data());
       return ptError_FileOpen;
   }
 
@@ -865,7 +926,7 @@ int photivoMain(int Argc, char *Argv[]) {
 #ifndef PT_WITHOUT_FILEMGR
   FileMgrWindow = new ptFileMgrWindow(MainWindow->FileManagerPage);
   MainWindow->FileManagerLayout->addWidget(FileMgrWindow);
-  QObject::connect(FileMgrWindow, SIGNAL(FileMgrWindowClosed()),
+  QObject::connect(FileMgrWindow, SIGNAL(fileMgrWindowClosed()),
                    MainWindow, SLOT(CloseFileMgrWindow()));
   QObject::connect(ViewWindow, SIGNAL(openFileMgr()), MainWindow, SLOT(OpenFileMgrWindow()));
 #endif
@@ -947,11 +1008,11 @@ int photivoMain(int Argc, char *Argv[]) {
 
   // Open and keep open the profile for previewing.
   PreviewColorProfile = cmsOpenProfileFromFile(
-          Settings->GetString("PreviewColorProfile").toAscii().data(),
+          Settings->GetString("PreviewColorProfile").toLocal8Bit().data(),
           "r");
   if (!PreviewColorProfile) {
       ptLogError(ptError_FileOpen,
-              Settings->GetString("PreviewColorProfile").toAscii().data());
+              Settings->GetString("PreviewColorProfile").toLocal8Bit().data());
       assert(PreviewColorProfile);
   }
 
@@ -982,7 +1043,6 @@ int photivoMain(int Argc, char *Argv[]) {
       // ViewWindow or HistogramWindow or CurveWindows
       //  delete LensfunData;    // TODO BJ: implement lensfun DB
       delete TheProcessor;
-      delete ChannelMixer;
       delete GuiOptions;
       delete MainWindow;  // Cleans up HistogramWindow and ViewWindow also !
       ViewWindow = NULL;  // needs to be NULL to properly construct MainWindow
@@ -1038,7 +1098,6 @@ void CB_Event0() {
   NextSubPhase = ptProcessorPhase_Load;
   ImageSaved = 0;
 
-  InitChannelMixers();
   PreCalcTransforms();
 
   if (Settings->GetInt("JobMode") == 0) { // not job mode!
@@ -1061,6 +1120,11 @@ void CB_Event0() {
     if (PtsFileToOpen != "") {
       CB_OpenSettingsFile(PtsFileToOpen);
     }
+
+    if (Sidecar != "") {
+      ReadSidecar(Sidecar);
+    }
+
     if (ImageFileToOpen != "") {
       CB_MenuFileOpen(1);
     }
@@ -1074,17 +1138,17 @@ void CB_Event0() {
     Temp << "TabWhiteBalance"
          << "TabRotation"
          << "TabCrop"
-         << Fuid::ReinhardBrighten_RGB
+         << "TabReinhard05"
          << "TabLABTexture2"
-         << Fuid::DetailCurve_LabSN
-         << Fuid::Vignette_LabEyeCandy
+         << "TabDetailCurve"
+         << "TabLABVignette"
          << "TabOutContrast";
     Settings->SetValue("FavouriteTools", Temp);
   }
 
 #ifndef PT_WITHOUT_FILEMGR
   if (Settings->GetInt("FileMgrIsOpen")) {
-    FileMgrWindow->DisplayThumbnails();
+    FileMgrWindow->displayThumbnails();
     FileMgrWindow->setFocus(Qt::OtherFocusReason);
   }
 #endif
@@ -1095,71 +1159,6 @@ void CB_Event0() {
 #endif
 
   InStartup = 0;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// InitChannelMixers
-// Bring the mixer combobox in sync and read the correct mixers
-// just after initialization.
-// In fact we mimick here the one after one reading of the mixers
-// which also ensures no unreadable mixers are there, for instance because
-// they were meanwhile removed.
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void InitChannelMixers() {
-
-  ReportProgress(QObject::tr("Loading channelmixers"));
-  QStringList ChannelMixerFileNames =
-    Settings->GetStringList("ChannelMixerFileNames");
-  // Start adding
-  for (short Idx = 0;
-       Idx<ChannelMixerFileNames.count();
-       Idx++) {
-
-    if (ChannelMixer->ReadChannelMixer(
-                  ChannelMixerFileNames[Idx].toAscii().data())) {
-      QString ErrorMessage = QObject::tr("Cannot read channelmixer ")
-                           + " '"
-                           + ChannelMixerFileNames[Idx]
-                           + "'" ;
-      if (Settings->GetInt("JobMode") == 0) {
-        ptMessageBox::warning(MainWindow,
-                           QObject::tr("Channelmixer read error"),
-                           ErrorMessage);
-      }
-
-      // Remove this invalid and continue.
-      // Some househoding due to removal.
-      if (Settings->GetInt("ChannelMixer") > ptChannelMixerChoice_File+Idx) {
-        Settings->SetValue("ChannelMixer",Settings->GetInt("ChannelMixer")-1);
-      } else if (Settings->GetInt("ChannelMixer") ==
-                 ptChannelMixerChoice_File+Idx) {
-        Settings->SetValue("ChannelMixer",0);
-      }
-      ChannelMixerFileNames.removeAt(Idx);
-      Idx--;
-      continue;
-    }
-
-    // Small routine that lets Shortfilename point to the basename.
-    QFileInfo PathInfo(ChannelMixerFileNames[Idx]);
-    QString ShortFileName = PathInfo.baseName().left(18);
-    Settings->AddOrReplaceOption("ChannelMixer",
-                                 ShortFileName,
-                                 ptChannelMixerChoice_File+Idx);
-  }
-
-  // Store the maybe changed list again.
-  Settings->SetValue("ChannelMixerFileNames",ChannelMixerFileNames);
-
-  // And process now as if just chosen
-  // TODO JDLA : Wouldn't this be implied by the setCurrentIndex signal ?
-  // Probably not : we're not yet in eventloop.
-  CB_ChannelMixerChoice(QVariant(Settings->GetInt("ChannelMixer")));
-
-  ReportProgress(QObject::tr("Ready"));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1540,6 +1539,7 @@ void BeforeGamma(ptImage* Image, const short FinalRun = 0, const short Resize = 
     if (Settings->ToolIsActive("TabWebResize")) {
       ReportProgress(QObject::tr("WebResizing"));
       Image->ptGMResize(Settings->GetInt("WebResizeScale"),
+                        0,
                         Settings->GetInt("WebResizeFilter"),
                         Settings->GetInt("WebResizeDimension"));
     }
@@ -1595,6 +1595,7 @@ void AfterAll(ptImage* Image, const short FinalRun = 0, const short Resize = 1) 
     if (Settings->ToolIsActive("TabWebResize")) {
       ReportProgress(QObject::tr("WebResizing"));
       Image->ptGMResize(Settings->GetInt("WebResizeScale"),
+                        0,
                         Settings->GetInt("WebResizeFilter"),
                         Settings->GetInt("WebResizeDimension"));
     }
@@ -1722,7 +1723,7 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
     PreviewImage->Set(ForcedImage);
     if (Settings->GetDouble("CropExposure") != 0.0) {
       float Factor = powf(2,Settings->GetDouble("CropExposure"));
-      PreviewImage->Expose(Factor,RatioExposureClip);
+      PreviewImage->Expose(Factor,ptExposureClipMode_Ratio);
     }
     BeforeGamma(PreviewImage,0,0);
 
@@ -1755,7 +1756,7 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
   } else if (Settings->GetInt("PreviewMode") == ptPreviewMode_End) {
     PreviewImage->Set(TheProcessor->m_Image_AfterEyeCandy);
   } else {
-    if (!Settings->GetInt("IsRAW")) ActiveTab = MAX(ptGeometryTab, ActiveTab);
+    if (!Settings->useRAWHandling()) ActiveTab = MAX(ptLocalTab, ActiveTab);
     switch (ActiveTab) {
       case ptCameraTab:
         Settings->SetValue("ShowExposureIndicatorSensor",1);
@@ -1908,10 +1909,10 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
 
     cmsHPROFILE OutputColorProfile = NULL;
     OutputColorProfile = cmsOpenProfileFromFile(
-                         Settings->GetString("OutputColorProfile").toAscii().data(), "r");
+                         Settings->GetString("OutputColorProfile").toLocal8Bit().data(), "r");
     if (!OutputColorProfile) {
       ptLogError(ptError_FileOpen,
-        Settings->GetString("OutputColorProfile").toAscii().data());
+        Settings->GetString("OutputColorProfile").toLocal8Bit().data());
       assert(OutputColorProfile);
     }
 
@@ -2074,77 +2075,6 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
   }
 } // UpdatePreviewImage
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Update comboboxes of curves and channelmixer
-// Checks if files are available
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void UpdateComboboxes(const QString Key) {
-  QStringList ListCombos;
-  ListCombos << "ChannelMixer";
-  if (!ListCombos.contains(Key)) return;
-
-  // get current selection
-  int Index = Settings->GetInt(Key) - 2;
-  QStringList FileNames;
-  if (Key == "ChannelMixer") {
-    FileNames = Settings->GetStringList("ChannelMixerFileNames");
-  }
-
-  //save current selection
-  QString CurrentIndex;
-  if (Index > -1) CurrentIndex = FileNames.at(Index);
-
-  FileNames.removeDuplicates();
-
-  // check if files are available
-  if (Key == "ChannelMixer") {
-    ptChannelMixer Tmp;
-    for (int i = 0; i < FileNames.size(); i++) {
-      if (Tmp.ReadChannelMixer(FileNames.at(i).toAscii().data())) {
-        if (Settings->GetInt("JobMode") == 0) {
-          ptMessageBox::warning(MainWindow,
-                               QObject::tr("Channelmixer read error"),
-                               QObject::tr("Cannot read channelmixer ")
-                                 + " '" + FileNames.at(i) + "'");
-        }
-        FileNames.replace(i, "@DELETEME@");
-      }
-    }
-  }
-  FileNames.removeAll("@DELETEME@");
-
-  // check if current selection is still available
-  if (Index > -1) {
-    if (FileNames.contains(CurrentIndex)) {
-      Index = FileNames.indexOf(CurrentIndex);
-      Settings->SetValue(Key, Index + 2);
-    } else {
-      Settings->SetValue(Key, 0);
-    }
-  }
-
-  // Set combos in gui
-  Settings->ClearOptions(Key, 1);
-  for (int i = 0; i < FileNames.size(); i++) {
-    // Small routine that lets Shortfilename point to the basename.
-    QFileInfo PathInfo(FileNames[i]);
-    QString ShortFileName = PathInfo.baseName().left(18);
-
-    // Curves and Channelmixer have 2 default options -> index=2+i
-    Settings->AddOrReplaceOption(Key, ShortFileName, 2+i);
-  }
-
-  // write clean lists to settings
-  if (Key == "ChannelMixer") {
-    Settings->SetValue("ChannelMixerFileNames", FileNames);
-  }
-
-  // update gui display
-  Settings->SetValue(Key,Settings->GetInt(Key));
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -2186,7 +2116,7 @@ void RunJob(const QString JobFileName) {
                              + " '"
                              + InputFileNameList[0]
                              + "'" ;
-        printf("%s\n",ErrorMessage.toAscii().data());
+        printf("%s\n",ErrorMessage.toLocal8Bit().data());
         delete TestDcRaw;
 
 
@@ -2196,7 +2126,10 @@ void RunJob(const QString JobFileName) {
           Settings->SetValue("IsRAW",1);
         } else {
           Settings->SetValue("IsRAW",0);
-          Settings->SetValue("ExposureNormalization",0.0);
+        }
+
+        if (!Settings->useRAWHandling()) {
+          Settings->SetValue("ExposureNormalization", 0.0);
         }
 
         QFileInfo PathInfo(InputFileNameList[0]);
@@ -2263,7 +2196,7 @@ void RunJob(const QString JobFileName) {
                            + " '"
                            + InputFileNameList[0]
                            + "'" ;
-      printf("%s\n",ErrorMessage.toAscii().data());
+      printf("%s\n",ErrorMessage.toLocal8Bit().data());
     }
 
     // Loop over the inputfiles by shifting the next one to index 0
@@ -2337,11 +2270,11 @@ void WriteOut() {
 
   // Prepare and open an output profile.
   OutputColorProfile = cmsOpenProfileFromFile(
-    Settings->GetString("OutputColorProfile").toAscii().data(),
+    Settings->GetString("OutputColorProfile").toLocal8Bit().data(),
     "r");
   if (!OutputColorProfile) {
     ptLogError(ptError_FileOpen,
-   Settings->GetString("OutputColorProfile").toAscii().data());
+   Settings->GetString("OutputColorProfile").toLocal8Bit().data());
     assert(OutputColorProfile);
   }
 
@@ -2364,12 +2297,12 @@ void WriteOut() {
   ReportProgress(QObject::tr("Writing output"));
 
   bool FileWritten =  OutImage->ptGMCWriteImage(
-    Settings->GetString("OutputFileName").toAscii().data(),
+    Settings->GetString("OutputFileName").toLocal8Bit().data(),
     Settings->GetInt("SaveFormat"),
     Settings->GetInt("SaveQuality"),
     Settings->GetInt("SaveSampling"),
     Settings->GetInt("SaveResolution"),
-    Settings->GetString("OutputColorProfile").toAscii().data(),
+    Settings->GetString("OutputColorProfile").toLocal8Bit().data(),
     Settings->GetInt("OutputColorProfileIntent"));
 
   if (!FileWritten) {
@@ -2379,7 +2312,9 @@ void WriteOut() {
 
     if (Settings->GetInt("IncludeExif")) {
       if (!ptImageHelper::WriteExif(Settings->GetString("OutputFileName"),
-                                    TheProcessor->m_ExifData))
+                                    TheProcessor->m_ExifBuffer,
+                                    IptcData,
+                                    XmpData))
         ptMessageBox::warning(MainWindow, QObject::tr("Exif Error"), QObject::tr("No exif data written."));
     }
   }
@@ -2593,6 +2528,7 @@ void CB_Tabs(const short) {
   }
 }
 
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Callbacks pertaining to the Menu structure.
@@ -2660,59 +2596,75 @@ void CB_MenuFileOpen(const short HaveFile) {
                          + " '"
                          + InputFileNameList[0]
                          + "'" ;
-    ptMessageBox::warning(MainWindow,"Decode error",ErrorMessage);
-    Settings->SetValue("InputFileNameList",OldInputFileNameList);
+    ptMessageBox::warning(MainWindow, "Decode error", ErrorMessage);
+    Settings->SetValue("InputFileNameList", OldInputFileNameList);
     delete TestDcRaw;
     return;
   }
 
-
   // Image type is supported: process the image
   if (InputType == itRaw) {
-    Settings->SetValue("IsRAW",1);
+    Settings->SetValue("IsRAW", 1);
   } else {
-    Settings->SetValue("IsRAW",0);
-    Settings->SetValue("ExposureNormalization",0.0);
+    Settings->SetValue("IsRAW", 0);
+  }
+
+  Settings->SetEnabled("UseThumbnail", Settings->GetInt("IsRAW") == 1);
+
+  if (!Settings->useRAWHandling()) {
+    Settings->SetValue("ExposureNormalization", 0.0);
   }
 
   if (Settings->GetInt("HaveImage") == 1) {
     // Catch 1:1 pipe size when opening
     if (Settings->GetInt("PipeSize") == 0)
-      Settings->SetValue("PipeSize",1);
+      Settings->SetValue("PipeSize", 1);
   }
 
   // TODO mike: need to delete the processor here?
   delete TheDcRaw;
   delete TheProcessor;
   // Load user settings
-  if (Settings->GetInt("StartupSettings")==1 &&
-      Settings->GetInt("StartupSettingsReset")==1 &&
-      Settings->GetInt("HaveImage")==1) {
-    Settings->SetValue("HaveImage",0);
+  if (Settings->GetInt("StartupSettings") == 1 &&
+      Settings->GetInt("StartupSettingsReset") == 1 &&
+      Settings->GetInt("HaveImage") == 1) {
+    Settings->SetValue("HaveImage", 0);
     CB_OpenSettingsFile(Settings->GetString("StartupSettingsFile"));
     // clean up
     QStringList Temp;
     Temp << "CropX" << "CropY" << "CropW" << "CropH";
     Temp << "RotateW" << "RotateH";
-    for (int i = 0; i < Temp.size(); i++) Settings->SetValue(Temp.at(i),0);
+    for (int i = 0; i < Temp.size(); i++) Settings->SetValue(Temp.at(i), 0);
   }
+
+  if (Settings->GetString("Sidecar") != "") {
+    ReadSidecar(Settings->GetString("Sidecar"));
+  }
+
+  // load settings file automatically
+  QString SettingsFileName = PathInfo.dir().path() + "/" + PathInfo.completeBaseName() + ".pts";
+  if (QFile::exists(SettingsFileName)) {
+    Settings->SetValue("HaveImage", 0);
+    CB_OpenSettingsFile(SettingsFileName);
+  }
+
   // clean up possible detail view cache
-  if (Settings->GetInt("DetailViewActive")==1) {
-    Settings->SetValue("DetailViewActive",0);
-    Settings->SetValue("DetailViewCropX", 0);
-    Settings->SetValue("DetailViewCropY", 0);
-    Settings->SetValue("DetailViewCropW", 0);
-    Settings->SetValue("DetailViewCropH", 0);
+  if (Settings->GetInt("DetailViewActive") == 1) {
+    Settings->SetValue("DetailViewActive", 0);
+    Settings->SetValue("DetailViewCropX",  0);
+    Settings->SetValue("DetailViewCropY",  0);
+    Settings->SetValue("DetailViewCropW",  0);
+    Settings->SetValue("DetailViewCropH",  0);
     Settings->ToDcRaw(TestDcRaw);
   }
 
   TheDcRaw = TestDcRaw;
-  Settings->SetValue("ImageW",InputWidth);
-  Settings->SetValue("ImageH",InputHeight);
+  Settings->SetValue("ImageW", InputWidth);
+  Settings->SetValue("ImageH", InputHeight);
 
   if (Settings->GetInt("StartupSwitchAR")) {
     // portrait image
-    if ((Settings->GetInt("IsRAW")==0 &&
+    if ((!Settings->useRAWHandling() &&
          Settings->GetInt("ImageW") < Settings->GetInt("ImageH")) ||
         TheDcRaw->m_Flip & 4) {
       if (Settings->GetInt("AspectRatioW") > Settings->GetInt("AspectRatioH"))
@@ -2722,6 +2674,9 @@ void CB_MenuFileOpen(const short HaveFile) {
         CB_CropOrientationButton();
     }
   }
+  SetRatingFromXmp();
+  if (Settings->GetInt("LoadTags"))
+    SetTagsFromXmp();
 
   // reflect RAW or bitmap in GUI
   MainWindow->UpdateToolBoxes();
@@ -2731,20 +2686,20 @@ void CB_MenuFileOpen(const short HaveFile) {
 
   Settings->SetValue("HaveImage", 1);
   short OldRunMode = Settings->GetInt("RunMode");
-  Settings->SetValue("RunMode",0);
+  Settings->SetValue("RunMode", 0);
 
   if (Settings->GetInt("AutomaticPipeSize") && Settings->ToolIsActive("TabResize")) {
     CalculatePipeSize(true);
   }
 
-  Update(ptProcessorPhase_Raw,ptProcessorPhase_Load,0);
+  Update(ptProcessorPhase_Raw, ptProcessorPhase_Load, 0);
 
   MainWindow->UpdateExifInfo(TheProcessor->m_ExifData);
-  Settings->SetValue("PerspectiveFocalLength",Settings->GetDouble("FocalLengthIn35mmFilm"));
-  Settings->SetValue("DefishFocalLength",Settings->GetDouble("FocalLengthIn35mmFilm"));
-  Settings->SetValue("LfunFocal", Settings->GetDouble("FocalLengthIn35mmFilm"));
+  Settings->SetValue("PerspectiveFocalLength", Settings->GetDouble("FocalLengthIn35mmFilm"));
+  Settings->SetValue("DefishFocalLength",      Settings->GetDouble("FocalLengthIn35mmFilm"));
+  Settings->SetValue("LfunFocal",              Settings->GetDouble("FocalLengthIn35mmFilm"));
   double TmpAprt = Settings->GetDouble("ApertureFromExif");
-  Settings->SetValue("LfunAperture", (TmpAprt==0.0) ? 8.0 : TmpAprt);
+  Settings->SetValue("LfunAperture",           (TmpAprt == 0.0) ? 8.0 : TmpAprt);
   MainWindow->UpdateFilenameInfo(Settings->GetStringList("InputFileNameList"));
 
   QFileInfo finfo = QFileInfo((Settings->GetStringList("InputFileNameList"))[0]);
@@ -2753,6 +2708,8 @@ void CB_MenuFileOpen(const short HaveFile) {
                                   .arg(QDir::toNativeSeparators(finfo.absolutePath())) );
 
   Settings->SetValue("RunMode",OldRunMode);
+
+  ptClearUndoRedo();
 }
 
 //==============================================================================
@@ -2840,7 +2797,7 @@ void CB_MenuFileSaveOutput(QString OutputName = "") {
 //==============================================================================
 
 void CB_MenuFileExit(const short) {
-  if (Settings->GetInt("HaveImage")==1 && ImageSaved == 0 && Settings->GetInt("SaveConfirmation")==1) {
+  if (Settings->GetInt("HaveImage")==1 && ImageSaved == 0) {
     if (!ptConfirmRequest::saveImage()) {
       return;
     }
@@ -2947,11 +2904,11 @@ void GimpExport(const short UsePipe) {
 
     // Prepare and open an output profile.
     OutputColorProfile = cmsOpenProfileFromFile(
-      Settings->GetString("OutputColorProfile").toAscii().data(),
+      Settings->GetString("OutputColorProfile").toLocal8Bit().data(),
       "r");
     if (!OutputColorProfile) {
       ptLogError(ptError_FileOpen,
-     Settings->GetString("OutputColorProfile").toAscii().data());
+     Settings->GetString("OutputColorProfile").toLocal8Bit().data());
       assert(OutputColorProfile);
     }
 
@@ -2974,39 +2931,42 @@ void GimpExport(const short UsePipe) {
 
     QTemporaryFile ImageFile;
     ImageFile.setFileTemplate(QDir::tempPath()+"/XXXXXX.ppm");
-    assert (ImageFile.open());
+    bool result = ImageFile.open();
+    assert (result);
     QString ImageFileName = ImageFile.fileName();
     ImageFile.setAutoRemove(false);
     ImageFile.close();
     printf("(%s,%d) '%s'\n",
-           __FILE__,__LINE__,ImageFileName.toAscii().data());
-    ImageForGimp->WriteAsPpm(ImageFileName.toAscii().data(),16);
+           __FILE__,__LINE__,ImageFileName.toLocal8Bit().data());
+    ImageForGimp->WriteAsPpm(ImageFileName.toLocal8Bit().data(),16);
 
     ReportProgress(QObject::tr("Writing tmp exif for gimp"));
 
     QTemporaryFile ExifFile;
-    assert (ExifFile.open());
+    result = ExifFile.open();
+    assert (result);
     QString ExifFileName = ExifFile.fileName();
     ExifFile.setAutoRemove(false);
     printf("(%s,%d) '%s'\n",
-           __FILE__,__LINE__,ExifFileName.toAscii().data());
+           __FILE__,__LINE__,ExifFileName.toLocal8Bit().data());
     QDataStream ExifOut(&ExifFile);
-    ExifOut.writeRawData((char *) TheProcessor->m_ExifBuffer,
-                         TheProcessor->m_ExifBufferLength);
+    ExifOut.writeRawData((char *) TheProcessor->m_ExifBuffer.data(),
+                         TheProcessor->m_ExifBuffer.size());
     ExifFile.close();
 
     ReportProgress(QObject::tr("Writing tmp icc for gimp"));
 
     QTemporaryFile ICCFile;
-    assert (ICCFile.open());
+    result = ICCFile.open();
+    assert (result);
     QString ICCFileName = ICCFile.fileName();
     ICCFile.setAutoRemove(false);
     printf("(%s,%d) '%s'\n",
-           __FILE__,__LINE__,ICCFileName.toAscii().data());
+           __FILE__,__LINE__,ICCFileName.toLocal8Bit().data());
     QDataStream ICCOut(&ICCFile);
-    FILE* pFile = fopen ( Settings->GetString("OutputColorProfile").toAscii().data(), "rb" );
+    FILE* pFile = fopen ( Settings->GetString("OutputColorProfile").toLocal8Bit().data(), "rb" );
     if (pFile==NULL) {
-      ptLogError(ptError_FileOpen,Settings->GetString("OutputColorProfile").toAscii().data());
+      ptLogError(ptError_FileOpen,Settings->GetString("OutputColorProfile").toLocal8Bit().data());
       exit(EXIT_FAILURE);
     }
     fseek (pFile , 0 , SEEK_END);
@@ -3018,7 +2978,7 @@ void GimpExport(const short UsePipe) {
 
     size_t RV = fread (pchBuffer, 1, lSize, pFile);
     if (RV != (size_t) lSize) {
-      ptLogError(ptError_FileOpen,Settings->GetString("OutputColorProfile").toAscii().data());
+      ptLogError(ptError_FileOpen,Settings->GetString("OutputColorProfile").toLocal8Bit().data());
       exit(EXIT_FAILURE);
     }
     ICCOut.writeRawData(pchBuffer, lSize);
@@ -3031,11 +2991,12 @@ void GimpExport(const short UsePipe) {
 
     QTemporaryFile GimpFile;
     GimpFile.setFileTemplate(QDir::tempPath()+"/XXXXXX.ptg");
-    assert (GimpFile.open());
+    result = GimpFile.open();
+    assert (result);
     QString GimpFileName = GimpFile.fileName();
     GimpFile.setAutoRemove(false);
     printf("(%s,%d) '%s'\n",
-           __FILE__,__LINE__,GimpFileName.toAscii().data());
+           __FILE__,__LINE__,GimpFileName.toLocal8Bit().data());
     QTextStream Out(&GimpFile);
     Out << ImageFileName << "\n";
     Out << ExifFileName << "\n";
@@ -3114,6 +3075,66 @@ void CB_FullScreenButton(const int State) {
     Settings->SetValue("FullscreenActive", 0);
   }
   MainWindow->FullScreenButton->setChecked(State);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// Callbacks pertaining to the prev/next image buttons
+//
+////////////////////////////////////////////////////////////////////////////////
+
+QFileInfoList ptGetFilesInTheImageFolder() {
+  QStringList InputFileNameList = Settings->GetStringList("InputFileNameList");
+  QFileInfo PathInfo(InputFileNameList[0]);
+  QString fileName = PathInfo.fileName();
+  QDir fileDir = PathInfo.dir();
+  fileDir.setFilter(QDir::Files);
+  fileDir.setSorting(QDir::Name);
+
+  QStringList fileExts;
+  if (Settings->GetInt("FileMgrShowRAWs")) {
+    fileExts << FileExtsRaw;
+  }
+  if (Settings->GetInt("FileMgrShowBitmaps")) {
+    fileExts << FileExtsBitmap;
+  }
+  return fileDir.entryInfoList(fileExts);
+}
+
+QString ptGetImageFileName() {
+  QStringList InputFileNameList = Settings->GetStringList("InputFileNameList");
+  QFileInfo PathInfo(InputFileNameList[0]);
+  return PathInfo.fileName();
+}
+
+void CB_PreviousImageButton() {
+  if (Settings->GetInt("HaveImage")==0) return;
+
+  QString fileName = ptGetImageFileName();
+  QFileInfoList files = ptGetFilesInTheImageFolder();
+
+  for (int i = 1; i < files.count(); i++) {
+    if (files[i].fileName() == fileName) {
+      ImageFileToOpen = files[i - 1].absoluteFilePath();
+      CB_MenuFileOpen(1);
+      break;
+    }
+  }
+}
+
+void CB_NextImageButton() {
+  if (Settings->GetInt("HaveImage")==0) return;
+
+  QString fileName = ptGetImageFileName();
+  QFileInfoList files = ptGetFilesInTheImageFolder();
+
+  for (int i = 0; i < files.count() - 1; i++) {
+    if (files[i].fileName() == fileName) {
+      ImageFileToOpen = files[i + 1].absoluteFilePath();
+      CB_MenuFileOpen(1);
+      break;
+    }
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -3210,11 +3231,11 @@ void CB_PreviewColorProfileButton() {
   // Close old profile and open new one.
   cmsCloseProfile(PreviewColorProfile);
   PreviewColorProfile = cmsOpenProfileFromFile(
-          Settings->GetString("PreviewColorProfile").toAscii().data(),
+          Settings->GetString("PreviewColorProfile").toLocal8Bit().data(),
           "r");
   if (!PreviewColorProfile) {
     ptLogError(ptError_FileOpen,
-         Settings->GetString("PreviewColorProfile").toAscii().data());
+         Settings->GetString("PreviewColorProfile").toLocal8Bit().data());
     assert(PreviewColorProfile);
   }
   PreCalcTransforms();
@@ -3257,7 +3278,7 @@ void CB_OutputColorProfileButton() {
 
 void CB_OutputColorProfileResetButton() {
   Settings->SetValue("OutputColorProfile",
-                     (Settings->GetString("UserDirectory") + "Profiles/Output/sRGB.icc").toAscii().data());
+                     (Settings->GetString("UserDirectory") + "Profiles/Output/sRGB.icc").toLocal8Bit().data());
   if (Settings->GetInt("HistogramMode")==ptHistogramMode_Output) {
     if (Settings->GetInt("ExposureIndicator")==1) {
       Update(ptProcessorPhase_Preview);
@@ -3323,7 +3344,7 @@ void CB_StyleChoice(const QVariant Choice) {
   SetBackgroundColor(Settings->GetInt("BackgroundColor"));
   CB_SliderWidthInput(Settings->GetInt("SliderWidth"));
 #ifndef PT_WITHOUT_FILEMGR
-  FileMgrWindow->UpdateTheme();
+  FileMgrWindow->updateTheme();
 #endif
   BatchWindow->UpdateTheme();
 }
@@ -3354,6 +3375,11 @@ void CB_LoadStyleButton() {
 
 void CB_SaveConfirmationCheck(const QVariant Check) {
   Settings->SetValue("SaveConfirmation",Check);
+  MainWindow->AutosaveSettingsWidget->setDisabled(Settings->GetInt("SaveConfirmation"));
+}
+
+void CB_AutosaveSettingsCheck(const QVariant Check) {
+  Settings->SetValue("AutosaveSettings",Check);
 }
 
 void CB_ResetSettingsConfirmationCheck(const QVariant Check) {
@@ -3407,17 +3433,17 @@ void CB_PipeSizeChoice(const QVariant Choice) {
     if (msgBox.clickedButton() == CancelButton ||
         (msgBox.clickedButton() == DetailButton &&
          Settings->GetInt("HaveImage")==0)) {
-      Settings->SetValue("PipeSize",PreviousPipeSize);
+      Settings->SetValue("PipeSize", PreviousPipeSize);
       return;
     } else if (msgBox.clickedButton() == DetailButton &&
-               Settings->GetInt("HaveImage")==1) {
+               Settings->GetInt("HaveImage") == 1) {
       short OldZoomMode = 0;
-      if (Settings->GetInt("DetailViewActive")==0) {
+      if (Settings->GetInt("DetailViewActive") == 0) {
         Settings->SetValue("DetailViewScale", PreviousPipeSize);
         if (TheProcessor->m_Image_DetailPreview == NULL)
           TheProcessor->m_Image_DetailPreview = new ptImage();
         // save a full image if we have several detail views without full view
-        if (Settings->GetInt("IsRAW")==0) {
+        if (!Settings->useRAWHandling()) {
           TheProcessor->m_Image_DetailPreview->SetScaled(TheProcessor->m_Image_AfterDcRaw,
                                                          Settings->GetInt("Scaled"));
         } else {
@@ -3778,6 +3804,8 @@ void SaveButtonToolTip(const short mode) {
     MainWindow->WritePipeButton->setToolTip(QObject::tr("Save job file"));
   } else if (mode==ptOutputMode_Settingsfile) {
     MainWindow->WritePipeButton->setToolTip(QObject::tr("Save settings file"));
+  } else if (mode==ptOutputMode_Batch) {
+    MainWindow->WritePipeButton->setToolTip(QObject::tr("Save and send to batch manager"));
   }
 }
 
@@ -3815,6 +3843,9 @@ void CB_OpenSettingsFile(QString SettingsFileName) {
     //TODO: check Nextphase against automatic pipesize
     Update(NextPhase);
   }
+  SetRatingFromXmp();
+  if (Settings->GetInt("LoadTags"))
+    SetTagsFromXmp();
 }
 
 void CB_OpenSettingsFileButton() {
@@ -3822,8 +3853,10 @@ void CB_OpenSettingsFileButton() {
     return;
   }
 
+  ptAddUndo();
+
   QString SettingsFilePattern =
-    QObject::tr("Settings files (*.pts *.ptj);;All files (*.*)");
+    QObject::tr("All supported files (*.pts *ptj);;Settings files (*.pts);;Job files (*.ptj);;All files (*.*)");
   QString SettingsFileName =
     QFileDialog::getOpenFileName(NULL,
                                  QObject::tr("Open setting file"),
@@ -3834,8 +3867,10 @@ void CB_OpenSettingsFileButton() {
 }
 
 void CB_OpenPresetFileButton() {
+  ptAddUndo();
+
   QString SettingsFilePattern =
-    QObject::tr("Settings files (*.pts *.ptj);;All files (*.*)");
+    QObject::tr("All supported files (*.pts *ptj);;Settings files (*.pts);;Job files (*.ptj);;All files (*.*)");
   QString SettingsFileName =
     QFileDialog::getOpenFileName(NULL,
                                  QObject::tr("Open preset"),
@@ -3845,8 +3880,17 @@ void CB_OpenPresetFileButton() {
   CB_OpenSettingsFile(SettingsFileName);
 }
 
+void CB_UseThumbnailCheck(const QVariant Check) {
+  Settings->SetValue("UseThumbnail", Check);
+
+  if (Settings->GetInt("IsRAW")) {
+    Update(ptProcessorPhase_Raw, ptProcessorPhase_Load);
+  }
+}
+
+
 void CB_BadPixelsChoice(const QVariant Choice) {
-  Settings->SetValue("HaveBadPixels",Choice);
+  Settings->SetValue("HaveBadPixels", Choice);
   short Cancelled = 0;
   if (Choice.toInt() == 1) {
     // Request to load one.
@@ -3903,7 +3947,7 @@ void SelectSpotWBDone(const ptStatus ExitStatus, const QRect SelectionRect);
 
 void CB_WhiteBalanceChoice(const QVariant Choice) {
   Settings->SetValue("WhiteBalance",Choice);
-  if (Settings->GetInt("HaveImage") == 0 || Settings->GetInt("IsRAW") == 0) return;
+  if (Settings->GetInt("HaveImage") == 0 || (!Settings->useRAWHandling())) return;
 
   switch (Choice.toInt()) {
     case ptWhiteBalance_Camera :
@@ -4813,12 +4857,28 @@ void CB_ResizeDimensionChoice(const QVariant Choice) {
       Update(ptProcessorPhase_Geometry);
     }
     MainWindow->UpdateExifInfo(TheProcessor->m_ExifData);
+  } else {
+    MainWindow->UpdateSettings();
   }
 }
 
 void CB_ResizeScaleInput(const QVariant Value) {
   Settings->SetValue("ResizeScale",Value);
   if (Settings->GetInt("Resize")) {
+    if (Settings->GetInt("AutomaticPipeSize")) {
+      if (!CalculatePipeSize())
+        Update(ptProcessorPhase_Geometry);
+    } else {
+      Update(ptProcessorPhase_Geometry);
+    }
+    MainWindow->UpdateExifInfo(TheProcessor->m_ExifData);
+  }
+}
+
+void CB_ResizeHeightInput(const QVariant Value) {
+  Settings->SetValue("ResizeHeight",Value);
+  if (Settings->GetInt("Resize") &&
+      Settings->GetInt("ResizeDimension") == ptResizeDimension_WidthHeight) {
     if (Settings->GetInt("AutomaticPipeSize")) {
       if (!CalculatePipeSize())
         Update(ptProcessorPhase_Geometry);
@@ -4852,197 +4912,6 @@ void CB_AutomaticPipeSizeCheck(const QVariant Check) {
       Update(ptProcessorPhase_Geometry);
     }
     MainWindow->UpdateExifInfo(TheProcessor->m_ExifData);
-  }
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the RGB Tab
-// Partim ChannelMixer
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_ChannelMixerOpenButton() {
-
-  QStringList ChannelMixerFileNames =
-    Settings->GetStringList("ChannelMixerFileNames");
-  int Index = ChannelMixerFileNames.count();
-
-  QString ChannelMixerFileName = QFileDialog::getOpenFileName(
-                        NULL,
-                        QObject::tr("Open Channelmixer"),
-                        Settings->GetString("ChannelMixersDirectory"),
-                        ChannelMixerFilePattern);
-
-  if (0 == ChannelMixerFileName.size() ) {
-    return;
-  } else {
-    QFileInfo PathInfo(ChannelMixerFileName);
-    Settings->SetValue("ChannelMixersDirectory",PathInfo.absolutePath());
-    ChannelMixerFileNames.append(PathInfo.absoluteFilePath());
-  }
-  if (ChannelMixer->
-      ReadChannelMixer(
-                  ChannelMixerFileNames[Index].toAscii().data())) {
-    QString ErrorMessage = QObject::tr("Cannot read channelmixer ")
-                           + " '"
-                           + ChannelMixerFileNames[Index]
-                           + "'" ;
-    ptMessageBox::warning(MainWindow,
-                         QObject::tr("Channelmixer read error"),
-                         ErrorMessage);
-    // Remove last invalid and return.
-    ChannelMixerFileNames.removeLast();
-    // Store the change.
-    Settings->SetValue("ChannelMixerFileNames",ChannelMixerFileNames);
-    return;
-  }
-  // Store the change.
-  Settings->SetValue("ChannelMixerFileNames",ChannelMixerFileNames);
-
-  // Small routine that lets Shortfilename point to the basename.
-  QFileInfo PathInfo(ChannelMixerFileNames[Index]);
-  QString ShortFileName = PathInfo.baseName().left(18);
-
-  // TODO Protection against double loading ?
-  Settings->AddOrReplaceOption("ChannelMixer",
-                               ShortFileName,
-                               ptChannelMixerChoice_File+Index);
-  Settings->SetValue("ChannelMixer",ptChannelMixerChoice_File+Index);
-
-  // And process now as if just chosen
-  CB_ChannelMixerChoice(QVariant(ptChannelMixerChoice_File+Index));
-}
-
-void CB_ChannelMixerSaveButton() {
-  QString ChannelMixerFileName = QFileDialog::getSaveFileName(
-                       NULL,
-                       QObject::tr("Save Channelmixer"),
-                       Settings->GetString("ChannelMixersDirectory"),
-                       ChannelMixerFilePattern);
-  if (0 == ChannelMixerFileName.size() ) return;
-
-  QString Header =
-    ";\n"
-    "; photivo Channelmixer File\n"
-    ";\n"
-    "; This curve was written from within photivo\n"
-    ";\n";
-
-  bool Success;
-  QString Explanation =
-    QInputDialog::getText(NULL,
-                          QObject::tr("Save Channelmixer"),
-                          QObject::tr("Give a description"),
-                          QLineEdit::Normal,
-                          NULL,
-                          &Success);
-  if (Success && !Explanation.isEmpty()) {
-    Header += "; " + Explanation + "\n;\n";
-  }
-
-  ChannelMixer->WriteChannelMixer(ChannelMixerFileName.toAscii().data(),
-                                  Header.toAscii().data());
-}
-
-void CB_ChannelMixerChoice(const QVariant Choice) {
-  Settings->SetValue("ChannelMixer",Choice);
-  // If we have a channelmixer, go for reading it.
-  if (Choice.toInt() >= ptChannelMixerChoice_File) {
-    // At this stage, as we have checked on loading the curves
-    // we assume the curve can be read. OK, if user has meanwhile
-    // removed it this might go wrong, but then we simply die.
-    if (ChannelMixer->
-        ReadChannelMixer(
-         (Settings->GetStringList("ChannelMixerFileNames"))
-           [Choice.toInt()-ptChannelMixerChoice_File].
-           toAscii().data())){
-      assert(0);
-    }
-  }
-
-  if (Choice == ptChannelMixerChoice_None) {
-    for (short i=0; i<3; i++) {
-      for (short j=0; j<3; j++) {
-        ChannelMixer->m_Mixer[i][j] = (i==j)?1.0:0.0;
-      }
-    }
-  }
-
-  if (!InStartup) Update(ptProcessorPhase_RGB);
-  if (!InStartup) UpdatePreviewImage();
-}
-
-void CB_ChannelMixerR2RInput(const QVariant Value) {
-  ChannelMixer->m_Mixer[0][0] = Value.toDouble();
-  Settings->SetValue("ChannelMixer",ptChannelMixerChoice_Manual);
-  if (Settings->GetInt("ChannelMixer")) {
-    Update(ptProcessorPhase_RGB);
-  }
-}
-
-void CB_ChannelMixerG2RInput(const QVariant Value) {
-  ChannelMixer->m_Mixer[0][1] = Value.toDouble();
-  Settings->SetValue("ChannelMixer",ptChannelMixerChoice_Manual);
-  if (Settings->GetInt("ChannelMixer")) {
-    Update(ptProcessorPhase_RGB);
-  }
-}
-
-void CB_ChannelMixerB2RInput(const QVariant Value) {
-  ChannelMixer->m_Mixer[0][2] = Value.toDouble();
-  Settings->SetValue("ChannelMixer",ptChannelMixerChoice_Manual);
-  if (Settings->GetInt("ChannelMixer")) {
-    Update(ptProcessorPhase_RGB);
-  }
-}
-
-void CB_ChannelMixerR2GInput(const QVariant Value) {
-  ChannelMixer->m_Mixer[1][0] = Value.toDouble();
-  Settings->SetValue("ChannelMixer",ptChannelMixerChoice_Manual);
-  if (Settings->GetInt("ChannelMixer")) {
-    Update(ptProcessorPhase_RGB);
-  }
-}
-
-void CB_ChannelMixerG2GInput(const QVariant Value) {
-  ChannelMixer->m_Mixer[1][1] = Value.toDouble();
-  Settings->SetValue("ChannelMixer",ptChannelMixerChoice_Manual);
-  if (Settings->GetInt("ChannelMixer")) {
-    Update(ptProcessorPhase_RGB);
-  }
-}
-
-void CB_ChannelMixerB2GInput(const QVariant Value) {
-  ChannelMixer->m_Mixer[1][2] = Value.toDouble();
-  Settings->SetValue("ChannelMixer",ptChannelMixerChoice_Manual);
-  if (Settings->GetInt("ChannelMixer")) {
-    Update(ptProcessorPhase_RGB);
-  }
-}
-
-void CB_ChannelMixerR2BInput(const QVariant Value) {
-  ChannelMixer->m_Mixer[2][0] = Value.toDouble();
-  Settings->SetValue("ChannelMixer",ptChannelMixerChoice_Manual);
-  if (Settings->GetInt("ChannelMixer")) {
-    Update(ptProcessorPhase_RGB);
-  }
-}
-
-void CB_ChannelMixerG2BInput(const QVariant Value) {
-  ChannelMixer->m_Mixer[2][1] = Value.toDouble();
-  Settings->SetValue("ChannelMixer",ptChannelMixerChoice_Manual);
-  if (Settings->GetInt("ChannelMixer")) {
-    Update(ptProcessorPhase_RGB);
-  }
-}
-
-void CB_ChannelMixerB2BInput(const QVariant Value) {
-  ChannelMixer->m_Mixer[2][2] = Value.toDouble();
-  Settings->SetValue("ChannelMixer",ptChannelMixerChoice_Manual);
-  if (Settings->GetInt("ChannelMixer")) {
-    Update(ptProcessorPhase_RGB);
   }
 }
 
@@ -5102,1039 +4971,27 @@ void CB_ExposureClipModeChoice(const QVariant Value) {
   Update(ptProcessorPhase_RGB);
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the RGB Tab
-// Texturecontrast
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_RGBTextureContrastAmountInput(const QVariant Value) {
-  Settings->SetValue("RGBTextureContrastAmount",Value);
-  Update(ptProcessorPhase_RGB);
-}
-
-void CB_RGBTextureContrastThresholdInput(const QVariant Value) {
-  Settings->SetValue("RGBTextureContrastThreshold",Value);
-  if (Settings->GetDouble("RGBTextureContrastAmount")) {
-    Update(ptProcessorPhase_RGB);
-  }
-}
-
-void CB_RGBTextureContrastOpacityInput(const QVariant Value) {
-  Settings->SetValue("RGBTextureContrastOpacity",Value);
-  if (Settings->GetDouble("RGBTextureContrastAmount")) {
-    Update(ptProcessorPhase_RGB);
-  }
-}
-
-void CB_RGBTextureContrastSoftnessInput(const QVariant Value) {
-  Settings->SetValue("RGBTextureContrastSoftness",Value);
-  if (Settings->GetDouble("RGBTextureContrastAmount")) {
-    Update(ptProcessorPhase_RGB);
-  }
-}
-
-void CB_RGBTextureContrastEdgeControlInput(const QVariant Value) {
-  Settings->SetValue("RGBTextureContrastEdgeControl",Value);
-  if (Settings->GetDouble("RGBTextureContrastAmount")) {
-    Update(ptProcessorPhase_RGB);
-  }
-}
-
-void CB_RGBTextureContrastMaskingInput(const QVariant Value) {
-  Settings->SetValue("RGBTextureContrastMasking",Value);
-  if (Settings->GetDouble("RGBTextureContrastAmount")) {
-    Update(ptProcessorPhase_RGB);
-  }
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Callbacks pertaining to the RGB Tab
-// Microcontrast
+// Callbacks pertaining to the LabEyeCandy Tab
+// Partim Vignette
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-void CB_Microcontrast1MaskTypeChoice(const QVariant Choice) {
-  Settings->SetValue("Microcontrast1MaskType",Choice);
-  Update(ptProcessorPhase_RGB);
-}
-
-void CB_Microcontrast1RadiusInput(const QVariant Value) {
-  Settings->SetValue("Microcontrast1Radius",Value);
-  if (Settings->GetInt("Microcontrast1MaskType")) {
-    Update(ptProcessorPhase_RGB);
-  }
-}
-
-void CB_Microcontrast1AmountInput(const QVariant Value) {
-  Settings->SetValue("Microcontrast1Amount",Value);
-  if (Settings->GetInt("Microcontrast1MaskType")) {
-    Update(ptProcessorPhase_RGB);
-  }
-}
-
-void CB_Microcontrast1OpacityInput(const QVariant Value) {
-  Settings->SetValue("Microcontrast1Opacity",Value);
-  if (Settings->GetInt("Microcontrast1MaskType")) {
-    Update(ptProcessorPhase_RGB);
-  }
-}
-
-void CB_Microcontrast1HaloControlInput(const QVariant Value) {
-  Settings->SetValue("Microcontrast1HaloControl",Value);
-  if (Settings->GetInt("Microcontrast1MaskType")) {
-    Update(ptProcessorPhase_RGB);
-  }
-}
-
-void CB_Microcontrast1LowerLimitInput(const QVariant Value) {
-  Settings->SetValue("Microcontrast1LowerLimit",MIN(Value.toDouble(), Settings->GetDouble("Microcontrast1UpperLimit")-0.01));
-  if (Settings->GetInt("Microcontrast1MaskType")) {
-    Update(ptProcessorPhase_RGB);
-  }
-}
-
-void CB_Microcontrast1UpperLimitInput(const QVariant Value) {
-  Settings->SetValue("Microcontrast1UpperLimit",MAX(Value.toDouble(), Settings->GetDouble("Microcontrast1LowerLimit")+0.01));
-  if (Settings->GetInt("Microcontrast1MaskType")) {
-    Update(ptProcessorPhase_RGB);
-  }
-}
-
-void CB_Microcontrast1SoftnessInput(const QVariant Value) {
-  Settings->SetValue("Microcontrast1Softness",Value);
-  if (Settings->GetInt("Microcontrast1MaskType")) {
-    Update(ptProcessorPhase_RGB);
-  }
-}
-
-void CB_Microcontrast2MaskTypeChoice(const QVariant Choice) {
-  Settings->SetValue("Microcontrast2MaskType",Choice);
-  Update(ptProcessorPhase_RGB);
-}
-
-void CB_Microcontrast2RadiusInput(const QVariant Value) {
-  Settings->SetValue("Microcontrast2Radius",Value);
-  if (Settings->GetInt("Microcontrast2MaskType")) {
-    Update(ptProcessorPhase_RGB);
-  }
-}
-
-void CB_Microcontrast2AmountInput(const QVariant Value) {
-  Settings->SetValue("Microcontrast2Amount",Value);
-  if (Settings->GetInt("Microcontrast2MaskType")) {
-    Update(ptProcessorPhase_RGB);
-  }
-}
-
-void CB_Microcontrast2OpacityInput(const QVariant Value) {
-  Settings->SetValue("Microcontrast2Opacity",Value);
-  if (Settings->GetInt("Microcontrast2MaskType")) {
-    Update(ptProcessorPhase_RGB);
-  }
-}
-
-void CB_Microcontrast2HaloControlInput(const QVariant Value) {
-  Settings->SetValue("Microcontrast2HaloControl",Value);
-  if (Settings->GetInt("Microcontrast2MaskType")) {
-    Update(ptProcessorPhase_RGB);
-  }
-}
-
-void CB_Microcontrast2LowerLimitInput(const QVariant Value) {
-  Settings->SetValue("Microcontrast2LowerLimit",MIN(Value.toDouble(), Settings->GetDouble("Microcontrast2UpperLimit")-0.01));
-  if (Settings->GetInt("Microcontrast2MaskType")) {
-    Update(ptProcessorPhase_RGB);
-  }
-}
-
-void CB_Microcontrast2UpperLimitInput(const QVariant Value) {
-  Settings->SetValue("Microcontrast2UpperLimit",MAX(Value.toDouble(), Settings->GetDouble("Microcontrast2LowerLimit")+0.01));
-  if (Settings->GetInt("Microcontrast2MaskType")) {
-    Update(ptProcessorPhase_RGB);
-  }
-}
-
-void CB_Microcontrast2SoftnessInput(const QVariant Value) {
-  Settings->SetValue("Microcontrast2Softness",Value);
-  if (Settings->GetInt("Microcontrast2MaskType")) {
-    Update(ptProcessorPhase_RGB);
-  }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the LABCC Tab
-// Texturecontrast
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_TextureContrast1AmountInput(const QVariant Value) {
-  Settings->SetValue("TextureContrast1Amount",Value);
-  Update(ptProcessorPhase_LabCC);
-}
-
-void CB_TextureContrast1ThresholdInput(const QVariant Value) {
-  Settings->SetValue("TextureContrast1Threshold",Value);
-  if (Settings->GetDouble("TextureContrast1Amount")) {
-    Update(ptProcessorPhase_LabCC);
-  }
-}
-
-void CB_TextureContrast1OpacityInput(const QVariant Value) {
-  Settings->SetValue("TextureContrast1Opacity",Value);
-  if (Settings->GetDouble("TextureContrast1Amount")) {
-    Update(ptProcessorPhase_LabCC);
-  }
-}
-
-void CB_TextureContrast1SoftnessInput(const QVariant Value) {
-  Settings->SetValue("TextureContrast1Softness",Value);
-  if (Settings->GetDouble("TextureContrast1Amount")) {
-    Update(ptProcessorPhase_LabCC);
-  }
-}
-
-void CB_TextureContrast1EdgeControlInput(const QVariant Value) {
-  Settings->SetValue("TextureContrast1EdgeControl",Value);
-  if (Settings->GetDouble("TextureContrast1Amount")) {
-    Update(ptProcessorPhase_LabCC);
-  }
-}
-
-void CB_TextureContrast1MaskingInput(const QVariant Value) {
-  Settings->SetValue("TextureContrast1Masking",Value);
-  if (Settings->GetDouble("TextureContrast1Amount")) {
-    Update(ptProcessorPhase_LabCC);
-  }
-}
-
-void CB_TextureContrast2AmountInput(const QVariant Value) {
-  Settings->SetValue("TextureContrast2Amount",Value);
-  Update(ptProcessorPhase_LabCC);
-}
-
-void CB_TextureContrast2ThresholdInput(const QVariant Value) {
-  Settings->SetValue("TextureContrast2Threshold",Value);
-  if (Settings->GetDouble("TextureContrast2Amount")) {
-    Update(ptProcessorPhase_LabCC);
-  }
-}
-
-void CB_TextureContrast2OpacityInput(const QVariant Value) {
-  Settings->SetValue("TextureContrast2Opacity",Value);
-  if (Settings->GetDouble("TextureContrast2Amount")) {
-    Update(ptProcessorPhase_LabCC);
-  }
-}
-
-void CB_TextureContrast2SoftnessInput(const QVariant Value) {
-  Settings->SetValue("TextureContrast2Softness",Value);
-  if (Settings->GetDouble("TextureContrast2Amount")) {
-    Update(ptProcessorPhase_LabCC);
-  }
-}
-
-void CB_TextureContrast2EdgeControlInput(const QVariant Value) {
-  Settings->SetValue("TextureContrast2EdgeControl",Value);
-  if (Settings->GetDouble("TextureContrast2Amount")) {
-    Update(ptProcessorPhase_LabCC);
-  }
-}
-
-void CB_TextureContrast2MaskingInput(const QVariant Value) {
-  Settings->SetValue("TextureContrast2Masking",Value);
-  if (Settings->GetDouble("TextureContrast2Amount")) {
-    Update(ptProcessorPhase_LabCC);
-  }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the LABCC Tab
-// Microcontrast
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_LabMicrocontrast1MaskTypeChoice(const QVariant Choice) {
-  Settings->SetValue("LabMicrocontrast1MaskType",Choice);
-  Update(ptProcessorPhase_LabCC);
-}
-
-void CB_LabMicrocontrast1RadiusInput(const QVariant Value) {
-  Settings->SetValue("LabMicrocontrast1Radius",Value);
-  if (Settings->GetInt("LabMicrocontrast1MaskType")) {
-    Update(ptProcessorPhase_LabCC);
-  }
-}
-
-void CB_LabMicrocontrast1AmountInput(const QVariant Value) {
-  Settings->SetValue("LabMicrocontrast1Amount",Value);
-  if (Settings->GetInt("LabMicrocontrast1MaskType")) {
-    Update(ptProcessorPhase_LabCC);
-  }
-}
-
-void CB_LabMicrocontrast1OpacityInput(const QVariant Value) {
-  Settings->SetValue("LabMicrocontrast1Opacity",Value);
-  if (Settings->GetInt("LabMicrocontrast1MaskType")) {
-    Update(ptProcessorPhase_LabCC);
-  }
-}
-
-void CB_LabMicrocontrast1HaloControlInput(const QVariant Value) {
-  Settings->SetValue("LabMicrocontrast1HaloControl",Value);
-  if (Settings->GetInt("LabMicrocontrast1MaskType")) {
-    Update(ptProcessorPhase_LabCC);
-  }
-}
-
-void CB_LabMicrocontrast1LowerLimitInput(const QVariant Value) {
-  Settings->SetValue("LabMicrocontrast1LowerLimit",MIN(Value.toDouble(), Settings->GetDouble("LabMicrocontrast1UpperLimit")-0.01));
-  if (Settings->GetInt("LabMicrocontrast1MaskType")) {
-    Update(ptProcessorPhase_LabCC);
-  }
-}
-
-void CB_LabMicrocontrast1UpperLimitInput(const QVariant Value) {
-  Settings->SetValue("LabMicrocontrast1UpperLimit",MAX(Value.toDouble(), Settings->GetDouble("LabMicrocontrast1LowerLimit")+0.01));
-  if (Settings->GetInt("LabMicrocontrast1MaskType")) {
-    Update(ptProcessorPhase_LabCC);
-  }
-}
-
-void CB_LabMicrocontrast1SoftnessInput(const QVariant Value) {
-  Settings->SetValue("LabMicrocontrast1Softness",Value);
-  if (Settings->GetInt("LabMicrocontrast1MaskType")) {
-    Update(ptProcessorPhase_LabCC);
-  }
-}
-
-void CB_LabMicrocontrast2MaskTypeChoice(const QVariant Choice) {
-  Settings->SetValue("LabMicrocontrast2MaskType",Choice);
-  Update(ptProcessorPhase_LabCC);
-}
-
-void CB_LabMicrocontrast2RadiusInput(const QVariant Value) {
-  Settings->SetValue("LabMicrocontrast2Radius",Value);
-  if (Settings->GetInt("LabMicrocontrast2MaskType")) {
-    Update(ptProcessorPhase_LabCC);
-  }
-}
-
-void CB_LabMicrocontrast2AmountInput(const QVariant Value) {
-  Settings->SetValue("LabMicrocontrast2Amount",Value);
-  if (Settings->GetInt("LabMicrocontrast2MaskType")) {
-    Update(ptProcessorPhase_LabCC);
-  }
-}
-
-void CB_LabMicrocontrast2OpacityInput(const QVariant Value) {
-  Settings->SetValue("LabMicrocontrast2Opacity",Value);
-  if (Settings->GetInt("LabMicrocontrast2MaskType")) {
-    Update(ptProcessorPhase_LabCC);
-  }
-}
-
-void CB_LabMicrocontrast2HaloControlInput(const QVariant Value) {
-  Settings->SetValue("LabMicrocontrast2HaloControl",Value);
-  if (Settings->GetInt("LabMicrocontrast2MaskType")) {
-    Update(ptProcessorPhase_LabCC);
-  }
-}
-
-void CB_LabMicrocontrast2LowerLimitInput(const QVariant Value) {
-  Settings->SetValue("LabMicrocontrast2LowerLimit",MIN(Value.toDouble(), Settings->GetDouble("LabMicrocontrast2UpperLimit")-0.01));
-  if (Settings->GetInt("LabMicrocontrast2MaskType")) {
-    Update(ptProcessorPhase_LabCC);
-  }
-}
-
-void CB_LabMicrocontrast2UpperLimitInput(const QVariant Value) {
-  Settings->SetValue("LabMicrocontrast2UpperLimit",MAX(Value.toDouble(), Settings->GetDouble("LabMicrocontrast2LowerLimit")+0.01));
-  if (Settings->GetInt("LabMicrocontrast2MaskType")) {
-    Update(ptProcessorPhase_LabCC);
-  }
-}
-
-void CB_LabMicrocontrast2SoftnessInput(const QVariant Value) {
-  Settings->SetValue("LabMicrocontrast2Softness",Value);
-  if (Settings->GetInt("LabMicrocontrast2MaskType")) {
-    Update(ptProcessorPhase_LabCC);
-  }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the LabSN Tab
-// Partim Edge avoiding wavelets
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_EAWMasterInput(const QVariant Value) {
-  if (Value.toDouble() == 0) { // Reset
-    Settings->SetValue("EAWLevel1",0.0);
-    Settings->SetValue("EAWLevel2",0.0);
-    Settings->SetValue("EAWLevel3",0.0);
-    Settings->SetValue("EAWLevel4",0.0);
-    Settings->SetValue("EAWLevel5",0.0);
-    Settings->SetValue("EAWLevel6",0.0);
-  } else if (fabs(Value.toDouble()) <= 0.1) {
-    Settings->SetValue("EAWLevel1",Value);
-    Settings->SetValue("EAWLevel2",0.0);
-    Settings->SetValue("EAWLevel3",0.0);
-    Settings->SetValue("EAWLevel4",0.0);
-    Settings->SetValue("EAWLevel5",0.0);
-    Settings->SetValue("EAWLevel6",0.0);
-  } else if (fabs(Value.toDouble()) <= 0.2) {
-    Settings->SetValue("EAWLevel1",Value);
-    Settings->SetValue("EAWLevel2",Value.toDouble()/2);
-    Settings->SetValue("EAWLevel3",0.0);
-    Settings->SetValue("EAWLevel4",0.0);
-    Settings->SetValue("EAWLevel5",0.0);
-    Settings->SetValue("EAWLevel6",0.0);
-  } else if (fabs(Value.toDouble()) <= 0.3) {
-    Settings->SetValue("EAWLevel1",Value);
-    Settings->SetValue("EAWLevel2",Value.toDouble()/3*2);
-    Settings->SetValue("EAWLevel3",Value.toDouble()/3);
-    Settings->SetValue("EAWLevel4",0.0);
-    Settings->SetValue("EAWLevel5",0.0);
-    Settings->SetValue("EAWLevel6",0.0);
-  } else if (fabs(Value.toDouble()) <= 0.4) {
-    Settings->SetValue("EAWLevel1",Value);
-    Settings->SetValue("EAWLevel2",Value.toDouble()/4*3);
-    Settings->SetValue("EAWLevel3",Value.toDouble()/4*2);
-    Settings->SetValue("EAWLevel4",Value.toDouble()/4);
-    Settings->SetValue("EAWLevel5",0.0);
-    Settings->SetValue("EAWLevel6",0.0);
-  } else if (fabs(Value.toDouble()) <= 0.5) {
-    Settings->SetValue("EAWLevel1",Value);
-    Settings->SetValue("EAWLevel2",Value.toDouble()/5*4);
-    Settings->SetValue("EAWLevel3",Value.toDouble()/5*3);
-    Settings->SetValue("EAWLevel4",Value.toDouble()/5*2);
-    Settings->SetValue("EAWLevel5",Value.toDouble()/5);
-    Settings->SetValue("EAWLevel6",0.0);
-  } else {
-    Settings->SetValue("EAWLevel1",Value);
-    Settings->SetValue("EAWLevel2",Value.toDouble()/6*5);
-    Settings->SetValue("EAWLevel3",Value.toDouble()/6*4);
-    Settings->SetValue("EAWLevel4",Value.toDouble()/6*3);
-    Settings->SetValue("EAWLevel5",Value.toDouble()/6*2);
-    Settings->SetValue("EAWLevel6",Value.toDouble()/6);
-  }
-  Update(ptProcessorPhase_LabSN);
-}
-
-void CB_EAWLevel1Input(const QVariant Value) {
-  Settings->SetValue("EAWLevel1",Value);
-  Settings->SetValue("EAWMaster",0.0);
-  Update(ptProcessorPhase_LabSN);
-}
-
-void CB_EAWLevel2Input(const QVariant Value) {
-  Settings->SetValue("EAWLevel2",Value);
-  Settings->SetValue("EAWMaster",0.0);
-  Update(ptProcessorPhase_LabSN);
-}
-
-void CB_EAWLevel3Input(const QVariant Value) {
-  Settings->SetValue("EAWLevel3",Value);
-  Settings->SetValue("EAWMaster",0.0);
-  Update(ptProcessorPhase_LabSN);
-}
-
-void CB_EAWLevel4Input(const QVariant Value) {
-  Settings->SetValue("EAWLevel4",Value);
-  Settings->SetValue("EAWMaster",0.0);
-  Update(ptProcessorPhase_LabSN);
-}
-
-void CB_EAWLevel5Input(const QVariant Value) {
-  Settings->SetValue("EAWLevel5",Value);
-  Settings->SetValue("EAWMaster",0.0);
-  Update(ptProcessorPhase_LabSN);
-}
-
-void CB_EAWLevel6Input(const QVariant Value) {
-  Settings->SetValue("EAWLevel6",Value);
-  Settings->SetValue("EAWMaster",0.0);
-  Update(ptProcessorPhase_LabSN);
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the LabSN Tab
-// Partim GreyCStoration
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_GREYCLabChoice(const QVariant State) {
-  Settings->SetValue("GREYCLab",State);
-  Update(ptProcessorPhase_LabSN);
-}
-
-void CB_GREYCLabMaskTypeChoice(const QVariant State) {
-  Settings->SetValue("GREYCLabMaskType",State);
-  if (Settings->GetInt("GREYCLab")>1) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_GREYCLabFastCheck(const QVariant State) {
-  Settings->SetValue("GREYCLabFast",State);
-  if (Settings->GetInt("GREYCLab")==2) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_GREYCLabInterpolationChoice(const QVariant Choice) {
-  Settings->SetValue("GREYCLabInterpolation",Choice);
-  if (Settings->GetInt("GREYCLab")==2) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_GREYCLabOpacityInput(const QVariant Value) {
-  Settings->SetValue("GREYCLabOpacity",Value);
-  if (Settings->GetInt("GREYCLab")==2) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_GREYCLabAmplitudeInput(const QVariant Value) {
-  Settings->SetValue("GREYCLabAmplitude",Value);
-  if (Settings->GetInt("GREYCLab")==2) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_GREYCLabIterationsInput(const QVariant Value) {
-  Settings->SetValue("GREYCLabIterations",Value);
-  if (Settings->GetInt("GREYCLab")==2) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_GREYCLabSharpnessInput(const QVariant Value) {
-  Settings->SetValue("GREYCLabSharpness",Value);
-  if (Settings->GetInt("GREYCLab")>1) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_GREYCLabAnisotropyInput(const QVariant Value) {
-  Settings->SetValue("GREYCLabAnisotropy",Value);
-  if (Settings->GetInt("GREYCLab")>1) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_GREYCLabAlphaInput(const QVariant Value) {
-  Settings->SetValue("GREYCLabAlpha",Value);
-  if (Settings->GetInt("GREYCLab")>1) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_GREYCLabSigmaInput(const QVariant Value) {
-  Settings->SetValue("GREYCLabSigma",Value);
-  if (Settings->GetInt("GREYCLab")>1) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_GREYCLabGaussPrecisionInput(const QVariant Value) {
-  Settings->SetValue("GREYCLabGaussPrecision",Value);
-  if (Settings->GetInt("GREYCLab")==2) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_GREYCLabdlInput(const QVariant Value) {
-  Settings->SetValue("GREYCLabdl",Value);
-  if (Settings->GetInt("GREYCLab")==2) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_GREYCLabdaInput(const QVariant Value) {
-  Settings->SetValue("GREYCLabda",Value);
-  if (Settings->GetInt("GREYCLab")==2) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the LabSN Tab
-// Defringe
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_DefringeRadiusInput(const QVariant Value) {
-  Settings->SetValue("DefringeRadius",Value);
-  Update(ptProcessorPhase_LabSN);
-}
-
-void CB_DefringeThresholdInput(const QVariant Value) {
-  Settings->SetValue("DefringeThreshold",Value);
-  if (Settings->GetDouble("DefringeRadius"))
-    Update(ptProcessorPhase_LabSN);
-}
-
-void CB_DefringeShiftInput(const QVariant Value) {
-  Settings->SetValue("DefringeShift",Value);
-  if (Settings->GetDouble("DefringeRadius"))
-    Update(ptProcessorPhase_LabSN);
-}
-
-void CB_DefringeColor1Check(const QVariant Value) {
-  Settings->SetValue("DefringeColor1",Value);
-  if (Settings->GetDouble("DefringeRadius"))
-    Update(ptProcessorPhase_LabSN);
-}
-
-void CB_DefringeColor2Check(const QVariant Value) {
-  Settings->SetValue("DefringeColor2",Value);
-  if (Settings->GetDouble("DefringeRadius"))
-    Update(ptProcessorPhase_LabSN);
-}
-
-void CB_DefringeColor3Check(const QVariant Value) {
-  Settings->SetValue("DefringeColor3",Value);
-  if (Settings->GetDouble("DefringeRadius"))
-    Update(ptProcessorPhase_LabSN);
-}
-
-void CB_DefringeColor4Check(const QVariant Value) {
-  Settings->SetValue("DefringeColor4",Value);
-  if (Settings->GetDouble("DefringeRadius"))
-    Update(ptProcessorPhase_LabSN);
-}
-
-void CB_DefringeColor5Check(const QVariant Value) {
-  Settings->SetValue("DefringeColor5",Value);
-  if (Settings->GetDouble("DefringeRadius"))
-    Update(ptProcessorPhase_LabSN);
-}
-
-void CB_DefringeColor6Check(const QVariant Value) {
-  Settings->SetValue("DefringeColor6",Value);
-  if (Settings->GetDouble("DefringeRadius"))
-    Update(ptProcessorPhase_LabSN);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the LabSN Tab
-// Partim Pyramid Denoise
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_PyrDenoiseLAmountInput(const QVariant Value) {
-  Settings->SetValue("PyrDenoiseLAmount",Value);
-  Update(ptProcessorPhase_LabSN);
-}
-
-void CB_PyrDenoiseABAmountInput(const QVariant Value) {
-  Settings->SetValue("PyrDenoiseABAmount",Value);
-  Update(ptProcessorPhase_LabSN);
-}
-
-void CB_PyrDenoiseGammaInput(const QVariant Value) {
-  Settings->SetValue("PyrDenoiseGamma",Value);
-  if (Settings->GetInt("PyrDenoiseLAmount")||
-      Settings->GetInt("PyrDenoiseABAmount")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_PyrDenoiseLevelsInput(const QVariant Value) {
-  Settings->SetValue("PyrDenoiseLevels",Value);
-  if (Settings->GetInt("PyrDenoiseLAmount")||
-      Settings->GetInt("PyrDenoiseABAmount")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the LabSN Tab
-// Partim Bilateral Denoise
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_BilateralLOpacityInput(const QVariant Value) {
-  Settings->SetValue("BilateralLOpacity",Value);
-  Update(ptProcessorPhase_LabSN);
-}
-
-void CB_BilateralLUseMaskInput(const QVariant Value) {
-  Settings->SetValue("BilateralLUseMask",Value);
-  if (Settings->GetDouble("BilateralLOpacity")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_BilateralLSigmaSInput(const QVariant Value) {
-  Settings->SetValue("BilateralLSigmaS",Value);
-  if (Settings->GetDouble("BilateralLOpacity")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_BilateralLSigmaRInput(const QVariant Value) {
-  Settings->SetValue("BilateralLSigmaR",Value);
-  if (Settings->GetDouble("BilateralLOpacity")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_BilateralASigmaRInput(const QVariant Value) {
-  Settings->SetValue("BilateralASigmaR",Value);
-  Update(ptProcessorPhase_LabSN);
-}
-
-void CB_BilateralASigmaSInput(const QVariant Value) {
-  Settings->SetValue("BilateralASigmaS",Value);
-  if (Settings->GetDouble("BilateralASigmaR")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_BilateralBSigmaRInput(const QVariant Value) {
-  Settings->SetValue("BilateralBSigmaR",Value);
-  Update(ptProcessorPhase_LabSN);
-}
-
-void CB_BilateralBSigmaSInput(const QVariant Value) {
-  Settings->SetValue("BilateralBSigmaS",Value);
-  if (Settings->GetDouble("BilateralBSigmaR")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the LabSN Tab
-// Partim Wavelet Denoise
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_WaveletDenoiseLInput(const QVariant Value) {
-  Settings->SetValue("WaveletDenoiseL",Value);
-  Update(ptProcessorPhase_LabSN);
-}
-
-void CB_WaveletDenoiseLSoftnessInput(const QVariant Value) {
-  Settings->SetValue("WaveletDenoiseLSoftness",Value);
-  if (Settings->GetDouble("WaveletDenoiseL")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_WaveletDenoiseLSharpnessInput(const QVariant Value) {
-  Settings->SetValue("WaveletDenoiseLSharpness",Value);
-  if (Settings->GetDouble("WaveletDenoiseL")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_WaveletDenoiseLAnisotropyInput(const QVariant Value) {
-  Settings->SetValue("WaveletDenoiseLAnisotropy",Value);
-  if (Settings->GetDouble("WaveletDenoiseL")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_WaveletDenoiseLAlphaInput(const QVariant Value) {
-  Settings->SetValue("WaveletDenoiseLAlpha",Value);
-  if (Settings->GetDouble("WaveletDenoiseL")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_WaveletDenoiseLSigmaInput(const QVariant Value) {
-  Settings->SetValue("WaveletDenoiseLSigma",Value);
-  if (Settings->GetDouble("WaveletDenoiseL")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_WaveletDenoiseAInput(const QVariant Value) {
-  Settings->SetValue("WaveletDenoiseA",Value);
-  Update(ptProcessorPhase_LabSN);
-}
-
-void CB_WaveletDenoiseASoftnessInput(const QVariant Value) {
-  Settings->SetValue("WaveletDenoiseASoftness",Value);
-  if (Settings->GetDouble("WaveletDenoiseA")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_WaveletDenoiseBInput(const QVariant Value) {
-  Settings->SetValue("WaveletDenoiseB",Value);
-  Update(ptProcessorPhase_LabSN);
-}
-
-void CB_WaveletDenoiseBSoftnessInput(const QVariant Value) {
-  Settings->SetValue("WaveletDenoiseBSoftness",Value);
-  if (Settings->GetDouble("WaveletDenoiseB")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the LabSN Tab
-// Partim Gradient Sharpen
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_GradientSharpenPassesInput(const QVariant Value) {
-  Settings->SetValue("GradientSharpenPasses",Value);
-  Update(ptProcessorPhase_LabSN);
-}
-
-void CB_GradientSharpenStrengthInput(const QVariant Value) {
-  Settings->SetValue("GradientSharpenStrength",Value);
-  if (Settings->GetInt("GradientSharpenPasses")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_MLMicroContrastStrengthInput(const QVariant Value) {
-  Settings->SetValue("MLMicroContrastStrength",Value);
-  Update(ptProcessorPhase_LabSN);
-}
-
-void CB_MLMicroContrastScalingInput(const QVariant Value) {
-  Settings->SetValue("MLMicroContrastScaling",Value);
-  if (Settings->GetDouble("MLMicroContrastStrength")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_MLMicroContrastWeightInput(const QVariant Value) {
-  Settings->SetValue("MLMicroContrastWeight",Value);
-  if (Settings->GetDouble("MLMicroContrastStrength")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_LabHotpixelInput(const QVariant Value) {
-  Settings->SetValue("LabHotpixel",Value);
-  Update(ptProcessorPhase_LabSN);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the LabSN Tab
-// Partim Inverse Diffusion Sharpen
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_InverseDiffusionIterationsInput(const QVariant Value) {
-  Settings->SetValue("InverseDiffusionIterations",Value);
-  Update(ptProcessorPhase_LabSN);
-}
-
-void CB_InverseDiffusionAmplitudeInput(const QVariant Value) {
-  Settings->SetValue("InverseDiffusionAmplitude",Value);
-  if (Settings->GetInt("InverseDiffusionIterations")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_InverseDiffusionUseEdgeMaskCheck(const QVariant State) {
-  Settings->SetValue("InverseDiffusionUseEdgeMask",State);
-  if (Settings->GetInt("InverseDiffusionIterations")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the LabSN Tab
-// Partim USM
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_USMChoice(const QVariant Choice) {
-  Settings->SetValue("USM",Choice);
-  Update(ptProcessorPhase_LabSN);
-}
-
-void CB_USMRadiusInput(const QVariant Value) {
-  Settings->SetValue("USMRadius",Value);
-  if (Settings->GetInt("USM")==2) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-
-void CB_USMAmountInput(const QVariant Value) {
-  Settings->SetValue("USMAmount",Value);
-  if (Settings->GetInt("USM")==2) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_USMThresholdInput(const QVariant Value) {
-  Settings->SetValue("USMThreshold",Value);
-  if (Settings->GetInt("USM")==2) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the LabSN Tab
-// Partim Highpass
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_HighpassChoice(const QVariant Choice) {
-  Settings->SetValue("Highpass",Choice);
-  Update(ptProcessorPhase_LabSN);
-}
-
-void CB_HighpassRadiusInput(const QVariant Value) {
-  Settings->SetValue("HighpassRadius",Value);
-  if (Settings->GetInt("Highpass")==2) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_HighpassAmountInput(const QVariant Value) {
-  Settings->SetValue("HighpassAmount",Value);
-  if (Settings->GetInt("Highpass")==2) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_HighpassDenoiseInput(const QVariant Value) {
-  Settings->SetValue("HighpassDenoise",Value);
-  if (Settings->GetInt("Highpass")==2) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the LabSN Tab
-// Partim Grain
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_Grain1MaskTypeChoice(const QVariant Choice) {
-  Settings->SetValue("Grain1MaskType",Choice);
-  Update(ptProcessorPhase_LabSN);
-}
-
-void CB_Grain1ModeChoice(const QVariant Choice) {
-  Settings->SetValue("Grain1Mode",Choice);
-  if (Settings->GetInt("Grain1MaskType")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_Grain1StrengthInput(const QVariant Value) {
-  Settings->SetValue("Grain1Strength",Value);
-  if (Settings->GetInt("Grain1MaskType")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_Grain1RadiusInput(const QVariant Value) {
-  Settings->SetValue("Grain1Radius",Value);
-  if (Settings->GetInt("Grain1MaskType")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_Grain1OpacityInput(const QVariant Value) {
-  Settings->SetValue("Grain1Opacity",Value);
-  if (Settings->GetInt("Grain1MaskType")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_Grain1LowerLimitInput(const QVariant Value) {
-  Settings->SetValue("Grain1LowerLimit",Value);
-  if (Settings->GetInt("Grain1MaskType")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_Grain1UpperLimitInput(const QVariant Value) {
-  Settings->SetValue("Grain1UpperLimit",Value);
-  if (Settings->GetInt("Grain1MaskType")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_Grain2MaskTypeChoice(const QVariant Choice) {
-  Settings->SetValue("Grain2MaskType",Choice);
-  Update(ptProcessorPhase_LabSN);
-}
-
-void CB_Grain2ModeChoice(const QVariant Choice) {
-  Settings->SetValue("Grain2Mode",Choice);
-  if (Settings->GetInt("Grain2MaskType")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_Grain2StrengthInput(const QVariant Value) {
-  Settings->SetValue("Grain2Strength",Value);
-  if (Settings->GetInt("Grain2MaskType")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_Grain2RadiusInput(const QVariant Value) {
-  Settings->SetValue("Grain2Radius",Value);
-  if (Settings->GetInt("Grain2MaskType")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
-
-void CB_Grain2OpacityInput(const QVariant Value) {
-  Settings->SetValue("Grain2Opacity",Value);
-  if (Settings->GetInt("Grain2MaskType")) {
-    Update(ptProcessorPhase_LabSN);
+void CB_LabVignetteInnerRadiusInput(const QVariant Value) {
+  Settings->SetValue("LabVignetteInnerRadius",MIN(Value.toDouble(), Settings->GetDouble("LabVignetteOuterRadius")));
+  if (Settings->ToolIsActive("TabLABVignette")) {
+    Update(ptProcessorPhase_LabEyeCandy);
   }
 }
 
-void CB_Grain2LowerLimitInput(const QVariant Value) {
-  Settings->SetValue("Grain2LowerLimit",Value);
-  if (Settings->GetInt("Grain2MaskType")) {
-    Update(ptProcessorPhase_LabSN);
-  }
-}
 
-void CB_Grain2UpperLimitInput(const QVariant Value) {
-  Settings->SetValue("Grain2UpperLimit",Value);
-  if (Settings->GetInt("Grain2MaskType")) {
-    Update(ptProcessorPhase_LabSN);
+void CB_LabVignetteOuterRadiusInput(const QVariant Value) {
+  Settings->SetValue("LabVignetteOuterRadius",MAX(Value.toDouble(), Settings->GetDouble("LabVignetteInnerRadius")));
+  if (Settings->ToolIsActive("TabLABVignette")) {
+    Update(ptProcessorPhase_LabEyeCandy);
   }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the LabSN Tab
-// Partim ViewLAB
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_ViewLABChoice(const QVariant Choice) {
-  Settings->SetValue("ViewLAB",Choice);
-  Update(ptProcessorPhase_LabSN);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -6475,6 +5332,28 @@ void CB_GradualOverlay2UpperLevelInput(const QVariant Value) {
 
 ////////////////////////////////////////////////////////////////////////////////
 //
+// Callbacks pertaining to the EyeCandy Tab
+// Partim Vignette
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void CB_VignetteInnerRadiusInput(const QVariant Value) {
+  Settings->SetValue("VignetteInnerRadius",MIN(Value.toDouble(), Settings->GetDouble("VignetteOuterRadius")));
+  if (Settings->ToolIsActive("TabRGBVignette")) {
+    Update(ptProcessorPhase_EyeCandy);
+  }
+}
+
+
+void CB_VignetteOuterRadiusInput(const QVariant Value) {
+  Settings->SetValue("VignetteOuterRadius",MAX(Value.toDouble(), Settings->GetDouble("VignetteInnerRadius")));
+  if (Settings->ToolIsActive("TabRGBVignette")) {
+    Update(ptProcessorPhase_EyeCandy);
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
 // Callbacks pertaining to Out Tab
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -6521,7 +5400,8 @@ QString GetCurrentImageBaseName() {
 
   QStringList InputFileNameList = Settings->GetStringList("InputFileNameList");
   QFileInfo PathInfo(InputFileNameList[0]);
-  return PathInfo.dir().absolutePath() + QDir::separator() + PathInfo.baseName() + ".";
+  return PathInfo.dir().absolutePath() + QDir::separator() + PathInfo.baseName() +
+      Settings->GetString("OutputFileNameSuffix") + ".";
 }
 
 //==============================================================================
@@ -6540,6 +5420,9 @@ void SaveOutput(const short mode) {
 
   } else if (mode==ptOutputMode_Settingsfile) {
     GFilterDM->WritePresetFile(GetCurrentImageBaseName());
+
+  } else if (mode==ptOutputMode_Batch) {
+    GFilterDM->SendToBatch(GetCurrentImageBaseName());
   }
 
   BlockSave(false);
@@ -6648,6 +5531,15 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   // noise events otherwise.
   if (InStartup) return;
 
+  if (ObjectName != "ZoomInput" &&
+      ObjectName != "PipeSizeChoice" &&
+      ObjectName != "RunModeCheck" &&
+      ObjectName != "SpecialPreviewChoice" &&
+      ObjectName != "UseThumbnailCheck")
+  {
+    ptAddUndo();
+  }
+
   if (ObjectName == "ZoomInput") {
     CB_ZoomInput(Value);
 
@@ -6673,6 +5565,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(StyleHighLightChoice)
 
   M_Dispatch(SaveConfirmationCheck)
+  M_Dispatch(AutosaveSettingsCheck)
   M_Dispatch(ResetSettingsConfirmationCheck)
   M_Dispatch(FullPipeConfirmationCheck)
 
@@ -6684,6 +5577,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_JustSetDispatch(FileMgrThumbMaxRowColInput)
   M_JustSetDispatch(FileMgrThumbSaveSizeInput)
   M_JustSetDispatch(FileMgrStartupOpenCheck)
+  M_JustSetDispatch(FileMgrThumbCacheSizeInput)
 
   M_JustSetDispatch(BatchMgrAutosaveCheck)
   M_JustSetDispatch(BatchMgrAutosaveFileChoice)
@@ -6698,6 +5592,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(StartupUIModeChoice)
   M_Dispatch(StartupPipeSizeChoice)
   M_JustSetDispatch(EscToExitCheck)
+  M_JustSetDispatch(LoadTagsCheck)
 
   M_JustSetDispatch(StartupSwitchARCheck)
 
@@ -6717,6 +5612,8 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(PipeSizeChoice)
   M_Dispatch(RunModeCheck)
   M_Dispatch(SpecialPreviewChoice)
+
+  M_Dispatch(UseThumbnailCheck)
 
   M_Dispatch(BadPixelsChoice)
   M_Dispatch(DarkFrameChoice)
@@ -6812,6 +5709,7 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(ResizeCheck)
   M_Dispatch(ResizeDimensionChoice)
   M_Dispatch(ResizeScaleInput)
+  M_Dispatch(ResizeHeightInput)
   M_Dispatch(ResizeFilterChoice)
   M_Dispatch(AutomaticPipeSizeCheck)
 
@@ -6819,186 +5717,21 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
 
   M_Dispatch(GeometryBlockCheck)
 
-  M_Dispatch(ChannelMixerChoice)
-  M_Dispatch(ChannelMixerR2RInput)
-  M_Dispatch(ChannelMixerG2RInput)
-  M_Dispatch(ChannelMixerB2RInput)
-  M_Dispatch(ChannelMixerR2GInput)
-  M_Dispatch(ChannelMixerG2GInput)
-  M_Dispatch(ChannelMixerB2GInput)
-  M_Dispatch(ChannelMixerR2BInput)
-  M_Dispatch(ChannelMixerG2BInput)
-  M_Dispatch(ChannelMixerB2BInput)
-
   M_Dispatch(AutoExposureChoice)
   M_Dispatch(WhiteFractionInput)
   M_Dispatch(WhiteLevelInput)
   M_Dispatch(ExposureInput)
   M_Dispatch(ExposureClipModeChoice)
 
-  M_Dispatch(RGBTextureContrastThresholdInput)
-  M_Dispatch(RGBTextureContrastSoftnessInput)
-  M_Dispatch(RGBTextureContrastAmountInput)
-  M_Dispatch(RGBTextureContrastOpacityInput)
-  M_Dispatch(RGBTextureContrastEdgeControlInput)
-  M_Dispatch(RGBTextureContrastMaskingInput)
-
-  M_Dispatch(Microcontrast1MaskTypeChoice)
-  M_Dispatch(Microcontrast1RadiusInput)
-  M_Dispatch(Microcontrast1AmountInput)
-  M_Dispatch(Microcontrast1OpacityInput)
-  M_Dispatch(Microcontrast1HaloControlInput)
-  M_Dispatch(Microcontrast1LowerLimitInput)
-  M_Dispatch(Microcontrast1UpperLimitInput)
-  M_Dispatch(Microcontrast1SoftnessInput)
-
-  M_Dispatch(Microcontrast2MaskTypeChoice)
-  M_Dispatch(Microcontrast2RadiusInput)
-  M_Dispatch(Microcontrast2AmountInput)
-  M_Dispatch(Microcontrast2OpacityInput)
-  M_Dispatch(Microcontrast2HaloControlInput)
-  M_Dispatch(Microcontrast2LowerLimitInput)
-  M_Dispatch(Microcontrast2UpperLimitInput)
-  M_Dispatch(Microcontrast2SoftnessInput)
-
-  M_Dispatch(TextureContrast1ThresholdInput)
-  M_Dispatch(TextureContrast1SoftnessInput)
-  M_Dispatch(TextureContrast1AmountInput)
-  M_Dispatch(TextureContrast1OpacityInput)
-  M_Dispatch(TextureContrast1EdgeControlInput)
-  M_Dispatch(TextureContrast1MaskingInput)
-  M_Dispatch(TextureContrast2ThresholdInput)
-  M_Dispatch(TextureContrast2SoftnessInput)
-  M_Dispatch(TextureContrast2AmountInput)
-  M_Dispatch(TextureContrast2OpacityInput)
-  M_Dispatch(TextureContrast2EdgeControlInput)
-  M_Dispatch(TextureContrast2MaskingInput)
-
-  M_SetAndRunDispatch(LC1RadiusInput)
-  M_SetAndRunDispatch(LC1FeatherInput)
-  M_SetAndRunDispatch(LC1OpacityInput)
-  M_SetAndRunDispatch(LC1mInput)
-  M_SetAndRunDispatch(LC2RadiusInput)
-  M_SetAndRunDispatch(LC2FeatherInput)
-  M_SetAndRunDispatch(LC2OpacityInput)
-  M_SetAndRunDispatch(LC2mInput)
-
-  M_Dispatch(LabMicrocontrast1MaskTypeChoice)
-  M_Dispatch(LabMicrocontrast1RadiusInput)
-  M_Dispatch(LabMicrocontrast1AmountInput)
-  M_Dispatch(LabMicrocontrast1OpacityInput)
-  M_Dispatch(LabMicrocontrast1HaloControlInput)
-  M_Dispatch(LabMicrocontrast1LowerLimitInput)
-  M_Dispatch(LabMicrocontrast1UpperLimitInput)
-  M_Dispatch(LabMicrocontrast1SoftnessInput)
-
-  M_Dispatch(LabMicrocontrast2MaskTypeChoice)
-  M_Dispatch(LabMicrocontrast2RadiusInput)
-  M_Dispatch(LabMicrocontrast2AmountInput)
-  M_Dispatch(LabMicrocontrast2OpacityInput)
-  M_Dispatch(LabMicrocontrast2HaloControlInput)
-  M_Dispatch(LabMicrocontrast2LowerLimitInput)
-  M_Dispatch(LabMicrocontrast2UpperLimitInput)
-  M_Dispatch(LabMicrocontrast2SoftnessInput)
-
-  M_SetAndRunDispatch(ImpulseDenoiseThresholdLInput)
-  M_SetAndRunDispatch(ImpulseDenoiseThresholdABInput)
-
-  M_Dispatch(EAWMasterInput)
-  M_Dispatch(EAWLevel1Input)
-  M_Dispatch(EAWLevel2Input)
-  M_Dispatch(EAWLevel3Input)
-  M_Dispatch(EAWLevel4Input)
-  M_Dispatch(EAWLevel5Input)
-  M_Dispatch(EAWLevel6Input)
-
-  M_Dispatch(GREYCLabChoice)
-  M_Dispatch(GREYCLabMaskTypeChoice)
-  M_Dispatch(GREYCLabFastCheck)
-  M_Dispatch(GREYCLabInterpolationChoice)
-  M_Dispatch(GREYCLabOpacityInput)
-  M_Dispatch(GREYCLabAmplitudeInput)
-  M_Dispatch(GREYCLabIterationsInput)
-  M_Dispatch(GREYCLabSharpnessInput)
-  M_Dispatch(GREYCLabAnisotropyInput)
-  M_Dispatch(GREYCLabAlphaInput)
-  M_Dispatch(GREYCLabSigmaInput)
-  M_Dispatch(GREYCLabdlInput)
-  M_Dispatch(GREYCLabdaInput)
-  M_Dispatch(GREYCLabGaussPrecisionInput)
-
-  M_Dispatch(DefringeRadiusInput)
-  M_Dispatch(DefringeThresholdInput)
-  M_Dispatch(DefringeShiftInput)
-  M_Dispatch(DefringeColor1Check)
-  M_Dispatch(DefringeColor2Check)
-  M_Dispatch(DefringeColor3Check)
-  M_Dispatch(DefringeColor4Check)
-  M_Dispatch(DefringeColor5Check)
-  M_Dispatch(DefringeColor6Check)
-
-  M_Dispatch(PyrDenoiseLAmountInput)
-  M_Dispatch(PyrDenoiseABAmountInput)
-  M_Dispatch(PyrDenoiseGammaInput)
-  M_Dispatch(PyrDenoiseLevelsInput)
-
-  M_Dispatch(BilateralLOpacityInput)
-  M_Dispatch(BilateralLUseMaskInput)
-  M_Dispatch(BilateralLSigmaRInput)
-  M_Dispatch(BilateralLSigmaSInput)
-  M_Dispatch(BilateralASigmaRInput)
-  M_Dispatch(BilateralASigmaSInput)
-  M_Dispatch(BilateralBSigmaRInput)
-  M_Dispatch(BilateralBSigmaSInput)
-
-  M_Dispatch(WaveletDenoiseLInput)
-  M_Dispatch(WaveletDenoiseLSoftnessInput)
-  M_Dispatch(WaveletDenoiseLSharpnessInput)
-  M_Dispatch(WaveletDenoiseLAnisotropyInput)
-  M_Dispatch(WaveletDenoiseLAlphaInput)
-  M_Dispatch(WaveletDenoiseLSigmaInput)
-  M_Dispatch(WaveletDenoiseAInput)
-  M_Dispatch(WaveletDenoiseASoftnessInput)
-  M_Dispatch(WaveletDenoiseBInput)
-  M_Dispatch(WaveletDenoiseBSoftnessInput)
-
-  M_Dispatch(GradientSharpenPassesInput)
-  M_Dispatch(GradientSharpenStrengthInput)
-  M_Dispatch(MLMicroContrastStrengthInput)
-  M_Dispatch(MLMicroContrastScalingInput)
-  M_Dispatch(MLMicroContrastWeightInput)
-  M_Dispatch(LabHotpixelInput)
-
-  M_Dispatch(InverseDiffusionIterationsInput)
-  M_Dispatch(InverseDiffusionAmplitudeInput)
-  M_Dispatch(InverseDiffusionUseEdgeMaskCheck)
-  M_Dispatch(USMChoice)
-  M_Dispatch(USMRadiusInput)
-  M_Dispatch(USMAmountInput)
-  M_Dispatch(USMThresholdInput)
-
-  M_SetAndRunDispatch(HighpassChoice)
-  M_SetAndRunDispatch(HighpassRadiusInput)
-  M_SetAndRunDispatch(HighpassAmountInput)
-  M_SetAndRunDispatch(HighpassDenoiseInput)
-
-  M_Dispatch(Grain1MaskTypeChoice)
-  M_Dispatch(Grain1ModeChoice)
-  M_Dispatch(Grain1StrengthInput)
-  M_Dispatch(Grain1RadiusInput)
-  M_Dispatch(Grain1OpacityInput)
-  M_Dispatch(Grain1LowerLimitInput)
-  M_Dispatch(Grain1UpperLimitInput)
-
-  M_Dispatch(Grain2MaskTypeChoice)
-  M_Dispatch(Grain2ModeChoice)
-  M_Dispatch(Grain2StrengthInput)
-  M_Dispatch(Grain2RadiusInput)
-  M_Dispatch(Grain2OpacityInput)
-  M_Dispatch(Grain2LowerLimitInput)
-  M_Dispatch(Grain2UpperLimitInput)
-
-  M_Dispatch(ViewLABChoice)
+  M_SetAndRunDispatch(LabVignetteModeChoice)
+  M_SetAndRunDispatch(LabVignetteInput)
+  M_SetAndRunDispatch(LabVignetteAmountInput)
+  M_Dispatch(LabVignetteInnerRadiusInput)
+  M_Dispatch(LabVignetteOuterRadiusInput)
+  M_SetAndRunDispatch(LabVignetteRoundnessInput)
+  M_SetAndRunDispatch(LabVignetteCenterXInput)
+  M_SetAndRunDispatch(LabVignetteCenterYInput)
+  M_SetAndRunDispatch(LabVignetteSoftnessInput)
 
   M_Dispatch(BWStylerFilmTypeChoice)
   M_SetAndRunDispatch(BWStylerColorFilterTypeChoice)
@@ -7006,10 +5739,6 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_SetAndRunDispatch(BWStylerMultGInput)
   M_SetAndRunDispatch(BWStylerMultBInput)
   M_SetAndRunDispatch(BWStylerOpacityInput)
-
-  M_SetAndRunDispatch(SimpleToneRInput)
-  M_SetAndRunDispatch(SimpleToneGInput)
-  M_SetAndRunDispatch(SimpleToneBInput)
 
   M_SetAndRunDispatch(Tone1MaskTypeChoice)
   M_SetAndRunDispatch(Tone1AmountInput)
@@ -7064,6 +5793,16 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(GradualOverlay2UpperLevelInput)
   M_SetAndRunDispatch(GradualOverlay2SoftnessInput)
 
+  M_SetAndRunDispatch(VignetteModeChoice)
+  M_SetAndRunDispatch(VignetteInput)
+  M_SetAndRunDispatch(VignetteAmountInput)
+  M_Dispatch(VignetteInnerRadiusInput)
+  M_Dispatch(VignetteOuterRadiusInput)
+  M_SetAndRunDispatch(VignetteRoundnessInput)
+  M_SetAndRunDispatch(VignetteCenterXInput)
+  M_SetAndRunDispatch(VignetteCenterYInput)
+  M_SetAndRunDispatch(VignetteSoftnessInput)
+
   M_SetAndRunDispatch(GradBlur1Choice)
   M_SetAndRunDispatch(GradBlur1RadiusInput)
   M_SetAndRunDispatch(GradBlur1LowerLevelInput)
@@ -7113,8 +5852,67 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
 
   } else {
     fprintf(stderr,"(%s,%d) Unexpected ObjectName '%s'\n",
-            __FILE__,__LINE__,ObjectName.toAscii().data());
+            __FILE__,__LINE__,ObjectName.toLocal8Bit().data());
     assert(0);
+  }
+}
+
+//==============================================================================
+
+/*!
+ * Reads Sidecar file
+ * Places data into \var IptcData and \var XmpData
+ */
+void ReadSidecar(const QString& Sidecar)
+{
+  if (Sidecar.size() == 0) return;
+
+  if (Exiv2::ImageFactory::getType(Sidecar.toLocal8Bit().data()) == Exiv2::ImageType::none) {
+    return;
+  }
+
+  Exiv2::Image::AutoPtr hImage = Exiv2::ImageFactory::open(Sidecar.toLocal8Bit().data());
+
+  if (!hImage.get()) {
+    return;
+  }
+  hImage->readMetadata();
+  IptcData = hImage->iptcData();
+  XmpData = hImage->xmpData();
+}
+
+//==============================================================================
+
+/*!
+ * Sets ImageRating value, which is taken from Xmp.xmp.Rating
+ * Places data into IptcData and XmpData
+ */
+void SetRatingFromXmp()
+{
+  Exiv2::XmpData::const_iterator Pos;
+  if ((Pos = XmpData.findKey(Exiv2::XmpKey("Xmp.xmp.Rating"))) != XmpData.end()) {
+    std::stringstream str;
+    str << *Pos;
+    int Rating;
+    sscanf(str.str().c_str(),"%d",&Rating);
+    Settings->SetValue("ImageRating", Rating);
+  }
+}
+
+//==============================================================================
+
+/*!
+ * Sets Tags value, which is taken from Xmp.digiKam.TagsList
+ * Places data into IptcData and XmpData
+ */
+void SetTagsFromXmp()
+{
+  Exiv2::XmpData::const_iterator Pos;
+  if ((Pos = XmpData.findKey(Exiv2::XmpKey("Xmp.digiKam.TagsList"))) != XmpData.end()) {
+    std::stringstream str;
+    str << *Pos;
+    QString tags = str.str().c_str();
+    MainWindow->TagsEditWidget->setPlainText(tags);
   }
 }
 
@@ -7160,21 +5958,26 @@ ptImageType CheckImageType(QString filename,
   if (filename != InputFileNameList[0]) {
     FREE(LocalDcRaw->m_UserSetting_InputFileName);
     LocalDcRaw->m_UserSetting_InputFileName =
-      (char*) MALLOC(1+strlen(filename.toAscii().data()));
+      (char*) MALLOC(1+strlen(filename.toLocal8Bit().data()));
     ptMemoryError(LocalDcRaw->m_UserSetting_InputFileName,__FILE__,__LINE__);
-    strcpy(LocalDcRaw->m_UserSetting_InputFileName,filename.toAscii().data());
+    strcpy(LocalDcRaw->m_UserSetting_InputFileName,filename.toLocal8Bit().data());
   }
 
   if (LocalDcRaw->Identify() == 0) {
     // we have a raw file
     result = itRaw;
-    if (width != NULL) *width = LocalDcRaw->m_Width;
-    if (height != NULL) *height = LocalDcRaw->m_Height;
+    if (Settings->GetInt("UseThumbnail") == 0) {
+      if (width != NULL)  *width  = LocalDcRaw->m_Width;
+      if (height != NULL) *height = LocalDcRaw->m_Height;
+    } else {
+      if (width != NULL)  *width  = LocalDcRaw->m_ThumbWidth;
+      if (height != NULL) *height = LocalDcRaw->m_ThumbHeight;
+    }
 
   } else {
     // Not a raw image. We use GraphicsMagick to check for valid Bitmaps.
     MagickWand* image = NewMagickWand();
-    MagickPingImage(image, filename.toAscii().data());
+    MagickPingImage(image, filename.toLocal8Bit().data());
 
     ExceptionType MagickExcept;
     const char* MagickErrorMsg = MagickGetException(image, &MagickExcept);
@@ -7203,3 +6006,170 @@ ptImageType CheckImageType(QString filename,
 }
 
 //==============================================================================
+QList<QByteArray> ptUndoBuffer;
+QList<QByteArray> ptRedoBuffer;
+QByteArray ptClipboard;
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// ptSettingsToQByteArray
+//
+// Copies Settings to a byte array
+//
+////////////////////////////////////////////////////////////////////////////////
+
+QByteArray ptSettingsToQByteArray() {
+  ptTempFile* tempFile = new ptTempFile();
+  GFilterDM->WritePresetFile(tempFile->fileName());
+  QFile file(tempFile->fileName());
+  file.open(QIODevice::ReadOnly);
+  QByteArray arr = file.readAll();
+  file.close();
+  delete tempFile;
+  return arr;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// ptQByteArrayToSettings
+//
+// Loads Settings from a byte array
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptQByteArrayToSettings(const QByteArray &arr) {
+  ptTempFile* tempFile = new ptTempFile();
+  QFile file(tempFile->fileName());
+  file.open(QIODevice::WriteOnly);
+  file.write(arr);
+  file.close();
+  CB_OpenSettingsFile(tempFile->fileName());
+  delete tempFile;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// ptAddUndo
+//
+// Adds current Settings to undo buffer
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptAddUndo() {
+  QByteArray arr = ptSettingsToQByteArray();
+  ptUndoBuffer << arr;
+  ptRedoBuffer.clear();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// ptMakeUndo
+//
+// Loads Settings from undo buffer
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptMakeUndo() {
+  if (ptUndoBuffer.isEmpty())
+    return;
+
+  QByteArray arr = ptSettingsToQByteArray();
+  ptRedoBuffer << arr;
+  arr = ptUndoBuffer.last();
+  ptUndoBuffer.removeLast();
+
+  ptQByteArrayToSettings(arr);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// ptMakeRedo
+//
+// Loads Settings from redo buffer
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptMakeRedo() {
+  if (ptRedoBuffer.isEmpty())
+    return;
+
+  QByteArray arr = ptSettingsToQByteArray();
+  ptUndoBuffer << arr;
+  arr = ptRedoBuffer.last();
+  ptRedoBuffer.removeLast();
+
+  ptQByteArrayToSettings(arr);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// ptClearUndoRedo
+//
+// Clears undo-redo buffers
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptClearUndoRedo() {
+  ptUndoBuffer.clear();
+  ptRedoBuffer.clear();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// ptMakeFullUndo
+//
+// Loads Settings from the first slot of undobuffer
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptMakeFullUndo() {
+  if (ptUndoBuffer.isEmpty())
+    return;
+
+  QByteArray arr = ptUndoBuffer.first();
+  ptQByteArrayToSettings(arr);
+  ptClearUndoRedo();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// ptResetSettingsToDefault
+//
+// Loads initial Settings
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptResetSettingsToDefault() {
+  ptAddUndo();
+  CB_OpenSettingsFile(Settings->GetString("StartupSettingsFile"));
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// ptCopySettingsToClipboard
+//
+// Copies Settings to a "clipboard"
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptCopySettingsToClipboard() {
+  ptClipboard = ptSettingsToQByteArray();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+// ptPasteSettingsFromClipboard
+//
+// Pastes Settings from a "clipboard"
+//
+////////////////////////////////////////////////////////////////////////////////
+
+void ptPasteSettingsFromClipboard() {
+  if (ptClipboard.isEmpty())
+    return;
+
+  ptAddUndo();
+  ptQByteArrayToSettings(ptClipboard);
+}

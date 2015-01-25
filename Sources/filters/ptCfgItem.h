@@ -2,7 +2,7 @@
 **
 ** Photivo
 **
-** Copyright (C) 2012 Bernd Schoeler <brjohn@brother-john.net>
+** Copyright (C) 2012-2013 Bernd Schoeler <brjohn@brother-john.net>
 ** Copyright (C) 2012 Michael Munzert <mail@mm-log.com>
 **
 ** This file is part of Photivo.
@@ -20,34 +20,36 @@
 ** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 **
 *******************************************************************************/
-
 #ifndef PTCFGITEM_H
 #define PTCFGITEM_H
 
-#include <memory>
-
 #include <QList>
 #include <QVariant>
+#include <memory>
 
+class ptStorable;
 class ptCurve;
 
-//==============================================================================
+class ptCfgItem;
+using TCfgItemList = QList<ptCfgItem>;
 
+//------------------------------------------------------------------------------
 class ptCfgItem {
 public:
   static const int CFirstCustomType = 100;
 
-  /*! \brief The \c TType enum contains the available types of GUI items. */
+  /*! \brief The \c TType enum contains the available types of items. */
   enum TType {
     // Widgets stored in ptFilterConfig’s default store
-    Button = 0,       /*!< QToolButton */
-    Check,            /*!< ptCheck */
-    Combo,            /*!< ptChoice */
-    SpinEdit,         /*!< ptInput: Simple input field for numbers. */
-    Slider,           /*!< ptInput: Input of numbers via a slider. */
-    HueSlider,        /*!< ptInput: Slider with an added hue bar. */
-    // Widgets stored in in a custom store
-    CurveWin = CFirstCustomType,   /*!< ptCurveWindow */
+    Button = 0,                     //!< QToolButton
+    Check,                          //!< ptCheck
+    Combo,                          //!< ptChoice
+    SpinEdit,                       //!< ptInput: Simple input field for numbers.
+    Slider,                         //!< ptInput: Input of numbers via a slider.
+    HueSlider,                      //!< ptInput: Slider with an added hue bar.
+    // Widgets stored in in the custom store
+    CurveWin = CFirstCustomType,    //!< ptCurveWindow
+    CustomType                      //!< any user defined type implementing ptStorable
   };
 
   struct TComboEntry {
@@ -55,6 +57,8 @@ public:
     int       value;
     QString   storableId;
   };
+
+  using TComboEntryList = QList<TComboEntry>;
 
 
 public:
@@ -65,7 +69,7 @@ public:
     bool          Default;
     bool          Checkable;
     bool          UseCommonDispatch;
-    bool          Storeable;
+    bool          Storable;
     QString       Caption;
     QString       ToolTip;
   };
@@ -75,7 +79,7 @@ public:
     TType         Type;
     bool          Default;
     bool          UseCommonDispatch;
-    bool          Storeable;
+    bool          Storable;
     QString       Caption;
     QString       ToolTip;
   };
@@ -84,9 +88,9 @@ public:
     QString             Id;
     TType               Type;
     int                 Default;
-    QList<TComboEntry>  EntryList;
+    TComboEntryList     EntryList;
     bool                UseCommonDispatch;
-    bool                Storeable;
+    bool                Storable;
     QString             Caption;
     QString             ToolTip;
   };
@@ -100,7 +104,7 @@ public:
     QVariant      StepSize;
     int           Decimals;
     bool          UseCommonDispatch;
-    bool          Storeable;
+    bool          Storable;
     QString       Caption;
     QString       ToolTip;
   };
@@ -112,6 +116,12 @@ public:
     QString                   Caption;
   };
 
+  struct TCustom {
+    QString                   Id;
+    TType                     Type;
+    ptStorable*               Object;
+  };
+
 
 public:
   /* NOTE: ptCfgItem basically does same thing that ptSettings does. The class is needed for nice
@@ -120,17 +130,19 @@ public:
   /*! \group Constructors.
       One for each type of GUI item. */
   ///@{
-  ptCfgItem(const TButton &AValues);
-  ptCfgItem(const TCheck &AValues);
-  ptCfgItem(const TCombo &AValues);
-  ptCfgItem(const TInput &AValues);
-  ptCfgItem(const TCurve &AValues);
+  ptCfgItem(const TButton& AValues);
+  ptCfgItem(const TCheck&  AValues);
+  ptCfgItem(const TCombo&  AValues);
+  ptCfgItem(TCombo&&       AValues);
+  ptCfgItem(const TInput&  AValues);
+  ptCfgItem(const TCurve&  AValues);
+  ptCfgItem(const TCustom& AValues);
   ///@}
 
   /*! Performs a type and range check of `AValue` according to the requirements of this `ptCfgItem`
       object and returns a `QVariant` with valid type and value. When validation is not possible
       raises a `ptInfo` exception. */
-  QVariant validate(QVariant AValue);
+  QVariant validate(const QVariant &AValue) const;
 
   /*! \group Members
       Simple members for easy access */
@@ -138,11 +150,12 @@ public:
   // used by all item types
   QString       Id;                 /*!< Internal ID. Used as key to identify this control in
                                          settings. Never shows up in GUI. */
-  TType         Type;               /*!< Type of input control. */
-  bool          UseCommonDispatch;  /*!< Defines if control uses the automatic signals/slots mechanism. */
-  bool          Storeable;          /*!< Defines if the control is stored in settings files. */
-  QString       Caption;            /*!< Caption text that appears in the GUI. */
-  QString       ToolTip;            /*!< Text for the GUI popup tooltip. */
+  TType         Type;               //!< Type of input control.
+  bool          UseCommonDispatch;  //!< Defines if control uses the automatic signals/slots mechanism.
+  bool          Storable;           /*!< Defines if the control is saved to the preset file.
+                                         Only applies to controls in the default store. */
+  QString       Caption;            //!< Caption text that appears in the GUI.
+  QString       ToolTip;            //!< Text for the GUI popup tooltip.
 
   // used by TCheck, TCombo, TInput, TCurve (via the constructor)
   QVariant      Default;
@@ -159,14 +172,17 @@ public:
   QVariant      StepSize;
   int           Decimals;
 
+  // specific to all custom types
+  ptStorable   *AssocObject;
+
   // specific to TCurve
-  std::shared_ptr<ptCurve>  Curve;
+  std::shared_ptr<ptCurve> Curve;
   ///@}
 
 
 private:
   void  init();
-  void  ensureVariantType(QVariant &AValue);
+  void  ensureVariantType(QVariant &AValue) const;
   void  setVariantType();
 
   QVariant::Type  FIntendedType;

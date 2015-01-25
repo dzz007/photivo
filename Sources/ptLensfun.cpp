@@ -28,7 +28,6 @@
 
 #include <cstdlib>
 
-
 // Compare for sorting on make/model.
 int CameraCompare(const void* a, const void* b) {
   if ((((const ptLensfunCamera*)a)->Make) ==
@@ -64,7 +63,7 @@ lfError ptLensfun::LoadDir(const char* Directory)
 
   for (int i = 0; i < Files.size(); i++) {
     if (Files.at(i).endsWith(".xml")) {
-      m_Database->Load(Files.at(i).toAscii().data());
+      m_Database->Load(Files.at(i).toLocal8Bit().data());
     }
   }
 
@@ -76,7 +75,7 @@ ptLensfun::ptLensfun() {
   // Load also the LensfunDatabase.
 
   m_Database = lf_db_new();
-  LoadDir(Settings->GetString("LensfunDatabaseDirectory").toAscii().data());
+  LoadDir(Settings->GetString("LensfunDatabaseDirectory").toLocal8Bit().data());
 
   // All cameras
   const lfCamera* const* CameraList = m_Database->GetCameras();

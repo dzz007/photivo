@@ -25,6 +25,8 @@
 #include "ptSettings.h"
 #include "ptTheme.h"
 
+#include <QFileDialog>
+
 //==============================================================================
 
 ptBatchWindow::ptBatchWindow(QWidget *parent) :
@@ -53,6 +55,8 @@ ptBatchWindow::ptBatchWindow(QWidget *parent) :
   BTLogSplitter->setStretchFactor(BTLogSplitter->indexOf(BTLog), 1);
 
   BTJobList->resizeColumnsToContents();
+  BTJobList->setSortingEnabled(true);
+  BTJobList->sortByColumn(jdFileName, Qt::AscendingOrder);
 }
 
 //==============================================================================
@@ -68,6 +72,25 @@ void ptBatchWindow::UpdateTheme()
 {
   setStyle(Theme->style());
   setStyleSheet(Theme->stylesheet());
+}
+
+void ptBatchWindow::AddJobToList(const QString &settingFile, const QString &rawFile)
+{
+  m_BatchModel->AddJobToList(settingFile, rawFile);
+
+  BTJobList->resizeColumnsToContents();
+  m_BatchModel->AutosaveJobList();
+}
+
+//==============================================================================
+
+void ptBatchWindow::AddJobsToList(const QStringList &settingFiles)
+{
+  foreach (QString fileName, settingFiles)
+    m_BatchModel->AddJobToList(fileName);
+
+  BTJobList->resizeColumnsToContents();
+  m_BatchModel->AutosaveJobList();
 }
 
 //==============================================================================
@@ -103,7 +126,7 @@ void ptBatchWindow::showEvent(QShowEvent *event)
 void ptBatchWindow::OnAddJob()
 {
   QString SettingsFilePattern =
-    QObject::tr("Settings files (*.pts *.ptj);;All files (*.*)");
+    QObject::tr("All supported files (*.pts *ptj);;Settings files (*.pts);;Job files (*.ptj);;All files (*.*)");
   QStringList SettingsFileNames =
     QFileDialog::getOpenFileNames(nullptr,
                                  QObject::tr("Open setting files"),
@@ -112,11 +135,7 @@ void ptBatchWindow::OnAddJob()
   if (SettingsFileNames.isEmpty()) return;
 
   Settings->SetValue("RawsDirectory", QFileInfo(SettingsFileNames.first()).absolutePath());
-  foreach (QString fileName, SettingsFileNames)
-    m_BatchModel->AddJobToList(fileName);
-
-  BTJobList->resizeColumnsToContents();
-  m_BatchModel->AutosaveJobList();
+  AddJobsToList(SettingsFileNames);
 }
 
 //==============================================================================
@@ -160,6 +179,14 @@ void ptBatchWindow::OnAbortProcessing()
   m_WasAborted = true;
   BTRun->setEnabled(true);
   BTAbort->setEnabled(false);
+}
+
+//==============================================================================
+
+void ptBatchWindow::OnResetStatus()
+{
+  foreach (QModelIndex idx, BTJobList->selectionModel()->selectedRows())
+    m_BatchModel->JobItem(idx.row())->SetStatus(jsWaiting);
 }
 
 //==============================================================================
@@ -223,7 +250,7 @@ void ptBatchWindow::OnRunNextJob()
 
 void ptBatchWindow::OnLogReady()
 {
-  BTLog->appendPlainText(m_BatchModel->m_BatchProcess->readAll().data());
+  BTLog->appendPlainText(QString::fromLocal8Bit(m_BatchModel->m_BatchProcess->readAll()));
 }
 
 //==============================================================================

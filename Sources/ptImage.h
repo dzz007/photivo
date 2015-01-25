@@ -24,15 +24,18 @@
 #ifndef DLIMAGE_H
 #define DLIMAGE_H
 
-#include <vector>
-#include <array>
+#include "ptDefines.h"
+#include "ptConstants.h"
+#include "ptCurve.h"
 
 #include <lensfun.h>
 
-#include "ptDefines.h"
-#include "ptConstants.h"
-#include "ptDcRaw.h"
-#include "ptCurve.h"
+#include <vector>
+#include <array>
+
+//==============================================================================
+
+class ptDcRaw;
 
 //==============================================================================
 
@@ -72,7 +75,7 @@ public:
   // [0] = R
   // [1] = G
   // [2] = B
-  std::vector<std::array<uint16_t, 3> > m_Data;
+  TImage16Data m_Data;
 
   // Pointer to the data buffer, since most algorithms still use that.
   uint16_t (*m_Image)[3];
@@ -184,9 +187,13 @@ public:
   /*! Converts the image from Lch to Lab colour space. Returns a pointer to itself. */
   ptImage* LchToLab();
 
-  // MixChannels
-  // MixFactors[To][From]
-  ptImage* MixChannels(const float MixFactors[3][3]);
+  /*!
+   * Mix channels according to the factors in mixFactors.
+   * mixFactors’s first dimension represents output channels (indexes 0 to 2 represent
+   * 1st to 3rd color component); second dimension represents input channels.
+   * Image must not be in Lab color space.
+   */
+  ptImage* mixChannels(const TChannelMatrix mixFactors);
 
   ptImage* Highlights(const float AHlRed, const float AHlGreen, const float AHlBlue);
 
@@ -262,11 +269,11 @@ public:
                         const float AHighlights);
 
   // LMHLightRecovery
-  ptImage* LMHRecovery(const short   MaskType,
-                            const float Amount,
-                            const float LowerLimit,
-                            const float UpperLimit,
-                            const float Softness);
+  ptImage* LMHRecovery(const TMaskType MaskType,
+                       const float Amount,
+                       const float LowerLimit,
+                       const float UpperLimit,
+                       const float Softness);
 
   // Highpass
   ptImage* Highpass(const double Radius,
@@ -297,7 +304,7 @@ public:
                          const double Amount,
                          const double Opacity,
                          const double HaloControl,
-                         const short MaskType,
+                         const TMaskType MaskType,
                          const double LowerLimit,
                          const double UpperLimit,
                          const double Softness);
@@ -336,10 +343,10 @@ public:
 
   // Grain
   ptImage* Grain(const double Sigma,
-                 const short NoiseType,
+                 const TGrainType NoiseType,
                  const double Radius,
                  const double Opacity,
-                 const short MaskType,
+                 const TMaskType MaskType,
                  const double LowerLimit,
                  const double UpperLimit,
                  const short ScaleFactor);
@@ -378,8 +385,8 @@ public:
   ptImage* LABTone(const double Amount,
                    const double Hue,
                    const double Saturation = 0,
-                   const short MaskType = ptMaskType_All,
-                   const short ManualMask = 0,
+                   const TMaskType MaskType = TMaskType::All,
+                   const short  ManualMask = 0,
                    const double LowerLevel = 0.,
                    const double UpperLevel = 1.,
                    const double Softness = 0.);
@@ -389,10 +396,10 @@ public:
                 const uint16_t G,
                 const uint16_t B,
                 const double   Amount,
-                const short    MaskType,
-          const double   LowerLimit,
-          const double   UpperLimit,
-          const double   Softness);
+                const TMaskType MaskType,
+                const double   LowerLimit,
+                const double   UpperLimit,
+                const double   Softness);
 
   // Crossprocessing
   ptImage* Crossprocess(const short Mode,
@@ -417,15 +424,15 @@ public:
               const double Softness);
 
   // Vignette
-  ptImage* Vignette(const TVignetteMask AVignetteMask,
-            const short AExponent,
-            const double AStrength,
-            const double AInnerRadius,
-            const double AOuterRadius,
-            const double ARoundness,
-            const double ACenterX,
-            const double ACenterY,
-            const double ASoftness);
+  ptImage* Vignette(const short VignetteMode,
+            const short Exponent,
+            const double Amount,
+            const double InnerRadius,
+            const double OuterRadius,
+            const double Roundness,
+            const double CenterX,
+            const double CenterY,
+            const double Softness);
 
   // Softglow
   ptImage* Softglow(const short   SoftglowMode,
@@ -441,7 +448,7 @@ public:
   // 30/59/11 seem to be a standard triple representing the luminance,
   // but this should be color space dependend, so TODO
   // For an image in LAB choose 1/0/0.
-  float *GetMask(const short  MaskType,
+  float *GetMask(const TMaskType MaskType,
                  const double LowerLimit,
                  const double UpperLimit,
                  const double Softness,
@@ -516,7 +523,7 @@ ptImage* MaskedColorAdjust(const int       Ax,
                           const double Sigma = 1.1);
 
   // View LAB
-  ptImage* ViewLAB(const short Channel);
+  ptImage* ViewLab(const TViewLabChannel Channel);
 
   // Special Preview
   ptImage* SpecialPreview(const short Mode, const int Intent = 0);
@@ -617,6 +624,7 @@ ptImage* MaskedColorAdjust(const int       Ax,
                           const int Intent);
   */
   ptImage* ptGMResize(const uint16_t Size,
+                      const uint16_t Height,
                       const short Filter,
                       const short Mode);
   ptImage* ptGMResizeWH(const uint16_t NewWidth,
@@ -641,12 +649,13 @@ ptImage* MaskedColorAdjust(const int       Ax,
 
   bool DumpImage(const char* FileName) const;
 
-  ptImage* ptGMCOpenImage(const char* FileName,
-                         const short ColorSpace,
-                         const short Intent,
-                         const short ScaleFactor,
-                         int& Success);
-
+  ptImage* ptGMCOpenImage(const char*        FileName,
+                          short              ColorSpace,
+                          short              Intent,
+                          short              ScaleFactor,
+                          bool               IsRAW,
+                          TImage8RawData*    ImgData,
+                          int&               Success);
 
   // ptImage_Pyramid.cpp
   ptImage* dirpyrLab_denoise(const int luma,
@@ -679,6 +688,13 @@ ptImage* MaskedColorAdjust(const int       Ax,
                          const uint16_t Height,
                          const short Energy,
                          const short VertFirst);
+
+  // ptImage.cpp
+  ptImage* fastBilateralChannel(
+      const float Sigma_s,
+      const float Sigma_r,
+      const int Iterations = 1,
+      const TChannelMask ChannelMask = ChMask_L);
 
   /**
    * ptImage_Lensfun.cpp

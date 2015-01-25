@@ -73,6 +73,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "geom.h"
 #include "msg_stream.h"
 
+#include "../ptConstants.h"
+
 
 
 
@@ -583,7 +585,7 @@ namespace Math_tools{
     typedef float        real_type;
     typedef unsigned int size_type;
 
-    typedef Index real_index_type;
+//    typedef Index real_index_type;
     typedef Array array_type;
 
     const size_type N = array_type::dimension;
@@ -667,7 +669,7 @@ namespace Math_tools{
     typedef float        real_type;
     typedef unsigned int size_type;
 
-    typedef Index real_index_type;
+//    typedef Index real_index_type;
     typedef Array array_type;
 
     const size_type N = array_type::dimension;
@@ -786,7 +788,7 @@ namespace Math_tools{
     typedef float        real_type;
     typedef unsigned int size_type;
 
-    typedef Index real_index_type;
+//    typedef Index real_index_type;
     typedef Array array_type;
 
     const size_type N = array_type::dimension;
@@ -990,12 +992,12 @@ namespace Math_tools{
 
 
   inline double degree_to_radian(const double d){
-    return d*M_PI/180;
+    return d*ptPI/180;
   }
 
 
   inline double radian_to_degree(const double r){
-    return r*180/M_PI;
+    return r*180/ptPI;
   }
 
 

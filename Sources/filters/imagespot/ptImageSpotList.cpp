@@ -21,7 +21,7 @@
 *******************************************************************************/
 
 #include "ptImageSpotList.h"
-#include <ptDefines.h>
+#include "../../ptDefines.h"
 
 ptImageSpotList::ptImageSpotList(PCreateSpotFunc ASpotCreator)
 : ptStorable(),
@@ -36,8 +36,10 @@ ptImageSpotList::~ptImageSpotList() {
 
 //==============================================================================
 
-TConfigStore ptImageSpotList::storeConfig(const QString &APrefix) const {
+TConfigStore ptImageSpotList::doStoreConfig(const QString &APrefix) const {
   TConfigStore hConfig;
+
+  // number of spots in this list
   hConfig.insert(APrefix+"Spot/size", FSpots.size());
 
   for (int i = 0; i < FSpots.size(); ++i) {
@@ -49,9 +51,10 @@ TConfigStore ptImageSpotList::storeConfig(const QString &APrefix) const {
 
 //==============================================================================
 
-void ptImageSpotList::loadConfig(const TConfigStore &AConfig, const QString &APrefix) {
+void ptImageSpotList::doLoadConfig(const TConfigStore &AConfig, const QString &APrefix) {
   FSpots.clear();
   int hSpotCount = AConfig.value(APrefix+"Spot/size").toInt();
+
   for (int i = 0; i < hSpotCount; ++i) {
     FSpots.append(FSpotCreator());
     FSpots.last()->loadConfig(AConfig, QString(APrefix+"Spot/%1/").arg(i));

@@ -1,100 +1,503 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+################################################################################
+##
+## Photivo
+##
+## Copyright (C) 2013 Sergey Salnikov <salsergey@gmail.com>
+##
+## This file is part of Photivo.
+##
+## Photivo is free software: you can redistribute it and/or modify
+## it under the terms of the GNU General Public License version 3
+## as published by the Free Software Foundation.
+##
+## Photivo is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+##
+## You should have received a copy of the GNU General Public License
+## along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
+##
+################################################################################
+#
+# The file CMakeLists.txt is generated automatically and you shouldn't
+# edit it directly. Instead of this you should edit CMakeLists.txt.in
+# and then run a script CMakeGenerate.py.
+# The script extracts all sources, headers and UIs from the
+# photivoProject/photivoProject.pro file and includes them into
+# CMakeLists.txt. So these variables should be lived empty in CMakeLists.txt.in.
+#
+################################################################################
+#
+# Besides compiling Photivo you can create an archive containing all sources
+# without hg metadata by calling "make package_source". You are supposed to give this
+# command in a subdirectory called build* or BUILD*. You can also create a
+# binary archive by calling "make package".
+#
+################################################################################
 
-EXECUTE_PROCESS(COMMAND /bin/sh -c "cd ${CMAKE_CURRENT_SOURCE_DIR}/photivoProject; sh ./get_appversion" OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE APPVERSION )
+CMAKE_MINIMUM_REQUIRED( VERSION 2.8 )
 
-PROJECT(photivo)
-find_package(PkgConfig REQUIRED)
-find_package(JPEG REQUIRED)
-find_package(Qt4 REQUIRED)
-set(QT_USE_QTNETWORK 1)
-set(QT_USE_QTDESIGNER 1)
-include(${QT_USE_FILE})
-pkg_check_modules(GLIB2 glib-2.0)
-pkg_check_modules(LCMS2 lcms2)
-pkg_check_modules(EXIV2 exiv2)
-pkg_check_modules(LQR lqr-1)
-pkg_check_modules(LENSFUN lensfun)
-pkg_check_modules(GM GraphicsMagick++)
-pkg_check_modules(GMW GraphicsMagickWand)
-pkg_check_modules(GTK2 gtk+-2.0)
-pkg_check_modules(GIMP gimp-2.0)
-pkg_check_modules(FFTW3 fftw3)
+PROJECT( photivo )
 
-ADD_DEFINITIONS("-DAPPVERSION=\"${APPVERSION}\"")
-ADD_DEFINITIONS("-DPREFIX=${CMAKE_INSTALL_PREFIX}")
-set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-Wall -O2 -g -ffast-math -ftree-vectorize -fopenmp")
-set(CMAKE_CXX_FLAGS_RELEASE "-Wall -O4 -DNDEBUG -ffast-math -ftree-vectorize -fopenmp")
-set(CMAKE_C_FLAGS_RELWITHDEBINFO "-Wall -O2 -g -ffast-math -ftree-vectorize -fopenmp")
-set(CMAKE_C_FLAGS_RELEASE "-Wall -O4 -DNDEBUG -ffast-math -ftree-vectorize -fopenmp")
-set(CMAKE_L_FLAGS_RELWITHDEBINFO "-rdynamic")
-set(CMAKE_L_FLAGS_DEBUG "-rdynamic")
+if( NOT CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 4.6 )
+  message( WARNING "\nAt least GCC 4.6 is required to build Photivo." )
+endif( NOT CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 4.6 )
 
-include_directories( ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR} ${QT4_INCLUDES} ${GLIB2_INCLUDE_DIRS} ${JPEG_INCLUDE_DIR} ${EXIV2_INCLUDE_DIRS}
-                                 ${LCMS2_INCLUDE_DIRS} ${LQR_INCLUDE_DIRS} ${LENSFUN_INCLUDE_DIRS} ${GM_INCLUDE_DIRS} ${GMW_INCLUDE_DIRS} ${GTK2_INCLUDE_DIRS}
-                                 ${GIMP_INCLUDE_DIRS} ${FFTW3_INCLUDE_DIRS} )
-link_directories( ${GLIB2_LIBRARY_DIRS} ${JPEG_LIBRARY_DIRS} ${EXIV2_LIBRARY_DIRS} ${LCMS2_LIBRARY_DIRS} ${LQR_LIBRARY_DIRS} ${LENSFUN_LIBRARY_DIRS} ${GM_LIBRARY_DIRS}
-                           ${GMW_LIBRARY_DIRS} ${GTK2_LIBRARY_DIRS} ${GIMP_LIBRARY_DIRS} ${FFTW3_LIBRARY_DIRS} )
+if( NOT CMAKE_BUILD_TYPE )
+  set( CMAKE_BUILD_TYPE Release )
+endif( NOT CMAKE_BUILD_TYPE )
 
-set(photivo_MOC_HDRS  Sources/ptVisibleToolsView.h Sources/ptMainWindow.h Sources/ptMessageBox.h Sources/ptCurveWindow.h Sources/ptHistogramWindow.h Sources/ptViewWindow.h Sources/ptInput.h
-  Sources/ptChoice.h Sources/ptCheck.h Sources/ptGroupBox.h Sources/ptSlider.h Sources/qtsingleapplication/qtsingleapplication.h Sources/qtsingleapplication/qtlocalpeer.h
-  Sources/ptGridInteraction.h Sources/ptImageInteraction.h Sources/ptLineInteraction.h Sources/ptReportOverlay.h Sources/ptRichRectInteraction.h Sources/ptSimpleRectInteraction.h
+find_package( Qt5Widgets QUIET )
+find_package( Qt5Network QUIET )
+option( FORCE_QT4 "whether to use Qt4 even if Qt5 is found" )
+
+if( Qt5Widgets_FOUND AND Qt5Network_FOUND )
+  if( FORCE_QT4 )
+    message( "************************************************************" )
+    message( "*                                                          *" )
+    message( "* Qt5 found, but using Qt4 because FORCE_QT4 flag was set. *" )
+    message( "*                                                          *" )
+    message( "************************************************************" )
+    set( QT_QMAKE_CHANGED True )
+  else( FORCE_QT4 )
+    message( "******************************************************" )
+    message( "*                                                    *" )
+    message( "* Qt5 found. Using Qt ${Qt5Core_VERSION_STRING}.                         *" )
+    message( "* Set FORCE_QT4 flag if you want to use Qt4 instead. *" )
+    message( "*                                                    *" )
+    message( "******************************************************" )
+    set( USE_QT5 True )
+  endif( FORCE_QT4 )
+else( Qt5Widgets_FOUND AND Qt5Network_FOUND )
+  message( "*****************************" )
+  message( "*                           *" )
+  message( "* Qt5 not found. Using Qt4. *" )
+  message( "*                           *" )
+  message( "*****************************" )
+endif( Qt5Widgets_FOUND AND Qt5Network_FOUND )
+if( NOT USE_QT5 )
+  find_package( Qt4 4.7 REQUIRED QtCore QtGui QtNetwork )
+  include( ${QT_USE_FILE} )
+endif( NOT USE_QT5 )
+
+find_package( PkgConfig REQUIRED )
+find_package( JPEG REQUIRED )
+
+pkg_check_modules( GLIB2   REQUIRED glib-2.0>=2.18 )
+pkg_check_modules( LCMS2   REQUIRED lcms2 )
+pkg_check_modules( EXIV2   REQUIRED exiv2>=0.19 )
+pkg_check_modules( LQR     REQUIRED lqr-1>=0.4.1 )
+pkg_check_modules( LENSFUN REQUIRED lensfun>=0.2.5 )
+pkg_check_modules( GM      REQUIRED GraphicsMagick++>=1.3.12 )
+pkg_check_modules( GMW     REQUIRED GraphicsMagickWand>=1.3.12 )
+pkg_check_modules( FFTW3   REQUIRED fftw3>=3.2.2 )
+
+if( ${WITH_GIMP} )
+  pkg_check_modules( GIMP REQUIRED gimp-2.0>=2.6.10 )
+  pkg_check_modules( GTK2 REQUIRED gtk+-2.0 )
+endif( ${WITH_GIMP} )
+
+# If no .hg, then we can assume we are building from a "clean" source archive previously created
+# by 'make package_source' from a hg repo, and named via this process.
+if( EXISTS ${PROJECT_SOURCE_DIR}/.hg )
+
+# Determine Photivo version with mercurial. Use current date if mercurial is unavailable.
+  find_program( MERCURIAL hg )
+  if( MERCURIAL )
+    execute_process( COMMAND hg branch OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE BRANCH )
+    execute_process( COMMAND hg log --limit 1 --branch ${BRANCH} --template {date|shortdate}
+                     OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE REVDATE )
+    execute_process( COMMAND hg identify --id OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE REVISION )
+    execute_process( COMMAND hg identify -n OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE PACKREVISION )
+    set( APPVERSION "${REVDATE} (rev ${REVISION})" )
+    string( REGEX REPLACE [+] "" REVISION ${REVISION} )
+    string( REGEX REPLACE [+] "" PACKREVISION ${PACKREVISION} )
+  else( MERCURIAL )
+    message( WARNING "Could not call Mercurial to determine Photivo's version info, using current date/time instead." )
+    execute_process( COMMAND date +%c OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE DATE )
+    set( APPVERSION "compiled at ${DATE}" )
+  endif( MERCURIAL )
+
+else( EXISTS ${PROJECT_SOURCE_DIR}/.hg )
+
+  message( "\nNo hg metadata is found. Determine Photivo version from the directory name." )
+  string( REGEX REPLACE ".*photivo-" "rev " APPVERSION ${PROJECT_SOURCE_DIR} )
+
+endif( EXISTS ${PROJECT_SOURCE_DIR}/.hg )
+
+message( "\nBuilding Photivo ${APPVERSION}\n" )
+
+# Choose Photivo parts to be built.
+option( WITH_CLEAR          "whether to build ptClear" ON )
+option( WITH_GIMP           "whether to build Gimp plugin" )
+option( WITH_ADOBE_PROFILES "whether to build Adobe profiles creator" )
+
+message( "Build Photivo                : ON" )
+message( "Build ptClear                : ${WITH_CLEAR}" )
+message( "Build Gimp plugin            : ${WITH_GIMP}" )
+message( "Build Adobe profiles creator : ${WITH_ADOBE_PROFILES}\n" )
+
+set( CMAKE_CXX_FLAGS "" )
+set( CMAKE_C_FLAGS "" )
+set( CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -funroll-loops -fopenmp -std=gnu++0x" )
+set( CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -std=gnu++0x" )
+set( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -std=gnu++0x" )
+
+include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/Sources
+                     ${CMAKE_CURRENT_BINARY_DIR}
+                     ${QT4_INCLUDES}
+                     ${GLIB2_INCLUDE_DIRS}
+                     ${JPEG_INCLUDE_DIR}
+                     ${EXIV2_INCLUDE_DIRS}
+                     ${LCMS2_INCLUDE_DIRS}
+                     ${LQR_INCLUDE_DIRS}
+                     ${LENSFUN_INCLUDE_DIRS}
+                     ${GM_INCLUDE_DIRS}
+                     ${GMW_INCLUDE_DIRS}
+                     ${FFTW3_INCLUDE_DIRS}
 )
 
-set(photivo_SRCS  Sources/ptCurve.cpp Sources/ptVisibleToolsView.cpp Sources/ptChannelMixer.cpp Sources/ptDcRaw.cpp Sources/ptError.cpp Sources/ptGuiOptions.cpp
-  Sources/ptSettings.cpp Sources/ptImage.cpp Sources/ptImage_DRC.cpp Sources/ptImage_EAW.cpp Sources/ptImage_GM.cpp Sources/ptImage_GMC.cpp Sources/ptImage_Pyramid.cpp
-  Sources/ptImage_Cimg.cpp Sources/ptImage_Lensfun.cpp Sources/ptImage_Lqr.cpp Sources/ptImage8.cpp Sources/ptResizeFilters.cpp Sources/ptKernel.cpp Sources/ptMain.cpp
-  Sources/ptMainWindow.cpp Sources/ptMessageBox.cpp Sources/ptRGBTemperature.cpp Sources/ptWhiteBalances.cpp Sources/ptCurveWindow.cpp Sources/ptHistogramWindow.cpp Sources/ptRefocusMatrix.cpp
-  Sources/ptViewWindow.cpp Sources/ptProcessor.cpp Sources/ptCimg.cpp Sources/ptFastBilateral.cpp Sources/ptWiener.cpp Sources/ptInput.cpp Sources/ptChoice.cpp Sources/ptCheck.cpp
-  Sources/ptCalloc.cpp Sources/ptGroupBox.cpp Sources/ptSlider.cpp Sources/ptTheme.cpp Sources/qtsingleapplication/qtsingleapplication.cpp Sources/qtsingleapplication/qtlocalpeer.cpp
-  Sources/ptGridInteraction.cpp Sources/ptImageInteraction.cpp Sources/ptLineInteraction.cpp Sources/ptReportOverlay.cpp Sources/ptRichRectInteraction.cpp Sources/ptSimpleRectInteraction.cpp
-  Sources/clapack/xerbla.c Sources/clapack/open.c Sources/clapack/ieeeck.c Sources/clapack/dtrsm.c Sources/clapack/util.c Sources/clapack/wsfe.c
-  Sources/clapack/s_cmp.c Sources/clapack/dgetrs.c Sources/clapack/ptaswp.c Sources/clapack/ilaenv.c Sources/clapack/s_stop.c Sources/clapack/dgemm.c Sources/clapack/s_copy.c
-  Sources/clapack/abort_.c Sources/clapack/dgesv.c Sources/clapack/dgetrf.c Sources/clapack/fmtlib.c Sources/clapack/sig_die.c Sources/clapack/idamax.c Sources/clapack/close.c
-  Sources/clapack/dger.c Sources/clapack/lsame.c Sources/clapack/dscal.c Sources/clapack/fmt.c Sources/clapack/dswap.c Sources/clapack/endfile.c Sources/clapack/wref.c
-  Sources/clapack/dgetf2.c Sources/clapack/err.c Sources/clapack/wrtfmt.c Sources/clapack/sfe.c
-#Sources/qtsingleapplication/qtlockedfile.cpp
-#Sources/dcb/dcb_demosaicing.c Sources/dcb/dcb_demosaicing_old.c  Sources/vcd/ahd_interpolate_mod.c Sources/vcd/ahd_partial_interpolate.c
-#Sources/vcd/es_median_filter.c Sources/vcd/median_filter_new.c Sources/vcd/refinement.c
-#Sources/vcd/vcd_interpolate.c Sources/perfectraw/lmmse_interpolate.c Sources/rawtherapee/amaze_interpolate.c Sources/rawtherapee/cfa_line_dn.c Sources/rawtherapee/ca_correct.c
-#Sources/rawtherapee/green_equil.c
+link_directories( ${GLIB2_LIBRARY_DIRS}
+                  ${JPEG_LIBRARY_DIRS}
+                  ${EXIV2_LIBRARY_DIRS}
+                  ${LCMS2_LIBRARY_DIRS}
+                  ${LQR_LIBRARY_DIRS}
+                  ${LENSFUN_LIBRARY_DIRS}
+                  ${GM_LIBRARY_DIRS}
+                  ${GMW_LIBRARY_DIRS}
+                  ${FFTW3_LIBRARY_DIRS}
 )
 
-set(photivo_UI_HDRS Sources/ptMainWindow.ui)
+set( photivo_MOC_HDRS
+     Sources/batch/ptBatchWindow.h
+     Sources/batch/ptJobListItem.h
+     Sources/batch/ptJobListModel.h
+     Sources/filemgmt/ptFileMgrDM.h
+     Sources/filemgmt/ptFileMgrWindow.h
+     Sources/filemgmt/ptGraphicsSceneEmitter.h
+     Sources/filemgmt/ptImageView.h
+     Sources/filemgmt/ptPathBar.h
+     Sources/filemgmt/ptSingleDirModel.h
+     Sources/filemgmt/ptTagList.h
+     Sources/filemgmt/ptTagModel.h
+     Sources/filters/imagespot/ptFilter_SpotTuning.h
+     Sources/filters/imagespot/ptImageSpotEditor.h
+     Sources/filters/imagespot/ptImageSpotItemDelegate.h
+     Sources/filters/imagespot/ptImageSpotModel.h
+     Sources/filters/imagespot/ptSpotInteraction.h
+     Sources/filters/imagespot/ptSpotListWidget.h
+     Sources/filters/ptFilter_ABCurves.h
+     Sources/filters/ptFilter_Brightness.h
+     Sources/filters/ptFilter_ColorBoost.h
+     Sources/filters/ptFilter_ColorContrast.h
+     Sources/filters/ptFilter_ColorEnhancement.h
+     Sources/filters/ptFilter_ColorIntensity.h
+     Sources/filters/ptFilter_DetailCurve.h
+     Sources/filters/ptFilter_Drc.h
+     Sources/filters/ptFilter_GammaTool.h
+     Sources/filters/ptFilter_Highlights.h
+     Sources/filters/ptFilter_LabTransform.h
+     Sources/filters/ptFilter_Levels.h
+     Sources/filters/ptFilter_LMHRecovery.h
+     Sources/filters/ptFilter_LumaDenoiseCurve.h
+     Sources/filters/ptFilter_LumaSatAdjust.h
+     Sources/filters/ptFilter_Normalization.h
+     Sources/filters/ptFilter_Outline.h
+     Sources/filters/ptFilter_ReinhardBrighten.h
+     Sources/filters/ptFilter_SatCurve.h
+     Sources/filters/ptFilter_Saturation.h
+     Sources/filters/ptFilter_ShadowsHighlights.h
+     Sources/filters/ptFilter_SigContrast.h
+     Sources/filters/ptFilter_StdCurve.h
+     Sources/filters/ptFilter_Tone.h
+     Sources/filters/ptFilter_ToneAdjust.h
+     Sources/filters/ptFilter_Wiener.h
+     Sources/filters/ptFilterBase.h
+     Sources/filters/ptFilterFactory.h
+     Sources/ptAbstractInteraction.h
+     Sources/ptCheck.h
+     Sources/ptChoice.h
+     Sources/ptCurveWindow.h
+     Sources/ptGridInteraction.h
+     Sources/ptGroupBox.h
+     Sources/ptHistogramWindow.h
+     Sources/ptInput.h
+     Sources/ptLineInteraction.h
+     Sources/ptMainWindow.h
+     Sources/ptMessageBox.h
+     Sources/ptReportOverlay.h
+     Sources/ptRichRectInteraction.h
+     Sources/ptSimpleRectInteraction.h
+     Sources/ptSlider.h
+     Sources/ptTempFilterBase.h
+     Sources/ptToolBox.h
+     Sources/ptViewWindow.h
+     Sources/ptVisibleToolsView.h
+     Sources/ptWidget.h
+     Sources/qtsingleapplication/qtlocalpeer.h
+     Sources/qtsingleapplication/qtsingleapplication.h
+     Sources/filemgmt/ptThumbGenWorker.h
+     Sources/filters/ptFilter_TextureContrast.h
+     Sources/filters/ptFilter_LocalContrastStretch.h
+     Sources/filters/ptFilter_LocalContrast.h
+     Sources/filters/ptFilter_ImpulseNR.h
+)
 
-set(photivo_RCCS qrc/photivo.qrc)
+set( photivo_SRCS
+     Sources/batch/ptBatchWindow.cpp
+     Sources/batch/ptJobListItem.cpp
+     Sources/batch/ptJobListModel.cpp
+     Sources/filemgmt/ptColumnGridThumbnailLayouter.cpp
+     Sources/filemgmt/ptFileMgrDM.cpp
+     Sources/filemgmt/ptFileMgrWindow.cpp
+     Sources/filemgmt/ptGraphicsSceneEmitter.cpp
+     Sources/filemgmt/ptGraphicsThumbGroup.cpp
+     Sources/filemgmt/ptGridThumbnailLayouter.cpp
+     Sources/filemgmt/ptImageView.cpp
+     Sources/filemgmt/ptPathBar.cpp
+     Sources/filemgmt/ptRowGridThumbnailLayouter.cpp
+     Sources/filemgmt/ptSingleDirModel.cpp
+     Sources/filemgmt/ptTagList.cpp
+     Sources/filemgmt/ptTagModel.cpp
+     Sources/filemgmt/ptThumbCache.cpp
+     Sources/filters/imagespot/ptFilter_SpotTuning.cpp
+     Sources/filters/imagespot/ptImageSpot.cpp
+     Sources/filters/imagespot/ptImageSpotEditor.cpp
+     Sources/filters/imagespot/ptImageSpotItemDelegate.cpp
+     Sources/filters/imagespot/ptImageSpotList.cpp
+     Sources/filters/imagespot/ptImageSpotModel.cpp
+     Sources/filters/imagespot/ptSpotInteraction.cpp
+     Sources/filters/imagespot/ptSpotListWidget.cpp
+     Sources/filters/imagespot/ptTuningSpot.cpp
+     Sources/filters/ptCfgItem.cpp
+     Sources/filters/ptFilter_ABCurves.cpp
+     Sources/filters/ptFilter_Brightness.cpp
+     Sources/filters/ptFilter_ColorBoost.cpp
+     Sources/filters/ptFilter_ColorContrast.cpp
+     Sources/filters/ptFilter_ColorEnhancement.cpp
+     Sources/filters/ptFilter_ColorIntensity.cpp
+     Sources/filters/ptFilter_DetailCurve.cpp
+     Sources/filters/ptFilter_Drc.cpp
+     Sources/filters/ptFilter_GammaTool.cpp
+     Sources/filters/ptFilter_Highlights.cpp
+     Sources/filters/ptFilter_LabTransform.cpp
+     Sources/filters/ptFilter_Levels.cpp
+     Sources/filters/ptFilter_LMHRecovery.cpp
+     Sources/filters/ptFilter_LumaDenoiseCurve.cpp
+     Sources/filters/ptFilter_LumaSatAdjust.cpp
+     Sources/filters/ptFilter_Normalization.cpp
+     Sources/filters/ptFilter_Outline.cpp
+     Sources/filters/ptFilter_ReinhardBrighten.cpp
+     Sources/filters/ptFilter_SatCurve.cpp
+     Sources/filters/ptFilter_Saturation.cpp
+     Sources/filters/ptFilter_ShadowsHighlights.cpp
+     Sources/filters/ptFilter_SigContrast.cpp
+     Sources/filters/ptFilter_StdCurve.cpp
+     Sources/filters/ptFilter_Tone.cpp
+     Sources/filters/ptFilter_ToneAdjust.cpp
+     Sources/filters/ptFilter_Wiener.cpp
+     Sources/filters/ptFilterBase.cpp
+     Sources/filters/ptFilterConfig.cpp
+     Sources/filters/ptFilterDM.cpp
+     Sources/filters/ptFilterFactory.cpp
+     Sources/ptAbstractInteraction.cpp
+     Sources/ptCalloc.cpp
+     Sources/ptChannelMixer.cpp
+     Sources/ptCheck.cpp
+     Sources/ptChoice.cpp
+     Sources/ptCimg.cpp
+     Sources/ptConfirmRequest.cpp
+     Sources/ptCurve.cpp
+     Sources/ptCurveWindow.cpp
+     Sources/ptDcRaw.cpp
+     Sources/ptError.cpp
+     Sources/ptFastBilateral.cpp
+     Sources/ptGridInteraction.cpp
+     Sources/ptGroupBox.cpp
+     Sources/ptGuiOptions.cpp
+     Sources/ptHistogramWindow.cpp
+     Sources/ptImage.cpp
+     Sources/ptImage_Cimg.cpp
+     Sources/ptImage_DRC.cpp
+     Sources/ptImage_EAW.cpp
+     Sources/ptImage_GM.cpp
+     Sources/ptImage_GMC.cpp
+     Sources/ptImage_Lensfun.cpp
+     Sources/ptImage_Lqr.cpp
+     Sources/ptImage_Pyramid.cpp
+     Sources/ptImage8.cpp
+     Sources/ptImageHelper.cpp
+     Sources/ptInfo.cpp
+     Sources/ptInput.cpp
+     Sources/ptKernel.cpp
+     Sources/ptLensfun.cpp
+     Sources/ptLineInteraction.cpp
+     Sources/ptMain.cpp
+     Sources/ptMainWindow.cpp
+     Sources/ptMessageBox.cpp
+     Sources/ptParseCli.cpp
+     Sources/ptProcessor.cpp
+     Sources/ptReportOverlay.cpp
+     Sources/ptResizeFilters.cpp
+     Sources/ptRGBTemperature.cpp
+     Sources/ptRichRectInteraction.cpp
+     Sources/ptSettings.cpp
+     Sources/ptSimpleRectInteraction.cpp
+     Sources/ptSlider.cpp
+     Sources/ptTempFile.cpp
+     Sources/ptTempFilterBase.cpp
+     Sources/ptTheme.cpp
+     Sources/ptToolBox.cpp
+     Sources/ptViewWindow.cpp
+     Sources/ptVisibleToolsView.cpp
+     Sources/ptWhiteBalances.cpp
+     Sources/ptWidget.cpp
+     Sources/ptWiener.cpp
+     Sources/qtsingleapplication/qtlocalpeer.cpp
+     Sources/qtsingleapplication/qtsingleapplication.cpp
+     Sources/ptUtils_Storage.cpp
+     Sources/ptStorable.cpp
+     Sources/ptUtils.cpp
+     Sources/filemgmt/ptThumbDefines.cpp
+     Sources/ptMutexLocker.cpp
+     Sources/filemgmt/ptThumbGenMgr.cpp
+     Sources/filemgmt/ptThumbGenWorker.cpp
+     Sources/filemgmt/ptThumbGenHelpers.cpp
+     Sources/filters/ptFilter_TextureContrast.cpp
+     Sources/filters/ptFilter_LocalContrastStretch.cpp
+     Sources/filters/ptFilter_LocalContrast.cpp
+     Sources/filters/ptFilter_ImpulseNR.cpp
+)
+ 
+if( WIN32 )
+  set( photivo_SRCS
+       ${photivo_SRCS}
+       Sources/ptEcWin7.cpp
+       Sources/ptWinApi.cpp
+  )
+endif( WIN32 )
 
-QT4_WRAP_UI(photivo_UI_SRCS ${photivo_UI_HDRS} )
-QT4_WRAP_CPP(photivo_MOC_SRCS ${photivo_MOC_HDRS} )
-QT4_ADD_RESOURCES(photivo_RCC_SRCS ${photivo_RCCS} )
+set( photivo_UI_HDRS
+     Sources/batch/ptBatchWindow.ui
+     Sources/filemgmt/ptFileMgrWindow.ui
+     Sources/filters/imagespot/ptFilter_SpotTuning.ui
+     Sources/filters/imagespot/ptSpotListWidget.ui
+     Sources/filters/ptFilter_ColorIntensity.ui
+     Sources/filters/ptFilter_LMHRecovery.ui
+     Sources/filters/ptFilter_Outline.ui
+     Sources/filters/ptFilter_Tone.ui
+     Sources/filters/ptFilter_Wiener.ui
+     Sources/ptMainWindow.ui
+)
 
-add_executable(photivo ${photivo_SRCS} ${photivo_RCC_SRCS} ${photivo_MOC_SRCS} ${photivo_UI_SRCS} )
-add_executable(ptClear Sources/ptClear.cpp )
-add_executable(ptCreateAdobeProfiles Sources/ptCreateAdobeProfiles.cpp )
-add_executable(ptCreateCurves Sources/ptCreateSomeCurves.cpp Sources/ptCurve.cpp Sources/ptError.cpp Sources/ptCalloc.cpp )
-add_executable(ptGimp Sources/ptCalloc.cpp Sources/ptError.cpp Sources/ptGimp.cpp )
+set( photivo_RCCS
+     qrc/photivo.qrc
+)
 
-target_link_libraries(photivo ${GLIB2_LIBRARIES} ${QT_LIBRARIES} ${JPEG_LIBRARIES} ${EXIV2_LIBRARIES} ${LCMS2_LIBRARIES} ${LQR_LIBRARIES} ${LENSFUN_LIBRARIES} ${GM_LIBRARIES} ${GMW_LIBRARIES} ${FFTW3_LIBRARIES} )
-target_link_libraries(ptClear ${QT_LIBRARIES} )
-target_link_libraries(ptCreateAdobeProfiles ${QT_LIBRARIES} ${LCMS2_LIBRARIES} )
-target_link_libraries(ptCreateCurves ${QT_LIBRARIES} )
-target_link_libraries(ptGimp ${QT_LIBRARIES} ${GTK2_LIBRARIES} ${GIMP_LIBRARIES} )
+if( USE_QT5 )
+  set(CMAKE_AUTOMOC ON)
+  qt5_wrap_ui( photivo_UI_SRCS ${photivo_UI_HDRS} )
+  qt5_add_resources( photivo_RCC_SRCS ${photivo_RCCS} )
+  add_executable( photivo
+                  ${photivo_SRCS}
+                  ${photivo_UI_SRCS}
+                  ${photivo_RCC_SRCS}
+  )
+  qt5_use_modules( photivo Widgets Network )
+else( USE_QT5 )
+  QT4_WRAP_UI( photivo_UI_SRCS ${photivo_UI_HDRS} )
+  QT4_WRAP_CPP( photivo_MOC_SRCS ${photivo_MOC_HDRS} )
+  QT4_ADD_RESOURCES( photivo_RCC_SRCS ${photivo_RCCS} )
+  add_executable( photivo
+                  ${photivo_SRCS}
+                  ${photivo_MOC_SRCS}
+                  ${photivo_UI_SRCS}
+                  ${photivo_RCC_SRCS}
+  )
+endif( USE_QT5 )
 
-file(GLOB_RECURSE ChannelMixer "ChannelMixers/*")
-file(GLOB_RECURSE Curves "Curves/*")
-file(GLOB_RECURSE LensFun "LensfunDatabase/*")
-file(GLOB_RECURSE Presets "Presets/*")
-file(GLOB_RECURSE Profiles "Profiles/*")
-file(GLOB_RECURSE Translations "Translations/*")
+if( NOT ${CMAKE_SYSTEM_PROCESSOR} OR ${CMAKE_SYSTEM_PROCESSOR} STREQUAL "x86_64" )
+  set_target_properties( photivo PROPERTIES COMPILE_FLAGS
+                         "-ffast-math -DAPPVERSION='${APPVERSION}' -DPREFIX=${CMAKE_INSTALL_PREFIX}" )
+else( NOT ${CMAKE_SYSTEM_PROCESSOR} OR ${CMAKE_SYSTEM_PROCESSOR} STREQUAL "x86_64" )
+  set_target_properties( photivo PROPERTIES COMPILE_FLAGS
+                         "-march=i686 -ffast-math -DAPPVERSION='${APPVERSION}' -DPREFIX=${CMAKE_INSTALL_PREFIX}" )
+endif( NOT ${CMAKE_SYSTEM_PROCESSOR} OR ${CMAKE_SYSTEM_PROCESSOR} STREQUAL "x86_64" )
 
-install(TARGETS photivo DESTINATION bin)
-install(TARGETS ptClear DESTINATION bin)
-install(FILES qrc/photivo.png DESTINATION share/pixmaps)
-install(FILES qrc/photivo.png photivoLogo.png DESTINATION share/photivo)
-install(FILES ReferenceMaterial/photivo.desktop DESTINATION share/applications)
-install(FILES ${ChannelMixer} DESTINATION share/photivo/ChannelMixers)
-install(FILES ${Curves} DESTINATION share/photivo/Curves)
-install(FILES ${LensFun} DESTINATION share/photivo/LensfunDatabase)
-install(FILES ${Presets} DESTINATION share/photivo/Presets)
-install(FILES ${Profiles} DESTINATION share/photivo/Profiles)
-install(FILES ${Translations} DESTINATION share/photivo/Translations)
-install(FILES UISettings/default.ptu DESTINATION share/photivo/UISettings)
+set_target_properties( photivo PROPERTIES LINK_FLAGS "-lgomp" )
+
+target_link_libraries( photivo
+                       ${GLIB2_LIBRARIES}
+                       ${QT_LIBRARIES}
+                       ${JPEG_LIBRARIES}
+                       ${EXIV2_LIBRARIES}
+                       ${LCMS2_LIBRARIES}
+                       ${LQR_LIBRARIES}
+                       ${LENSFUN_LIBRARIES}
+                       ${GM_LIBRARIES}
+                       ${GMW_LIBRARIES}
+                       ${FFTW3_LIBRARIES}
+)
+
+install( TARGETS   photivo         DESTINATION bin )
+install( FILES     qrc/photivo-appicon.png DESTINATION share/pixmaps )
+install( FILES     ReferenceMaterial/photivo.desktop DESTINATION share/applications )
+install( DIRECTORY ChannelMixers   DESTINATION share/photivo )
+install( DIRECTORY Curves          DESTINATION share/photivo )
+install( DIRECTORY LensfunDatabase DESTINATION share/photivo )
+install( DIRECTORY Presets         DESTINATION share/photivo )
+install( DIRECTORY Profiles        DESTINATION share/photivo )
+install( DIRECTORY Themes          DESTINATION share/photivo )
+install( DIRECTORY Translations    DESTINATION share/photivo )
+install( DIRECTORY UISettings      DESTINATION share/photivo )
+
+
+if( ${WITH_CLEAR} )
+  add_executable( ptClear Sources/ptClear.cpp )
+  if( USE_QT5 )
+    qt5_use_modules( ptClear Widgets )
+  endif( USE_QT5 )
+  target_link_libraries( ptClear ${QT_LIBRARIES} )
+  install( TARGETS ptClear DESTINATION bin )
+endif( ${WITH_CLEAR} )
+
+
+if( ${WITH_GIMP} )
+  include_directories( ${GIMP_INCLUDE_DIRS} ${GTK2_INCLUDE_DIRS} )
+  link_directories(    ${GIMP_LIBRARY_DIRS} ${GTK2_LIBRARY_DIRS} )
+  add_executable( ptGimp Sources/ptCalloc.cpp
+                         Sources/ptError.cpp
+                         Sources/ptGimp.cpp )
+  if( USE_QT5 )
+    qt5_use_modules( ptGimp Core )
+  endif( USE_QT5 )
+  set_target_properties( ptGimp PROPERTIES COMPILE_FLAGS "-ffast-math" )
+  target_link_libraries( ptGimp ${QT_LIBRARIES} ${GTK2_LIBRARIES} ${GIMP_LIBRARIES} )
+  find_library( LIBGIMP gimp-2.0 )
+  string( REGEX MATCH "lib[0-9]*" LIBPATH ${LIBGIMP} )
+  install( TARGETS   ptGimp                DESTINATION ${LIBPATH}/gimp/2.0/plug-ins )
+  install( PROGRAMS "mm extern photivo.py" DESTINATION ${LIBPATH}/gimp/2.0/plug-ins )
+endif( ${WITH_GIMP} )
+
+
+if( ${WITH_ADOBE_PROFILES} )
+  add_executable( ptCreateAdobeProfiles Sources/ptCreateAdobeProfiles.cpp )
+  target_link_libraries( ptCreateAdobeProfiles ${QT_LIBRARIES} ${LCMS2_LIBRARIES} )
+  install( TARGETS ptCreateAdobeProfiles DESTINATION bin )
+endif( ${WITH_ADOBE_PROFILES} )
+
+
+# uninstall target
+configure_file( "${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
+                "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
+                IMMEDIATE @ONLY )
+
+add_custom_target( uninstall COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake )
+
+set( CPACK_SOURCE_IGNORE_FILES "build.*/;BUILD.*/;\\\\.hg/;\\\\.hgignore$;\\\\.hgtags$" )
+set( CPACK_PACKAGE_FILE_NAME "photivo-${PACKREVISION}_${REVISION}_${CMAKE_SYSTEM_PROCESSOR}" )
+set( CPACK_SOURCE_PACKAGE_FILE_NAME "photivo-${PACKREVISION}_${REVISION}" )
+set( CPACK_GENERATOR TBZ2 )
+set( CPACK_SOURCE_GENERATOR TBZ2 )
+include( CPack )

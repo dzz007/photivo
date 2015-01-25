@@ -22,7 +22,7 @@
 
 #include "ptFilter_Highlights.h"
 #include "ptCfgItem.h"
-#include <ptImage.h>
+#include "../ptImage.h"
 
 //==============================================================================
 
@@ -52,29 +52,29 @@ ptFilterBase *ptFilter_Highlights::CreateHighlights() {
 //==============================================================================
 
 void ptFilter_Highlights::doDefineControls() {
-  FCfgItems = QList<ptCfgItem>()                                                 //--- Combo: list of entries               ---//
+  FConfig.initStores(TCfgItemList()                                              //--- Combo: list of entries               ---//
     //            Id                       Type                      Default     Min           Max           Step        Decimals, commonConnect, storeable, caption, tooltip
     << ptCfgItem({CHighlightsR,            ptCfgItem::Slider,        0.0,       -1.0,          1.0,          0.05,       2,        true, true, tr("Reg highlights"),    tr("Adjusts brightness of highlights in R channel")})
     << ptCfgItem({CHighlightsG,            ptCfgItem::Slider,        0.0,       -1.0,          1.0,          0.05,       2,        true, true, tr("Green highlights"),  tr("Adjusts brightness of highlights in G channel")})
     << ptCfgItem({CHighlightsB,            ptCfgItem::Slider,        0.0,       -1.0,          1.0,          0.05,       2,        true, true, tr("Blue highlights"),   tr("Adjusts brightness of highlights in B channel")})
-  ;
+  );
 }
 
 //==============================================================================
 
 bool ptFilter_Highlights::doCheckHasActiveCfg() {
-  return (FConfig->getValue(CHighlightsR).toFloat() != 0.0f) ||
-         (FConfig->getValue(CHighlightsG).toFloat() != 0.0f) ||
-         (FConfig->getValue(CHighlightsB).toFloat() != 0.0f);
+  return (FConfig.value(CHighlightsR).toFloat() != 0.0f) ||
+         (FConfig.value(CHighlightsG).toFloat() != 0.0f) ||
+         (FConfig.value(CHighlightsB).toFloat() != 0.0f);
 }
 
 //==============================================================================
 
 void ptFilter_Highlights::doRunFilter(ptImage *AImage) const {
   AImage->toRGB();
-  AImage->Highlights(FConfig->getValue(CHighlightsR).toFloat(),
-                     FConfig->getValue(CHighlightsG).toFloat(),
-                     FConfig->getValue(CHighlightsB).toFloat());
+  AImage->Highlights(FConfig.value(CHighlightsR).toFloat(),
+                     FConfig.value(CHighlightsG).toFloat(),
+                     FConfig.value(CHighlightsB).toFloat());
 }
 
 //==============================================================================

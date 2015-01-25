@@ -31,11 +31,11 @@
 
 //==============================================================================
 
+#include <ptAbstractInteraction.h>
+
 #include <QPoint>
 #include <QMouseEvent>
 #include <QKeyEvent>
-
-#include <ptAbstractInteraction.h>
 
 //==============================================================================
 
@@ -47,7 +47,7 @@ public:
   ~ptSpotInteraction();
 
   /*! Reimplemented from base class. */
-  virtual void abortMouseAction(const ptMouseAction AAction);
+  virtual void abortMouseAction(const ptMouseAction /*AAction*/);
 
   /*! Reimplemented from base class. */
   virtual Qt::KeyboardModifiers modifiers()    const { return Qt::NoModifier; }

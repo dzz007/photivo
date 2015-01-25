@@ -25,11 +25,11 @@
 
 //==============================================================================
 
-#include <QString>
-#include <QListView>
-
 #include "ptImageSpot.h"
 #include "ui_ptSpotListWidget.h"
+
+#include <QString>
+#include <QListView>
 
 class ptImageSpotModel;
 class ptImageSpotList;
@@ -127,6 +127,7 @@ public:
   explicit ptSpotListView(QWidget *AParent);
   ~ptSpotListView();
   void setModel(ptImageSpotModel *AModel);
+  using QListView::setModel;
 
 protected:
   virtual void dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);

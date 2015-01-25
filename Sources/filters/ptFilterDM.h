@@ -26,12 +26,12 @@
 
 //==============================================================================
 
-#include <memory>
-
 #include <QString>
 #include <QStringList>
 #include <QHash>
 #include <QList>
+
+#include <memory>
 
 // forward
 class QSettings;
@@ -129,6 +129,9 @@ public:
 
   /*! Writes a job file for batch processing. */
   bool          WriteJobFile();
+
+  /*! Saves a settings file and adds it to the batch list. */
+  bool          SendToBatch(const QString &AFileName = "");
   ///@}
 
   /*! \group Iterators
@@ -171,7 +174,7 @@ private:
   void TranslateNormalToNew   (QSettings *APreset, QStringList *AKeys);
   void TranslateNormalToOld   (QSettings *APreset, QStringList *AKeys);
   void TranslateSpecialToNew  (QSettings *APreset, QStringList *AKeys);
-  void TranslateSpecialToOld  (QSettings */*APreset*/);
+  void TranslateSpecialToOld  (QSettings *APreset);
   ///@}
 
   bool PerformWritePreset(const QString       &AFileName,

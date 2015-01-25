@@ -21,12 +21,12 @@
 **
 *******************************************************************************/
 
-#include <iostream>
+#include "ptInfo.h"
 
 #include <QApplication>
 #include <QMessageBox>
 
-#include "ptInfo.h"
+#include <iostream>
 
 //==============================================================================
 
@@ -66,7 +66,7 @@ void ptInfo::Log(const char *AMsg, const short AMode)
   QString hTemp = QString(AMsg);
   if (!hTemp.trimmed().isEmpty()) {
     if (AMode == 0 || !qApp->activeWindow()) {
-      std::cout << hTemp.toAscii().data() << std::endl;
+      std::cout << hTemp.toLocal8Bit().data() << std::endl;
     } else if (AMode == 1) {
       QMessageBox::information(nullptr, "Photivo log", hTemp);
     }
@@ -77,7 +77,7 @@ void ptInfo::Log(const char *AMsg, const short AMode)
 
 void ptInfo::Log(const QString &AMsg, const short AMode)
 {
-  Log(AMsg.toAscii().data(), AMode);
+  Log(AMsg.toLocal8Bit().data(), AMode);
 }
 
 //==============================================================================
@@ -98,7 +98,7 @@ void ptInfo::Raise(const char *AMsg, const char *ALocation)
 
 void ptInfo::Raise(const QString AMsg, const char *ALocation)
 {
-  Raise(AMsg.toAscii().data(), ALocation);
+  Raise(AMsg.toLocal8Bit().data(), ALocation);
 }
 
 //==============================================================================
@@ -116,7 +116,7 @@ void ptInfo::Warning(const char *AMsg, const char *ALocation) {
 //==============================================================================
 
 void ptInfo::Warning(const QString AMsg, const char *ALocation) {
-  Warning(AMsg.toAscii().data(), ALocation);
+  Warning(AMsg.toLocal8Bit().data(), ALocation);
 }
 
 //==============================================================================
@@ -191,7 +191,7 @@ void ptInfo::ShowMsg(const char *AMsg, const char *ALocation)
 
 void ptInfo::ShowMsg(const QString AMsg, const char *ALocation)
 {
-  ShowMsg(AMsg.toAscii().data(), ALocation);
+  ShowMsg(AMsg.toLocal8Bit().data(), ALocation);
 }
 
 //==============================================================================
@@ -218,7 +218,7 @@ void ptInfo::Assert(const bool ACondition, const char *AMsg, const char *ALocati
 
 void ptInfo::Assert(const bool ACondition, const QString AMsg, const char *ALocation) {
   if (!ACondition)
-    Raise(AMsg.toAscii().data(), ALocation);
+    Raise(AMsg.toLocal8Bit().data(), ALocation);
 }
 
 //==============================================================================

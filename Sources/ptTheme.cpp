@@ -21,17 +21,16 @@
 **
 *******************************************************************************/
 
-#include <cassert>
-
-#include <QWindowsXPStyle>
-#include <QCleanlooksStyle>
-#include <QFile>
-#include <QTextStream>
-
 #include "ptDefines.h"
 #include "ptTheme.h"
 #include "ptConstants.h"
 #include "ptSettings.h"
+
+#include <QStyleFactory>
+#include <QFile>
+#include <QTextStream>
+
+#include <cassert>
 
 extern ptSettings* Settings;
 extern QString     ShareDirectory;
@@ -64,9 +63,13 @@ ptTheme::ptTheme(const QApplication* app,
   m_SystemStyle = (QStyle*)(app->style()->metaObject()->newInstance());
   m_SystemPalette = app->palette();
 #ifdef Q_OS_WIN
-  m_ThemeStyle = new QWindowsXPStyle;
+  m_ThemeStyle = QStyleFactory::create("windows");
 #else
-  m_ThemeStyle = new QCleanlooksStyle;
+  #if QT_VERSION >= 0x050000
+    m_ThemeStyle = QStyleFactory::create("fusion");
+  #else
+    m_ThemeStyle = QStyleFactory::create("cleanlooks");
+  #endif  
 #endif
 #ifdef Q_OS_MAC
   MacBackGround = "";
@@ -217,7 +220,7 @@ bool ptTheme::SetupStylesheet(QString ThemeFileName, const QColor& highlightColo
   // read the complete ptheme file into a string
   QString data = ReadUTF8TextFile(ThemeFileName);
   if (data.isEmpty()) {
-    printf("Theme engine: Could not read \"%s\"\n", ThemeFileName.toAscii().data());
+    printf("Theme engine: Could not read \"%s\"\n", ThemeFileName.toLocal8Bit().data());
     return false;
   }
 
@@ -225,7 +228,7 @@ bool ptTheme::SetupStylesheet(QString ThemeFileName, const QColor& highlightColo
   QMap<QString, QString>* vars = new QMap<QString, QString>;
   int dataPos;
   if (!ParseTheme(data, vars, &dataPos)) {
-    printf("Theme engine: Could not parse \"%s\"\n", ThemeFileName.toAscii().data());
+    printf("Theme engine: Could not parse \"%s\"\n", ThemeFileName.toLocal8Bit().data());
     return false;
   }
 

@@ -20,10 +20,11 @@
 **
 *******************************************************************************/
 
+#include "ptRowGridThumbnailLayouter.h"
+
 #include <qmath.h>
 #include <QScrollBar>
-
-#include "ptRowGridThumbnailLayouter.h"
+#include <QKeyEvent>
 
 //==============================================================================
 

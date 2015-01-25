@@ -22,7 +22,7 @@
 
 #include "ptImageSpotModel.h"
 #include "ptImageSpotList.h"
-#include <ptSettings.h>
+#include "../../ptSettings.h"
 
 //==============================================================================
 

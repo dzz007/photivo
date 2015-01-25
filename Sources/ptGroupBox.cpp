@@ -20,14 +20,15 @@
 **
 *******************************************************************************/
 
-#include <cassert>
-
 #include "ptMessageBox.h"
 #include "ptGroupBox.h"
 #include "ptSettings.h"
 #include "ptConstants.h"
 #include "ptTheme.h"
 #include "ptViewWindow.h"
+#include <QFileDialog>
+
+#include <cassert>
 
 extern QString SettingsFilePattern;
 extern ptViewWindow *ViewWindow;
@@ -367,10 +368,6 @@ void ptGroupBox::WriteSettings(const short Append) {
   for (int i=0; i<Keys.size(); i++) {
     QString Key = Keys[i];
     if (!Settings->GetInJobFile(Key)) continue;
-    if (Keys.at(i) == "ChannelMixer") {// set ChannelMixer to manual if needed
-      JobSettings.setValue("ChannelMixer",MIN((Settings->GetValue(Key)).toInt(),1));
-      continue;
-    }
     JobSettings.setValue(Key,Settings->GetValue(Key));
   }
 
@@ -387,10 +384,10 @@ void ptGroupBox::setActivityIcon(const bool AStatus) {
 
 //==============================================================================
 
-void ptGroupBox::SetEnabled(const short Enabled) {
+void ptGroupBox::SetEnabled(const bool Enabled) {
   QStringList Temp = Settings->GetStringList("DisabledTools");
   Temp.removeDuplicates();
-  if (Enabled == 0) {
+  if (!Enabled) {
     Temp.append(m_Name);
     m_IsEnabled = 0;
   } else {

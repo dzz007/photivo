@@ -238,9 +238,9 @@ QSlider#HueSlider::groove:horizontal {
 ptSlider, QProgressBar {
   background: none;
   border: 1px solid #000;
-  padding: 2px;
-  max-height: 16px;
-  min-height: 16px;
+  padding: 0;
+  max-height: 22px;
+  min-height: 22px;
   border-radius: 3px;
 }
 

@@ -20,22 +20,25 @@
 **
 *******************************************************************************/
 
-#include <cstdlib>
-#include <cstdio>
+#include "ptImage.h"
+#include "ptImage8.h"
+#include "ptError.h"
+#include "ptCalloc.h"
+
+#include <wand/magick_wand.h>
 
 #include <QtGlobal>
 #include <QFile>
 #include <QString>
 
-#include <wand/magick_wand.h>
+#include <cstdlib>
+#include <cstdio>
+#include <cassert>
+#include <cmath>
+
 #ifdef _OPENMP
   #include <omp.h>
 #endif
-
-#include "ptImage.h"
-#include "ptImage8.h"
-#include "ptError.h"
-#include "ptCalloc.h"
 
 // Lut
 extern float ToFloatTable[0x10000];
@@ -178,21 +181,27 @@ bool ptImage::DumpImage(const char* FileName) const {
 //==============================================================================
 
 // Open Image
-ptImage* ptImage::ptGMCOpenImage(const char* FileName,
-                                const short ColorSpace,
-                                const short Intent,
-                                const short ScaleFactor,
-                                int& Success)
+ptImage* ptImage::ptGMCOpenImage(const char*        FileName,
+                                 short              ColorSpace,
+                                 short              Intent,
+                                 short              ScaleFactor,
+                                 bool               IsRAW,
+                                 TImage8RawData*    ImgData,
+                                 int&               Success)
 {
   Success = 0;
-  if (!QFile::exists(QString(FileName))) return this;
 
   MagickWand* image = NewMagickWand();
   ExceptionType MagickExcept;
 
-  MagickReadImage(image, FileName);
-  MagickGetException(image, &MagickExcept);
+  if (IsRAW) {
+    MagickReadImageBlob(image, (const uchar*)ImgData->data(), (const size_t)ImgData->size());
+  } else {
+    if (!QFile::exists(QString::fromLocal8Bit(FileName))) return this;
+    MagickReadImage(image, FileName);
+  }
 
+  MagickGetException(image, &MagickExcept);
   if (MagickExcept != UndefinedException) {
     return this;
   }
@@ -223,7 +232,7 @@ ptImage* ptImage::ptGMCOpenImage(const char* FileName,
 
   // Buffer for the data from Magick
   std::vector<std::array<float, 3> > ImageBuffer;
-  ImageBuffer.resize((size_t)NewWidth*NewHeight);
+  ImageBuffer.resize((size_t) NewWidth*NewHeight);
 
   MagickGetImagePixels(image, 0, 0, NewWidth, NewHeight, "RGB", FloatPixel, (uchar*)ImageBuffer.data());
 
@@ -265,9 +274,9 @@ ptImage* ptImage::ptGMCOpenImage(const char* FileName,
     NewImage = ImageBuffer;
   }
 
-  m_Width  = NewWidth;
-  m_Height = NewHeight;
-  m_Colors = 3;
+  m_Width      = NewWidth;
+  m_Height     = NewHeight;
+  m_Colors     = 3;
   m_ColorSpace = ColorSpace;
 
   // Alloc for the resulting image
@@ -352,7 +361,7 @@ ptImage* ptImage::ptGMCOpenImage(const char* FileName,
 //==============================================================================
 
 // just write an image to disk
-bool ptImage8::DumpImage(const char* FileName) const {
+bool ptImage8::DumpImage(const char* FileName, const bool BGR) const {
 
   long unsigned int Width  = m_Width;
   long unsigned int Height = m_Height;
@@ -365,7 +374,10 @@ bool ptImage8::DumpImage(const char* FileName) const {
   MagickSetImageDepth(mw,8);
   MagickSetImageType(mw,TrueColorType);
 
-  MagickSetImagePixels(mw,0,0,Width,Height,"RGBA",CharPixel,(unsigned char*) m_Image);
+  if (BGR)
+    MagickSetImagePixels(mw,0,0,Width,Height,"BGRA",CharPixel,(unsigned char*) m_Image.data());
+  else
+    MagickSetImagePixels(mw,0,0,Width,Height,"RGBA",CharPixel,(unsigned char*) m_Image.data());
 
   MagickSetImageDepth(mw,8);
 

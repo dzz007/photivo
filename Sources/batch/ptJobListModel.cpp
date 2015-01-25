@@ -20,11 +20,12 @@
 **
 *******************************************************************************/
 
-#include <QFileInfo>
 #include "ptConstants.h"
 #include "ptJobListModel.h"
 #include "ptMessageBox.h"
 #include "ptSettings.h"
+
+#include <QFileInfo>
 
 //==============================================================================
 
@@ -37,7 +38,7 @@ ptJobListModel::ptJobListModel(QObject *parent) :
   connect(this, SIGNAL(processingAborted()), SLOT(OnAbortProcessing()));
 
   m_DefaultAutosaveFileName = Settings->GetString("UserDirectory")+"currentBatch.ptb";
-  if (Settings->GetValue("BatchMgrAutoload").toBool())
+  if (Settings->GetValue("BatchMgrAutoload").toBool() && QFileInfo(m_DefaultAutosaveFileName).exists())
     LoadFromSettings(m_DefaultAutosaveFileName);
 }
 
@@ -100,7 +101,7 @@ QVariant ptJobListModel::data(const QModelIndex &index, int role) const
     if (m_JobList->at(r)->Status() == jsFinished)
       return QColor(Qt::green);
     if (m_JobList->at(r)->Status() == jsError || m_JobList->at(r)->Status() == jsAborted)
-      return QColor(Qt::darkRed);
+      return QColor(Qt::red);
     if (m_JobList->at(r)->Status() == jsSkipped)
       return QColor(Qt::yellow);
   }
@@ -128,6 +129,56 @@ QVariant ptJobListModel::headerData(int section, Qt::Orientation orientation, in
 
 //==============================================================================
 
+void ptJobListModel::sort(int column, Qt::SortOrder order)
+{
+  emit layoutAboutToBeChanged();
+  if (order == Qt::AscendingOrder) {
+    switch (column) {
+      case jdFileName:
+        qStableSort(m_JobList->begin(), m_JobList->end(), SortByFileName);
+        break;
+      case jdStatus:
+        qStableSort(m_JobList->begin(), m_JobList->end(), SortByStatus);
+        break;
+      case jdOutputPath:
+        qStableSort(m_JobList->begin(), m_JobList->end(), SortByOutputPath);
+        break;
+      case jdOutputFileSuffix:
+        qStableSort(m_JobList->begin(), m_JobList->end(), SortByOutputFileSuffix);
+        break;
+      case jdInputFiles:
+        qStableSort(m_JobList->begin(), m_JobList->end(), SortByInputFiles);
+        break;
+      default:
+        break;
+    }
+  }
+  if (order == Qt::DescendingOrder) {
+    switch (column) {
+      case jdFileName:
+        qStableSort(m_JobList->begin(), m_JobList->end(), ReverseSortByFileName);
+        break;
+      case jdStatus:
+        qStableSort(m_JobList->begin(), m_JobList->end(), ReverseSortByStatus);
+        break;
+      case jdOutputPath:
+        qStableSort(m_JobList->begin(), m_JobList->end(), ReverseSortByOutputPath);
+        break;
+      case jdOutputFileSuffix:
+        qStableSort(m_JobList->begin(), m_JobList->end(), ReverseSortByOutputFileSuffix);
+        break;
+      case jdInputFiles:
+        qStableSort(m_JobList->begin(), m_JobList->end(), ReverseSortByInputFiles);
+        break;
+      default:
+        break;
+    }
+  }
+  emit layoutChanged();
+}
+
+//==============================================================================
+
 ptJobListItem* ptJobListModel::JobItem(int i) const
 {
   return m_JobList->at(i);
@@ -135,7 +186,7 @@ ptJobListItem* ptJobListModel::JobItem(int i) const
 
 //==============================================================================
 
-void ptJobListModel::AddJobToList(const QString &file)
+void ptJobListModel::AddJobToList(const QString &file, const QString &inputFile)
 {
   ptJobListItem *item = nullptr;
   try {
@@ -149,8 +200,11 @@ void ptJobListModel::AddJobToList(const QString &file)
   }
 
 //  a valid settings file
-  if (item != nullptr)
+  if (item != nullptr) {
+    if (!inputFile.isEmpty())
+      item->SetInputFiles(QStringList(inputFile));
     AddJobToList(item);
+  }
 }
 
 //==============================================================================
@@ -158,8 +212,10 @@ void ptJobListModel::AddJobToList(const QString &file)
 void ptJobListModel::AddJobToList(ptJobListItem *item)
 {
   foreach (ptJobListItem *i, *m_JobList) {
-    if (*i == *item)
+    if (*i == *item) {
+      i->UpdateFromJobItem(item);
       return;
+    }
   }
   beginInsertRows(QModelIndex(), rowCount(), rowCount());
   m_JobList->append(item);
@@ -248,7 +304,17 @@ bool ptJobListModel::RunNextJob()
   for (i = 0; i < count(); i++) {
     m_CurrentJob = JobItem(i);
     if (m_CurrentJob->Status() == jsWaiting) {
-      QString fileName = m_CurrentJob->GetCallFileName();
+      QString fileName;
+      try {
+        fileName = m_CurrentJob->GetCallFileName();
+      }
+      catch (ptJobListItem::ptJobExeption) {
+//        settings file doesn't exist
+        m_CurrentJob->SetStatus(jsError);
+        ptMessageBox::critical(nullptr, tr("Invalid settings file"),
+                               m_CurrentJob->FileName() + tr("\ndoesn't exist."));
+        continue;
+      }
       if (fileName.isEmpty()) {
 //        invalid job
         m_CurrentJob->SetStatus(jsSkipped);

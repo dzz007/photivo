@@ -30,12 +30,12 @@
 
 #include "ptDcRaw.h"
 
-#include <cassert>
-
 #include "ptDefines.h"
 #include "ptError.h"
 #include "ptConstants.h"
 #include "ptCalloc.h"
+
+#include <cassert>
 
 #define NO_JASPER
 #ifndef NO_JASPER
@@ -62,6 +62,11 @@ assert (RV == 1);                      \
 {                               \
 char* RV = fgets(str,num,file); \
 assert (RV);                    \
+}
+
+inline void VAppend(TImage8RawData &AVector, char* AArray, const int ALength) {
+  char* hEnd = AArray + ALength * sizeof(char);
+  AVector.insert(AVector.end(), AArray, hEnd);
 }
 
 // The class.
@@ -125,8 +130,7 @@ CLASS ptDcRaw() {
   m_MetaData    = NULL;
   m_InputFile   = NULL;
 
-  m_ThumbData   = new QByteArray();
-  m_ThumbStream = new QDataStream(m_ThumbData, QIODevice::ReadWrite);
+  m_Thumb.clear();
   ResetNonUserSettings();
 }
 
@@ -150,8 +154,6 @@ CLASS ~ptDcRaw() {
   FREE(m_Image_AfterPhase3);
   FCLOSE(m_InputFile);
   FREE(m_MetaData);
-  DelAndNull(m_ThumbData);
-  DelAndNull(m_ThumbStream);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1066,9 +1068,11 @@ void CLASS canon_sraw_load_raw()
     if (row & (jh.sraw >> 1))
       for (col=0; col < m_Width; col+=2)
   for (c=1; c < 3; c++)
-    if (row == m_Height-1)
-         ip[col][c] =  ip[col-m_Width][c];
-    else ip[col][c] = (ip[col-m_Width][c] + ip[col+m_Width][c] + 1) >> 1;
+    if (row == m_Height-1) {
+      ip[col][c] =  ip[col-m_Width][c];
+    } else {
+      ip[col][c] = (ip[col-m_Width][c] + ip[col+m_Width][c] + 1) >> 1;
+    }
     for (col=1; col < m_Width; col+=2)
       for (c=1; c < 3; c++)
   if (col == m_Width-1)
@@ -1076,19 +1080,21 @@ void CLASS canon_sraw_load_raw()
   else ip[col][c] = (ip[col-1][c] + ip[col+1][c] + 1) >> 1;
   }
   for ( ; rp < ip[0]; rp+=4) {
-    if (unique_id < 0x80000218) {
-      rp[0] -= 512;
-      goto next;
-    } else if (unique_id == 0x80000285) {
-next: pix[0] = rp[0] + rp[2];
-      pix[2] = rp[0] + rp[1];
-      pix[1] = rp[0] + ((-778*rp[1] - (rp[2] << 11)) >> 12);
-    } else {
+    if (unique_id == 0x80000218 ||
+	unique_id == 0x80000250 ||
+	unique_id == 0x80000261 ||
+	unique_id == 0x80000281 ||
+	unique_id == 0x80000287) {
       rp[1] = (rp[1] << 2) + hue;
       rp[2] = (rp[2] << 2) + hue;
       pix[0] = rp[0] + ((  200*rp[1] + 22929*rp[2]) >> 14);
       pix[1] = rp[0] + ((-5640*rp[1] - 11751*rp[2]) >> 14);
       pix[2] = rp[0] + ((29040*rp[1] -   101*rp[2]) >> 14);
+    } else {
+      if (unique_id < 0x80000218) rp[0] -= 512;
+      pix[0] = rp[0] + rp[2];
+      pix[2] = rp[0] + rp[1];
+      pix[1] = rp[0] + ((-778*rp[1] - (rp[2] << 11)) >> 12);
     }
     for (c=0;c<3;c++) rp[c] = CLIP(pix[c] * sraw_mul[c] >> 10);
   }
@@ -1258,23 +1264,6 @@ void CLASS nikon_load_raw()
 }
 
 /*
-   Figure out if a NEF file is compressed.  These fancy heuristics
-   are only needed for the D100, thanks to a bug in some cameras
-   that tags all images as "compressed".
- */
-int CLASS nikon_is_compressed()
-{
-  uint8_t test[256];
-  int i;
-
-  fseek (m_InputFile, m_Data_Offset, SEEK_SET);
-  ptfread (test, 1, 256, m_InputFile);
-  for (i=15; i < 256; i+=16)
-    if (test[i]) return 1;
-  return 0;
-}
-
-/*
    Returns 1 for a Coolpix 995, 0 for anything else.
  */
 int CLASS nikon_e995()
@@ -1352,8 +1341,7 @@ int CLASS minolta_z2()
 
 void CLASS ppm_thumb ()
 /* Remember: This function is modified to write the raw’s thumbnail to the
-   m_ThumbStream stream instead of a file on disk. Always access thumbnails
-   via DcRaw::thumbnail()!
+   m_Thumb instead of a file on disk. Always access thumbnails via DcRaw::thumbnail()!
 */
 {
   char *thumb;
@@ -1362,10 +1350,9 @@ void CLASS ppm_thumb ()
   merror (thumb, "ppm_thumb()");
   //fprintf (m_OutputFile, "P6\n%d %d\n255\n", m_ThumbWidth, m_ThumbHeight);
   QString dummy = QString("P6\n%1 %2\n255\n").arg(m_ThumbWidth).arg(m_ThumbHeight);
-  m_ThumbStream->writeRawData(dummy.toAscii().data(), dummy.length());
+  VAppend(m_Thumb, dummy.toLocal8Bit().data(), dummy.length());
   ptfread  (thumb, 1, m_ThumbLength, m_InputFile);
-  //ptfwrite (thumb, 1, m_ThumbLength, m_OutputFile);
-  m_ThumbStream->writeRawData(thumb, m_ThumbLength);
+  VAppend(m_Thumb, thumb, m_ThumbLength);
   FREE (thumb);
 }
 
@@ -1380,17 +1367,16 @@ void CLASS ppm16_thumb()
   for (i=0; i < (int32_t)m_ThumbLength; i++)
     thumb[i] = ((uint16_t *) thumb)[i] >> 8;
   QString dummy = QString("P6\n%1 %2\n255\n").arg(m_ThumbWidth).arg(m_ThumbHeight);
-  m_ThumbStream->writeRawData(dummy.toAscii().data(), dummy.length());
+  VAppend(m_Thumb, dummy.toLocal8Bit().data(), dummy.length());
   //fprintf (ofp, "P6\n%d %d\n255\n", m_ThumbWidth, m_ThumbHeight);
   //fwrite (thumb, 1, m_ThumbLength, ofp);
-  m_ThumbStream->writeRawData(thumb, m_ThumbLength);
+  VAppend(m_Thumb, thumb, m_ThumbLength);
   FREE (thumb);
 }
 
 void CLASS layer_thumb ()
 /* Remember: This function is modified to write the raw’s thumbnail to the
-   m_ThumbStream stream instead of a file on disk. Always access thumbnails
-   via DcRaw::thumbnail()!
+   m_Thumb instead of a file on disk. Always access thumbnails via DcRaw::thumbnail()!
 */
 // TODO: Tests needed: What format is this? Can it be read by QPixmap?
 {
@@ -1405,14 +1391,14 @@ void CLASS layer_thumb ()
   //fprintf (m_OutputFile, "P%d\n%d %d\n255\n", 5 + (m_Colors >> 1), m_ThumbWidth, m_ThumbHeight);
   QString dummy = QString("P%1\n%2 %3\n255\n")
       .arg(5 + (m_Colors >> 1)).arg(m_ThumbWidth).arg(m_ThumbHeight);
-  m_ThumbStream->writeRawData(dummy.toAscii().data(), dummy.length());
+  VAppend(m_Thumb, dummy.toLocal8Bit().data(), dummy.length());
   ptfread (thumb, m_ThumbLength, m_Colors, m_InputFile);
   for (unsigned i=0; i < m_ThumbLength; i++) {
     for (c=0; c < m_Colors; c++) {
       //putc (thumb[i+m_ThumbLength*(map[m_ThumbMisc >> 8][c]-'0')], m_OutputFile);
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wint-to-pointer-cast"
-      m_ThumbStream->writeRawData((char*)thumb[i+m_ThumbLength*(map[m_ThumbMisc >> 8][c]-'0')], 1);
+      m_Thumb.push_back(thumb[i+m_ThumbLength*(map[m_ThumbMisc >> 8][c]-'0')]);
 #pragma GCC diagnostic pop
     }
   }
@@ -1421,8 +1407,7 @@ void CLASS layer_thumb ()
 
 void CLASS rollei_thumb ()
 /* Remember: This function is modified to write the raw’s thumbnail to the
-   m_ThumbStream stream instead of a file on disk. Always access thumbnails
-   via DcRaw::thumbnail()!
+   m_Thumb instead of a file on disk. Always access thumbnails via DcRaw::thumbnail()!
 */
 // TODO: Tests needed: What format is this? Can it be read by QPixmap?
 {
@@ -1434,7 +1419,7 @@ void CLASS rollei_thumb ()
   merror (thumb, "rollei_thumb()");
   //fprintf (m_OutputFile, "P6\n%d %d\n255\n", m_ThumbWidth, m_ThumbHeight);
   QString dummy = QString("P6\n%1 %2\n255\n").arg(m_ThumbWidth).arg(m_ThumbHeight);
-  m_ThumbStream->writeRawData(dummy.toAscii().data(), dummy.length());
+  VAppend(m_Thumb, dummy.toLocal8Bit().data(), dummy.length());
   read_shorts (thumb, m_ThumbLength);
   for (i=0; i < m_ThumbLength; i++) {
     //putc (thumb[i] << 3, m_OutputFile);
@@ -1442,9 +1427,9 @@ void CLASS rollei_thumb ()
     //putc (thumb[i] >> 11 << 3, m_OutputFile);
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wint-to-pointer-cast"
-    m_ThumbStream->writeRawData((char*)(thumb[i] << 3) ,1);
-    m_ThumbStream->writeRawData((char*)(thumb[i] >> 5 << 2) ,1);
-    m_ThumbStream->writeRawData((char*)(thumb[i] >> 11 << 3) ,1);
+    m_Thumb.push_back(thumb[i] << 3);
+    m_Thumb.push_back(thumb[i] >> 5 << 2);
+    m_Thumb.push_back(thumb[i] >> 11 << 3);
 #pragma GCC diagnostic pop
   }
   FREE (thumb);
@@ -1751,9 +1736,7 @@ void CLASS hasselblad_load_raw()
   if ((diff & (1 << (len[c]-1))) == 0)
     diff -= (1 << len[c]) - 1;
   if (diff == 65535) diff = -32768;
-  pred[c] += diff;
-  if (row >= 0 && (unsigned)(col+c) < m_Width)
-    RAW(row,col+c) = pred[c];
+	RAW(row,col+c) = pred[c] += diff;
       }
     }
   }
@@ -1795,7 +1778,7 @@ void CLASS unpacked_load_raw()
 {
   int row, col, bits=0;
 
-  while ((1 << ++bits) < m_WhiteLevel);
+  while ((1 << ++bits) < (int32_t)m_WhiteLevel);
   read_shorts (m_Raw_Image, m_RawWidth*m_RawHeight);
   for (row=0; row < m_RawHeight; row++)
     for (col=0; col < m_RawWidth; col++)
@@ -1941,8 +1924,7 @@ void CLASS panasonic_load_raw()
   }
       } else if ((nonz[i & 1] = pana_bits(8)) || i > 11)
   pred[i & 1] = nonz[i & 1] << 4 | pana_bits(4);
-      if (col < m_Width)
-  if ((RAW(row,col) = pred[col & 1]) > 4098) derror();
+      if ((RAW(row,col) = pred[col & 1]) > 4098 && col < m_Width) derror();
     }
 }
 
@@ -2118,7 +2100,9 @@ void CLASS kodak_radc_load_raw()
   };
   uint16_t huff[19][256];
   int row, col, tree, nreps, rep, step, /* i,*/ c, s, r, x, y, val;
-  short last[3] = { 16,16,16 }, mul[3], buf[3][3][386];
+  constexpr unsigned int bufi1 = 3;
+  constexpr unsigned int bufi2 = 386;
+  short last[3] = { 16,16,16 }, mul[3], buf[3][bufi1][bufi2];
   static const uint16_t pt[] =
     { 0,0, 1280,1344, 2320,3616, 3328,8000, 4095,16383, 65535,16383 };
   int i;
@@ -2133,11 +2117,9 @@ void CLASS kodak_radc_load_raw()
   s = m_Kodak_cbpp == 243 ? 2 : 3;
   for(c=0;c<256;c++) huff[18][c] = (8-s) << 8 | c >> s << s | 1 << (s-1);
   getbits(-1);
-  for (unsigned i=0; i < sizeof(buf)/sizeof(short); i++)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Warray-bounds"
-    buf[0][0][i] = 2048;
-#pragma GCC diagnostic pop
+  memset(buf, 2048, sizeof(buf)/sizeof(short));
+//  for (unsigned i=0; i < sizeof(buf)/sizeof(short); i++)
+//    buf[0][0][i] = 2048;
   for (row=0; row < m_Height; row+=4) {
     for (c=0; c<3; c++) mul[c] = getbits(6);
     for (c=0; c<3; c++) {
@@ -2145,8 +2127,11 @@ void CLASS kodak_radc_load_raw()
       s = val > 65564 ? 10:12;
       x = ~(-1 << (s-1));
       val <<= 12-s;
-      for (unsigned i=0; i < sizeof(buf[0])/sizeof(short); i++)
-  buf[c][0][i] = (buf[c][0][i] * val + x) >> s;
+      for (unsigned i=0; i < bufi1; i++)
+        for (unsigned j=0; j < bufi2; j++)
+          buf[c][i][j] = (buf[c][i][j] * val + x) >> s;
+//      for (unsigned i=0; i < sizeof(buf[0])/sizeof(short); i++)
+//        buf[c][0][i] = (buf[c][0][i] * val + x) >> s;
       last[c] = mul[c];
       for (r=0; r <= !c; r++) {
   buf[c][1][m_Width/2] = buf[c][2][m_Width/2] = mul[c] << 7;
@@ -2624,7 +2609,7 @@ void CLASS sony_arw2_load_raw()
     bit += 7;
   }
       for (i=0; i < 16; i++, col+=2)
-  if (col < m_Width) RAW(row,col) = m_Curve[pix[i] << 1] >> 2;
+	RAW(row,col) = m_Curve[pix[i] << 1] >> 2;
       col -= col & 1 ? 1:31;
     }
   }
@@ -2671,14 +2656,17 @@ void CLASS smal_decode_segment (unsigned seg[2][2], int holes)
       high <<= nbits;
       next = hist[s][1];
       if (++hist[s][2] > hist[s][3]) {
-  next = (next+1) & hist[s][0];
-  hist[s][3] = (hist[s][next+4] - hist[s][next+5]) >> 2;
-  hist[s][2] = 1;
+        next = (next+1) & hist[s][0];
+        hist[s][3] = (hist[s][next+4] - hist[s][next+5]) >> 2;
+        hist[s][2] = 1;
       }
       if (hist[s][hist[s][1]+4] - hist[s][hist[s][1]+5] > 1) {
-  if (bin < hist[s][1])
+  if (bin < hist[s][1]) {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Warray-bounds"
     for (i=bin; i < hist[s][1]; i++) hist[s][i+5]--;
-  else if (next <= bin)
+#pragma GCC diagnostic pop
+  } else if (next <= bin)
     for (i=hist[s][1]; i < bin; i++) hist[s][i+5]++;
       }
       hist[s][1] = next;
@@ -2854,8 +2842,7 @@ void CLASS foveon_decoder (unsigned size, unsigned code)
 
 void CLASS foveon_thumb ()
 /* Remember: This function is modified to write the raw’s thumbnail to the
-   m_ThumbStream stream instead of a file on disk. Always access thumbnails
-   via DcRaw::thumbnail()!
+   m_Thumb instead of a file on disk. Always access thumbnails via DcRaw::thumbnail()!
 */
 // TODO: Tests needed: What format is this? Can it be read by QPixmap?
 {
@@ -2867,7 +2854,7 @@ void CLASS foveon_thumb ()
   bwide = get4();
   //fprintf (m_OutputFile, "P6\n%d %d\n255\n", m_ThumbWidth, m_ThumbHeight);
   QString dummy = QString("P6\n%1 %2\n255\n").arg(m_ThumbWidth).arg(m_ThumbHeight);
-  m_ThumbStream->writeRawData(dummy.toAscii().data(), dummy.length());
+  VAppend(m_Thumb, dummy.toLocal8Bit().data(), dummy.length());
   if (bwide > 0) {
     if (bwide < (unsigned)(m_ThumbWidth*3)) return;
     buf = (char *) MALLOC (bwide);
@@ -2875,7 +2862,7 @@ void CLASS foveon_thumb ()
     for (row=0; row < m_ThumbHeight; row++) {
       ptfread  (buf, 1, bwide, m_InputFile);
       //ptfwrite (buf, 3, m_ThumbWidth, m_OutputFile);
-      m_ThumbStream->writeRawData(buf, 3 * m_ThumbWidth);
+      VAppend(m_Thumb, buf, 3 * m_ThumbWidth);
     }
     FREE (buf);
     return;
@@ -2897,7 +2884,7 @@ void CLASS foveon_thumb ()
   //fputc (pred[c], m_OutputFile);
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wint-to-pointer-cast"
-  m_ThumbStream->writeRawData((char*)pred[c], 1);
+  m_Thumb.push_back(pred[c]);
 #pragma GCC diagnostic pop
       }
   }
@@ -2966,9 +2953,9 @@ void CLASS foveon_dp_load_raw()
     for (row=0; row < m_Height; row++) {
       for (col=0; col < m_Width; col++) {
   diff = ljpeg_diff(huff);
-	if (col < 2) hpred[col] = vpred[row & 1][col] += diff;
-	else hpred[col & 1] += diff;
-	m_Image[row*m_Width+col][c] = hpred[col & 1];
+  if (col < 2) hpred[col] = vpred[row & 1][col] += diff;
+  else hpred[col & 1] += diff;
+  m_Image[row*m_Width+col][c] = hpred[col & 1];
       }
     }
   }
@@ -3103,7 +3090,7 @@ short * CLASS foveon_make_curve (double max, double mul, double filt)
   double x;
 
   if (!filt) filt = 0.8;
-  size = (unsigned) (4*M_PI*max / filt);
+  size = (unsigned) (4*ptPI*max / filt);
   if (size == UINT_MAX) size--;
   curve = (short *) CALLOC (size+1, sizeof *curve);
   merror (curve, "foveon_make_curve()");
@@ -3136,8 +3123,13 @@ int CLASS foveon_apply_curve (short *l_Curve, int i)
 
 void CLASS foveon_interpolate()
 {
+// Loop optimization causes an "undefined behaviour" compiler warning. I just disable
+// the warning here instead of fixing the problem because Photivo does not support
+// Foveon anyway, but I’m not positive that removing this function wouldn’t break
+// DCRaw in some way.
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Warray-bounds"
+#pragma GCC diagnostic ignored "-Waggressive-loop-optimizations"
   static const short hood[] = { -1,-1, -1,0, -1,1, 0,-1, 0,1, 1,-1, 1,0, 1,1 };
   short *pix, prev[3], *l_curve[8], (*shrink)[3];
   float cfilt=0, ddft[3][3][2], ppm[3][3][3];
@@ -3153,6 +3145,12 @@ void CLASS foveon_interpolate()
   double dsum=0, trsum[3];
   char str[128];
   const char* cp;
+
+  memset(cam_xyz, 0, sizeof(cam_xyz));
+  memset(dscr,    0, sizeof(dscr));
+  memset(dstb,    0, sizeof(dstb));
+  memset(active,  0, sizeof(active));
+  memset(keep,    0, sizeof(keep));
 
   TRACEKEYVALS("Foveon interpolation","%s","");
 
@@ -3570,11 +3568,8 @@ void CLASS crop_masked_pixels()
     m_Mask[0][3] = -2;
     goto sides;
   }
-  if (m_LoadRawFunction == &CLASS sony_load_raw) {
-    m_Mask[0][3] = 9;
-    goto sides;
-  }
   if (m_LoadRawFunction == &CLASS canon_600_load_raw ||
+      m_LoadRawFunction == &CLASS sony_load_raw ||
      (m_LoadRawFunction == &CLASS eight_bit_load_raw && strncmp(m_CameraModel,"DC2",3)) ||
       m_LoadRawFunction == &CLASS kodak_262_load_raw ||
      (m_LoadRawFunction == &CLASS packed_load_raw && (m_Load_Flags & 32))) {
@@ -4486,7 +4481,7 @@ void CLASS vng_interpolate()
 */
 void CLASS ppg_interpolate()
 {
-  int dir[5] = { 1, m_Width, -1, -m_Width, 1 };
+  const int dir[5] = { 1, m_Width, -1, -m_Width, 1 };
   int row, col, diff[2], guess[2], c, d, i;
   uint16_t (*pix)[4];
 
@@ -4500,7 +4495,8 @@ void CLASS ppg_interpolate()
   for (row=3; row < m_Height-3; row++)
     for (col=3+(FC(row,3) & 1), c=FC(row,col); col < m_Width-3; col+=2) {
       pix = m_Image + row*m_Width+col;
-      for (i=0; (d=dir[i]) > 0; i++) {
+      for (i=0; i<2; i++) {
+        d = dir[i];
   guess[i] = (pix[-d][1] + pix[0][c] + pix[d][1]) * 2
           - pix[-2*d][c] - pix[2*d][c];
   diff[i] = ( ABS(pix[-2*d][c] - pix[ 0][c]) +
@@ -4526,8 +4522,9 @@ void CLASS ppg_interpolate()
   for (row=1; row < m_Height-1; row++)
     for (col=1+(FC(row,1) & 1), c=2-FC(row,col); col < m_Width-1; col+=2) {
       pix = m_Image + row*m_Width+col;
-      for (i=0; (d=dir[i]+dir[i+1]) > 0; i++) {
-  diff[i] = ABS(pix[-d][c] - pix[d][c]) +
+      for (i=0; i < 2; i++) {
+        d = dir[i]+dir[i+1];
+        diff[i] = ABS(pix[-d][c] - pix[d][c]) +
       ABS(pix[-d][1] - pix[0][1]) +
       ABS(pix[ d][1] - pix[0][1]);
   guess[i] = pix[-d][c] + pix[d][c] + 2*pix[0][1]
@@ -4833,10 +4830,10 @@ void CLASS parse_makernote (int base, int uptag)
     }
     if (tag == 0xd && type == 7 && get2() == 0xaaaa) {
       for (c=i=2; (uint16_t) c != 0xbbbb && i < len; i++)
-	c = c << 8 | fgetc(m_InputFile);
+  c = c << 8 | fgetc(m_InputFile);
       while ((i+=4) < len-5)
-	if (get4() == 257 && (i=len) && (c = (get4(),fgetc(m_InputFile))) < 3)
-	  m_Flip = "065"[c]-'0';
+  if (get4() == 257 && (i=len) && (c = (get4(),fgetc(m_InputFile))) < 3)
+    m_Flip = "065"[c]-'0';
     }
     if (tag == 0x10 && type == 4)
       unique_id = get4();
@@ -5001,7 +4998,7 @@ get2_256:
       fseek (m_InputFile, i, SEEK_CUR);
 get2_rggb:
       for (c=0; c < 4; c++) ASSIGN(m_CameraMultipliers[c ^ (c >> 1)], get2());
-      i = len == 1312 ? 112:22;
+      i = len >> 3 == 164 ? 112:22;
       fseek (m_InputFile, i, SEEK_CUR);
       for (c=0; c < 4; c++) sraw_mul[c ^ (c >> 1)] = get2();
     }
@@ -5806,7 +5803,15 @@ void CLASS apply_tiff()
       case 262:
   m_LoadRawFunction = &CLASS kodak_262_load_raw;			break;
       case 34713:
-  m_LoadRawFunction = &CLASS nikon_load_raw;			break;
+	if ((m_RawWidth+9)/10*16*m_RawHeight == m_Tiff_IFD[l_Raw].bytes) {
+	  m_LoadRawFunction = &CLASS packed_load_raw;
+	  m_Load_Flags = 1;
+	} else if (m_RawWidth*m_RawHeight*2 == m_Tiff_IFD[l_Raw].bytes) {
+	  m_LoadRawFunction = &CLASS unpacked_load_raw;
+	  m_Load_Flags = 4;
+	  m_ByteOrder = 0x4d4d;
+	} else
+	  m_LoadRawFunction = &CLASS nikon_load_raw;			break;
       case 34892:
   m_LoadRawFunction = &CLASS lossy_dng_load_raw;		break;
       case 65535:
@@ -5827,7 +5832,8 @@ void CLASS apply_tiff()
     }
   if (!m_DNG_Version)
     if ( (m_Tiff_Samples == 3 && m_Tiff_IFD[l_Raw].bytes &&
-    m_Tiff_bps != 14 && m_Tiff_bps != 2048 && m_Tiff_Compress != 32770)
+	  m_Tiff_bps != 14 && m_Tiff_bps != 2048 && 
+	  m_Tiff_Compress != 32769 && m_Tiff_Compress != 32770)
       || (m_Tiff_bps == 8 && !strstr(m_CameraMake,"KODAK") &&
           !strstr(m_CameraMake,"Kodak") &&
     !strstr(m_CameraModelBis,"DEBUG RAW")))
@@ -6257,7 +6263,7 @@ void CLASS parse_fuji (int offset)
     } else if (tag == 0xc000) {
       c = m_ByteOrder;
       m_ByteOrder = 0x4949;
-      m_Width  = get4();
+      if ((m_Width = get4()) > 10000) m_Width = get4();
       m_Height = get4();
       m_ByteOrder = c;
     }
@@ -6753,6 +6759,7 @@ void CLASS identify() {
     { 12310144, "CASIO",    "EX-Z850"         ,1 },
     { 12489984, "CASIO",    "EX-Z8"           ,1 },
     { 15499264, "CASIO",    "EX-Z1050"        ,1 },
+    { 18702336, "CASIO",    "EX-ZR100"        ,1 },
     {  7426656, "CASIO",    "EX-P505"         ,1 },
     {  9313536, "CASIO",    "EX-P600"         ,1 },
     { 10979200, "CASIO",    "EX-P700"         ,1 },
@@ -6836,7 +6843,7 @@ void CLASS identify() {
     parse_fuji (get4());
     if (m_ThumbOffset > 120) {
       fseek (m_InputFile, 120, SEEK_SET);
-      m_IsRaw += (i = get4()) && 1;
+      m_IsRaw += (i = get4());
       if (m_IsRaw == 2 && m_UserSetting_ShotSelect)
   parse_fuji (i);
     }
@@ -6945,7 +6952,7 @@ void CLASS identify() {
     { m_Height  = 3124;   m_Width  = 4688; m_Filters = 0x16161616; }
   if (m_Width == 4352 && (!strcmp(m_CameraModel,"K-r") || !strcmp(m_CameraModel,"K-x")))
     { m_Width  = 4309; m_Filters = 0x16161616; }
-  if (m_Width >= 4960 && !strcmp(m_CameraModel,"K-5"))
+  if (m_Width >= 4960 && !strncmp(m_CameraModel,"K-5",3))
     { m_LeftMargin = 10; m_Width  = 4950; m_Filters = 0x16161616; }
   if (m_Width == 4736 && !strcmp(m_CameraModel,"K-7"))
     { m_Height  = 3122;   m_Width  = 4684; m_Filters = 0x16161616; m_TopMargin = 2; }
@@ -6991,6 +6998,7 @@ void CLASS identify() {
       case 3344: m_Width -= 66;
       case 3872: m_Width -= 6;
     }
+    if (m_Height > m_Width) SWAP(m_Height,m_Width);
     m_Filters = 0;
     m_LoadRawFunction = &CLASS canon_sraw_load_raw;
   } else if (!strcmp(m_CameraModel,"PowerShot 600")) {
@@ -7269,6 +7277,14 @@ canon_a5:
     m_Width  = 4048;
     m_TopMargin  = 11;
     m_LeftMargin = 104;
+  } else if (l_IsCanon && m_RawWidth == 4176) {
+    m_Height = 3045;
+    m_Width  = 4072;
+    m_LeftMargin = 96;
+    m_Mask[0][0] = m_TopMargin = 17;
+    m_Mask[0][2] = m_RawHeight;
+    m_Mask[0][3] = 80;
+    m_Filters = 0x49494949;
   } else if (l_IsCanon && m_RawWidth == 4312) {
     m_TopMargin  = 18;
     m_LeftMargin = 22;
@@ -7335,6 +7351,10 @@ canon_a5:
     m_TopMargin = 51;
     m_LeftMargin = 158;
     goto canon_cr2;
+  } else if (l_IsCanon && m_RawWidth == 5568) {
+    m_TopMargin = 38;
+    m_LeftMargin = 72;
+    goto canon_cr2;
   } else if (l_IsCanon && m_RawWidth == 5712) {
     m_Height = 3752;
     m_Width  = 5640;
@@ -7378,6 +7398,7 @@ canon_cr2:
        !strcmp(m_CameraModel,"D7000")) {
     m_Width -= 44;
   } else if (!strcmp(m_CameraModel,"D3200") ||
+	     !strcmp(m_CameraModel,"D600")  ||
        !strcmp(m_CameraModel,"D800")) {
     m_Width -= 46;
   } else if (!strcmp(m_CameraModel,"D4")) {
@@ -7388,11 +7409,8 @@ canon_cr2:
        !strncmp(m_CameraModel,"D70",3)) {
     m_Width--;
   } else if (!strcmp(m_CameraModel,"D100")) {
-    if (m_Tiff_Compress == 34713 && !nikon_is_compressed()) {
-      m_LoadRawFunction = &CLASS packed_load_raw;
-      m_Load_Flags |= 1;
+    if (m_Load_Flags)
       m_RawWidth = (m_Width += 3) + 3;
-    }
   } else if (!strcmp(m_CameraModel,"D200")) {
     m_LeftMargin = 1;
     m_Width -= 4;
@@ -7405,6 +7423,8 @@ canon_cr2:
     else m_Width -= 8;
   } else if (!strncmp(m_CameraModel,"D300",4)) {
     m_Width -= 32;
+  } else if (!strcmp(m_CameraMake,"NIKON") && m_RawWidth == 4032) {
+    adobe_coeff ("NIKON","COOLPIX P7700");
   } else if (!strncmp(m_CameraModel,"COOLPIX P",9)) {
     m_Load_Flags = 24;
     m_Filters = 0x94949494;
@@ -7520,13 +7540,12 @@ cp_e2500:
       m_WhiteLevel = (m_IsRaw == 2 && m_UserSetting_ShotSelect) ? 0x2f00 : 0x3e00;
     m_TopMargin = (m_RawHeight - m_Height) >> 2 << 1;
     m_LeftMargin = (m_RawWidth - m_Width ) >> 2 << 1;
+    if (m_Width == 2848) m_Filters = 0x16161616;
     if (m_Width == 3328) {
       m_Width = 3262;
       m_LeftMargin = 34;
     }
-    if (!strcmp(m_CameraModel,"X10") || !strcmp(m_CameraModel,"X-S1"))
-      m_Filters = 0x16161616;
-    if (!strcmp(m_CameraModel,"X-Pro1")) {
+    if (m_Width == 4952) {
       m_LeftMargin = 0;
       m_Filters = 2;
     }
@@ -7665,6 +7684,13 @@ wb550:
     m_LoadRawFunction = &CLASS unpacked_load_raw;
     m_Load_Flags = 6;
     m_WhiteLevel = 0x3df;
+  } else if (!strcmp(m_CameraModel,"EX2F")) {
+    m_Height = 3045;
+    m_Width  = 4070;
+    m_TopMargin = 3;
+    m_ByteOrder = 0x4949;
+    m_Filters = 0x49494949;
+    m_LoadRawFunction = &CLASS unpacked_load_raw;
   } else if (!strcmp(m_CameraModel,"STV680 VGA")) {
     m_Height = 484;
     m_Width  = 644;
@@ -7873,6 +7899,9 @@ wb550:
       m_ThumbLength = l_FLen - (m_ThumbOffset = 0xa39800);
       m_ThumbHeight = 480;
       m_ThumbWidth  = 640;
+    } else if (!strcmp(m_CameraModel,"XZ-2")) {
+      m_LoadRawFunction = &CLASS packed_load_raw;
+      m_Load_Flags = 24;
     }
   } else if (!strcmp(m_CameraModel,"N Digital")) {
     m_Height = 2047;
@@ -7883,6 +7912,7 @@ wb550:
   } else if (!strcmp(m_CameraModel,"DSC-F828")) {
     m_Width = 3288;
     m_LeftMargin = 5;
+    m_Mask[1][3] = -17;
     m_Data_Offset = 862144;
     m_LoadRawFunction = &CLASS sony_load_raw;
     m_Filters = 0x9c9c9c9c;
@@ -7891,6 +7921,7 @@ wb550:
   } else if (!strcmp(m_CameraModel,"DSC-V3")) {
     m_Width = 3109;
     m_LeftMargin = 59;
+    m_Mask[0][1] = 9;
     m_Data_Offset = 787392;
     m_LoadRawFunction = &CLASS sony_load_raw;
   } else if (!strcmp(m_CameraMake,"SONY") && m_RawWidth == 3984) {
@@ -8160,6 +8191,11 @@ c603:
     m_Height = 2752;
     m_Width  = 3672;
     m_RawWidth = 5632;
+  } else if (!strcmp(m_CameraModel,"EX-ZR100")) {
+    m_Height = 3044;
+    m_Width  = 4072;
+    m_RawWidth = 4096;
+    m_Load_Flags = 80;
   } else if (!strcmp(m_CameraModel,"EX-P505")) {
     m_Height = 1928;
     m_Width  = 2568;
@@ -8412,8 +8448,7 @@ void CLASS tiff_head (struct tiff_hdr *th)
 
 void CLASS jpeg_thumb ()
 /* Remember: This function is modified to write the raw’s thumbnail to the
-   m_ThumbStream stream instead of a file on disk. Always access thumbnails
-   via DcRaw::thumbnail()!
+   m_Thumb instead of a file on disk. Always access thumbnails via DcRaw::thumbnail()!
 */
 {
   char *thumb;
@@ -8425,19 +8460,21 @@ void CLASS jpeg_thumb ()
   ptfread (thumb, 1, m_ThumbLength, m_InputFile);
 //  fputc (0xff, m_OutputFile);
 //  fputc (0xd8, m_OutputFile);
-  m_ThumbStream->writeRawData("\xff\xd8", 2);
+  m_Thumb.push_back('\xff');
+  m_Thumb.push_back('\xd8');
 
   if (strcmp (thumb+6, "Exif")) {
     memcpy (exif, "\xff\xe1  Exif\0\0", 10);
     exif[1] = htons (8 + sizeof th);
     //ptfwrite (exif, 1, sizeof exif, m_OutputFile);
-    m_ThumbStream->writeRawData((char*)&exif[0], sizeof exif);
+    VAppend(m_Thumb, (char*)&exif[0], sizeof(exif));
     tiff_head (&th);
     //ptfwrite (&th, 1, sizeof th, m_OutputFile);
-    m_ThumbStream->writeRawData((char*)&th, sizeof th);
+    VAppend(m_Thumb, (char*)&th, sizeof(th));
   }
   //ptfwrite (thumb+2, 1, m_ThumbLength-2, m_OutputFile);
-  m_ThumbStream->writeRawData(thumb+2, m_ThumbLength-2);
+  VAppend(m_Thumb, thumb+2, m_ThumbLength-2);
+
   FREE (thumb);
 }
 
@@ -8460,9 +8497,9 @@ short CLASS Identify(const QString NewInputFile) {
 
   if (NewInputFile != "") {
     FREE(m_UserSetting_InputFileName);
-    m_UserSetting_InputFileName = (char*) MALLOC(1 + strlen(NewInputFile.toAscii().data()));
+    m_UserSetting_InputFileName = (char*) MALLOC(1 + strlen(NewInputFile.toLocal8Bit().data()));
     ptMemoryError(m_UserSetting_InputFileName,__FILE__,__LINE__);
-    strcpy(m_UserSetting_InputFileName, NewInputFile.toAscii().data());
+    strcpy(m_UserSetting_InputFileName, NewInputFile.toLocal8Bit().data());
   }
 
   if (!(m_InputFile = fopen (m_UserSetting_InputFileName, "rb"))) {
@@ -8546,10 +8583,8 @@ short CLASS RunDcRaw_Phase1() {
     m_RawColor = 0;
   }
 
-  // Basic image memory allocation @ 4 int per pixel happens here.
+  // Allocation is depending on m_Raw_Image below.
   FREE(m_Image);
-  m_Image = (uint16_t (*)[4]) CALLOC (m_OutHeight*m_OutWidth, sizeof *m_Image);
-  merror (m_Image, "main()");
 
   if (m_MetaLength) {
     FREE(m_MetaData);
@@ -8558,8 +8593,13 @@ short CLASS RunDcRaw_Phase1() {
   }
   if (m_Filters || m_Colors == 1) {
     m_Raw_Image = (uint16_t *) CALLOC ((m_RawHeight+7)*m_RawWidth, 2);
-    merror (m_Image, "main().m_Raw_Image");
+    merror (m_Raw_Image, "main().m_Raw_Image");
+  } else {
+    // Basic image memory allocation @ 4 int per pixel happens here.
+    m_Image = (uint16_t (*)[4]) CALLOC (m_OutHeight*m_OutWidth, sizeof *m_Image);
+    merror (m_Image, "main()");
   }
+
   TRACEKEYVALS("CameraMake","%s",m_CameraMake);
   TRACEKEYVALS("CameraModel","%s",m_CameraModel);
   TRACEKEYVALS("InputFile","%s",m_UserSetting_InputFileName);
@@ -8574,6 +8614,9 @@ short CLASS RunDcRaw_Phase1() {
   (*this.*m_LoadRawFunction)();
 
   if (m_Raw_Image) {
+    // Basic image memory allocation @ 4 int per pixel happens here.
+    m_Image = (uint16_t (*)[4]) CALLOC (m_OutHeight*m_OutWidth, sizeof *m_Image);
+    merror (m_Image, "main()");
     crop_masked_pixels();
     FREE (m_Raw_Image);
   }
@@ -8988,7 +9031,12 @@ void CLASS ptBlendHighlights() {
     { { 1,1,1,1 }, { 1,-1,1,-1 }, { 1,1,-1,-1 }, { 1,-1,-1,1 } } };
   float Cam[2][4], lab[2][4], Sum[2], chratio;
 
-  if ((unsigned) (m_Colors-3) > 1) return;
+  const int transIdx = m_Colors - 3;
+  assert(transIdx > -1);
+  if (transIdx > 1) return;
+
+  // to shut up gcc warnings...
+  const int localColors = ptMin(static_cast<int>(m_Colors), 4);
 
   for (short c=0; c<m_Colors; c++) {
     if (ClipLevel > (i = (int)(0xFFFF*VALUE(m_PreMultipliers[c])))) {
@@ -9010,7 +9058,7 @@ void CLASS ptBlendHighlights() {
       for (i=0; i < 2; i++) {
   for (c=0; c<m_Colors; c++) {
           for (lab[i][c]=j=0; j < m_Colors; j++) {
-      lab[i][c] += trans[m_Colors-3][c][j] * Cam[i][j];
+      lab[i][c] += trans[transIdx][c][j] * Cam[i][j];
           }
         }
   for (Sum[i]=0,c=1; c < m_Colors; c++) {
@@ -9018,13 +9066,15 @@ void CLASS ptBlendHighlights() {
         }
       }
       chratio = sqrt(Sum[1]/Sum[0]);
-      for (c=1; c < m_Colors; c++) {
-  lab[0][c] *= chratio;
+      for (c = 1; c < m_Colors; c++) {
+        lab[0][c] *= chratio;
       }
-      for (c=0; c<m_Colors; c++) for (Cam[0][c]=j=0; j < m_Colors; j++) {
-  Cam[0][c] += itrans[m_Colors-3][c][j] * lab[0][j];
+      for (c = 0; (c < localColors); c++) {
+        for (Cam[0][c]=j=0; (j < localColors); j++) {
+          Cam[0][c] += itrans[transIdx][c][j] * lab[0][j];
+        }
       }
-      for (c=0; c<m_Colors; c++) {
+      for (c = 0; c < m_Colors; c++) {
         m_Image[Row*m_Width+Column][c] = (uint16_t)(Cam[0][c] / m_Colors);
       }
     }
@@ -9580,22 +9630,16 @@ void CLASS CamToLab(uint16_t Cam[4], double Lab[3]) {
   Lab[2] = 200.0*(xyz[1]-xyz[2]);
 }
 
+//==============================================================================
 
-bool CLASS thumbnail(QByteArray*& thumbnail) {
-  if(!m_InputFile || !m_LoadRawFunction) {
-    return false;
+TImage8RawData ptDcRaw::thumbnail() {
+  m_Thumb.clear();
+
+  if(m_InputFile && m_LoadRawFunction) {
+    fseek (m_InputFile, m_ThumbOffset, SEEK_SET);
+    (this->*m_WriteThumb)();
   }
 
-  m_ThumbData->clear();
-  m_ThumbStream->resetStatus();
-
-  fseek (m_InputFile, m_ThumbOffset, SEEK_SET);
-  (*this.*m_WriteThumb)();
-
-  bool result = (!m_ThumbData->isEmpty());
-
-  if (result) thumbnail = new QByteArray(*m_ThumbData);
-
-  return result;
+  return m_Thumb;
 }
 

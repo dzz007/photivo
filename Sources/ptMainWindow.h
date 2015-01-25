@@ -4,6 +4,7 @@
 **
 ** Copyright (C) 2008 Jos De Laender <jos.de_laender@telenet.be>
 ** Copyright (C) 2009,2010 Michael Munzert <mail@mm-log.com>
+** Copyright (C) 2013 Alexander Tzyganenko <tz@fast-report.com>
 **
 ** This file is part of Photivo.
 **
@@ -24,17 +25,6 @@
 #ifndef DLMAINWINDOW_H
 #define DLMAINWINDOW_H
 
-#include <memory>
-using std::unique_ptr;
-
-#include <QTimer>
-
-#include <exiv2/exif.hpp>
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-#include <exiv2/image.hpp>
-#pragma GCC diagnostic pop
-
 #include "ui_ptMainWindow.h"
 
 #include "ptCurve.h"
@@ -46,6 +36,17 @@ using std::unique_ptr;
 #include "ptVisibleToolsView.h"
 
 #include "ptTempFilterBase.h"
+
+#include <exiv2/exif.hpp>
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#include <exiv2/image.hpp>
+#pragma GCC diagnostic pop
+
+#include <memory>
+using std::unique_ptr;
+
+#include <QTimer>
 
 //==============================================================================
 
@@ -153,6 +154,7 @@ private:
   QAction*  m_AtnSaveFull;
   QAction*  m_AtnSaveSettings;
   QAction*  m_AtnSaveJobfile;
+  QAction*  m_AtnSendToBatch;
   QAction*  m_AtnGimpSavePipe;
   QAction*  m_AtnGimpSaveFull;
   QAction*  m_AtnMenuFullReset;
@@ -197,6 +199,7 @@ private slots:
   void SaveMenuFull();
   void SaveMenuSettings();
   void SaveMenuJobfile();
+  void SaveMenuBatch();
   void GimpSaveMenuPipe();
   void GimpSaveMenuFull();
   void MenuFullReset();
@@ -242,6 +245,9 @@ private slots:
   void OnFullScreenButtonClicked();
   void OnLoadStyleButtonClicked();
 
+  void OnPreviousImageButtonClicked();
+  void OnNextImageButtonClicked();
+
   void OnTabProcessingButtonClicked();
   void OnTabSettingsButtonClicked();
   void OnTabInfoButtonClicked();
@@ -263,10 +269,6 @@ private slots:
   void OnCropOrientationButtonClicked();
   void OnCropCenterHorButtonClicked();
   void OnCropCenterVertButtonClicked();
-
-  void OnChannelMixerOpenButtonClicked();
-  void OnChannelMixerSaveButtonClicked();
-
 
   void OnTone1ColorButtonClicked();
   void OnTone2ColorButtonClicked();

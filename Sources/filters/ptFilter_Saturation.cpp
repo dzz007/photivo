@@ -50,23 +50,23 @@ ptFilterBase *ptFilter_Saturation::createSaturation() {
 //==============================================================================
 
 void ptFilter_Saturation::doDefineControls() {
-  FCfgItems = QList<ptCfgItem>()
+  FConfig.initStores(TCfgItemList()
     //            Id                       Type                      Default     Min           Max           Step        Decimals, commonConnect, storeable, caption, tooltip
     << ptCfgItem({CStrength,               ptCfgItem::Slider,        0.0,      -10.0,         10.0,          0.5,        1,        true, true, tr("Strength"), tr("")})
-  ;
+  );
 }
 
 //==============================================================================
 
 bool ptFilter_Saturation::doCheckHasActiveCfg() {
-  return FConfig->getValue(CStrength).toFloat() != 0.0f;
+  return FConfig.value(CStrength).toFloat() != 0.0f;
 }
 
 //==============================================================================
 
 void ptFilter_Saturation::doRunFilter(ptImage *AImage) const {
   AImage->toLab();
-  AImage->SigmoidalContrast(FConfig->getValue(CStrength).toFloat(), 0.5, ChMask_a|ChMask_b);
+  AImage->SigmoidalContrast(FConfig.value(CStrength).toFloat(), 0.5, ChMask_a|ChMask_b);
 }
 
 //==============================================================================

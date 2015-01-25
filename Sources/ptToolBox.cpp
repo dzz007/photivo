@@ -20,6 +20,13 @@
 **
 *******************************************************************************/
 
+#include "ptToolBox.h"
+#include "filters/ptFilterBase.h"
+#include "filters/ptFilterDM.h"
+#include "ptTheme.h"
+
+#include "ptSettings.h"
+
 #include <QVBoxLayout>
 #include <QEvent>
 #include <QMouseEvent>
@@ -28,13 +35,6 @@
 #include <QAction>
 #include <QMenu>
 #include <QSettings>
-
-#include "ptToolBox.h"
-#include "filters/ptFilterBase.h"
-#include "filters/ptFilterDM.h"
-#include "ptTheme.h"
-
-#include "ptSettings.h"
 
 //==============================================================================
 
@@ -272,10 +272,10 @@ void ptToolBox::execContextMenu(const QPoint APos) {
   if (FFilter->flags() & ptFilterBase::FilterIsBlockable) {
     hMenu.addAction(FBlockAction);
     if (FFilter->isBlocked()) {
-      FBlockAction->setText("All&ow");
+      FBlockAction->setText(tr("All&ow"));
       FBlockAction->setIcon(QIcon(*Theme->ptIconCircleGreen));
     } else {
-      FBlockAction->setText("Bl&ock");
+      FBlockAction->setText(tr("Bl&ock"));
       FBlockAction->setIcon(QIcon(*Theme->ptIconCircleRed));
     }
   }
@@ -292,7 +292,7 @@ void ptToolBox::execContextMenu(const QPoint APos) {
     hMenu.addSeparator();
     hMenu.addAction(FFavAction);
     if (FFilter->isFavourite()) {
-      FFavAction->setText("Remove from &favourites");
+      FFavAction->setText(tr("Remove from &favourites"));
       FFavAction->setIcon(QIcon(*Theme->ptIconStarGrey));
     } else {
       FFavAction->setText(tr("Add to &favourites"));

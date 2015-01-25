@@ -54,29 +54,29 @@ ptFilterBase *ptFilter_ReinhardBrighten::createReinhardBrighten() {
 //==============================================================================
 
 void ptFilter_ReinhardBrighten::doDefineControls() {
-  FCfgItems = QList<ptCfgItem>()
+  FConfig.initStores(TCfgItemList()
                                                                                  //--- Check: not available                 ---//
     //            Id                       Type                      Default     Min           Max           Step        Decimals, commonConnect, storeable, caption, tooltip
     << ptCfgItem({CEnabled,                ptCfgItem::Check,         0,                                                            true, true, tr("Enable"), tr("")})
     << ptCfgItem({CBrightness,             ptCfgItem::Slider,        -10,        -90,          10,              2,       0,        true, true, tr("Brightness"), tr("")})
     << ptCfgItem({CChroma,                 ptCfgItem::Slider,        0.5,        0.0,          1.0,          0.10,       2,        true, true, tr("Chrominance"), tr("")})
     << ptCfgItem({CLightTweak,             ptCfgItem::Slider,        0.2,        0.0,          1.0,          0.05,       2,        true, true, tr("Lightness tweak"), tr("")})
-  ;
+  );
 }
 
 //==============================================================================
 
 bool ptFilter_ReinhardBrighten::doCheckHasActiveCfg() {
-  return FConfig->getValue(CEnabled).toBool();
+  return FConfig.value(CEnabled).toBool();
 }
 
 //==============================================================================
 
 void ptFilter_ReinhardBrighten::doRunFilter(ptImage *AImage) const {
   AImage->toRGB();
-  AImage->Reinhard05(FConfig->getValue(CBrightness).toFloat(),
-                     FConfig->getValue(CChroma).toFloat(),
-                     FConfig->getValue(CLightTweak).toFloat() );
+  AImage->Reinhard05(FConfig.value(CBrightness).toFloat(),
+                     FConfig.value(CChroma).toFloat(),
+                     FConfig.value(CLightTweak).toFloat() );
 }
 
 //==============================================================================

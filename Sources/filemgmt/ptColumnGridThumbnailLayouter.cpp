@@ -20,11 +20,12 @@
 **
 *******************************************************************************/
 
-#include <qmath.h>
-#include <QScrollBar>
-
 #include "../ptSettings.h"
 #include "ptColumnGridThumbnailLayouter.h"
+
+#include <qmath.h>
+#include <QScrollBar>
+#include <QKeyEvent>
 
 extern ptSettings* Settings;
 

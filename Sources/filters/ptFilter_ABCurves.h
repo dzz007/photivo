@@ -19,15 +19,10 @@
 ** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 **
 *******************************************************************************/
-
 #ifndef PTFILTER_ABCurves_H
 #define PTFILTER_ABCurves_H
 
-//==============================================================================
-
 #include "ptFilterBase.h"
-
-//==============================================================================
 
 class ptFilter_ABCurves: public ptFilterBase {
 Q_OBJECT
@@ -35,21 +30,13 @@ Q_OBJECT
 public:
   static ptFilterBase *CreateABCurves();
 
-
 protected:
-  /*! Reimplemented from base class. */
-  void      doDefineControls();
-
-  /*! Reimplemented from base class. */
-  bool      doCheckHasActiveCfg();
-
-  /*! Reimplemented from base class. Processing */
-  void      doRunFilter(ptImage *AImage) const;
-
+  void doDefineControls();
+  bool doCheckHasActiveCfg();
+  void doRunFilter(ptImage *AImage) const;
 
 private:
   ptFilter_ABCurves();
-  
 };
 
 #endif // PTFILTER_ABCurves_H

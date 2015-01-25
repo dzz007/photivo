@@ -39,6 +39,7 @@ http://dukto.googlecode.com/
 #ifdef Q_OS_WIN
 
 #include <windows.h>
+#include <unknwn.h>
 #include <initguid.h>
 #define CMIC_MASK_ASYNCOK SEE_MASK_ASYNCOK
 
@@ -129,7 +130,7 @@ public:
 
 //-------------------------------------
 
-  void init(WId wid);
+  void init(HWND wid);
 #ifdef Q_OS_WIN
   bool winEvent(MSG * message, long * result);
 #endif
@@ -154,7 +155,7 @@ private:
   ptEcWin7();
   ~ptEcWin7();
 
-  WId mWindowId;
+  HWND mWindowId;
 #ifdef Q_OS_WIN
   UINT mTaskbarMessageId;
   ITaskbarList3 *mTaskbar;
