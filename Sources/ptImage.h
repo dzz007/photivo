@@ -343,7 +343,7 @@ public:
 
   // Grain
   ptImage* Grain(const double Sigma,
-                 const short NoiseType,
+                 const TGrainType NoiseType,
                  const double Radius,
                  const double Opacity,
                  const TMaskType MaskType,

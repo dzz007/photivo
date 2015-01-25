@@ -364,15 +364,15 @@ const short ptGradualBlur_Vignette     = 2;
 const short ptGradualBlur_MaskLinear   = 3;
 const short ptGradualBlur_MaskVignette = 4;
 
-
-// GrainModes
-
-const short ptGrainMode_SoftGaussian   = 0;
-const short ptGrainMode_SoftUniform    = 1;
-const short ptGrainMode_SoftSaltPepper = 2;
-const short ptGrainMode_HardGaussian   = 3;
-const short ptGrainMode_HardUniform    = 4;
-const short ptGrainMode_HardSaltPepper = 5;
+enum class TGrainType: int {
+  // ptImage::Grain() relies on the integer values! Do not change them!
+  SoftGaussian   = 0,
+  SoftUniform    = 1,
+  SoftSaltPepper = 2,
+  HardGaussian   = 3,
+  HardUniform    = 4,
+  HardSaltPepper = 5
+};
 
 // GradientModes
 

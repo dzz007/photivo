@@ -67,6 +67,17 @@ namespace pt {
         (mode >= TFilterMode::AlwaysOn) ||
         ((mode == TFilterMode::FinalRun) && Settings->GetInt("FullOutput"));
   }
+
+  /*!
+   * Checks the activation state for filters that are enabled/disabled via a MaskTypes
+   * combobox.
+   * \pre AMaskMode must contain an integer that can be cast to a valid TMaskType value.
+   * \returns true if active, false otherwise.
+   */
+  bool isActiveMaskType(const QVariant& AMaskType) {
+    Q_ASSERT(AMaskType.type() == QVariant::Int);
+    return static_cast<TMaskType>(AMaskType.toInt()) != TMaskType::Disabled;
+  }
 } // namespace pt
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -385,15 +396,6 @@ const ptGuiOptionsItem ptGuiOptions::FlipMode[] = {
   {ptFlipMode_None,              QObject::tr("No flip") },
   {ptFlipMode_Horizontal,        QObject::tr("Horizontal flip") },
   {ptFlipMode_Vertical,          QObject::tr("Vertical flip") },
-  {-1,NULL}};
-
-const ptGuiOptionsItem ptGuiOptions::GrainMode[] = {
-  {ptGrainMode_SoftGaussian,     QObject::tr("Soft gaussian") },
-  {ptGrainMode_SoftUniform,      QObject::tr("Soft uniform") },
-  {ptGrainMode_SoftSaltPepper,   QObject::tr("Soft salt'n pepper") },
-  {ptGrainMode_HardGaussian,     QObject::tr("Hard gaussian") },
-  {ptGrainMode_HardUniform,      QObject::tr("Hard uniform") },
-  {ptGrainMode_HardSaltPepper,   QObject::tr("Hard salt'n pepper") },
   {-1,NULL}};
 
 const ptGuiOptionsItem ptGuiOptions::MaskType[] = {

@@ -625,7 +625,6 @@ void ptProcessor::Run(short Phase,
         if (hFilter->isActive()) {
           m_ReportProgress(hFilter->caption());
           hFilter->runFilter(m_Image_AfterRGB);
-          TRACEMAIN("Done RGB Curve at %d ms.",FRunTimer.elapsed());
         }
 
 
@@ -688,7 +687,6 @@ void ptProcessor::Run(short Phase,
         if (hFilter->isActive()) {
           m_ReportProgress(hFilter->caption());
           hFilter->runFilter(m_Image_AfterLabCC);
-          TRACEMAIN("Done texture curve at %d ms.",FRunTimer.elapsed());
         }
 
 
@@ -885,7 +883,7 @@ void ptProcessor::Run(short Phase,
 
         hFilter = GFilterDM->GetFilterFromName(Fuid::DetailCurve_LabSN);
         if (hFilter->isActive()) {
-          m_ReportProgress(tr("Detail curve"));
+          m_ReportProgress(hFilter->caption());
           hFilter->runFilter(m_Image_AfterLabSN);
         }
 
@@ -940,56 +938,13 @@ void ptProcessor::Run(short Phase,
         }
 
 
-
         //***************************************************************************
-        // Grain
+        // Film grain simulation
 
-        if (Settings->ToolIsActive("TabLABFilmGrain") &&
-            Settings->GetInt("Grain1MaskType")) {
-
-          m_ReportProgress(tr("Film grain 1"));
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabSN->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabSN->RGBToLab();
-
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      FRunTimer.elapsed());
-
-          }
-          m_Image_AfterLabSN->Grain(Settings->GetDouble("Grain1Strength"),
-                                    Settings->GetInt("Grain1Mode"),
-                                    Settings->GetDouble("Grain1Radius"),
-                                    Settings->GetDouble("Grain1Opacity"),
-                                    static_cast<TMaskType>(Settings->GetInt("Grain1MaskType")),
-                                    Settings->GetDouble("Grain1LowerLimit"),
-                                    Settings->GetDouble("Grain1UpperLimit"),
-                                    (int)(logf(m_ScaleFactor)/logf(0.5)));
-          TRACEMAIN("Done film grain 1 at %d ms.",FRunTimer.elapsed());
-        }
-
-        if (Settings->ToolIsActive("TabLABFilmGrain") &&
-            Settings->GetInt("Grain2MaskType")) {
-
-          m_ReportProgress(tr("Film grain 2"));
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabSN->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabSN->RGBToLab();
-
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      FRunTimer.elapsed());
-
-          }
-          m_Image_AfterLabSN->Grain(Settings->GetDouble("Grain2Strength"),
-                                    Settings->GetInt("Grain2Mode"),
-                                    Settings->GetDouble("Grain2Radius"),
-                                    Settings->GetDouble("Grain2Opacity"),
-                                    static_cast<TMaskType>(Settings->GetInt("Grain2MaskType")),
-                                    Settings->GetDouble("Grain2LowerLimit"),
-                                    Settings->GetDouble("Grain2UpperLimit"),
-                                    (int)(logf(m_ScaleFactor)/logf(0.5)));
-          TRACEMAIN("Done film grain 2 at %d ms.",FRunTimer.elapsed());
+        hFilter = GFilterDM->GetFilterFromName(Fuid::FilmGrain_LabSN);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterLabSN);
         }
 
 

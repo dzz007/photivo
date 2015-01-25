@@ -303,7 +303,8 @@ HEADERS += \
     ../Sources/filters/ptFilter_WaveletDenoise.h \
     ../Sources/filters/ptFilter_InvDiffSharpen.h \
     ../Sources/filters/ptFilter_UnsharpMask.h \
-    ../Sources/filters/ptFilter_HighpassSharpen.h
+    ../Sources/filters/ptFilter_HighpassSharpen.h \
+    ../Sources/filters/ptFilter_FilmGrain.h
 
 SOURCES += \
     ../Sources/batch/ptBatchWindow.cpp \
@@ -453,7 +454,8 @@ SOURCES += \
     ../Sources/filters/ptFilter_WaveletDenoise.cpp \
     ../Sources/filters/ptFilter_InvDiffSharpen.cpp \
     ../Sources/filters/ptFilter_UnsharpMask.cpp \
-    ../Sources/filters/ptFilter_HighpassSharpen.cpp
+    ../Sources/filters/ptFilter_HighpassSharpen.cpp \
+    ../Sources/filters/ptFilter_FilmGrain.cpp
 
 FORMS += \
     ../Sources/batch/ptBatchWindow.ui \
@@ -472,6 +474,7 @@ FORMS += \
     ../Sources/filters/ptFilter_Defringe.ui \
     ../Sources/filters/ptFilter_WaveletDenoise.ui \
     ../Sources/filters/ptFilter_InvDiffSharpen.ui \
+    ../Sources/filters/ptFilter_FilmGrain.ui \
     ../Sources/ptMainWindow.ui
 
 win32 {

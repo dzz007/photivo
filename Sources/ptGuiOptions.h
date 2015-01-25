@@ -39,6 +39,7 @@ namespace pt {
   }
 
   bool isActiveFilterMode(const QVariant& AFilterMode);
+  bool isActiveMaskType(const QVariant& AMaskType);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -106,7 +107,6 @@ public:
   static const ptGuiOptionsItem ColorFilterType[];
   static const ptGuiOptionsItem GradualBlurMode[];
   static const ptGuiOptionsItem FlipMode[];
-  static const ptGuiOptionsItem GrainMode[];
   static const ptGuiOptionsItem MaskType[];
   static const ptGuiOptionsItem GrainMaskType[];
   static const ptGuiOptionsItem OverlayMode[];
