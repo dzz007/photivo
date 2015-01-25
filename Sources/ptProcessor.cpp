@@ -979,9 +979,8 @@ void ptProcessor::Run(short Phase,
 
         hFilter = GFilterDM->GetFilterFromName(Fuid::Outline_LabEyeCandy);
         if (hFilter->isActive()) {
-          m_ReportProgress(tr("Applying Outline"));
+          m_ReportProgress(hFilter->caption());
           hFilter->runFilter(m_Image_AfterLabEyeCandy);
-          TRACEMAIN("Done Outline at %d ms.",FRunTimer.elapsed());
         }
 
         //***************************************************************************
@@ -989,9 +988,8 @@ void ptProcessor::Run(short Phase,
 
         hFilter = GFilterDM->GetFilterFromName(Fuid::LumaByHueCurve_LabEyeCandy);
         if (hFilter->isActive()) {
-          m_ReportProgress(tr("Applying L by Hue curve"));
+          m_ReportProgress(hFilter->caption());
           hFilter->runFilter(m_Image_AfterLabEyeCandy);
-          TRACEMAIN("Done L by Hue Curve at %d ms.",FRunTimer.elapsed());
         }
 
 
@@ -1000,9 +998,8 @@ void ptProcessor::Run(short Phase,
 
         hFilter = GFilterDM->GetFilterFromName(Fuid::SatCurve_LabEyeCandy);
         if (hFilter->isActive()) {
-          m_ReportProgress(tr("Applying saturation curve"));
+          m_ReportProgress(hFilter->caption());
           hFilter->runFilter(m_Image_AfterLabEyeCandy);
-          TRACEMAIN("Done saturation Curve at %d ms.",FRunTimer.elapsed());
         }
 
 
@@ -1010,9 +1007,8 @@ void ptProcessor::Run(short Phase,
         // Hue Curve
         hFilter = GFilterDM->GetFilterFromName(Fuid::HueCurve_LabEyeCandy);
         if (hFilter->isActive()) {
-          m_ReportProgress(tr("Applying hue curve"));
+          m_ReportProgress(hFilter->caption());
           hFilter->runFilter(m_Image_AfterLabEyeCandy);
-          TRACEMAIN("Done hue Curve at %d ms.",FRunTimer.elapsed());
         }
 
 
@@ -1021,9 +1017,8 @@ void ptProcessor::Run(short Phase,
 
         hFilter = GFilterDM->GetFilterFromName(Fuid::LCurve_LabEyeCandy);
         if (hFilter->isActive()) {
-          m_ReportProgress(tr("Applying L curve"));
+          m_ReportProgress(hFilter->caption());
           hFilter->runFilter(m_Image_AfterLabEyeCandy);
-          TRACEMAIN("Done L Curve at %d ms.",FRunTimer.elapsed());
         }
 
         //***************************************************************************
@@ -1031,9 +1026,8 @@ void ptProcessor::Run(short Phase,
 
         hFilter = GFilterDM->GetFilterFromName(Fuid::ABCurves_LabEyeCandy);
         if (hFilter->isActive()) {
-          m_ReportProgress(tr("Applying a* b* curves"));
+          m_ReportProgress(hFilter->caption());
           hFilter->runFilter(m_Image_AfterLabEyeCandy);
-          TRACEMAIN("Done a* b* curves at %d ms.",FRunTimer.elapsed());
         }
 
         
@@ -1237,7 +1231,7 @@ void ptProcessor::Run(short Phase,
 
         hFilter = GFilterDM->GetFilterFromName(Fuid::SigContrastRgb_EyeCandy);
         if (hFilter->isActive()) {
-          m_ReportProgress(tr("Applying RGB Contrast"));
+          m_ReportProgress(hFilter->caption());
           hFilter->runFilter(m_Image_AfterEyeCandy);
         }
 
