@@ -47,11 +47,11 @@ ptFilter_$FilterName$::ptFilter_$FilterName$():
 
 //------------------------------------------------------------------------------
 
-ptFilterBase *ptFilter_$FilterName$::create$FilterName$() {
-  auto hInstance         = new ptFilter_$FilterName$;
-  hInstance->FFilterName = C$FilterName$Id;
-  hInstance->FCaption    = tr("GUI toolbox header");
-  return hInstance;
+ptFilterBase* ptFilter_$FilterName$::create$FilterName$() {
+  auto instance         = new ptFilter_$FilterName$;
+  instance->FFilterName = C$FilterName$Id;
+  instance->FCaption    = tr("GUI toolbox header");
+  return instance;
 }
 
 //------------------------------------------------------------------------------
@@ -110,7 +110,7 @@ void ptFilter_$FilterName$::doRunFilter(ptImage *AImage) const {
 //------------------------------------------------------------------------------
 
 /*** Uncomment following method when the filter has a .ui file. ***/
-//QWidget *ptFilter_$FilterName$::doCreateGui() {
+//QWidget* ptFilter_$FilterName$::doCreateGui() {
 //  auto guiBody = new QWidget;
 //  Ui_$FilterName$Form form;
 

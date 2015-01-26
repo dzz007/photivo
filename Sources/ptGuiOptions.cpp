@@ -41,7 +41,7 @@ namespace pt {
       {QObject::tr("Disabled"),       static_cast<int>(TFilterMode::Disabled), "Disabled"},
       {QObject::tr("Only final run"), static_cast<int>(TFilterMode::FinalRun), "FinalRun"},
       {QObject::tr("With preview"),   static_cast<int>(TFilterMode::AlwaysOn), "AlwaysOn"},
-      {QObject::tr("Show mask"),      static_cast<int>(TFilterMode::ShowMask), "ShowMask"}
+      {QObject::tr("Show mask"),      static_cast<int>(TFilterMode::ShowMask), "ShowMask"},
     });
 
     const ptCfgItem::TComboEntryList MaskTypes({
@@ -50,6 +50,19 @@ namespace pt {
       {QObject::tr("Midtones"),   static_cast<int>(TMaskType::Midtones),   "Midtones"},
       {QObject::tr("Highlights"), static_cast<int>(TMaskType::Highlights), "Highlights"},
       {QObject::tr("All values"), static_cast<int>(TMaskType::All),        "AllValues"},
+    });
+
+    const ptCfgItem::TComboEntryList VignetteShapes({
+      {QObject::tr("Diamond"),               static_cast<int>(TVignetteShape::Diamond), "Diamond"},
+      {QObject::tr("Circle"),                static_cast<int>(TVignetteShape::Circle),  "Circle"},
+      {QObject::tr("Rectangle 1 (rounded)"), static_cast<int>(TVignetteShape::Rect1),   "Rect1"},
+      {QObject::tr("Rectangle 2"),           static_cast<int>(TVignetteShape::Rect2),   "Rect2"},
+      {QObject::tr("Rectangle 3"),           static_cast<int>(TVignetteShape::Rect3),   "Rect3"},
+      {QObject::tr("Rectangle 4"),           static_cast<int>(TVignetteShape::Rect4),   "Rect4"},
+      {QObject::tr("Rectangle 5"),           static_cast<int>(TVignetteShape::Rect5),   "Rect5"},
+      {QObject::tr("Rectangle 6"),           static_cast<int>(TVignetteShape::Rect6),   "Rect6"},
+      {QObject::tr("Rectangle 7"),           static_cast<int>(TVignetteShape::Rect7),   "Rect7"},
+      {QObject::tr("Rectangle 8 (sharp)"),   static_cast<int>(TVignetteShape::Rect8),   "Rect8"},
     });
   } // namespace ComboEntries
 
@@ -462,14 +475,6 @@ const ptGuiOptionsItem ptGuiOptions::CrossprocessMode[] = {
   {ptCrossprocessMode_RM,    QObject::tr("Red - magenta") },
   {ptCrossprocessMode_BC,    QObject::tr("Blue - cyan") },
   {ptCrossprocessMode_BM,    QObject::tr("Blue - magenta") },
-  {-1,NULL}};
-
-const ptGuiOptionsItem ptGuiOptions::VignetteMode[] = {
-  {ptVignetteMode_None,              QObject::tr("Disabled") },
-  {ptVignetteMode_Soft,              QObject::tr("Soft") },
-  {ptVignetteMode_Hard,              QObject::tr("Hard") },
-  {ptVignetteMode_Fancy,             QObject::tr("Fancy") },
-  {ptVignetteMode_Mask,              QObject::tr("Show Mask") },
   {-1,NULL}};
 
 const ptGuiOptionsItem ptGuiOptions::SoftglowMode[] = {

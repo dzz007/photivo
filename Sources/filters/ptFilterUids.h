@@ -116,7 +116,7 @@ namespace Fuid {
   const QString LumaAdjust_LabEyeCandy          = "61b61fd7-c891-4d78-92c2-3290c190be65";
   const QString SatAdjust_LabEyeCandy           = "fb3f0bbc-6255-43ec-947c-4bd43e115379";
   const QString Tone_LabEyeCandy                = "57477687-7954-4dd6-8442-e4fe52539e61";
-  const QString Vignette_LabEyeCandy            = "eb2830e7-3782-4b1a-9e14-4fb3b8ad102d"; // not yet ported
+  const QString Vignette_LabEyeCandy            = "eb2830e7-3782-4b1a-9e14-4fb3b8ad102d";
 
   const QString BlackWhite_EyeCandy             = "fa677364-4c8c-41bd-9397-94ea42bec595"; // not yet ported
   const QString SimpleTone_EyeCandy             = "3ca8f518-398d-44f4-8e17-6303a0abcdd0";
@@ -128,7 +128,7 @@ namespace Fuid {
   const QString TextureOverlay2_EyeCandy        = "695cd103-9969-4331-b312-02fdeb361c9b"; // not yet ported
   const QString GradualOverlay1_EyeCandy        = "2dac85aa-7961-4fed-aa5d-6cde71535749"; // not yet ported
   const QString GradualOverlay2_EyeCandy        = "9b69181e-80ca-44bd-8ccf-a0bf57b0c11d"; // not yet ported
-  const QString Vignette_EyeCandy               = "98128af2-9c76-4483-870c-89dce831daf1"; // not yet ported
+  const QString Vignette_EyeCandy               = "98128af2-9c76-4483-870c-89dce831daf1";
   const QString GradualBlur1_EyeCandy           = "0a254db6-6300-403e-b4be-8ee6ca55bd7f"; // not yet ported
   const QString GradualBlur2_EyeCandy           = "2232911d-bac9-4eaa-a73f-d49594b07952"; // not yet ported
   const QString SoftglowOrten_EyeCandy          = "77ac5ce7-e1ab-4677-b6da-907c9f70e001"; // not yet ported

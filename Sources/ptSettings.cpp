@@ -128,14 +128,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"WhiteFraction"                 ,ptGT_InputSlider     ,2,1,1 ,10   ,1    ,50    ,1    ,0 ,tr("% white")             ,tr("Percentage of white aimed at")},
     {"WhiteLevel"                    ,ptGT_InputSlider     ,2,1,1 ,90   ,50   ,99    ,1    ,0 ,tr("WhiteLevel")         ,tr("WhiteLevel")},
     {"Exposure"                      ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-5.0 ,5.0   ,0.1 ,2 ,tr("EV")                 ,tr("Exposure in EV")},
-    {"LabVignette"                   ,ptGT_Input           ,2,1,1 ,2    ,1    ,10    ,1    ,0  ,tr("Shape")             ,tr("Shape of the vignette")},
-    {"LabVignetteAmount"             ,ptGT_InputSlider     ,2,1,1 ,0.3  ,-1.0  ,1.0   ,0.1  ,2 ,tr("Amount")            ,tr("Amount")},
-    {"LabVignetteInnerRadius"        ,ptGT_InputSlider     ,2,1,1 ,0.7  ,0.0  ,3.0   ,0.1  ,2  ,tr("Inner Radius")      ,tr("Inner Radius")},
-    {"LabVignetteOuterRadius"        ,ptGT_InputSlider     ,2,1,1 ,2.2  ,0.0  ,3.0   ,0.1  ,2  ,tr("Outer Radius")      ,tr("Outer Radius")},
-    {"LabVignetteRoundness"          ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0  ,1.0   ,0.05  ,2,tr("Roundness")         ,tr("Roundness")},
-    {"LabVignetteCenterX"            ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0  ,1.0   ,0.1  ,2 ,tr("Center X")          ,tr("Center X")},
-    {"LabVignetteCenterY"            ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0  ,1.0   ,0.1  ,2 ,tr("Center Y")          ,tr("Center Y")},
-    {"LabVignetteSoftness"           ,ptGT_InputSlider     ,2,1,1 ,0.06 ,0.0   ,1.0   ,0.1  ,2 ,tr("Softness")          ,tr("Softness")},
     {"BWStylerOpacity"               ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0   ,1.0   ,0.05 ,2 ,tr("Opacity")            ,tr("Opacity")},
     {"BWStylerMultR"                 ,ptGT_InputSlider     ,2,1,1 ,0.5  ,-1.0  ,1.0   ,0.1 ,2 ,tr("Red")                ,tr("Red multiplicity")},
     {"BWStylerMultG"                 ,ptGT_InputSlider     ,2,1,1 ,0.5  ,-1.0  ,1.0   ,0.1 ,2 ,tr("Green")              ,tr("Green multiplicity")},
@@ -178,14 +170,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"GradualOverlay2LowerLevel"     ,ptGT_InputSlider     ,2,1,1 ,0.5  ,0.0  ,3.0   ,0.1  ,2 ,tr("Lower Level")        ,tr("Lower Level")},
     {"GradualOverlay2UpperLevel"     ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,3.0   ,0.1  ,2 ,tr("Upper Level")        ,tr("Upper Level")},
     {"GradualOverlay2Softness"       ,ptGT_InputSlider     ,2,1,1 ,0.15  ,0.0  ,1.0   ,0.1  ,2 ,tr("Softness")        ,tr("Softness")},
-    {"Vignette"                      ,ptGT_Input           ,2,1,1 ,2    ,1    ,10    ,1    ,0 ,tr("Shape")             ,tr("Shape of the vignette")},
-    {"VignetteAmount"                ,ptGT_InputSlider     ,2,1,1 ,0.5  ,-1.0  ,1.0   ,0.1  ,2 ,tr("Amount")        ,tr("Amount")},
-    {"VignetteInnerRadius"           ,ptGT_InputSlider     ,2,1,1 ,0.7  ,0.0  ,3.0   ,0.1  ,2 ,tr("Inner Radius")        ,tr("Inner Radius")},
-    {"VignetteOuterRadius"           ,ptGT_InputSlider     ,2,1,1 ,2.2  ,0.0  ,3.0   ,0.1  ,2 ,tr("Outer Radius")        ,tr("Outer Radius")},
-    {"VignetteRoundness"             ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0  ,1.0   ,0.05  ,2 ,tr("Roundness")        ,tr("Roundness")},
-    {"VignetteCenterX"               ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0  ,1.0   ,0.1  ,2 ,tr("Center X")        ,tr("Center X")},
-    {"VignetteCenterY"               ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0  ,1.0   ,0.1  ,2 ,tr("Center Y")        ,tr("Center Y")},
-    {"VignetteSoftness"              ,ptGT_InputSlider     ,2,1,1 ,0.15  ,0.0  ,1.0   ,0.1  ,2 ,tr("Softness")        ,tr("Softness")},
     {"GradBlur1Radius"               ,ptGT_InputSlider     ,2,1,1 ,0.0 ,0.0  ,200.0 ,5.0  ,0 ,tr("Radius")             ,tr("Maximal radius for the blur")},
     {"GradBlur1LowerLevel"           ,ptGT_InputSlider     ,2,1,1 ,0.3  ,0.0  ,10.0  ,0.1  ,2 ,tr("Lower Level")        ,tr("Lower Level")},
     {"GradBlur1UpperLevel"           ,ptGT_InputSlider     ,2,1,1 ,1.5  ,0.0  ,10.0  ,0.1  ,2 ,tr("Upper Level")        ,tr("Upper Level")},
@@ -260,7 +244,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"AspectRatioH"                ,ptGT_Choice       ,2,0,0 ,2                           ,GuiOptions->AspectRatio               ,tr("Aspect height")},
     {"ExposureClipMode"            ,ptGT_Choice       ,1,1,1 ,ptExposureClipMode_Curve    ,GuiOptions->ExposureClipMode          ,tr("Clip mode")},
     {"AutoExposure"                ,ptGT_Choice       ,1,1,1 ,ptAutoExposureMode_Zero     ,GuiOptions->AutoExposureMode          ,tr("Auto exposure mode")},
-    {"LabVignetteMode"             ,ptGT_Choice       ,2,1,1 ,ptVignetteMode_None         ,GuiOptions->VignetteMode              ,tr("Mode for Vignette")},
     {"BWStylerFilmType"            ,ptGT_Choice       ,2,1,1 ,ptFilmType_Luminance        ,GuiOptions->FilmType                  ,tr("Film emulation")},
     {"BWStylerColorFilterType"     ,ptGT_Choice       ,2,1,1 ,ptColorFilterType_None      ,GuiOptions->ColorFilterType           ,tr("Color filter emulation")},
     {"Tone1MaskType"               ,ptGT_Choice       ,2,1,1 ,ptMaskType_None             ,GuiOptions->MaskType                  ,tr("Values for Toning")},
@@ -272,7 +255,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"TextureOverlay2Mask"         ,ptGT_Choice       ,2,1,1 ,ptOverlayMaskMode_FullImage ,GuiOptions->OverlayMaskMode           ,tr("Mask for Texture Overlay")},
     {"GradualOverlay1"             ,ptGT_Choice       ,2,1,1 ,ptOverlayMode_None          ,GuiOptions->OverlayMode               ,tr("Mode for Gradual Overlay")},
     {"GradualOverlay2"             ,ptGT_Choice       ,2,1,1 ,ptOverlayMode_None          ,GuiOptions->OverlayMode               ,tr("Mode for Gradual Overlay")},
-    {"VignetteMode"                ,ptGT_Choice       ,2,1,1 ,ptVignetteMode_None         ,GuiOptions->VignetteMode              ,tr("Mode for Vignette")},
     {"GradBlur1"                   ,ptGT_Choice       ,1,1,1 ,ptGradualBlur_Linear        ,GuiOptions->GradualBlurMode           ,tr("Mode for the gradual blur")},
     {"GradBlur2"                   ,ptGT_Choice       ,1,1,1 ,ptGradualBlur_Linear        ,GuiOptions->GradualBlurMode           ,tr("Mode for the gradual blur")},
     {"SoftglowMode"                ,ptGT_Choice       ,2,1,1 ,ptSoftglowMode_None         ,GuiOptions->SoftglowMode              ,tr("Mode for Softglow")},
@@ -1432,12 +1414,6 @@ sToolInfo ToolInfo (const QString GuiName) {
       Info.Name = "Exposure";
       Info.IsActive = Settings->GetDouble("Exposure")!=0.0?1:0;
   }
-  // Tab Lab EyeCandy
-  else if (GuiName == "TabLABVignette") {
-      Info.Name = "Lab vignette";
-      Info.IsActive = (Settings->GetInt("LabVignetteMode") != 0 &&
-                       Settings->GetDouble("LabVignetteAmount") != 0.0)!=0?1:0;
-  }
   // Tab EyeCandy
   else if (GuiName == "TabBW") {
       Info.Name = "Black and White";
@@ -1467,10 +1443,6 @@ sToolInfo ToolInfo (const QString GuiName) {
       Info.Name = "Gradual Overlay 2";
       Info.IsActive = (Settings->GetInt("GradualOverlay2") &&
                        Settings->GetDouble("GradualOverlay2Amount")!=0.0)!=0?1:0;
-  } else if (GuiName == "TabRGBVignette") {
-      Info.Name = "Eyecandy vignette";
-      Info.IsActive = (Settings->GetInt("VignetteMode") &&
-                       Settings->GetDouble("VignetteAmount")!=0.0)!=0?1:0;
   } else if (GuiName == "TabGradualBlur1") {
       Info.Name = "Gradual blur 1";
       Info.IsActive = Settings->GetDouble("GradBlur1Radius")!=0.0?1:0;

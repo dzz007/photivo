@@ -885,7 +885,10 @@ void ptFilterDM::TranslateSpecialToNew(QSettings *APreset, QStringList *AKeys) {
 //==============================================================================
 
 void ptFilterDM::TranslateSpecialToOld(QSettings *APreset) {
-  /***** Channel mixer *****/
+  /***** Channel mixer *****
+    Write old-style active state and (empty) file name list. Corresponding new-style
+    keys do not exist anymore.
+  */
   APreset->setValue(
       "ChannelMixer",
       static_cast<int>(GFilterDM->GetFilterFromName(Fuid::ChannelMixer_RGB)->isActive()));
@@ -1269,14 +1272,14 @@ void ptFilterDM::FillNameMap() {
   FNameMap.insert("LABToneHSaturation",              "Tone/"+Fuid::Tone_LabEyeCandy+"/SaturationLights");
   FNameMap.insert("LABToneHAmount",                  "Tone/"+Fuid::Tone_LabEyeCandy+"/StrengthLights");
   FNameMap.insert("LABToneHHue",                     "Tone/"+Fuid::Tone_LabEyeCandy+"/HueLights");
-//  FNameMap.insert("LabVignette",                     "");
-//  FNameMap.insert("LabVignetteAmount",               "");
-//  FNameMap.insert("LabVignetteInnerRadius",          "");
-//  FNameMap.insert("LabVignetteOuterRadius",          "");
-//  FNameMap.insert("LabVignetteRoundness",            "");
-//  FNameMap.insert("LabVignetteCenterX",              "");
-//  FNameMap.insert("LabVignetteCenterY",              "");
-//  FNameMap.insert("LabVignetteSoftness",             "");
+  FNameMap.insert("LabVignette",                     "VignetteLab/"+Fuid::Vignette_LabEyeCandy+"/Shape");
+  FNameMap.insert("LabVignetteAmount",               "VignetteLab/"+Fuid::Vignette_LabEyeCandy+"/Strength");
+  FNameMap.insert("LabVignetteInnerRadius",          "VignetteLab/"+Fuid::Vignette_LabEyeCandy+"/InnerRadius");
+  FNameMap.insert("LabVignetteOuterRadius",          "VignetteLab/"+Fuid::Vignette_LabEyeCandy+"/OuterRadius");
+  FNameMap.insert("LabVignetteRoundness",            "VignetteLab/"+Fuid::Vignette_LabEyeCandy+"/Roundness");
+  FNameMap.insert("LabVignetteCenterX",              "VignetteLab/"+Fuid::Vignette_LabEyeCandy+"/CenterX");
+  FNameMap.insert("LabVignetteCenterY",              "VignetteLab/"+Fuid::Vignette_LabEyeCandy+"/CenterY");
+  FNameMap.insert("LabVignetteSoftness",             "VignetteLab/"+Fuid::Vignette_LabEyeCandy+"/Softness");
 //  FNameMap.insert("BWStylerOpacity",                 "");
 //  FNameMap.insert("BWStylerMultR",                   "");
 //  FNameMap.insert("BWStylerMultG",                   "");
@@ -1324,14 +1327,14 @@ void ptFilterDM::FillNameMap() {
 //  FNameMap.insert("GradualOverlay2LowerLevel",       "");
 //  FNameMap.insert("GradualOverlay2UpperLevel",       "");
 //  FNameMap.insert("GradualOverlay2Softness",         "");
-//  FNameMap.insert("Vignette",                        "");
-//  FNameMap.insert("VignetteAmount",                  "");
-//  FNameMap.insert("VignetteInnerRadius",             "");
-//  FNameMap.insert("VignetteOuterRadius",             "");
-//  FNameMap.insert("VignetteRoundness",               "");
-//  FNameMap.insert("VignetteCenterX",                 "");
-//  FNameMap.insert("VignetteCenterY",                 "");
-//  FNameMap.insert("VignetteSoftness",                "");
+  FNameMap.insert("Vignette",                        "VignetteRgb/"+Fuid::Vignette_EyeCandy+"/Shape");
+  FNameMap.insert("VignetteAmount",                  "VignetteRgb/"+Fuid::Vignette_EyeCandy+"/Strength");
+  FNameMap.insert("VignetteInnerRadius",             "VignetteRgb/"+Fuid::Vignette_EyeCandy+"/InnerRadius");
+  FNameMap.insert("VignetteOuterRadius",             "VignetteRgb/"+Fuid::Vignette_EyeCandy+"/OuterRadius");
+  FNameMap.insert("VignetteRoundness",               "VignetteRgb/"+Fuid::Vignette_EyeCandy+"/Roundness");
+  FNameMap.insert("VignetteCenterX",                 "VignetteRgb/"+Fuid::Vignette_EyeCandy+"/CenterX");
+  FNameMap.insert("VignetteCenterY",                 "VignetteRgb/"+Fuid::Vignette_EyeCandy+"/CenterY");
+  FNameMap.insert("VignetteSoftness",                "VignetteRgb/"+Fuid::Vignette_EyeCandy+"/Softness");
 //  FNameMap.insert("GradBlur1Radius",                 "");
 //  FNameMap.insert("GradBlur1LowerLevel",             "");
 //  FNameMap.insert("GradBlur1UpperLevel",             "");
@@ -1429,7 +1432,7 @@ void ptFilterDM::FillNameMap() {
   FNameMap.insert("Grain1Mode",                      "FilmGrain/"+Fuid::FilmGrain_LabSN+"/GrainType1");
   FNameMap.insert("Grain2MaskType",                  "FilmGrain/"+Fuid::FilmGrain_LabSN+"/MaskType2");
   FNameMap.insert("Grain2Mode",                      "FilmGrain/"+Fuid::FilmGrain_LabSN+"/GrainType2");
-//  FNameMap.insert("LabVignetteMode",                 "");
+  FNameMap.insert("LabVignetteMode",                 "VignetteLab/"+Fuid::Vignette_LabEyeCandy+"/MaskType");
   FNameMap.insert("ViewLAB",                         "LabChannelView/"+Fuid::ViewLab_LabSN+"/ChannelSelection");
   FNameMap.insert("OutlineMode",                     "Outline/"+Fuid::Outline_LabEyeCandy+"/OverlayMode");
   FNameMap.insert("OutlineGradientMode",             "Outline/"+Fuid::Outline_LabEyeCandy+"/GradientMode");
@@ -1446,7 +1449,7 @@ void ptFilterDM::FillNameMap() {
 //  FNameMap.insert("TextureOverlay2Mask",             "");
 //  FNameMap.insert("GradualOverlay1",                 "");
 //  FNameMap.insert("GradualOverlay2",                 "");
-//  FNameMap.insert("VignetteMode",                    "");
+  FNameMap.insert("VignetteMode",                    "VignetteRgb/"+Fuid::Vignette_EyeCandy+"/MaskType");
 //  FNameMap.insert("GradBlur1",                       "");
 //  FNameMap.insert("GradBlur2",                       "");
 //  FNameMap.insert("SoftglowMode",                    "");

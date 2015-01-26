@@ -424,8 +424,8 @@ public:
               const double Softness);
 
   // Vignette
-  ptImage* Vignette(const short VignetteMode,
-            const short Exponent,
+  ptImage* Vignette(const TVignetteMask VignetteMode,
+            const TVignetteShape Shape,
             const double Amount,
             const double InnerRadius,
             const double OuterRadius,
