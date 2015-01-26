@@ -4731,30 +4731,33 @@ ptImage* ptImage::GradualOverlay(const uint16_t R,
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-ptImage* ptImage::Vignette(const short VignetteMode,
-                           const short Exponent,
+ptImage* ptImage::Vignette(const TVignetteMask VignetteMode,
+                           const TVignetteShape Shape,
                            const double Amount,
                            const double InnerRadius,
                            const double OuterRadius,
                            const double Roundness,
                            const double CenterX,
                            const double CenterY,
-                           const double Softness) {
-
-  float *VignetteMask;
-
-  VignetteMask = GetVignetteMask(0,
-                                 Exponent,
-                                 InnerRadius,
-                                 OuterRadius,
-                                 Roundness,
-                                 CenterX,
-                                 CenterY,
-                                 Softness);
+                           const double Softness)
+{
+  float* VignetteMask = GetVignetteMask(
+      0,
+      static_cast<int>(Shape),
+      InnerRadius,
+      OuterRadius,
+      Roundness,
+      CenterX,
+      CenterY,
+      Softness);
 
   switch (VignetteMode) {
-    case ptVignetteMode_Soft:
-    case ptVignetteMode_Hard:
+    case TVignetteMask::Disabled:
+      assert("Should not be called with disabled vignette mask!");
+      break;
+
+    case TVignetteMask::Soft:
+    case TVignetteMask::Hard:
       {
         uint16_t (*ToneImage)[3] = (uint16_t (*)[3]) CALLOC(m_Width*m_Height,sizeof(*ToneImage));
         ptMemoryError(ToneImage,__FILE__,__LINE__);
@@ -4762,10 +4765,10 @@ ptImage* ptImage::Vignette(const short VignetteMode,
         short    hMode  = ptOverlayMode_SoftLight;
         if (Amount > 0) {
           hColor = 0;
-          if (VignetteMode == ptVignetteMode_Hard) hMode = ptOverlayMode_Multiply;
+          if (VignetteMode == TVignetteMask::Hard) hMode = ptOverlayMode_Multiply;
         } else {
           hColor = 0xffff;
-          if (VignetteMode == ptVignetteMode_Hard) hMode = ptOverlayMode_Screen;
+          if (VignetteMode == TVignetteMask::Hard) hMode = ptOverlayMode_Screen;
       }
 
 #pragma omp parallel for schedule(static) default(shared)
@@ -4778,7 +4781,7 @@ ptImage* ptImage::Vignette(const short VignetteMode,
       }
       break;
 
-    case ptVignetteMode_Fancy:
+    case TVignetteMask::Fancy:
       {
         ptImage *VignetteLayer = new ptImage;
         VignetteLayer->Set(this);
@@ -4792,15 +4795,15 @@ ptImage* ptImage::Vignette(const short VignetteMode,
       }
       break;
 
-    case ptVignetteMode_Mask:
+    case TVignetteMask::ShowMask:
       if (m_ColorSpace == ptSpace_Lab) {
-#pragma omp parallel for schedule(static) default(shared)
+#       pragma omp parallel for schedule(static) default(shared)
         for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
           m_Image[i][0] = CLIP((int32_t) (VignetteMask[i]*0xffff));
           m_Image[i][1] = m_Image[i][2] = 0x8080;
         }
       } else {
-#pragma omp parallel for schedule(static) default(shared)
+#       pragma omp parallel for schedule(static) default(shared)
         for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
           m_Image[i][0] = m_Image[i][1] = m_Image[i][2] =
             CLIP((int32_t) (VignetteMask[i]*0xffff));

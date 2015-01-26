@@ -1084,28 +1084,10 @@ void ptProcessor::Run(short Phase,
         //***************************************************************************
         // Vignette
 
-        if (Settings->ToolIsActive("TabLABVignette")) {
-
-          //Postponed RGBToLab for performance.
-          if (m_Image_AfterLabEyeCandy->m_ColorSpace != ptSpace_Lab) {
-            m_Image_AfterLabEyeCandy->RGBToLab();
-
-            TRACEMAIN("Done conversion to LAB at %d ms.",
-                      FRunTimer.elapsed());
-          }
-
-          m_ReportProgress(tr("Lab Vignette"));
-
-          m_Image_AfterLabEyeCandy->Vignette(Settings->GetInt("LabVignetteMode"),
-            Settings->GetInt("LabVignette"),
-            Settings->GetDouble("LabVignetteAmount"),
-            Settings->GetDouble("LabVignetteInnerRadius"),
-            Settings->GetDouble("LabVignetteOuterRadius"),
-            Settings->GetDouble("LabVignetteRoundness")/2,
-            Settings->GetDouble("LabVignetteCenterX"),
-            Settings->GetDouble("LabVignetteCenterY"),
-            Settings->GetDouble("LabVignetteSoftness"));
-
+        hFilter = GFilterDM->GetFilterFromName(Fuid::Vignette_LabEyeCandy);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterLabEyeCandy);
         }
 
 
@@ -1446,21 +1428,12 @@ void ptProcessor::Run(short Phase,
         //***************************************************************************
         // Vignette
 
-        if (Settings->ToolIsActive("TabRGBVignette")) {
-
-          m_ReportProgress(tr("Vignette"));
-
-          m_Image_AfterEyeCandy->Vignette(Settings->GetInt("VignetteMode"),
-            Settings->GetInt("Vignette"),
-            Settings->GetDouble("VignetteAmount"),
-            Settings->GetDouble("VignetteInnerRadius"),
-            Settings->GetDouble("VignetteOuterRadius"),
-            Settings->GetDouble("VignetteRoundness")/2,
-            Settings->GetDouble("VignetteCenterX"),
-            Settings->GetDouble("VignetteCenterY"),
-            Settings->GetDouble("VignetteSoftness"));
-
+        hFilter = GFilterDM->GetFilterFromName(Fuid::Vignette_EyeCandy);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterEyeCandy);
         }
+
 
         //***************************************************************************
         // Gradual Blur 1

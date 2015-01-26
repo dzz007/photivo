@@ -25,24 +25,22 @@
 
 #include "ui_ptFilter_Vignette.h"
 #include "ptFilterBase.h"
-#include <memory>
 
 //==============================================================================
 
 class ptFilter_Vignette: public ptFilterBase {
-Q_OBJECT
+  Q_OBJECT
 
 public:
-  static ptFilterBase *createVignetteRgb();
-  static ptFilterBase *createVignetteLab();
+  static ptFilterBase* createVignetteRgb();
+  static ptFilterBase* createVignetteLab();
 
 
 protected:
-  QWidget  *doCreateGui();
-
-  void      doDefineControls();
-  bool      doCheckHasActiveCfg();
-  void      doRunFilter(ptImage *AImage) const;
+  QWidget*  doCreateGui() override;
+  void      doDefineControls() override;
+  bool      doCheckHasActiveCfg() override;
+  void      doRunFilter(ptImage *AImage) const override;
 
 
 private:
@@ -51,13 +49,11 @@ private:
   ptFilter_Vignette(TColorSpace AColorSpace);
 
   TColorSpace FColorSpace;
-  std::unique_ptr<Ui_VignetteForm> FUi;
+  Ui_VignetteForm FForm;
 
 private slots:
-  void innerRadiusChanged(const QString, const QVariant ANewValue);
-  void outerRadiusChanged(const QString, const QVariant ANewValue);
-
-
+  void onInnerRadiusChanged(const QString, const QVariant ANewValue);
+  void onOuterRadiusChanged(const QString, const QVariant ANewValue);
 };
 
 #endif // PTFILTER_Vignette_H

@@ -22,9 +22,11 @@
 
 #include "ptFilter_Vignette.h"
 #include "ptCfgItem.h"
+#include "../ptConstants.h"
+#include "../ptDefines.h"
+#include "../ptGuiOptions.h"
 #include "../ptImage.h"
 #include "../ptInfo.h"
-#include "../ptDefines.h"
 
 //------------------------------------------------------------------------------
 
@@ -53,7 +55,7 @@ ptFilter_Vignette::ptFilter_Vignette(TColorSpace AColorSpace)
 
 //------------------------------------------------------------------------------
 
-ptFilterBase *ptFilter_Vignette::createVignetteRgb() {
+ptFilterBase* ptFilter_Vignette::createVignetteRgb() {
   auto hInstance         = new ptFilter_Vignette(TColorSpace::Rgb);
   hInstance->FFilterName = CVignetteRgbId;
   hInstance->FCaption    = tr("Vignette");
@@ -62,118 +64,118 @@ ptFilterBase *ptFilter_Vignette::createVignetteRgb() {
 
 //------------------------------------------------------------------------------
 
-ptFilterBase *ptFilter_Vignette::createVignetteLab() {
-  auto hInstance         = new ptFilter_Vignette(TColorSpace::Lab);
-  hInstance->FFilterName = CVignetteLabId;
-  hInstance->FCaption    = tr("Vignette");
-  return hInstance;
+ptFilterBase* ptFilter_Vignette::createVignetteLab() {
+  auto instance         = new ptFilter_Vignette(TColorSpace::Lab);
+  instance->FFilterName = CVignetteLabId;
+  instance->FCaption    = tr("Vignette");
+  return instance;
 }
 
 //------------------------------------------------------------------------------
 
 void ptFilter_Vignette::doDefineControls() {
-  float hDefStrength = (FColorSpace == TColorSpace::Rgb) ? 0.5f  : 0.3f;
-  float hDefSoftness = (FColorSpace == TColorSpace::Rgb) ? 0.15f : 0.06f;
+  double defStrength = (FColorSpace == TColorSpace::Rgb) ? 0.5  : 0.3;
+  double defSoftness = (FColorSpace == TColorSpace::Rgb) ? 0.15 : 0.06;
 
-  QList<ptCfgItem::TComboEntry> hMaskTypes;
-  hMaskTypes.append({tr("Disabled"),  NoVignetteMask,    "disabled"});
-  hMaskTypes.append({tr("Soft"),      SoftVignetteMask,  "soft"});
-  hMaskTypes.append({tr("Hard"),      HardVignetteMask,  "hard"});
-  hMaskTypes.append({tr("Fancy"),     FancyVignetteMask, "fancy"});
-  hMaskTypes.append({tr("Show mask"), MaskVignetteMask,  "mask"});
+  ptCfgItem::TComboEntryList maskTypes;
+  maskTypes.append({tr("Disabled"),  static_cast<int>(TVignetteMask::Disabled), "Disabled"});
+  maskTypes.append({tr("Soft"),      static_cast<int>(TVignetteMask::Soft),     "Soft"});
+  maskTypes.append({tr("Hard"),      static_cast<int>(TVignetteMask::Hard),     "Hard"});
+  maskTypes.append({tr("Fancy"),     static_cast<int>(TVignetteMask::Fancy),    "Fancy"});
+  maskTypes.append({tr("Show mask"), static_cast<int>(TVignetteMask::ShowMask), "ShowMask"});
 
-  QList<ptCfgItem::TComboEntry> hShapes;
-  hShapes.append({tr("Diamond"),               DiamondVignetteShape, "diamond"});
-  hShapes.append({tr("Circle"),                CircleVignetteShape,  "circle"});
-  hShapes.append({tr("Rectangle 1 (rounded)"), Rect1VignetteShape,   "rect1"});
-  hShapes.append({tr("Rectangle 2"),           Rect2VignetteShape,   "rect2"});
-  hShapes.append({tr("Rectangle 3"),           Rect3VignetteShape,   "rect3"});
-  hShapes.append({tr("Rectangle 4"),           Rect4VignetteShape,   "rect4"});
-  hShapes.append({tr("Rectangle 5"),           Rect5VignetteShape,   "rect5"});
-  hShapes.append({tr("Rectangle 6"),           Rect6VignetteShape,   "rect6"});
-  hShapes.append({tr("Rectangle 7"),           Rect7VignetteShape,   "rect7"});
-  hShapes.append({tr("Rectangle 8 (sharp)"),   Rect8VignetteShape,   "rect8"});
-
-  FCfgItems = QList<ptCfgItem>()                                              //--- Combo: list of entries               ---//
+  FConfig.initStores(TCfgItemList()                                           //--- Combo: list of entries               ---//
     //            Id                    Type                      Default     Min           Max           Step        Decimals, commonConnect, storeable, caption, tooltip
-    << ptCfgItem({CMaskType,            ptCfgItem::Combo,         NoVignetteMask,      hMaskTypes,                              true, true, tr("Mask type"),   tr("")})
-    << ptCfgItem({CShape,               ptCfgItem::Combo,         CircleVignetteShape, hShapes,                                 true, true, tr("Shape"),   tr("")})
-    << ptCfgItem({CStrength,            ptCfgItem::Slider,      hDefStrength,-1.0,          1.0,          0.10,       2,        true, true, tr("Strength"), tr("")})
+    << ptCfgItem({CMaskType,            ptCfgItem::Combo,         static_cast<int>(TVignetteMask::Disabled), maskTypes,         true, true, tr("Mask type"),    tr("Mask type")})
+    << ptCfgItem({CShape,               ptCfgItem::Combo,         static_cast<int>(TVignetteShape::Circle), pt::ComboEntries::VignetteShapes, true, true, tr("Shape"),        tr("Shape of the vignette")})
+    << ptCfgItem({CStrength,            ptCfgItem::Slider,      defStrength, -1.0,          1.0,          0.10,       2,        true, true, tr("Strength"),     tr("")})
     << ptCfgItem({CInnerRadius,         ptCfgItem::Slider,        0.7,        0.0,          3.0,          0.10,       2,       false, true, tr("Inner radius"), tr("")})
     << ptCfgItem({COuterRadius,         ptCfgItem::Slider,        2.2,        0.0,          3.0,          0.10,       2,       false, true, tr("Outer radius"), tr("")})
-    << ptCfgItem({CRoundness,           ptCfgItem::Slider,        0.0,       -1.0,          1.0,          0.05,       2,        true, true, tr("Roundness"), tr("")})
-    << ptCfgItem({CCenterX,             ptCfgItem::Slider,        0.0,       -1.0,          1.0,          0.10,       2,        true, true, tr("Center X"), tr("")})
-    << ptCfgItem({CCenterY,             ptCfgItem::Slider,        0.0,       -1.0,          1.0,          0.10,       2,        true, true, tr("Center Y"), tr("")})
-    << ptCfgItem({CSoftness,            ptCfgItem::Slider,      hDefSoftness, 0.0,          1.0,          0.10,       2,        true, true, tr("Softness"), tr("")})
-  ;
-
+    << ptCfgItem({CRoundness,           ptCfgItem::Slider,        0.0,       -1.0,          1.0,          0.05,       2,        true, true, tr("Roundness"),    tr("")})
+    << ptCfgItem({CCenterX,             ptCfgItem::Slider,        0.0,       -1.0,          1.0,          0.10,       2,        true, true, tr("Horizontal center"),     tr("")})
+    << ptCfgItem({CCenterY,             ptCfgItem::Slider,        0.0,       -1.0,          1.0,          0.10,       2,        true, true, tr("Vertical center"),     tr("")})
+    << ptCfgItem({CSoftness,            ptCfgItem::Slider,      defSoftness,  0.0,          1.0,          0.10,       2,        true, true, tr("Softness"),     tr("")})
+  );
 }
 
 //------------------------------------------------------------------------------
 
 bool ptFilter_Vignette::doCheckHasActiveCfg() {
-  return (FConfig->getValue(CMaskType).value<TVignetteMask>() != NoVignetteMask) &&
-         (FConfig->getValue(CStrength).toFloat() != 0.0f);
+  return
+      (static_cast<TVignetteMask>(FConfig.value(CMaskType).toInt()) != TVignetteMask::Disabled) &&
+      !qFuzzyIsNull(FConfig.value(CStrength).toDouble());
 }
 
 //------------------------------------------------------------------------------
 
 void ptFilter_Vignette::doRunFilter(ptImage *AImage) const {
   switch (FColorSpace) {
-    case TColorSpace::Rgb: AImage->toRGB();
-    case TColorSpace::Lab: AImage->toLab();
-    default:               GInfo->Raise("Unknown color space", AT);
+    case TColorSpace::Rgb: AImage->toRGB(); break;
+    case TColorSpace::Lab: AImage->toLab(); break;
+    default:               GInfo->Raise("Unknown color space", AT); break;
   }
 
-  AImage->Vignette(FConfig->getValue(CMaskType).value<TVignetteMask>(),
-                   FConfig->getValue(CShape).toInt(),
-                   FConfig->getValue(CStrength).toFloat(),
-                   FConfig->getValue(CInnerRadius).toFloat(),
-                   FConfig->getValue(COuterRadius).toFloat(),
-                   FConfig->getValue(CRoundness).toFloat() / 2.0f,
-                   FConfig->getValue(CCenterX).toFloat(),
-                   FConfig->getValue(CCenterY).toFloat(),
-                   FConfig->getValue(CSoftness).toFloat() );
+  AImage->Vignette(
+      static_cast<TVignetteMask>(FConfig.value(CMaskType).toInt()),
+      static_cast<TVignetteShape>(FConfig.value(CShape).toInt()),
+      FConfig.value(CStrength).toDouble(),
+      FConfig.value(CInnerRadius).toDouble(),
+      FConfig.value(COuterRadius).toDouble(),
+      FConfig.value(CRoundness).toDouble() / 2.0,
+      FConfig.value(CCenterX).toDouble(),
+      FConfig.value(CCenterY).toDouble(),
+      FConfig.value(CSoftness).toDouble() );
 }
 
 //------------------------------------------------------------------------------
 
-QWidget *ptFilter_Vignette::doCreateGui() {
-  auto hGuiBody = new QWidget;
-  if (!FUi)
-    FUi = make_unique<Ui_VignetteForm>();
+QWidget* ptFilter_Vignette::doCreateGui() {
+  auto guiBody = new QWidget;
 
-  FUi->setupUi(hGuiBody);
-  this->initDesignerGui(hGuiBody);
+  FForm.setupUi(guiBody);
+  this->initDesignerGui(guiBody);
 
-  return hGuiBody;
+  connect(FForm.InnerRadius,
+          SIGNAL(valueChanged(QString,QVariant)),
+          SLOT(onInnerRadiusChanged(QString,QVariant)));
+  connect(FForm.OuterRadius,
+          SIGNAL(valueChanged(QString,QVariant)),
+          SLOT(onOuterRadiusChanged(QString,QVariant)));
+
+  return guiBody;
 }
 
 //------------------------------------------------------------------------------
 
-void ptFilter_Vignette::innerRadiusChanged(const QString, const QVariant ANewValue) {
-  if (!ANewValue.isValid()) return;
+void ptFilter_Vignette::onInnerRadiusChanged(const QString, const QVariant ANewValue) {
+  if (!ANewValue.isValid()) {
+    return;
+  }
 
-  QVariant hRadius = qMin(ANewValue.toFloat(), FConfig->getValue(COuterRadius).toFloat());
-  FConfig->setValue(CInnerRadius, hRadius);
-  FUi->InnerRadius->setValue(hRadius);
+  QVariant hRadius = qMin(ANewValue.toDouble(), FConfig.value(COuterRadius).toDouble());
+  FConfig.setValue(CInnerRadius, hRadius);
+  FForm.InnerRadius->setValue(hRadius);
 
-  requestPipeRun();
+  this->requestPipeRun();
 }
 
 //------------------------------------------------------------------------------
 
-void ptFilter_Vignette::outerRadiusChanged(const QString, const QVariant ANewValue) {
-  if (!ANewValue.isValid()) return;
+void ptFilter_Vignette::onOuterRadiusChanged(const QString, const QVariant ANewValue) {
+  if (!ANewValue.isValid()) {
+    return;
+  }
 
-  QVariant hRadius = qMax(ANewValue.toFloat(), FConfig->getValue(CInnerRadius).toFloat());
-  FConfig->setValue(COuterRadius, hRadius);
-  FUi->OuterRadius->setValue(hRadius);
+  QVariant hRadius = qMax(ANewValue.toDouble(), FConfig.value(CInnerRadius).toDouble());
+  FConfig.setValue(COuterRadius, hRadius);
+  FForm.OuterRadius->setValue(hRadius);
 
-  requestPipeRun();
+  this->requestPipeRun();
 }
 
 //------------------------------------------------------------------------------
 
 RegisterHelper VignetteRegisterRgb(&ptFilter_Vignette::createVignetteRgb, CVignetteRgbId);
 RegisterHelper VignetteRegisterLab(&ptFilter_Vignette::createVignetteLab, CVignetteLabId);
+
+// -----------------------------------------------------------------------------

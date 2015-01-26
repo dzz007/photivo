@@ -36,6 +36,7 @@ namespace pt {
     extern const ptCfgItem::TComboEntryList FilterModes;
     extern const ptCfgItem::TComboEntryList MaskedFilterModes;
     extern const ptCfgItem::TComboEntryList MaskTypes;
+    extern const ptCfgItem::TComboEntryList VignetteShapes;
   }
 
   bool isActiveFilterMode(const QVariant& AFilterMode);
@@ -112,7 +113,6 @@ public:
   static const ptGuiOptionsItem OutlineMode[];
   static const ptGuiOptionsItem OverlayMaskMode[];
   static const ptGuiOptionsItem CrossprocessMode[];
-  static const ptGuiOptionsItem VignetteMode[];
   static const ptGuiOptionsItem SoftglowMode[];
   static const ptGuiOptionsItem Enable[];
   static const ptGuiOptionsItem SaveFormat[];

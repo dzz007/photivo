@@ -508,13 +508,27 @@ const short ptOverlayMaskMode_FullImage   = 0;
 const short ptOverlayMaskMode_Vignette    = 1;
 const short ptOverlayMaskMode_InvVignette = 2;
 
-// VignetteMode
+enum class TVignetteMask: int {
+  Disabled,
+  Soft,
+  Hard,
+  Fancy,
+  ShowMask
+};
 
-const short ptVignetteMode_None  = 0;
-const short ptVignetteMode_Soft  = 1;
-const short ptVignetteMode_Hard  = 2;
-const short ptVignetteMode_Fancy = 3;
-const short ptVignetteMode_Mask  = 4;
+enum class TVignetteShape: int {
+  // ptImage::Vignette() relies on the integer values. Do not change them.
+  Diamond = 1,
+  Circle  = 2,
+  Rect1   = 3,
+  Rect2   = 4,
+  Rect3   = 5,
+  Rect4   = 6,
+  Rect5   = 7,
+  Rect6   = 8,
+  Rect7   = 9,
+  Rect8   = 10
+};
 
 // SoftglowMode
 

@@ -375,9 +375,11 @@ void CreateAllFilters() {
   GFilterDM->NewFilter("LumaAdjust",            Fuid::LumaAdjust_LabEyeCandy);
   GFilterDM->NewFilter("SatAdjust",             Fuid::SatAdjust_LabEyeCandy);
   GFilterDM->NewFilter("Tone",                  Fuid::Tone_LabEyeCandy);
+  GFilterDM->NewFilter("VignetteLab",           Fuid::Vignette_LabEyeCandy);
   // Eyecandy tab
   GFilterDM->NewFilter("SimpleTone",            Fuid::SimpleTone_EyeCandy);
   GFilterDM->NewFilter("SigContrastRgb",        Fuid::SigContrastRgb_EyeCandy);
+  GFilterDM->NewFilter("VignetteRgb",           Fuid::Vignette_EyeCandy);
   GFilterDM->NewFilter("ColorIntensity",        Fuid::ColorIntensity_EyeCandy);
   GFilterDM->NewFilter("RToneCurve",            Fuid::RTone_EyeCandy);
   GFilterDM->NewFilter("GToneCurve",            Fuid::GTone_EyeCandy);
@@ -1133,17 +1135,20 @@ void CB_Event0() {
     HistogramWindow->Init();
   }
 
-  if (Settings->GetStringList("FavouriteTools") == QStringList()) {
-    QStringList Temp;
-    Temp << "TabWhiteBalance"
-         << "TabRotation"
-         << "TabCrop"
-         << "TabReinhard05"
-         << "TabLABTexture2"
-         << "TabDetailCurve"
-         << "TabLABVignette"
-         << "TabOutContrast";
-    Settings->SetValue("FavouriteTools", Temp);
+  if (Settings->GetStringList("FavouriteTools").isEmpty()) {
+    Settings->SetValue(
+      "FavouriteTools",
+      QStringList({
+        "TabWhiteBalance",
+        "TabRotation",
+        "TabCrop",
+        Fuid::ReinhardBrighten_RGB,
+        Fuid::TextureContrast2_LabCC,
+        Fuid::DetailCurve_LabSN,
+        Fuid::Vignette_LabEyeCandy,
+        Fuid::SigContrastRgb_Out
+      })
+    );
   }
 
 #ifndef PT_WITHOUT_FILEMGR
@@ -4974,28 +4979,6 @@ void CB_ExposureClipModeChoice(const QVariant Value) {
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Callbacks pertaining to the LabEyeCandy Tab
-// Partim Vignette
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_LabVignetteInnerRadiusInput(const QVariant Value) {
-  Settings->SetValue("LabVignetteInnerRadius",MIN(Value.toDouble(), Settings->GetDouble("LabVignetteOuterRadius")));
-  if (Settings->ToolIsActive("TabLABVignette")) {
-    Update(ptProcessorPhase_LabEyeCandy);
-  }
-}
-
-
-void CB_LabVignetteOuterRadiusInput(const QVariant Value) {
-  Settings->SetValue("LabVignetteOuterRadius",MAX(Value.toDouble(), Settings->GetDouble("LabVignetteInnerRadius")));
-  if (Settings->ToolIsActive("TabLABVignette")) {
-    Update(ptProcessorPhase_LabEyeCandy);
-  }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
 // Callbacks pertaining to the EyeCandy Tab
 // Partim Black & White Styler
 //
@@ -5330,27 +5313,6 @@ void CB_GradualOverlay2UpperLevelInput(const QVariant Value) {
   }
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the EyeCandy Tab
-// Partim Vignette
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_VignetteInnerRadiusInput(const QVariant Value) {
-  Settings->SetValue("VignetteInnerRadius",MIN(Value.toDouble(), Settings->GetDouble("VignetteOuterRadius")));
-  if (Settings->ToolIsActive("TabRGBVignette")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
-
-void CB_VignetteOuterRadiusInput(const QVariant Value) {
-  Settings->SetValue("VignetteOuterRadius",MAX(Value.toDouble(), Settings->GetDouble("VignetteInnerRadius")));
-  if (Settings->ToolIsActive("TabRGBVignette")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -5723,16 +5685,6 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(ExposureInput)
   M_Dispatch(ExposureClipModeChoice)
 
-  M_SetAndRunDispatch(LabVignetteModeChoice)
-  M_SetAndRunDispatch(LabVignetteInput)
-  M_SetAndRunDispatch(LabVignetteAmountInput)
-  M_Dispatch(LabVignetteInnerRadiusInput)
-  M_Dispatch(LabVignetteOuterRadiusInput)
-  M_SetAndRunDispatch(LabVignetteRoundnessInput)
-  M_SetAndRunDispatch(LabVignetteCenterXInput)
-  M_SetAndRunDispatch(LabVignetteCenterYInput)
-  M_SetAndRunDispatch(LabVignetteSoftnessInput)
-
   M_Dispatch(BWStylerFilmTypeChoice)
   M_SetAndRunDispatch(BWStylerColorFilterTypeChoice)
   M_SetAndRunDispatch(BWStylerMultRInput)
@@ -5792,16 +5744,6 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(GradualOverlay2LowerLevelInput)
   M_Dispatch(GradualOverlay2UpperLevelInput)
   M_SetAndRunDispatch(GradualOverlay2SoftnessInput)
-
-  M_SetAndRunDispatch(VignetteModeChoice)
-  M_SetAndRunDispatch(VignetteInput)
-  M_SetAndRunDispatch(VignetteAmountInput)
-  M_Dispatch(VignetteInnerRadiusInput)
-  M_Dispatch(VignetteOuterRadiusInput)
-  M_SetAndRunDispatch(VignetteRoundnessInput)
-  M_SetAndRunDispatch(VignetteCenterXInput)
-  M_SetAndRunDispatch(VignetteCenterYInput)
-  M_SetAndRunDispatch(VignetteSoftnessInput)
 
   M_SetAndRunDispatch(GradBlur1Choice)
   M_SetAndRunDispatch(GradBlur1RadiusInput)

@@ -407,8 +407,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>98</width>
-                                <height>249</height>
+                                <width>426</width>
+                                <height>586</height>
                                </rect>
                               </property>
                               <layout class="QVBoxLayout" name="CameraTabLayout">
@@ -422,8 +422,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>234</width>
-                                    <height>76</height>
+                                    <width>408</width>
+                                    <height>406</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -1386,8 +1386,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>98</width>
-                                <height>114</height>
+                                <width>426</width>
+                                <height>586</height>
                                </rect>
                               </property>
                               <layout class="QVBoxLayout" name="verticalLayout_280">
@@ -1401,8 +1401,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>408</width>
+                                    <height>541</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -1439,8 +1439,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>98</width>
-                                <height>411</height>
+                                <width>426</width>
+                                <height>586</height>
                                </rect>
                               </property>
                               <layout class="QVBoxLayout" name="GeometryTabLayout">
@@ -2939,8 +2939,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>92</height>
+                                    <width>408</width>
+                                    <height>244</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -3127,8 +3127,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>98</width>
-                                <height>519</height>
+                                <width>426</width>
+                                <height>586</height>
                                </rect>
                               </property>
                               <layout class="QVBoxLayout" name="RGBTabLayout">
@@ -3145,8 +3145,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>408</width>
+                                    <height>136</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -3484,8 +3484,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>98</width>
-                                <height>492</height>
+                                <width>426</width>
+                                <height>586</height>
                                </rect>
                               </property>
                               <layout class="QVBoxLayout" name="LabCCTabLayout">
@@ -3611,8 +3611,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>28</height>
+                                    <width>408</width>
+                                    <height>163</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -4032,8 +4032,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>98</width>
-                                <height>438</height>
+                                <width>426</width>
+                                <height>586</height>
                                </rect>
                               </property>
                               <layout class="QVBoxLayout" name="LabEyeCandyTabLayout">
@@ -4215,95 +4215,14 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>174</height>
+                                    <width>408</width>
+                                    <height>217</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
-                                   <string>Vignette</string>
+                                   <string notr="true">eb2830e7-3782-4b1a-9e14-4fb3b8ad102d</string>
                                   </attribute>
-                                  <layout class="QVBoxLayout" name="verticalLayout_173">
-                                   <item>
-                                    <widget class="QWidget" name="widget_80" native="true">
-                                     <layout class="QVBoxLayout" name="verticalLayout_172">
-                                      <item>
-                                       <widget class="QWidget" name="widget_81" native="true">
-                                        <layout class="QHBoxLayout" name="horizontalLayout_55">
-                                         <property name="sizeConstraint">
-                                          <enum>QLayout::SetFixedSize</enum>
-                                         </property>
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <item>
-                                          <widget class="QWidget" name="LabVignetteModeWidget" native="true"/>
-                                         </item>
-                                         <item>
-                                          <widget class="QWidget" name="LabVignetteWidget" native="true"/>
-                                         </item>
-                                         <item>
-                                          <spacer name="horizontalSpacer_36">
-                                           <property name="orientation">
-                                            <enum>Qt::Horizontal</enum>
-                                           </property>
-                                           <property name="sizeHint" stdset="0">
-                                            <size>
-                                             <width>40</width>
-                                             <height>20</height>
-                                            </size>
-                                           </property>
-                                          </spacer>
-                                         </item>
-                                        </layout>
-                                       </widget>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="LabVignetteAmountWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="LabVignetteInnerRadiusWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="LabVignetteOuterRadiusWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="LabVignetteRoundnessWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="LabVignetteCenterXWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="LabVignetteCenterYWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="LabVignetteSoftnessWidget" native="true"/>
-                                      </item>
-                                     </layout>
-                                    </widget>
-                                   </item>
-                                   <item>
-                                    <spacer name="verticalSpacer_75">
-                                     <property name="orientation">
-                                      <enum>Qt::Vertical</enum>
-                                     </property>
-                                     <property name="sizeHint" stdset="0">
-                                      <size>
-                                       <width>20</width>
-                                       <height>318</height>
-                                      </size>
-                                     </property>
-                                    </spacer>
-                                   </item>
-                                  </layout>
+                                  <layout class="QVBoxLayout" name="verticalLayout_173"/>
                                  </widget>
                                 </widget>
                                </item>
@@ -4342,14 +4261,14 @@
                                <item>
                                 <widget class="QToolBox" name="ToolBoxEyeCandy">
                                  <property name="currentIndex">
-                                  <number>1</number>
+                                  <number>10</number>
                                  </property>
                                  <widget class="QWidget" name="TabBW">
                                   <property name="geometry">
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>391</width>
+                                    <width>98</width>
                                     <height>126</height>
                                    </rect>
                                   </property>
@@ -5326,95 +5245,14 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>174</height>
+                                    <width>408</width>
+                                    <height>82</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
-                                   <string>Vignette</string>
+                                   <string notr="true">98128af2-9c76-4483-870c-89dce831daf1</string>
                                   </attribute>
-                                  <layout class="QVBoxLayout" name="verticalLayout_110">
-                                   <item>
-                                    <widget class="QWidget" name="widget_35" native="true">
-                                     <layout class="QVBoxLayout" name="verticalLayout_111">
-                                      <item>
-                                       <widget class="QWidget" name="widgeta10" native="true">
-                                        <layout class="QHBoxLayout" name="horizontalLayout_20">
-                                         <property name="sizeConstraint">
-                                          <enum>QLayout::SetFixedSize</enum>
-                                         </property>
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <item>
-                                          <widget class="QWidget" name="VignetteModeWidget" native="true"/>
-                                         </item>
-                                         <item>
-                                          <widget class="QWidget" name="VignetteWidget" native="true"/>
-                                         </item>
-                                         <item>
-                                          <spacer name="horizontalSpacer_48">
-                                           <property name="orientation">
-                                            <enum>Qt::Horizontal</enum>
-                                           </property>
-                                           <property name="sizeHint" stdset="0">
-                                            <size>
-                                             <width>40</width>
-                                             <height>20</height>
-                                            </size>
-                                           </property>
-                                          </spacer>
-                                         </item>
-                                        </layout>
-                                       </widget>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="VignetteAmountWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="VignetteInnerRadiusWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="VignetteOuterRadiusWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="VignetteRoundnessWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="VignetteCenterXWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="VignetteCenterYWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="VignetteSoftnessWidget" native="true"/>
-                                      </item>
-                                     </layout>
-                                    </widget>
-                                   </item>
-                                   <item>
-                                    <spacer name="verticalSpacer_51">
-                                     <property name="orientation">
-                                      <enum>Qt::Vertical</enum>
-                                     </property>
-                                     <property name="sizeHint" stdset="0">
-                                      <size>
-                                       <width>20</width>
-                                       <height>40</height>
-                                      </size>
-                                     </property>
-                                    </spacer>
-                                   </item>
-                                  </layout>
+                                  <layout class="QVBoxLayout" name="verticalLayout_110"/>
                                  </widget>
                                  <widget class="QWidget" name="TabGradualBlur1">
                                   <property name="geometry">
@@ -5778,8 +5616,8 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>98</width>
-                                <height>303</height>
+                                <width>426</width>
+                                <height>586</height>
                                </rect>
                               </property>
                               <layout class="QVBoxLayout" name="OutTabLayout">
@@ -5810,8 +5648,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>84</height>
+                                    <width>408</width>
+                                    <height>352</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
