@@ -22,7 +22,6 @@
 ** along with Photivo.  If not, see <http://www.gnu.org/licenses/>.
 **
 *******************************************************************************/
-
 #include "ptDefines.h"
 #include "ptInfo.h"
 #include "ptCalloc.h"
@@ -380,6 +379,8 @@ void CreateAllFilters() {
   GFilterDM->NewFilter("SimpleTone",            Fuid::SimpleTone_EyeCandy);
   GFilterDM->NewFilter("SigContrastRgb",        Fuid::SigContrastRgb_EyeCandy);
   GFilterDM->NewFilter("VignetteRgb",           Fuid::Vignette_EyeCandy);
+  GFilterDM->NewFilter("GradualBlur",           Fuid::GradualBlur1_EyeCandy,        " I");
+  GFilterDM->NewFilter("GradualBlur",           Fuid::GradualBlur2_EyeCandy,        " II");
   GFilterDM->NewFilter("ColorIntensity",        Fuid::ColorIntensity_EyeCandy);
   GFilterDM->NewFilter("RToneCurve",            Fuid::RTone_EyeCandy);
   GFilterDM->NewFilter("GToneCurve",            Fuid::GTone_EyeCandy);
@@ -5744,27 +5745,6 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(GradualOverlay2LowerLevelInput)
   M_Dispatch(GradualOverlay2UpperLevelInput)
   M_SetAndRunDispatch(GradualOverlay2SoftnessInput)
-
-  M_SetAndRunDispatch(GradBlur1Choice)
-  M_SetAndRunDispatch(GradBlur1RadiusInput)
-  M_SetAndRunDispatch(GradBlur1LowerLevelInput)
-  M_SetAndRunDispatch(GradBlur1UpperLevelInput)
-  M_SetAndRunDispatch(GradBlur1SoftnessInput)
-  M_SetAndRunDispatch(GradBlur1AngleInput)
-  M_SetAndRunDispatch(GradBlur1VignetteInput)
-  M_SetAndRunDispatch(GradBlur1RoundnessInput)
-  M_SetAndRunDispatch(GradBlur1CenterXInput)
-  M_SetAndRunDispatch(GradBlur1CenterYInput)
-  M_SetAndRunDispatch(GradBlur2Choice)
-  M_SetAndRunDispatch(GradBlur2RadiusInput)
-  M_SetAndRunDispatch(GradBlur2LowerLevelInput)
-  M_SetAndRunDispatch(GradBlur2UpperLevelInput)
-  M_SetAndRunDispatch(GradBlur2SoftnessInput)
-  M_SetAndRunDispatch(GradBlur2AngleInput)
-  M_SetAndRunDispatch(GradBlur2VignetteInput)
-  M_SetAndRunDispatch(GradBlur2RoundnessInput)
-  M_SetAndRunDispatch(GradBlur2CenterXInput)
-  M_SetAndRunDispatch(GradBlur2CenterYInput)
 
   M_SetAndRunDispatch(SoftglowModeChoice)
   M_SetAndRunDispatch(SoftglowRadiusInput)

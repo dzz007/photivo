@@ -356,13 +356,14 @@ const short ptFlipMode_None       = 0;
 const short ptFlipMode_Horizontal = 1;
 const short ptFlipMode_Vertical   = 2;
 
-// Gradual Blur modes
-
-const short ptGradualBlur_None         = 0;
-const short ptGradualBlur_Linear       = 1;
-const short ptGradualBlur_Vignette     = 2;
-const short ptGradualBlur_MaskLinear   = 3;
-const short ptGradualBlur_MaskVignette = 4;
+enum class TGradualBlurMode: int {
+  // There used to be an unused "none" mode with value 0. For settings compatibility
+  // values need to start at 1.
+  Linear       = 1,
+  Vignette     = 2,
+  LinearMask   = 3,
+  VignetteMask = 4
+};
 
 enum class TGrainType: int {
   // ptImage::Grain() relies on the integer values! Do not change them!

@@ -398,13 +398,6 @@ const ptGuiOptionsItem ptGuiOptions::ColorFilterType[] = {
 //  {ptColorFilterType_fakeIR,     QObject::tr("fake IR") },
   {-1,NULL}};
 
-const ptGuiOptionsItem ptGuiOptions::GradualBlurMode[] = {
-  {ptGradualBlur_Linear,         QObject::tr("Linear") },
-  {ptGradualBlur_Vignette,       QObject::tr("Round") },
-  {ptGradualBlur_MaskLinear,     QObject::tr("Linear mask") },
-  {ptGradualBlur_MaskVignette,   QObject::tr("Round mask") },
-  {-1,NULL}};
-
 const ptGuiOptionsItem ptGuiOptions::FlipMode[] = {
   {ptFlipMode_None,              QObject::tr("No flip") },
   {ptFlipMode_Horizontal,        QObject::tr("Horizontal flip") },

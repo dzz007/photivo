@@ -5214,35 +5214,33 @@ float *ptImage::GetVignetteMask(const short  Inverted,
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-ptImage* ptImage::GradualBlur(const int    Mode,
-                              const double MaxRadius,
-                              const double LowerLevel,
-                              const double UpperLevel,
-                              const double Softness,
-                              const double Angle,
-                              const int    Vignette,
-                              const double Roundness,
-                              const double CenterX,
-                              const double CenterY) {
+ptImage* ptImage::GradualBlur(const TGradualBlurMode Mode,
+    const double MaxRadius,
+    const double LowerLevel,
+    const double UpperLevel,
+    const double Softness,
+    const double Angle,
+    const TVignetteShape Vignette,
+    const double Roundness,
+    const double CenterX,
+    const double CenterY)
+{
 
-  float* Mask = 0;
-  if (Mode == ptGradualBlur_Linear ||
-      Mode == ptGradualBlur_MaskLinear) {
+  float* Mask = nullptr;
+
+  if (Mode == TGradualBlurMode::Linear || Mode == TGradualBlurMode::LinearMask) {
     Mask = GetGradualMask(Angle, LowerLevel, UpperLevel, Softness);
-  } else if (Mode == ptGradualBlur_Vignette ||
-             Mode == ptGradualBlur_MaskVignette) {
-    Mask = GetVignetteMask(0, Vignette, LowerLevel, UpperLevel, Roundness, CenterX, CenterY, Softness);
+  } else if (Mode == TGradualBlurMode::Vignette || Mode == TGradualBlurMode::VignetteMask) {
+    Mask = GetVignetteMask(0, static_cast<int>(Vignette), LowerLevel, UpperLevel, Roundness, CenterX, CenterY, Softness);
   }
 
-  if (Mode == ptGradualBlur_MaskLinear ||
-      Mode == ptGradualBlur_MaskVignette) {
+  if ((Mode == TGradualBlurMode::LinearMask) || (Mode == TGradualBlurMode::VignetteMask)) {
     Overlay(m_Image, 1, Mask, ptOverlayMode_ShowMask);
   } else {
     Box((uint16_t)(ceil(MaxRadius)), Mask);
   }
 
   FREE(Mask);
-
   return this;
 }
 

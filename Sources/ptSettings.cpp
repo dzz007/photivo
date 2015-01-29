@@ -170,24 +170,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"GradualOverlay2LowerLevel"     ,ptGT_InputSlider     ,2,1,1 ,0.5  ,0.0  ,3.0   ,0.1  ,2 ,tr("Lower Level")        ,tr("Lower Level")},
     {"GradualOverlay2UpperLevel"     ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,3.0   ,0.1  ,2 ,tr("Upper Level")        ,tr("Upper Level")},
     {"GradualOverlay2Softness"       ,ptGT_InputSlider     ,2,1,1 ,0.15  ,0.0  ,1.0   ,0.1  ,2 ,tr("Softness")        ,tr("Softness")},
-    {"GradBlur1Radius"               ,ptGT_InputSlider     ,2,1,1 ,0.0 ,0.0  ,200.0 ,5.0  ,0 ,tr("Radius")             ,tr("Maximal radius for the blur")},
-    {"GradBlur1LowerLevel"           ,ptGT_InputSlider     ,2,1,1 ,0.3  ,0.0  ,10.0  ,0.1  ,2 ,tr("Lower Level")        ,tr("Lower Level")},
-    {"GradBlur1UpperLevel"           ,ptGT_InputSlider     ,2,1,1 ,1.5  ,0.0  ,10.0  ,0.1  ,2 ,tr("Upper Level")        ,tr("Upper Level")},
-    {"GradBlur1Softness"             ,ptGT_InputSlider     ,2,1,1 ,0.01 ,0.0  ,1.0   ,0.001,3 ,tr("Softness")           ,tr("Softness")},
-    {"GradBlur1Angle"                ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-180.0,180.0,5.0  ,0 ,tr("Angle")              ,tr("Angle")},
-    {"GradBlur1Vignette"             ,ptGT_Input           ,2,1,1 ,2    ,1    ,10    ,1    ,0 ,tr("Shape")              ,tr("Shape of the vignette")},
-    {"GradBlur1Roundness"            ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-3.0 ,3.0   ,0.1  ,2 ,tr("Roundness")          ,tr("Roundness")},
-    {"GradBlur1CenterX"              ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0   ,0.05 ,2 ,tr("Center X")           ,tr("Center X")},
-    {"GradBlur1CenterY"              ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0   ,0.05 ,2 ,tr("Center Y")           ,tr("Center Y")},
-    {"GradBlur2Radius"               ,ptGT_InputSlider     ,2,1,1 ,0.0 ,0.0  ,200.0 ,5.0  ,0 ,tr("Radius")             ,tr("Maximal radius for the blur")},
-    {"GradBlur2LowerLevel"           ,ptGT_InputSlider     ,2,1,1 ,0.3  ,0.0  ,10.0  ,0.1  ,2 ,tr("Lower Level")        ,tr("Lower Level")},
-    {"GradBlur2UpperLevel"           ,ptGT_InputSlider     ,2,1,1 ,1.5  ,0.0  ,10.0  ,0.1  ,2 ,tr("Upper Level")        ,tr("Upper Level")},
-    {"GradBlur2Softness"             ,ptGT_InputSlider     ,2,1,1 ,0.01 ,0.0  ,1.0   ,0.001,3 ,tr("Softness")           ,tr("Softness")},
-    {"GradBlur2Angle"                ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-180.0,180.0,5.0  ,0 ,tr("Angle")              ,tr("Angle")},
-    {"GradBlur2Vignette"             ,ptGT_Input           ,2,1,1 ,2    ,1    ,10    ,1    ,0 ,tr("Shape")              ,tr("Shape of the vignette")},
-    {"GradBlur2Roundness"            ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-3.0 ,3.0   ,0.1  ,2 ,tr("Roundness")          ,tr("Roundness")},
-    {"GradBlur2CenterX"              ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0   ,0.05 ,2 ,tr("Center X")           ,tr("Center X")},
-    {"GradBlur2CenterY"              ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0   ,0.05 ,2 ,tr("Center Y")           ,tr("Center Y")},
     {"SoftglowRadius"                ,ptGT_InputSlider     ,2,1,1 ,10.0  ,0.0  ,30.0  ,1.0 ,1 ,tr("Radius")        ,tr("Radius")},
     {"SoftglowAmount"                ,ptGT_InputSlider     ,2,1,1 ,0.5  ,0.0  ,1.0   ,0.1  ,1  ,tr("Amount")        ,tr("Amount")},
     {"SoftglowSaturation"            ,ptGT_InputSlider     ,2,1,1 ,-50  ,-100  ,100    ,5  ,0 ,tr("Saturation")     ,tr("Saturation")},
@@ -255,8 +237,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"TextureOverlay2Mask"         ,ptGT_Choice       ,2,1,1 ,ptOverlayMaskMode_FullImage ,GuiOptions->OverlayMaskMode           ,tr("Mask for Texture Overlay")},
     {"GradualOverlay1"             ,ptGT_Choice       ,2,1,1 ,ptOverlayMode_None          ,GuiOptions->OverlayMode               ,tr("Mode for Gradual Overlay")},
     {"GradualOverlay2"             ,ptGT_Choice       ,2,1,1 ,ptOverlayMode_None          ,GuiOptions->OverlayMode               ,tr("Mode for Gradual Overlay")},
-    {"GradBlur1"                   ,ptGT_Choice       ,1,1,1 ,ptGradualBlur_Linear        ,GuiOptions->GradualBlurMode           ,tr("Mode for the gradual blur")},
-    {"GradBlur2"                   ,ptGT_Choice       ,1,1,1 ,ptGradualBlur_Linear        ,GuiOptions->GradualBlurMode           ,tr("Mode for the gradual blur")},
     {"SoftglowMode"                ,ptGT_Choice       ,2,1,1 ,ptSoftglowMode_None         ,GuiOptions->SoftglowMode              ,tr("Mode for Softglow")},
     {"WebResize"                   ,ptGT_Choice       ,2,1,1 ,ptEnable_None               ,GuiOptions->Enable                    ,tr("Enable web resizing")},
     {"WebResizeDimension"          ,ptGT_Choice       ,2,1,1 ,ptResizeDimension_LongerEdge,GuiOptions->WebResizeDimension        ,tr("Image dimension the resize value applies to")},
@@ -1443,12 +1423,6 @@ sToolInfo ToolInfo (const QString GuiName) {
       Info.Name = "Gradual Overlay 2";
       Info.IsActive = (Settings->GetInt("GradualOverlay2") &&
                        Settings->GetDouble("GradualOverlay2Amount")!=0.0)!=0?1:0;
-  } else if (GuiName == "TabGradualBlur1") {
-      Info.Name = "Gradual blur 1";
-      Info.IsActive = Settings->GetDouble("GradBlur1Radius")!=0.0?1:0;
-  } else if (GuiName == "TabGradualBlur2") {
-      Info.Name = "Gradual blur 2";
-      Info.IsActive = Settings->GetDouble("GradBlur2Radius")!=0.0?1:0;
   } else if (GuiName == "TabSoftglow") {
       Info.Name = "Softglow / Orton";
       Info.IsActive = (Settings->GetInt("SoftglowMode") &&

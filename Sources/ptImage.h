@@ -476,27 +476,28 @@ ptImage* MaskedColorAdjust(const int       Ax,
                            float           ASaturation,
                            const float     AHueShift);
 
-  // GetVignetteMask
-  float *GetVignetteMask(const short Inverted,
-                         const short Exponent,
-                         const double InnerRadius,
-                         const double OuterRadius,
-                         const double Roundness,
-                         const double CenterX,
-                         const double CenterY,
-                         const double Softness);
+  // CAUTION! Do not forget to free the returned float*!
+  float* GetVignetteMask(
+      const short Inverted,
+      const short Exponent,
+      const double InnerRadius,
+      const double OuterRadius,
+      const double Roundness,
+      const double CenterX,
+      const double CenterY,
+      const double Softness);
 
-  // GradualBlur
-  ptImage* GradualBlur(const int    Mode,
-                       const double MaxRadius,
-                       const double LowerLevel,
-                       const double UpperLevel,
-                       const double Softness,
-                       const double Angle,
-                       const int    Vignette,
-                       const double Roundness,
-                       const double CenterX,
-                       const double CenterY);
+  ptImage* GradualBlur(
+      const TGradualBlurMode Mode,
+      const double MaxRadius,
+      const double LowerLevel,
+      const double UpperLevel,
+      const double Softness,
+      const double Angle,
+      const TVignetteShape Vignette,
+      const double Roundness,
+      const double CenterX,
+      const double CenterY);
 
   // Box
   ptImage* Box(const uint16_t MaxRadius, float* Mask);

@@ -105,7 +105,6 @@ public:
   static const ptGuiOptionsItem SpecialPreview[];
   static const ptGuiOptionsItem FilmType[];
   static const ptGuiOptionsItem ColorFilterType[];
-  static const ptGuiOptionsItem GradualBlurMode[];
   static const ptGuiOptionsItem FlipMode[];
   static const ptGuiOptionsItem MaskType[];
   static const ptGuiOptionsItem GrainMaskType[];
