@@ -25,30 +25,22 @@
 
 #include "ptFilterBase.h"
 
-//==============================================================================
-
 class ptFilter_LumaSatAdjust: public ptFilterBase {
-Q_OBJECT
+  Q_OBJECT
 
 public:
   static ptFilterBase *createLumaAdjust();
   static ptFilterBase *createSatAdjust();
 
-
 protected:
-  void      doDefineControls();
-  bool      doCheckHasActiveCfg();
-  void      doRunFilter(ptImage *AImage) const;
-
+  void      doDefineControls() override;
+  bool      doCheckHasActiveCfg() override;
+  void      doRunFilter(ptImage *AImage) override;
 
 private:
   enum TMode { LumaMode, SatMode };
-
-
-private:
   ptFilter_LumaSatAdjust();
   TMode FMode;
-  
 };
 
 #endif // ptFilter_LumaSatAdjust_H

@@ -25,20 +25,16 @@
 
 #include "ptFilterBase.h"
 
-//==============================================================================
-
 class ptFilter_ReinhardBrighten: public ptFilterBase {
-Q_OBJECT
+  Q_OBJECT
 
 public:
   static ptFilterBase *createReinhardBrighten();
 
-
 protected:
-  void      doDefineControls();
-  bool      doCheckHasActiveCfg();
-  void      doRunFilter(ptImage *AImage) const;
-
+  void      doDefineControls() override;
+  bool      doCheckHasActiveCfg() override;
+  void      doRunFilter(ptImage *AImage) override;
 
 private:
   ptFilter_ReinhardBrighten();

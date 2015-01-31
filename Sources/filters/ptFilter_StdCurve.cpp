@@ -62,7 +62,7 @@ ptFilter_StdCurve::ptFilter_StdCurve(std::shared_ptr<ptCurve> ACurve)
 
 //==============================================================================
 
-void ptFilter_StdCurve::doRunFilter(ptImage *AImage) const {
+void ptFilter_StdCurve::doRunFilter(ptImage *AImage) {
   if (FFilterName =="RgbCurve") {
     AImage->toRGB();
     AImage->ApplyCurve(FConfig.items()[0].Curve.get(), ChMask_RGB);

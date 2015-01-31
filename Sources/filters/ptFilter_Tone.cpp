@@ -94,7 +94,7 @@ bool ptFilter_Tone::doCheckHasActiveCfg() {
 
 //==============================================================================
 
-void ptFilter_Tone::doRunFilter(ptImage *AImage) const {
+void ptFilter_Tone::doRunFilter(ptImage *AImage) {
   AImage->toLab();
 
   if ((FConfig.value(CStrengthAll).toFloat() != 0.0f) || (FConfig.value(CSaturationAll).toFloat() != 1.0f)) {

@@ -86,7 +86,7 @@ bool ptFilter_Defringe::doCheckHasActiveCfg() {
 
 //------------------------------------------------------------------------------
 
-void ptFilter_Defringe::doRunFilter(ptImage *AImage) const {
+void ptFilter_Defringe::doRunFilter(ptImage *AImage) {
   AImage->toLab();
   AImage->DeFringe(
       FConfig.value(CRadius).toDouble(),

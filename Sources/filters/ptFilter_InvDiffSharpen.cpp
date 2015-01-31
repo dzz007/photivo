@@ -71,7 +71,7 @@ bool ptFilter_InvDiffSharpen::doCheckHasActiveCfg() {
 
 //------------------------------------------------------------------------------
 
-void ptFilter_InvDiffSharpen::doRunFilter(ptImage *AImage) const {
+void ptFilter_InvDiffSharpen::doRunFilter(ptImage *AImage) {
   AImage->toLab();
   ptCimgSharpen(
       AImage,

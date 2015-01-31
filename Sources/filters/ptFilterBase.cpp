@@ -117,7 +117,7 @@ void ptFilterBase::reset(const bool ARequestPipeRun /*=false*/) {
 //==============================================================================
 
 /*! Executes the filter on \c AImage. */
-void ptFilterBase::runFilter(ptImage *AImage) const {
+void ptFilterBase::runFilter(ptImage *AImage) {
   this->doRunFilter(AImage);
 }
 

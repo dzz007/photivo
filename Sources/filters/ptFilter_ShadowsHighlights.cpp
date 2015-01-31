@@ -77,7 +77,7 @@ bool ptFilter_ShadowsHighlights::doCheckHasActiveCfg() {
 
 //==============================================================================
 
-void ptFilter_ShadowsHighlights::doRunFilter(ptImage *AImage) const {
+void ptFilter_ShadowsHighlights::doRunFilter(ptImage *AImage) {
   AImage->toLab();
   AImage->ShadowsHighlights(FConfig.items()[cfgIdx(CCurve)].Curve.get(),
                             FConfig.value(CScale).toDouble(),

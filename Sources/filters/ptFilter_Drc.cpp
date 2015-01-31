@@ -70,7 +70,7 @@ bool ptFilter_Drc::doCheckHasActiveCfg() {
 
 //==============================================================================
 
-void ptFilter_Drc::doRunFilter(ptImage *AImage) const {
+void ptFilter_Drc::doRunFilter(ptImage *AImage) {
   AImage->toLab();
   AImage->DRC(FConfig.value(CBias).toFloat(),
               FConfig.value(CStrength).toFloat(),

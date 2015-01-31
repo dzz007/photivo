@@ -68,7 +68,7 @@ bool ptFilter_ImpulseNR::doCheckHasActiveCfg() {
 
 //------------------------------------------------------------------------------
 
-void ptFilter_ImpulseNR::doRunFilter(ptImage *AImage) const {
+void ptFilter_ImpulseNR::doRunFilter(ptImage *AImage) {
   AImage->toLab();
   AImage->DenoiseImpulse(
       FConfig.value(CThresholdL).toDouble(),

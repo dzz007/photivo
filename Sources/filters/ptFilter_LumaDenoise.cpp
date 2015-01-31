@@ -75,7 +75,7 @@ bool ptFilter_LumaDenoise::doCheckHasActiveCfg() {
 
 //------------------------------------------------------------------------------
 
-void ptFilter_LumaDenoise::doRunFilter(ptImage *AImage) const {
+void ptFilter_LumaDenoise::doRunFilter(ptImage *AImage) {
   AImage->toLab();
   AImage->BilateralDenoise(
       FConfig.value(CLScale).toDouble() * TheProcessor->m_ScaleFactor,

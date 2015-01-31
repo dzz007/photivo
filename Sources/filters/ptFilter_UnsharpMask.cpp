@@ -77,7 +77,7 @@ bool ptFilter_UnsharpMask::doCheckHasActiveCfg() {
 
 //------------------------------------------------------------------------------
 
-void ptFilter_UnsharpMask::doRunFilter(ptImage *AImage) const {
+void ptFilter_UnsharpMask::doRunFilter(ptImage *AImage) {
   AImage->toLab();
   AImage->ptGMUnsharp(
       FConfig.value(CRadius).toDouble() * TheProcessor->m_ScaleFactor,

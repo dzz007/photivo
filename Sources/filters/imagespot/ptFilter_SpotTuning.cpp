@@ -156,7 +156,7 @@ void ptFilter_SpotTuning::doImportCustomConfig(QSettings*) {
 
 //------------------------------------------------------------------------------
 
-void ptFilter_SpotTuning::doRunFilter(ptImage *AImage) const {
+void ptFilter_SpotTuning::doRunFilter(ptImage *AImage) {
   AImage->RGBToLch();
   for (int i = 0; i < FSpotList.count(); ++i) {
     ptTuningSpot *hTSpot = static_cast<ptTuningSpot*>(FSpotList.at(i));

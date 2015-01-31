@@ -36,7 +36,7 @@ protected:
 
   void      doDefineControls() override;
   bool      doCheckHasActiveCfg() override;
-  void      doRunFilter(ptImage *AImage) const override;
+  void      doRunFilter(ptImage *AImage) override;
 
 private:
   ptFilter_GradientSharpen();

@@ -35,17 +35,10 @@ Q_OBJECT
 public:
   static ptFilterBase *CreateColorContrast();
 
-
 protected:
-  /*! Reimplemented from base class. */
-  void      doDefineControls();
-
-  /*! Reimplemented from base class. */
-  bool      doCheckHasActiveCfg();
-
-  /*! Reimplemented from base class. Processing */
-  void      doRunFilter(ptImage *AImage) const;
-
+  void      doDefineControls() override;
+  bool      doCheckHasActiveCfg() override;
+  void      doRunFilter(ptImage *AImage) override;
 
 private:
   ptFilter_ColorContrast();

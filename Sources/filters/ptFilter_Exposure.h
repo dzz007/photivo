@@ -38,7 +38,7 @@ protected:
   QWidget*  doCreateGui() override;
   void      doDefineControls() override;
   bool      doCheckHasActiveCfg() override;
-  void      doRunFilter(ptImage *AImage) const override;
+  void      doRunFilter(ptImage *AImage) override;
 
 private:
   enum class TMode {

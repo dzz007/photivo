@@ -75,7 +75,7 @@ bool ptFilter_ViewLab::doCheckHasActiveCfg() {
 
 //------------------------------------------------------------------------------
 
-void ptFilter_ViewLab::doRunFilter(ptImage *AImage) const {
+void ptFilter_ViewLab::doRunFilter(ptImage *AImage) {
   AImage->toLab();
   AImage->ViewLab(static_cast<TViewLabChannel>(FConfig.value(CChannelSelection).toInt()));
 }

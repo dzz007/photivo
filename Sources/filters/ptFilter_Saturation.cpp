@@ -64,7 +64,7 @@ bool ptFilter_Saturation::doCheckHasActiveCfg() {
 
 //==============================================================================
 
-void ptFilter_Saturation::doRunFilter(ptImage *AImage) const {
+void ptFilter_Saturation::doRunFilter(ptImage *AImage) {
   AImage->toLab();
   AImage->SigmoidalContrast(FConfig.value(CStrength).toFloat(), 0.5, ChMask_a|ChMask_b);
 }

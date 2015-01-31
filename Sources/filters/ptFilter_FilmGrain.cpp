@@ -111,7 +111,7 @@ bool ptFilter_FilmGrain::doCheckHasActiveCfg() {
 
 //------------------------------------------------------------------------------
 
-void ptFilter_FilmGrain::doRunFilter(ptImage *AImage) const {
+void ptFilter_FilmGrain::doRunFilter(ptImage *AImage) {
   AImage->toLab();
   int scaleFactor = static_cast<int>(logf(TheProcessor->m_ScaleFactor)/logf(0.5f));
 

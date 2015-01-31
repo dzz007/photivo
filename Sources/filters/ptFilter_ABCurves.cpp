@@ -71,7 +71,7 @@ bool ptFilter_ABCurves::doCheckHasActiveCfg() {
 }
 
 //------------------------------------------------------------------------------
-void ptFilter_ABCurves::doRunFilter(ptImage *AImage) const {
+void ptFilter_ABCurves::doRunFilter(ptImage *AImage) {
   AImage->toLab();
   if (!FConfig.items()[0].Curve->isNull())
     AImage->ApplyCurve(FConfig.items()[0].Curve.get(), ChMask_a);

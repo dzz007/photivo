@@ -98,7 +98,7 @@ bool ptFilter_GradualBlur::doCheckHasActiveCfg() {
 
 //------------------------------------------------------------------------------
 
-void ptFilter_GradualBlur::doRunFilter(ptImage* AImage) const {
+void ptFilter_GradualBlur::doRunFilter(ptImage* AImage) {
   AImage->toRGB();
   AImage->GradualBlur(
       static_cast<TGradualBlurMode>(FConfig.value(CMode).toInt()),

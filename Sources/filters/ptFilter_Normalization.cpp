@@ -65,7 +65,7 @@ bool ptFilter_Normalization::doCheckHasActiveCfg() {
 
 //==============================================================================
 
-void ptFilter_Normalization::doRunFilter(ptImage *AImage) const {
+void ptFilter_Normalization::doRunFilter(ptImage *AImage) {
   AImage->toRGB();
   AImage->ptGMNormalize(FConfig.value(COpacity).toDouble());
 }

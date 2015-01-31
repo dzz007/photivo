@@ -66,7 +66,7 @@ bool ptFilter_GammaTool::doCheckHasActiveCfg() {
 
 //==============================================================================
 
-void ptFilter_GammaTool::doRunFilter(ptImage *AImage) const {
+void ptFilter_GammaTool::doRunFilter(ptImage *AImage) {
   AImage->toRGB();
   AImage->GammaTool(FConfig.value(CGamma).toFloat(),
                     FConfig.value(CLinearity).toFloat());
