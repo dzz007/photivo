@@ -387,20 +387,6 @@ ptMainWindow::ptMainWindow(const QString Title)
   Macro_ConnectSomeButton(CropCenterVert);
 
   //
-  // TAB : RGB
-  //
-
-  if (Settings->GetInt("AutoExposure")==ptAutoExposureMode_Auto) {
-    Settings->SetEnabled("WhiteFraction",1);
-    Settings->SetEnabled("WhiteLevel",1);
-  } else {
-    Settings->SetEnabled("WhiteFraction",0);
-    Settings->SetEnabled("WhiteLevel",0);
-  }
-
-
-
-  //
   // TAB : EyeCandy
   //
 
@@ -2228,15 +2214,6 @@ void ptMainWindow::UpdateSettings() {
 
   // Geometry
   ResizeHeightWidget->setVisible(Settings->GetInt("ResizeDimension") == ptResizeDimension_WidthHeight);
-
-  // Exposure
-  if (Settings->GetInt("AutoExposure")==ptAutoExposureMode_Auto) {
-    Settings->SetEnabled("WhiteFraction",1);
-    Settings->SetEnabled("WhiteLevel",1);
-  } else {
-    Settings->SetEnabled("WhiteFraction",0);
-    Settings->SetEnabled("WhiteLevel",0);
-  }
 
   // Black and White
   if (Settings->GetInt("BWStylerFilmType") == ptFilmType_ChannelMixer) {

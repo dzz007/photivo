@@ -505,19 +505,6 @@ const ptGuiOptionsItem ptGuiOptions::AspectRatio[] = {
   {1,    "1"     },
   {-1,NULL}};
 
-const ptGuiOptionsItem ptGuiOptions::ExposureClipMode[] = {
-  {ptExposureClipMode_None,   QObject::tr("None")                },
-  {ptExposureClipMode_Ratio,  QObject::tr("Ratio")               },
-  {ptExposureClipMode_Curve,  QObject::tr("Film curve")          },
-  {-1,NULL}};
-
-const ptGuiOptionsItem ptGuiOptions::AutoExposureMode[] = {
-  {ptAutoExposureMode_Auto,   QObject::tr("Auto")                },
-  {ptAutoExposureMode_Ufraw,  QObject::tr("Like UFRaw")          },
-  {ptAutoExposureMode_Zero,   QObject::tr("Null")                },
-  {ptAutoExposureMode_Manual, QObject::tr("Manual")              },
-  {-1,NULL}};
-
 const ptGuiOptionsItem ptGuiOptions::SpecialPreview[] = {
   {ptSpecialPreview_RGB,        QObject::tr("RGB") },
   {ptSpecialPreview_Structure,  QObject::tr("Structure") },

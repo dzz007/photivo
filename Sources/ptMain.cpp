@@ -315,6 +315,7 @@ void CreateAllFilters() {
   GFilterDM->NewFilter("Highlights",            Fuid::Highlights_RGB);
   GFilterDM->NewFilter("ColorIntensity",        Fuid::ColorIntensity_RGB);
   GFilterDM->NewFilter("Brightness",            Fuid::Brightness_RGB);
+  GFilterDM->NewFilter("Exposure",              Fuid::Exposure_RGB);
   GFilterDM->NewFilter("ReinhardBrighten",      Fuid::ReinhardBrighten_RGB);
   GFilterDM->NewFilter("GammaTool",             Fuid::GammaTool_RGB);
   GFilterDM->NewFilter("Normalization",         Fuid::Normalization_RGB);
@@ -1728,8 +1729,7 @@ void UpdatePreviewImage(const ptImage* ForcedImage   /* = NULL  */,
   if (ForcedImage) {
     PreviewImage->Set(ForcedImage);
     if (Settings->GetDouble("CropExposure") != 0.0) {
-      float Factor = powf(2,Settings->GetDouble("CropExposure"));
-      PreviewImage->Expose(Factor,ptExposureClipMode_Ratio);
+      PreviewImage->Expose(pow(2,Settings->GetDouble("CropExposure")), TExposureClipMode::Ratio);
     }
     BeforeGamma(PreviewImage,0,0);
 
@@ -4921,62 +4921,6 @@ void CB_AutomaticPipeSizeCheck(const QVariant Check) {
   }
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the RGB Tab
-// Partim Exposure
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_AutoExposureChoice(const QVariant Value) {
-  Settings->SetValue("AutoExposure",Value);
-  MainWindow->UpdateSettings();
-  if (Settings->GetInt("AutoExposure")==ptAutoExposureMode_Auto) {
-    if(Settings->GetInt("HaveImage") == 1) {
-      TheProcessor->m_AutoExposureValue = TheProcessor->CalculateAutoExposure(TheProcessor->m_Image_AfterGeometry);
-      Settings->SetValue("Exposure",TheProcessor->m_AutoExposureValue);
-      Update(ptProcessorPhase_RGB);
-    }
-  } else if (Settings->GetInt("AutoExposure")==ptAutoExposureMode_Ufraw) {
-    Settings->SetValue("Exposure",Settings->GetDouble("ExposureNormalization"));
-    Update(ptProcessorPhase_RGB);
-  } else if (Settings->GetInt("AutoExposure")==ptAutoExposureMode_Zero) {
-    Settings->SetValue("Exposure",0.0);
-    Update(ptProcessorPhase_RGB);
-  }
-}
-
-void CB_WhiteFractionInput(const QVariant Value) {
-  Settings->SetValue("WhiteFraction",Value);
-  if (Settings->GetInt("AutoExposure")) {
-    TheProcessor->m_AutoExposureValue = TheProcessor->CalculateAutoExposure(TheProcessor->m_Image_AfterGeometry);
-    Settings->SetValue("Exposure",TheProcessor->m_AutoExposureValue);
-    Update(ptProcessorPhase_RGB);
-  }
-}
-
-void CB_WhiteLevelInput(const QVariant Value) {
-  Settings->SetValue("WhiteLevel",Value);
-  if (Settings->GetInt("AutoExposure")) {
-    TheProcessor->m_AutoExposureValue = TheProcessor->CalculateAutoExposure(TheProcessor->m_Image_AfterGeometry);
-    Settings->SetValue("Exposure",TheProcessor->m_AutoExposureValue);
-    Update(ptProcessorPhase_RGB);
-  }
-}
-
-void CB_ExposureInput(const QVariant Value) {
-  // The Gui element is expressed in EV.
-  Settings->SetValue("Exposure",Value);
-  Settings->SetValue("AutoExposure",ptAutoExposureMode_Manual);
-  Update(ptProcessorPhase_RGB);
-}
-
-void CB_ExposureClipModeChoice(const QVariant Value) {
-  Settings->SetValue("ExposureClipMode",Value);
-  // if (!Settings->ToolIsBlocked(MainWindow->ExposureWidget->parent()->parent()->parent()->objectName()))
-  Update(ptProcessorPhase_RGB);
-}
-
 
 ////////////////////////////////////////////////////////////////////////////////
 //
@@ -5320,19 +5264,6 @@ void CB_GradualOverlay2UpperLevelInput(const QVariant Value) {
 // Callbacks pertaining to Out Tab
 //
 ////////////////////////////////////////////////////////////////////////////////
-
-/* TODO MIKE: dead?
-void CB_OutputExposureInput(const QVariant Value) {
-  // The Gui element is expressed in EV.
-  Settings->SetValue("OutputExposure",Value);
-  Update(ptProcessorPhase_Output);
-}
-
-void CB_OutputExposureClipModeChoice(const QVariant Value) {
-  Settings->SetValue("OutputExposureClipMode",Value);
-  Update(ptProcessorPhase_Output);
-}
-*/
 
 void CB_SaveFormatChoice(const QVariant Choice) {
   Settings->SetValue("SaveFormat",Choice);
@@ -5679,12 +5610,6 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(FlipModeChoice)
 
   M_Dispatch(GeometryBlockCheck)
-
-  M_Dispatch(AutoExposureChoice)
-  M_Dispatch(WhiteFractionInput)
-  M_Dispatch(WhiteLevelInput)
-  M_Dispatch(ExposureInput)
-  M_Dispatch(ExposureClipModeChoice)
 
   M_Dispatch(BWStylerFilmTypeChoice)
   M_SetAndRunDispatch(BWStylerColorFilterTypeChoice)

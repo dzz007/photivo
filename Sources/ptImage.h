@@ -566,7 +566,7 @@ ptImage* MaskedColorAdjust(const int       Ax,
 
   // Expose (multiply) an image.
   ptImage* Expose(const double Exposure,
-                  const short  ExposureClipMode);
+                  const TExposureClipMode ExposureClipMode);
 
   // Calculates the level in the image where Fraction of the pixels is above.
   uint16_t CalculateFractionLevel(const double  Fraction,

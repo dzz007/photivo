@@ -125,9 +125,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"LqrHeight"                     ,ptGT_Input           ,1,1,1 ,800   ,200 ,6000  ,100  ,0 ,tr("Height")             ,tr("Height")},
     {"ResizeScale"                   ,ptGT_Input           ,1,1,1 ,1200  ,200 ,6000  ,100  ,0 ,tr("Pixels")             ,tr("Image size")},
     {"ResizeHeight"                  ,ptGT_Input           ,1,1,1 ,800   ,200 ,6000  ,100  ,0 ,tr("Height")             ,tr("Image height")},
-    {"WhiteFraction"                 ,ptGT_InputSlider     ,2,1,1 ,10   ,1    ,50    ,1    ,0 ,tr("% white")             ,tr("Percentage of white aimed at")},
-    {"WhiteLevel"                    ,ptGT_InputSlider     ,2,1,1 ,90   ,50   ,99    ,1    ,0 ,tr("WhiteLevel")         ,tr("WhiteLevel")},
-    {"Exposure"                      ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-5.0 ,5.0   ,0.1 ,2 ,tr("EV")                 ,tr("Exposure in EV")},
     {"BWStylerOpacity"               ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0   ,1.0   ,0.05 ,2 ,tr("Opacity")            ,tr("Opacity")},
     {"BWStylerMultR"                 ,ptGT_InputSlider     ,2,1,1 ,0.5  ,-1.0  ,1.0   ,0.1 ,2 ,tr("Red")                ,tr("Red multiplicity")},
     {"BWStylerMultG"                 ,ptGT_InputSlider     ,2,1,1 ,0.5  ,-1.0  ,1.0   ,0.1 ,2 ,tr("Green")              ,tr("Green multiplicity")},
@@ -224,8 +221,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"FlipMode"                    ,ptGT_Choice       ,2,1,1 ,ptFlipMode_None             ,GuiOptions->FlipMode                  ,tr("Flip mode")},
     {"AspectRatioW"                ,ptGT_Choice       ,2,0,0 ,3                           ,GuiOptions->AspectRatio               ,tr("Aspect width")},
     {"AspectRatioH"                ,ptGT_Choice       ,2,0,0 ,2                           ,GuiOptions->AspectRatio               ,tr("Aspect height")},
-    {"ExposureClipMode"            ,ptGT_Choice       ,1,1,1 ,ptExposureClipMode_Curve    ,GuiOptions->ExposureClipMode          ,tr("Clip mode")},
-    {"AutoExposure"                ,ptGT_Choice       ,1,1,1 ,ptAutoExposureMode_Zero     ,GuiOptions->AutoExposureMode          ,tr("Auto exposure mode")},
     {"BWStylerFilmType"            ,ptGT_Choice       ,2,1,1 ,ptFilmType_Luminance        ,GuiOptions->FilmType                  ,tr("Film emulation")},
     {"BWStylerColorFilterType"     ,ptGT_Choice       ,2,1,1 ,ptColorFilterType_None      ,GuiOptions->ColorFilterType           ,tr("Color filter emulation")},
     {"Tone1MaskType"               ,ptGT_Choice       ,2,1,1 ,ptMaskType_None             ,GuiOptions->MaskType                  ,tr("Values for Toning")},
@@ -1292,12 +1287,12 @@ void ptSettings::FromDcRaw(ptDcRaw* TheDcRaw) {
     SetValue("WhitePoint",TheDcRaw->m_WhiteLevel_AfterPhase1);
   }
 
+  double exposureNormalization = 1.0;
+
   // EOS exposure normalization might be a result of running DcRaw
   // (ie we have to normalize the exposure further in the flow.
   // TODO This is coming from ufraw. Seems fair, but no clue
   // what's the logic behind the calculation. Someone ?
-
-  double EOSExposureNormalization = 1.0;
   if (strcmp(TheDcRaw->m_CameraMake, "Canon")==0 &&
       strncmp(TheDcRaw->m_CameraModel, "EOS", 3)==0 ) {
     int Max = (int) VALUE(TheDcRaw->m_CameraMultipliers[0]);
@@ -1310,16 +1305,16 @@ void ptSettings::FromDcRaw(ptDcRaw* TheDcRaw) {
     // was a 'right' number calculated and it's not bogus
     // due to for instance not being able reading CamMultipliers
     if ( Max > 100 ) {
-      EOSExposureNormalization =
+      exposureNormalization =
         (4096.0-TheDcRaw->m_BlackLevel_AfterPhase1)/Max;
     }
   }
 
-  TRACEKEYVALS("EOSExposureNorm","%f",EOSExposureNormalization);
+  TRACEKEYVALS("EOSExposureNorm","%f",exposureNormalization);
 
   SetValue("ExposureNormalization",
            // EV conversion !
-           log(EOSExposureNormalization/TheDcRaw->m_MinPreMulti)/log(2));
+           log(exposureNormalization/TheDcRaw->m_MinPreMulti)/log(2));
 
   TRACEKEYVALS("ExposureNorm(EV)","%f", GetDouble("ExposureNormalization"));
 }
@@ -1388,11 +1383,6 @@ sToolInfo ToolInfo (const QString GuiName) {
       Info.Name = "Block";
       Info.IsActive = !Settings->GetInt("JobMode") &&
                       Settings->GetInt("GeometryBlock");
-  }
-  // Tab RGB
-  else if (GuiName == "TabExposure") {
-      Info.Name = "Exposure";
-      Info.IsActive = Settings->GetDouble("Exposure")!=0.0?1:0;
   }
   // Tab EyeCandy
   else if (GuiName == "TabBW") {

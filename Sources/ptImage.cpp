@@ -1616,14 +1616,14 @@ ptImage* ptImage::IndicateExposure(ptImage* ValueImage,
 ////////////////////////////////////////////////////////////////////////////////
 
 ptImage* ptImage::Expose(const double Exposure,
-                         const short  ExposureClipMode) {
+                         const TExposureClipMode ExposureClipMode) {
 
   assert (m_Colors == 3);
   assert (m_ColorSpace != ptSpace_XYZ);
   assert (Exposure < (2<<15));
   const short NrChannels = (m_ColorSpace == ptSpace_Lab)?1:3;
 
-#pragma omp parallel for schedule(static)
+# pragma omp parallel for schedule(static)
   for (uint32_t i=0; i< (uint32_t)m_Height*m_Width; i++) {
     uint32_t Pixel[3];
     uint32_t Highest = 0;
@@ -1637,16 +1637,16 @@ ptImage* ptImage::Expose(const double Exposure,
         m_Image[i][Color] = Pixel[Color];
       }
     } else {
-      if (ExposureClipMode == ptExposureClipMode_None) {
+      if (ExposureClipMode == TExposureClipMode::Hard) {
         for (short Color=0; Color<NrChannels; Color++) {
           m_Image[i][Color] = CLIP((int32_t)Pixel[Color]);
         }
-      } else if (ExposureClipMode == ptExposureClipMode_Ratio) {
+      } else if (ExposureClipMode == TExposureClipMode::Ratio) {
         for (short Color=0; Color<NrChannels; Color++) {
           m_Image[i][Color] = CLIP((int32_t)(Pixel[Color]*(float)0xFFFF/Highest));
         }
       } else {
-        assert(0);
+        assert("Unexpected clip mode.");
       }
     }
   }
@@ -4785,7 +4785,7 @@ ptImage* ptImage::Vignette(const TVignetteMask VignetteMode,
       {
         ptImage *VignetteLayer = new ptImage;
         VignetteLayer->Set(this);
-        VignetteLayer->Expose(pow(2,-Amount*5), ptExposureClipMode_None);
+        VignetteLayer->Expose(pow(2,-Amount*5), TExposureClipMode::Hard);
         ptCurve* VignetteContrastCurve = new ptCurve();
         VignetteContrastCurve->setFromFunc(ptCurve::Sigmoidal,0.5,fabs(Amount)*10);
         VignetteLayer->ApplyCurve(VignetteContrastCurve, (m_ColorSpace == ptSpace_Lab) ? 1 : 7);

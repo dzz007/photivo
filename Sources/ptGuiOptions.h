@@ -99,8 +99,6 @@ public:
   static const ptGuiOptionsItem BayerDenoise[];
   static const ptGuiOptionsItem ClipMode[];
   static const ptGuiOptionsItem AspectRatio[];
-  static const ptGuiOptionsItem ExposureClipMode[];
-  static const ptGuiOptionsItem AutoExposureMode[];
   static const ptGuiOptionsItem LABTransformMode[];
   static const ptGuiOptionsItem SpecialPreview[];
   static const ptGuiOptionsItem FilmType[];
