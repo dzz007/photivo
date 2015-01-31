@@ -76,7 +76,7 @@ bool ptFilter_SatCurve::doCheckHasActiveCfg() {
 
 //==============================================================================
 
-void ptFilter_SatCurve::doRunFilter(ptImage *AImage) const {
+void ptFilter_SatCurve::doRunFilter(ptImage *AImage) {
   AImage->toLab();
   AImage->ApplySaturationCurve(FConfig.items()[0].Curve.get(),
                                FConfig.value(CMode).toInt());

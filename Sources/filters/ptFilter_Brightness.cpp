@@ -70,7 +70,7 @@ bool ptFilter_Brightness::doCheckHasActiveCfg() {
 
 //==============================================================================
 
-void ptFilter_Brightness::doRunFilter(ptImage *AImage) const {
+void ptFilter_Brightness::doRunFilter(ptImage *AImage) {
   AImage->toRGB();
 
   float hWhite = FConfig.value(CCatchWhite).toFloat();

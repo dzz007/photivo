@@ -78,7 +78,7 @@ bool ptFilter_DetailCurve::doCheckHasActiveCfg() {
 
 //==============================================================================
 
-void ptFilter_DetailCurve::doRunFilter(ptImage *AImage) const {
+void ptFilter_DetailCurve::doRunFilter(ptImage *AImage) {
   AImage->toLab();
   AImage->MLMicroContrast(0.15,
                           FConfig.value(CHaloControl).toDouble(),

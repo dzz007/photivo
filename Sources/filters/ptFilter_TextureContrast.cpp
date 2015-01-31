@@ -131,7 +131,7 @@ bool ptFilter_TextureContrast::doCheckHasActiveCfg() {
 
 //------------------------------------------------------------------------------
 
-void ptFilter_TextureContrast::doRunFilter(ptImage *AImage) const {
+void ptFilter_TextureContrast::doRunFilter(ptImage *AImage) {
   if (FFilterName == CTextureContrastRgbId) {
     AImage->toRGB();
   } else {

@@ -79,7 +79,7 @@ bool ptFilter_Levels::doCheckHasActiveCfg() {
 
 //==============================================================================
 
-void ptFilter_Levels::doRunFilter(ptImage *AImage) const {
+void ptFilter_Levels::doRunFilter(ptImage *AImage) {
   if (FColorSpace == TColorSpace::Rgb) {
     float hBlackP = FConfig.value(CBlackpoint).toFloat();
     float hWhiteP = FConfig.value(CWhitepoint).toFloat();

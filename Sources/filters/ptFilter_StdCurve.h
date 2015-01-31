@@ -23,16 +23,11 @@
 #ifndef PTFILTER_StdCurve_H
 #define PTFILTER_StdCurve_H
 
-//==============================================================================
-
 #include "ptFilterBase.h"
 #include "../ptCurve.h"
-
 #include <memory>
 
 class ptCurveWindow;
-
-//==============================================================================
 
 /*!
    \brief The \c ptFilter_StdCurve class holds all curve-only filters.
@@ -40,7 +35,7 @@ class ptCurveWindow;
    Curve filters are here when they have only a curve and no additional config items.
  */
 class ptFilter_StdCurve: public ptFilterBase {
-Q_OBJECT
+  Q_OBJECT
 
 public:
   static ptFilterBase *CreateRgbCurve();
@@ -53,17 +48,10 @@ public:
   static ptFilterBase *CreateBToneCurve();
   static ptFilterBase *CreateAfterGammaCurve();
 
-
 protected:
-  /*! Reimplemented from base class. */
-  void      doDefineControls();
-
-  /*! Reimplemented from base class. */
-  bool      doCheckHasActiveCfg();
-
-  /*! Reimplemented from base class. Processing */
-  void      doRunFilter(ptImage *AImage) const;
-
+  void      doDefineControls() override;
+  bool      doCheckHasActiveCfg() override;
+  void      doRunFilter(ptImage *AImage) override;
 
 private:
   ptFilter_StdCurve(std::shared_ptr<ptCurve> ACurve);

@@ -72,7 +72,7 @@ bool ptFilter_ReinhardBrighten::doCheckHasActiveCfg() {
 
 //==============================================================================
 
-void ptFilter_ReinhardBrighten::doRunFilter(ptImage *AImage) const {
+void ptFilter_ReinhardBrighten::doRunFilter(ptImage *AImage) {
   AImage->toRGB();
   AImage->Reinhard05(FConfig.value(CBrightness).toFloat(),
                      FConfig.value(CChroma).toFloat(),

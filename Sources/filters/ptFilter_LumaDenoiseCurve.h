@@ -23,29 +23,18 @@
 #ifndef PTFILTER_LumaDenoiseCurve_H
 #define PTFILTER_LumaDenoiseCurve_H
 
-//==============================================================================
-
 #include "ptFilterBase.h"
 
-//==============================================================================
-
 class ptFilter_LumaDenoiseCurve: public ptFilterBase {
-Q_OBJECT
+  Q_OBJECT
 
 public:
   static ptFilterBase *CreateLumaDenoiseCurve();
 
-
 protected:
-  /*! Reimplemented from base class. */
-  void      doDefineControls();
-
-  /*! Reimplemented from base class. */
-  bool      doCheckHasActiveCfg();
-
-  /*! Reimplemented from base class. Processing */
-  void      doRunFilter(ptImage *AImage) const;
-
+  void      doDefineControls() override;
+  bool      doCheckHasActiveCfg() override;
+  void      doRunFilter(ptImage *AImage) override;
 
 private:
   ptFilter_LumaDenoiseCurve();

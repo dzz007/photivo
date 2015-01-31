@@ -77,7 +77,7 @@ bool ptFilter_ColorDenoise::doCheckHasActiveCfg() {
 
 //------------------------------------------------------------------------------
 
-void ptFilter_ColorDenoise::doRunFilter(ptImage *AImage) const {
+void ptFilter_ColorDenoise::doRunFilter(ptImage *AImage) {
   AImage->toLab();
 
   double AStrength = FConfig.value(CAStrength).toFloat();

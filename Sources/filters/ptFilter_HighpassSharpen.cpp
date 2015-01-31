@@ -76,7 +76,7 @@ bool ptFilter_HighpassSharpen::doCheckHasActiveCfg() {
 
 //------------------------------------------------------------------------------
 
-void ptFilter_HighpassSharpen::doRunFilter(ptImage *AImage) const {
+void ptFilter_HighpassSharpen::doRunFilter(ptImage *AImage) {
   AImage->toLab();
   AImage->Highpass(
       FConfig.value(CRadius).toDouble() * TheProcessor->m_ScaleFactor,

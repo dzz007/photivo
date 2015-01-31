@@ -98,7 +98,7 @@ bool ptFilter_LMHRecovery::doCheckHasActiveCfg() {
 
 //==============================================================================
 
-void ptFilter_LMHRecovery::doRunFilter(ptImage *AImage) const {
+void ptFilter_LMHRecovery::doRunFilter(ptImage *AImage) {
   auto hInputFactor = Settings->GetDouble("InputPowerFactor");
 
   auto hMaskType1   = static_cast<TMaskType>(FConfig.value(CMaskType1).toInt());

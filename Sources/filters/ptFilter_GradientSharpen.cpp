@@ -78,7 +78,7 @@ bool ptFilter_GradientSharpen::doCheckHasActiveCfg() {
 
 //------------------------------------------------------------------------------
 
-void ptFilter_GradientSharpen::doRunFilter(ptImage *AImage) const {
+void ptFilter_GradientSharpen::doRunFilter(ptImage *AImage) {
   AImage->toLab();
 
   int gradientPasses = FConfig.value(CPasses).toInt();

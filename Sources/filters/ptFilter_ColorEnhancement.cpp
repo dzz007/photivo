@@ -68,7 +68,7 @@ bool ptFilter_ColorEnhancement::doCheckHasActiveCfg() {
 
 //==============================================================================
 
-void ptFilter_ColorEnhancement::doRunFilter(ptImage *AImage) const {
+void ptFilter_ColorEnhancement::doRunFilter(ptImage *AImage) {
   AImage->toRGB();
   AImage->ColorEnhance(FConfig.value(CShadows).toFloat(),
                        FConfig.value(CHighlights).toFloat());

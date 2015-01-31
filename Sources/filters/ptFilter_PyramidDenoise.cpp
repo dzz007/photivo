@@ -76,7 +76,7 @@ bool ptFilter_PyramidDenoise::doCheckHasActiveCfg() {
 
 //------------------------------------------------------------------------------
 
-void ptFilter_PyramidDenoise::doRunFilter(ptImage *AImage) const {
+void ptFilter_PyramidDenoise::doRunFilter(ptImage *AImage) {
   AImage->toLab();
   AImage->dirpyrLab_denoise(
       static_cast<int>(FConfig.value(

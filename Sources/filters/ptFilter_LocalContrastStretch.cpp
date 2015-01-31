@@ -96,7 +96,7 @@ bool ptFilter_LocalContrastStretch::doCheckHasActiveCfg() {
 
 //------------------------------------------------------------------------------
 
-void ptFilter_LocalContrastStretch::doRunFilter(ptImage *AImage) const {
+void ptFilter_LocalContrastStretch::doRunFilter(ptImage *AImage) {
   AImage->toLab();
   AImage->Localcontrast(
       FConfig.value(CRadius).toDouble() * TheProcessor->m_ScaleFactor,

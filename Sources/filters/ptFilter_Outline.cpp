@@ -114,7 +114,7 @@ bool ptFilter_Outline::doCheckHasActiveCfg() {
 
 //==============================================================================
 
-void ptFilter_Outline::doRunFilter(ptImage *AImage) const {
+void ptFilter_Outline::doRunFilter(ptImage *AImage) {
   AImage->toLab();
   AImage->Outline(FConfig.value(COverlayMode).toInt(),
                   FConfig.value(CGradientMode).toInt(),

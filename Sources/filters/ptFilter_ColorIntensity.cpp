@@ -87,7 +87,7 @@ bool ptFilter_ColorIntensity::doCheckHasActiveCfg() {
 
 //==============================================================================
 
-void ptFilter_ColorIntensity::doRunFilter(ptImage *AImage) const {
+void ptFilter_ColorIntensity::doRunFilter(ptImage *AImage) {
   AImage->toRGB();
   AImage->ColorIntensity(FConfig.value(CVibrance).toInt(),
                          FConfig.value(CRed).toInt(),

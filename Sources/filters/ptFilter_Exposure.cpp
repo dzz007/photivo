@@ -136,7 +136,7 @@ namespace pt {
 
 // -----------------------------------------------------------------------------
 
-void ptFilter_Exposure::doRunFilter(ptImage* AImage) const {
+void ptFilter_Exposure::doRunFilter(ptImage* AImage) {
   double ev = 0.0;
 
   switch (static_cast<TMode>(FConfig.value(CExposureMode).toInt())) {

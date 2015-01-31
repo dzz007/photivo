@@ -106,7 +106,7 @@ bool ptFilter_ChannelMixer::doCheckHasActiveCfg() {
 
 //------------------------------------------------------------------------------
 
-void ptFilter_ChannelMixer::doRunFilter(ptImage *AImage) const {
+void ptFilter_ChannelMixer::doRunFilter(ptImage *AImage) {
   AImage->toRGB();
   AImage->mixChannels(this->configToMatrix());
 }

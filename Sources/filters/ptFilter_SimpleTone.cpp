@@ -72,7 +72,7 @@ bool ptFilter_SimpleTone::doCheckHasActiveCfg() {
 
 //------------------------------------------------------------------------------
 
-void ptFilter_SimpleTone::doRunFilter(ptImage *AImage) const {
+void ptFilter_SimpleTone::doRunFilter(ptImage *AImage) {
   AImage->toRGB();
   AImage->SimpleTone(
       FConfig.value(CChannelR).toDouble(),

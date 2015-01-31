@@ -70,7 +70,7 @@ bool ptFilter_ColorContrast::doCheckHasActiveCfg() {
 
 //==============================================================================
 
-void ptFilter_ColorContrast::doRunFilter(ptImage *AImage) const {
+void ptFilter_ColorContrast::doRunFilter(ptImage *AImage) {
   AImage->toLab();
   AImage->Colorcontrast(FConfig.value(CRadius).toInt(),
                         FConfig.value(CStrength).toDouble(),

@@ -158,7 +158,7 @@ bool ptFilter_EAWavelets::doCheckHasActiveCfg() {
 
 //------------------------------------------------------------------------------
 
-void ptFilter_EAWavelets::doRunFilter(ptImage *AImage) const {
+void ptFilter_EAWavelets::doRunFilter(ptImage *AImage) {
   AImage->toLab();
   AImage->EAWChannel(
       static_cast<int>(logf(TheProcessor->m_ScaleFactor)/logf(0.5f)),

@@ -89,7 +89,7 @@ bool ptFilter_Wiener::doCheckHasActiveCfg() {
 
 //==============================================================================
 
-void ptFilter_Wiener::doRunFilter(ptImage *AImage) const {
+void ptFilter_Wiener::doRunFilter(ptImage *AImage) {
   AImage->toLab();
   ptWienerFilterChannel(AImage,
                         FConfig.value(CGaussian).toDouble(),

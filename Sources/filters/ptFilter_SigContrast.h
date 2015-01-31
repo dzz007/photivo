@@ -24,51 +24,32 @@
 #ifndef PTFILTER_SIGCONTRAST_H
 #define PTFILTER_SIGCONTRAST_H
 
-//==============================================================================
-
 #include "ptFilterBase.h"
-
 #include <QObject>
-
-//==============================================================================
 
 
 /*! The \c ptFilter_SigContrast class implements sigmodial contrast for Lab and RGB. */
 class ptFilter_SigContrast: public ptFilterBase {
-Q_OBJECT
+  Q_OBJECT
 
 public:
-  /*! These methods are used to create the instances from the factory.*/
   static  ptFilterBase* CreateLabContrast();
   static  ptFilterBase* CreateRgbContrast();
 
-//-------------------------------------
-
 protected:
-  /*! Reimplemented from base class. */
-  void doDefineControls();
-
-  /*! Reimplemented from base class. */
-  bool doCheckHasActiveCfg();
-
-  /*! Reimplemented from base class. Processing */
-  void doRunFilter(ptImage *AImage) const;
-
-//-------------------------------------
+  void doDefineControls() override;
+  bool doCheckHasActiveCfg() override;
+  void doRunFilter(ptImage *AImage) override;
 
 private:
   enum class TColorSpace { Rgb, Lab };
 
-  /*! Constructor */
   ptFilter_SigContrast(const QString    &AFilterName,
                        const TColorSpace AColorSpace,
                        const QString    &AGuiCaption);
 
-  /*! Type of the current instance. */
   TColorSpace FColorSpace;
 
 };
-
-//==============================================================================
 
 #endif // PTFILTER_SIGCONTRAST_H

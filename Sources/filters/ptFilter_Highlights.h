@@ -23,11 +23,7 @@
 #ifndef PTFILTER_Highlights_H
 #define PTFILTER_Highlights_H
 
-//==============================================================================
-
 #include "ptFilterBase.h"
-
-//==============================================================================
 
 class ptFilter_Highlights: public ptFilterBase {
 Q_OBJECT
@@ -35,17 +31,10 @@ Q_OBJECT
 public:
   static ptFilterBase *CreateHighlights();
 
-
 protected:
-  /*! Reimplemented from base class. */
-  void      doDefineControls();
-
-  /*! Reimplemented from base class. */
-  bool      doCheckHasActiveCfg();
-
-  /*! Reimplemented from base class. Processing */
-  void      doRunFilter(ptImage *AImage) const;
-
+  void      doDefineControls() override;
+  bool      doCheckHasActiveCfg() override;
+  void      doRunFilter(ptImage *AImage) override;
 
 private:
   ptFilter_Highlights();

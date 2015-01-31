@@ -73,10 +73,11 @@ bool ptFilter_SigContrast::doCheckHasActiveCfg() {
 
 //==============================================================================
 
-void ptFilter_SigContrast::doRunFilter(ptImage *AImage) const {
+void ptFilter_SigContrast::doRunFilter(ptImage *AImage) {
   if (FColorSpace == TColorSpace::Rgb) {
-    if (!(AImage->m_ColorSpace == ptSpace_Profiled))
+    if (!(AImage->m_ColorSpace == ptSpace_Profiled)) {
       AImage->toRGB();
+    }
     AImage->SigmoidalContrast(FConfig.value(CStrengthId).toFloat(),
                               FConfig.value(CThresholdId).toFloat(),
                               ChMask_RGB);

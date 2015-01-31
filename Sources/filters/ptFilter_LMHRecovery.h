@@ -25,8 +25,6 @@
 
 #include "ptFilterBase.h"
 
-//==============================================================================
-
 class ptFilter_LMHRecovery: public ptFilterBase {
 Q_OBJECT
 
@@ -36,12 +34,10 @@ public:
 
 
 protected:
-  QWidget  *doCreateGui();
-
-  void      doDefineControls();
-  bool      doCheckHasActiveCfg();
-  void      doRunFilter(ptImage *AImage) const;
-
+  QWidget  *doCreateGui() override;
+  void      doDefineControls() override;
+  bool      doCheckHasActiveCfg() override;
+  void      doRunFilter(ptImage *AImage) override;
 
 private:
   enum class TColorSpace { Rgb, Lab };

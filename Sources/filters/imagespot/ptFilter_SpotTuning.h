@@ -40,12 +40,12 @@ public:
   static ptFilterBase *CreateSpotTuning();
 
 protected:
-  void      doDefineControls();
-  QWidget  *doCreateGui();
-  bool      doCheckHasActiveCfg();
-  void      doImportCustomConfig(QSettings*);
-  void      doRunFilter(ptImage *AImage) const;
-  void      doReset();
+  void      doDefineControls() override;
+  QWidget  *doCreateGui() override;
+  bool      doCheckHasActiveCfg() override;
+  void      doImportCustomConfig(QSettings*) override;
+  void      doRunFilter(ptImage *AImage) override;
+  void      doReset() override;
 
 private:
   ptFilter_SpotTuning();

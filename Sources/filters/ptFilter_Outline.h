@@ -25,21 +25,17 @@
 
 #include "ptFilterBase.h"
 
-//==============================================================================
-
 class ptFilter_Outline: public ptFilterBase {
-Q_OBJECT
+  Q_OBJECT
 
 public:
   static ptFilterBase *CreateOutline();
 
-
 protected:
-  void      doDefineControls();
-  QWidget  *doCreateGui();
-  bool      doCheckHasActiveCfg();
-  void      doRunFilter(ptImage *AImage) const;
-
+  void      doDefineControls() override;
+  QWidget  *doCreateGui() override;
+  bool      doCheckHasActiveCfg() override;
+  void      doRunFilter(ptImage *AImage) override;
 
 private:
   ptFilter_Outline();

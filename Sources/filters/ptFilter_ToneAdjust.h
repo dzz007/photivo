@@ -23,29 +23,18 @@
 #ifndef PTFILTER_ToneAdjust_H
 #define PTFILTER_ToneAdjust_H
 
-//==============================================================================
-
 #include "ptFilterBase.h"
 
-//==============================================================================
-
 class ptFilter_ToneAdjust: public ptFilterBase {
-Q_OBJECT
+  Q_OBJECT
 
 public:
   static ptFilterBase *CreateToneAdjust();
 
-
 protected:
-  /*! Reimplemented from base class. */
-  void      doDefineControls();
-
-  /*! Reimplemented from base class. */
-  bool      doCheckHasActiveCfg();
-
-  /*! Reimplemented from base class. Processing */
-  void      doRunFilter(ptImage *AImage) const;
-
+  void      doDefineControls() override;
+  bool      doCheckHasActiveCfg() override;
+  void      doRunFilter(ptImage *AImage) override;
 
 private:
   ptFilter_ToneAdjust();

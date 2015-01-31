@@ -25,26 +25,20 @@
 
 #include "ptFilterBase.h"
 
-//==============================================================================
-
 class ptFilter_Tone: public ptFilterBase {
-Q_OBJECT
+  Q_OBJECT
 
 public:
   static ptFilterBase *createTone();
 
-
 protected:
-  QWidget  *doCreateGui();
-
-  void      doDefineControls();
-  bool      doCheckHasActiveCfg();
-  void      doRunFilter(ptImage *AImage) const;
-
+  QWidget*  doCreateGui() override;
+  void      doDefineControls() override;
+  bool      doCheckHasActiveCfg() override;
+  void      doRunFilter(ptImage *AImage) override;
 
 private:
   ptFilter_Tone();
-  
 };
 
 #endif // PTFILTER_Tone_H

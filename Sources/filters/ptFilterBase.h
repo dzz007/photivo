@@ -73,7 +73,7 @@ public:
   void    importPreset(QSettings *APreset, const bool ARequestPipeRun = false);
   void    init(const QString &AUniqueName, const QString &AGuiNamePostfix);
   void    reset(const bool ARequestPipeRun = false);
-  void    runFilter(ptImage *AImage) const;
+  void    runFilter(ptImage *AImage);
 
 
   /*! \name Status getters and setters *//*! @{*/
@@ -133,7 +133,7 @@ protected:
   virtual void      doExportCustomConfig(QSettings *APreset, const bool AIncludeFlags) const {}
   virtual void      doImportCustomConfig(QSettings *APreset) {}
   virtual void      doUpdateGui() {}                          //!< Update for the children.
-  virtual void      doRunFilter(ptImage *AImage) const = 0;   //!< Children should do the work.
+  virtual void      doRunFilter(ptImage *AImage) = 0;         //!< Children should do the work.
   virtual void      doReset() {}                              //!< Reset for the children
   virtual void      doDefineControls() = 0;                   //!< Children know which controls they need.
 #pragma GCC diagnostic pop

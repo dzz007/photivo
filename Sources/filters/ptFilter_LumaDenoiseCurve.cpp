@@ -78,7 +78,7 @@ bool ptFilter_LumaDenoiseCurve::doCheckHasActiveCfg() {
 
 //==============================================================================
 
-void ptFilter_LumaDenoiseCurve::doRunFilter(ptImage *AImage) const {
+void ptFilter_LumaDenoiseCurve::doRunFilter(ptImage *AImage) {
   AImage->toLab();
   AImage->ApplyDenoiseCurve(FConfig.value(CLScale).toDouble()*TheProcessor->m_ScaleFactor,
                             FConfig.value(CLStrength).toDouble()/10,

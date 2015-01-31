@@ -68,7 +68,7 @@ bool ptFilter_ColorBoost::doCheckHasActiveCfg() {
 
 //==============================================================================
 
-void ptFilter_ColorBoost::doRunFilter(ptImage *AImage) const {
+void ptFilter_ColorBoost::doRunFilter(ptImage *AImage) {
   AImage->toLab();
   AImage->ColorBoost(FConfig.value(CStrengthA).toFloat(),
                      FConfig.value(CStrengthB).toFloat());

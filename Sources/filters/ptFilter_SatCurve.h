@@ -23,29 +23,18 @@
 #ifndef PTFILTER_SatCurve_H
 #define PTFILTER_SatCurve_H
 
-//==============================================================================
-
 #include "ptFilterBase.h"
 
-//==============================================================================
-
 class ptFilter_SatCurve: public ptFilterBase {
-Q_OBJECT
+  Q_OBJECT
 
 public:
   static ptFilterBase *CreateSatCurve();
 
-
 protected:
-  /*! Reimplemented from base class. */
-  void      doDefineControls();
-
-  /*! Reimplemented from base class. */
-  bool      doCheckHasActiveCfg();
-
-  /*! Reimplemented from base class. Processing */
-  void      doRunFilter(ptImage *AImage) const;
-
+  void      doDefineControls() override;
+  bool      doCheckHasActiveCfg() override;
+  void      doRunFilter(ptImage *AImage) override;
 
 private:
   ptFilter_SatCurve();

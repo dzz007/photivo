@@ -90,7 +90,7 @@ bool ptFilter_WaveletDenoise::doCheckHasActiveCfg() {
 
 //------------------------------------------------------------------------------
 
-void ptFilter_WaveletDenoise::doRunFilter(ptImage *AImage) const {
+void ptFilter_WaveletDenoise::doRunFilter(ptImage *AImage) {
   AImage->toLab();
 
   const double LStrength = FConfig.value(CLStrength).toDouble();

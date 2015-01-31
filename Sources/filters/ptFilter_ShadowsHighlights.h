@@ -23,29 +23,18 @@
 #ifndef PTFILTER_ShadowsHighlights_H
 #define PTFILTER_ShadowsHighlights_H
 
-//==============================================================================
-
 #include "ptFilterBase.h"
 
-//==============================================================================
-
 class ptFilter_ShadowsHighlights: public ptFilterBase {
-Q_OBJECT
+  Q_OBJECT
 
 public:
   static ptFilterBase *CreateShadowsHighlights();
 
-
 protected:
-  /*! Reimplemented from base class. */
-  void      doDefineControls();
-
-  /*! Reimplemented from base class. */
-  bool      doCheckHasActiveCfg();
-
-  /*! Reimplemented from base class. Processing */
-  void      doRunFilter(ptImage *AImage) const;
-
+  void      doDefineControls() override;
+  bool      doCheckHasActiveCfg() override;
+  void      doRunFilter(ptImage *AImage) override;
 
 private:
   ptFilter_ShadowsHighlights();

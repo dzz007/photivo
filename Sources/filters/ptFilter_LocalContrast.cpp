@@ -130,7 +130,7 @@ bool ptFilter_LocalContrast::doCheckHasActiveCfg() {
 
 //------------------------------------------------------------------------------
 
-void ptFilter_LocalContrast::doRunFilter(ptImage *AImage) const {
+void ptFilter_LocalContrast::doRunFilter(ptImage *AImage) {
   double lowerLimit {};
   double upperLimit {};
 

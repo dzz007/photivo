@@ -70,7 +70,7 @@ bool ptFilter_Highlights::doCheckHasActiveCfg() {
 
 //==============================================================================
 
-void ptFilter_Highlights::doRunFilter(ptImage *AImage) const {
+void ptFilter_Highlights::doRunFilter(ptImage *AImage) {
   AImage->toRGB();
   AImage->Highlights(FConfig.value(CHighlightsR).toFloat(),
                      FConfig.value(CHighlightsG).toFloat(),

@@ -70,7 +70,7 @@ bool ptFilter_LabTransform::doCheckHasActiveCfg() {
 
 //==============================================================================
 
-void ptFilter_LabTransform::doRunFilter(ptImage *AImage) const {
+void ptFilter_LabTransform::doRunFilter(ptImage *AImage) {
   AImage->toRGB();  // Yes, this filter needs RGB input
   AImage->LABTransform(FConfig.value(CMode).toInt());
 }

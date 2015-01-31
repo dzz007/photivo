@@ -82,7 +82,7 @@ bool ptFilter_ToneAdjust::doCheckHasActiveCfg() {
 
 //==============================================================================
 
-void ptFilter_ToneAdjust::doRunFilter(ptImage *AImage) const {
+void ptFilter_ToneAdjust::doRunFilter(ptImage *AImage) {
   AImage->toLab();
   AImage->LABTone(FConfig.value(CStrength).toDouble(),
                   FConfig.value(CHue).toDouble(),

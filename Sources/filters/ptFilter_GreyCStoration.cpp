@@ -115,7 +115,7 @@ bool ptFilter_GreyCStoration::doCheckHasActiveCfg() {
 
 //------------------------------------------------------------------------------
 
-void ptFilter_GreyCStoration::doRunFilter(ptImage *AImage) const {
+void ptFilter_GreyCStoration::doRunFilter(ptImage *AImage) {
   AImage->toLab();
 
   if (static_cast<TFilterMode>(FConfig.value(CMode).toInt()) == TFilterMode::ShowMask) {

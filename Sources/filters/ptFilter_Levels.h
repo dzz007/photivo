@@ -25,21 +25,17 @@
 
 #include "ptFilterBase.h"
 
-//==============================================================================
-
 class ptFilter_Levels: public ptFilterBase {
-Q_OBJECT
+  Q_OBJECT
 
 public:
   static ptFilterBase *createLevelsRgb();
   static ptFilterBase *createLevelsLab();
 
-
 protected:
-  void      doDefineControls();
-  bool      doCheckHasActiveCfg();
-  void      doRunFilter(ptImage *AImage) const;
-
+  void      doDefineControls() override;
+  bool      doCheckHasActiveCfg() override;
+  void      doRunFilter(ptImage *AImage) override;
 
 private:
   enum class TColorSpace { Rgb, Lab };

@@ -108,7 +108,7 @@ bool ptFilter_Vignette::doCheckHasActiveCfg() {
 
 //------------------------------------------------------------------------------
 
-void ptFilter_Vignette::doRunFilter(ptImage *AImage) const {
+void ptFilter_Vignette::doRunFilter(ptImage *AImage) {
   switch (FColorSpace) {
     case TColorSpace::Rgb: AImage->toRGB(); break;
     case TColorSpace::Lab: AImage->toLab(); break;

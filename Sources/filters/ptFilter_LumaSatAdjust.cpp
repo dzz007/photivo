@@ -98,7 +98,7 @@ bool ptFilter_LumaSatAdjust::doCheckHasActiveCfg() {
 
 //==============================================================================
 
-void ptFilter_LumaSatAdjust::doRunFilter(ptImage *AImage) const {
+void ptFilter_LumaSatAdjust::doRunFilter(ptImage *AImage) {
   AImage->toLab();
 
   switch (FMode) {
