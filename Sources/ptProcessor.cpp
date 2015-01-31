@@ -27,7 +27,6 @@
 #include "ptError.h"
 #include "ptSettings.h"
 #include "ptImage.h"
-//#include "ptLensfun.h"    // TODO BJ: implement lensfun DB
 #include "ptCurve.h"
 #include "ptCimg.h"
 #include "ptDcRaw.h"
@@ -49,79 +48,36 @@ void ViewWindowShowStatus(short State);
 
 //==============================================================================
 
-// FindAlpha (helper for ExposureFunction)
-// such that f(x)=(1-exp(-Alpha*x)/(1-exp(-Alpha))
-// f(x) is then foto curve for which :
-// f(0) = 0
-// f(1) = 1
-// f'(0)= Exposure
-double FindAlpha(double Exposure) {
-  assert(Exposure > 1.0);
-
-  double Alpha;
-  double fDerivedAt0;
-  if (Exposure<2) {
-    Alpha=(Exposure-1)/2;
-  } else {
-    Alpha=Exposure;
-  }
-  fDerivedAt0 = Alpha/(1-exp(-Alpha));
-  while (fabs(fDerivedAt0-Exposure)>0.001) {
-    Alpha = Alpha + (Exposure-fDerivedAt0);
-    fDerivedAt0 = Alpha/(1-exp(-Alpha));
-  }
-  return Alpha;
-}
-
-//==============================================================================
-
-// ExposureFunction
-// (used to generate an expsure curve)
-static double Alpha;
-static double ExposureForWhichAlphaIsCalculated = -1;
-
-double ExposureFunction(double r, double Exposure, double) {
-  if (Exposure != ExposureForWhichAlphaIsCalculated) {
-    Alpha = FindAlpha(Exposure);
-  }
-  return (1-exp(-Alpha*r))/(1-exp(-Alpha));
-}
-
-
-//==============================================================================
-
-ptProcessor::ptProcessor(PReportProgressFunc AReportProgress)
-{
+ptProcessor::ptProcessor(PReportProgressFunc AReportProgress) {
   // We work with a callback to avoid dependency on ptMainWindow
   m_ReportProgress = AReportProgress;
 
   // The DcRaw
-  m_DcRaw          = NULL;
+  m_DcRaw          = nullptr;
 
   // Cached version at different points.
-  m_Image_AfterDcRaw       = NULL;
-  m_Image_AfterLocalEdit   = NULL;
-  m_Image_AfterGeometry    = NULL;
-  m_Image_AfterRGB         = NULL;
-  m_Image_AfterLabCC       = NULL;
-  m_Image_AfterLabSN       = NULL;
-  m_Image_AfterLabEyeCandy = NULL;
-  m_Image_AfterEyeCandy    = NULL;
+  m_Image_AfterDcRaw       = nullptr;
+  m_Image_AfterLocalEdit   = nullptr;
+  m_Image_AfterGeometry    = nullptr;
+  m_Image_AfterRGB         = nullptr;
+  m_Image_AfterLabCC       = nullptr;
+  m_Image_AfterLabSN       = nullptr;
+  m_Image_AfterLabEyeCandy = nullptr;
+  m_Image_AfterEyeCandy    = nullptr;
 
-  m_Image_DetailPreview    = NULL;
+  m_Image_DetailPreview    = nullptr;
 
-  m_Image_TextureOverlay   = NULL;
-  m_Image_TextureOverlay2  = NULL;
+  m_Image_TextureOverlay   = nullptr;
+  m_Image_TextureOverlay2  = nullptr;
 
-  m_AutoExposureValue      = 0.0;
-
-  m_ScaleFactor            = 0;
+  m_ScaleFactor            = 0.0f;
 }
 
 //==============================================================================
 
 ptProcessor::~ptProcessor() {
-  // Tricky delete stuff as some pointer might be shared.
+  // Tricky delete stuff. Some pointers might point to the same object.
+  // Avoid repeated destruction.
   QList <ptImage*> PointerList;
   PointerList << m_Image_AfterDcRaw
               << m_Image_AfterLocalEdit
@@ -134,8 +90,9 @@ ptProcessor::~ptProcessor() {
               << m_Image_DetailPreview
               << m_Image_TextureOverlay
               << m_Image_TextureOverlay2;
-  while(PointerList.size()) {
-    if (PointerList[0] != NULL) {
+
+  while(!PointerList.isEmpty()) {
+    if (PointerList[0] != nullptr) {
       ptImage* CurrentPointer = PointerList[0];
       delete CurrentPointer;
       // Remove all elements equal to CurrentPointer.
@@ -181,7 +138,6 @@ void ptProcessor::Run(short Phase,
     // Purposes of timing the lenghty operations.
     FRunTimer.start();
 
-    double  ExposureFactor;
     QString CameraProfileName = Settings->GetString("CameraColorProfile");
 
     if (!m_DcRaw) goto Exit;
@@ -402,8 +358,6 @@ void ptProcessor::Run(short Phase,
                 Settings->GetInt("CameraColorGamma"));
 
               Settings->FromDcRaw(m_DcRaw);
-              if (Settings->GetInt("AutoExposure")==ptAutoExposureMode_Ufraw)
-                Settings->SetValue("Exposure",Settings->GetDouble("ExposureNormalization"));
 
               TRACEMAIN("Done m_Image_AfterDcRaw transfer to GUI at %d ms.",
                          FRunTimer.elapsed());
@@ -449,16 +403,6 @@ void ptProcessor::Run(short Phase,
           m_Image_AfterRGB->Set(m_Image_AfterGeometry);
         }
 
-        // Calculate the autoexposure required value at this point.
-        if (Settings->GetInt("AutoExposure")==ptAutoExposureMode_Auto) {
-          m_ReportProgress(tr("Calculate auto exposure"));
-          m_AutoExposureValue = CalculateAutoExposure(m_Image_AfterGeometry);
-          Settings->SetValue("Exposure",m_AutoExposureValue);
-        }
-        if (Settings->GetInt("AutoExposure")==ptAutoExposureMode_Ufraw)
-            Settings->SetValue("Exposure",Settings->GetDouble("ExposureNormalization"));
-
-
         //***************************************************************************
         // Channel mixing.
 
@@ -502,25 +446,10 @@ void ptProcessor::Run(short Phase,
         //***************************************************************************
         // Exposure and Exposure gain
 
-        if (Settings->ToolIsActive("TabExposure")) {
-
-          m_ReportProgress(tr("Correcting Exposure"));
-
-          // From EV to factor.
-          ExposureFactor = pow(2,Settings->GetDouble("Exposure"));
-
-          TRACEKEYVALS("ExposureFactor","%f",ExposureFactor);
-
-          if (Settings->GetInt("ExposureClipMode") != ptExposureClipMode_Curve ||
-              (ExposureFactor <= 1.0) ) {
-            m_Image_AfterRGB->Expose(ExposureFactor,
-                                     Settings->GetInt("ExposureClipMode"));
-          } else {
-            auto ExposureCurve = new ptCurve();
-            ExposureCurve->setFromFunc(ExposureFunction, ExposureFactor, 0);
-            m_Image_AfterRGB->ApplyCurve(ExposureCurve,7);
-            delete ExposureCurve;
-          }
+        hFilter = GFilterDM->GetFilterFromName(Fuid::Exposure_RGB);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterRGB);
         }
 
 
@@ -2013,24 +1942,6 @@ void ptProcessor::ReadExifBuffer() {
 
     ptLogWarning(ptWarning_Exiv2,"Exiv2 : %s\n",Error.what());
   }
-}
-
-//==============================================================================
-
-// There should be Settings->m_WhiteFraction % pixels above 90%
-double ptProcessor::CalculateAutoExposure(ptImage *Image) {
-  uint16_t White = Image->CalculateFractionLevel(Settings->GetInt("WhiteFraction")/100.0,7);
-  TRACEKEYVALS("White","%d",White);
-  // Account also for the ExposureNormalization that will be added.
-  // And express in EV.
-  // TODO Is Settings->ExposureNormalization valid at al times at this
-  // point ? Might be a bug.
-  double AutoExposure = log(Settings->GetInt("WhiteLevel")/100.0*0xFFFF / White)/log(2);
-  TRACEKEYVALS("AutoExpos(EV)","%f",AutoExposure);
-  //TRACEKEYVALS("ExposNorm(EV)","%f",Settings->GetDouble("ExposureNormalization"));
-
-  return AutoExposure; //-Settings->GetDouble("ExposureNormalization");
-  // Since now the ExposureNormalization is not used all the time.
 }
 
 //==============================================================================

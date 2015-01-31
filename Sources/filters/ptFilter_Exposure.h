@@ -2,7 +2,7 @@
 **
 ** Photivo
 **
-** Copyright (C) 2012 Bernd Schoeler <brjohn@brother-john.net>
+** Copyright (C) 2012-2015 Bernd Schoeler <brjohn@brother-john.net>
 **
 ** This file is part of Photivo.
 **
@@ -24,26 +24,34 @@
 #define PTFILTER_Exposure_H
 
 #include "ptFilterBase.h"
+#include "ui_ptFilter_Exposure.h"
 
 //==============================================================================
 
 class ptFilter_Exposure: public ptFilterBase {
-Q_OBJECT
+  Q_OBJECT
 
 public:
-  static ptFilterBase *createExposure();
-
+  static ptFilterBase* createExposure();
 
 protected:
-  QWidget  *doCreateGui();
-
-  void      doDefineControls();
-  bool      doCheckHasActiveCfg();
-  void      doRunFilter(ptImage *AImage) const;
-
+  QWidget*  doCreateGui() override;
+  void      doDefineControls() override;
+  bool      doCheckHasActiveCfg() override;
+  void      doRunFilter(ptImage *AImage) const override;
 
 private:
+  enum class TMode {
+    Manual, Auto, LikeUfraw
+  };
+
   ptFilter_Exposure();
+  double calcAutoExposure() const;
+
+  Ui_ExposureForm FForm;
+
+private slots:
+  void onExposureModeChanged(QString AId, QVariant ANewValue);
   
 };
 

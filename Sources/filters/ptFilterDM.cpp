@@ -893,6 +893,12 @@ void ptFilterDM::TranslateSpecialToOld(QSettings *APreset) {
       "ChannelMixer",
       static_cast<int>(GFilterDM->GetFilterFromName(Fuid::ChannelMixer_RGB)->isActive()));
   APreset->setValue("ChannelMixerFileNames", QVariant());
+
+//  const short ptAutoExposureMode_Auto     = 0;
+//  const short ptAutoExposureMode_Ufraw    = 1;
+//  const short ptAutoExposureMode_Manual   = 2;
+//  const short ptAutoExposureMode_Zero     = 3;
+
 }
 
 //==============================================================================
@@ -1054,9 +1060,9 @@ void ptFilterDM::FillNameMap() {
   FNameMap.insert("HighlightsR",                     "Highlights/"+Fuid::Highlights_RGB+"/HighlightsR");
   FNameMap.insert("HighlightsG",                     "Highlights/"+Fuid::Highlights_RGB+"/HighlightsG");
   FNameMap.insert("HighlightsB",                     "Highlights/"+Fuid::Highlights_RGB+"/HighlightsB");
-//  FNameMap.insert("WhiteFraction",                   "");
-//  FNameMap.insert("WhiteLevel",                      "");
-//  FNameMap.insert("Exposure",                        "");
+  FNameMap.insert("WhiteFraction",                   "Exposure/"+Fuid::Exposure_RGB+"/WhiteFraction");
+  FNameMap.insert("WhiteLevel",                      "Exposure/"+Fuid::Exposure_RGB+"/WhiteLevel");
+  FNameMap.insert("Exposure",                        "Exposure/"+Fuid::Exposure_RGB+"/Exposure");
   FNameMap.insert("Reinhard05Brightness",            "ReinhardBrighten/"+Fuid::ReinhardBrighten_RGB+"/Brightness");
   FNameMap.insert("Reinhard05Chroma",                "ReinhardBrighten/"+Fuid::ReinhardBrighten_RGB+"/Chroma");
   FNameMap.insert("Reinhard05Light",                 "ReinhardBrighten/"+Fuid::ReinhardBrighten_RGB+"/LightTweak");
@@ -1412,8 +1418,8 @@ void ptFilterDM::FillNameMap() {
 //  FNameMap.insert("FlipMode",                        "");
 //  FNameMap.insert("AspectRatioW",                    "");
 //  FNameMap.insert("AspectRatioH",                    "");
-//  FNameMap.insert("ExposureClipMode",                "");
-//  FNameMap.insert("AutoExposure",                    "");
+  FNameMap.insert("ExposureClipMode",                "Exposure/"+Fuid::Exposure_RGB+"/ClipMode");
+  FNameMap.insert("AutoExposure",                    "Exposure/"+Fuid::Exposure_RGB+"/ExposureMode");
   FNameMap.insert("LABTransform",                    "LabTransform/"+Fuid::LabTransform_LabCC+"/Mode");
   FNameMap.insert("LMHLightRecovery1MaskType",       "LMHRecoveryRgb/"+Fuid::LMHRecovery_RGB+"/MaskType1");
   FNameMap.insert("LMHLightRecovery2MaskType",       "LMHRecoveryRgb/"+Fuid::LMHRecovery_RGB+"/MaskType2");
@@ -1563,7 +1569,6 @@ void ptFilterDM::FillNameMap() {
 //  FNameMap.insert("CropH",                           "");
 //  FNameMap.insert("RotateW",                         "");
 //  FNameMap.insert("RotateH",                         "");
-//  FNameMap.insert("ExposureNormalization",           "");
 //  FNameMap.insert("OutputFileName",                  "");
 //  FNameMap.insert("JobMode",                         "");
 //  FNameMap.insert("InputFileNameList",               "");

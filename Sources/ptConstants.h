@@ -289,16 +289,11 @@ const short ptLightsOutMode_None    = 0;
 const short ptLightsOutMode_Dimmed  = 1;
 const short ptLightsOutMode_Black   = 2;
 
-// Exposure Clip Modes
-const short ptExposureClipMode_None  = 0;
-const short ptExposureClipMode_Ratio = 1;
-const short ptExposureClipMode_Curve = 2;
-
-// Auto Exposure Modes
-const short ptAutoExposureMode_Auto     = 0;
-const short ptAutoExposureMode_Ufraw    = 1;
-const short ptAutoExposureMode_Manual   = 2;
-const short ptAutoExposureMode_Zero     = 3;
+enum class TExposureClipMode: int {
+  Hard,
+  Ratio,
+  FilmCurve
+};
 
 // Curves.
 

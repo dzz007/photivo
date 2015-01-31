@@ -115,12 +115,6 @@ public:
   // Reporting
   void ReportProgress(const QString Message);
 
-  // AutoExposure Value in EV.
-  double m_AutoExposureValue;
-  // CalculateAutoExposure
-  // There should be GuiSettings->m_WhiteFraction % pixels above 90%
-  double CalculateAutoExposure(ptImage* Image);
-
   // Factor for size dependend filters
   float  m_ScaleFactor;
 
