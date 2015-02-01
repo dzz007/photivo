@@ -100,7 +100,7 @@ bool ptFilter_$FilterName$::doCheckHasActiveCfg() {
 
 //------------------------------------------------------------------------------
 
-void ptFilter_$FilterName$::doRunFilter(ptImage *AImage) const {
+void ptFilter_$FilterName$::doRunFilter(ptImage* AImage) {
   AImage->toLab();
   AImage->$FilterName$(FConfig.value(CCfgItem1).toBool(),
                      FConfig.value(CCfgItem2).toDouble(),

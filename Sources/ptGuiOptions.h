@@ -110,7 +110,6 @@ public:
   static const ptGuiOptionsItem OutlineMode[];
   static const ptGuiOptionsItem OverlayMaskMode[];
   static const ptGuiOptionsItem CrossprocessMode[];
-  static const ptGuiOptionsItem SoftglowMode[];
   static const ptGuiOptionsItem Enable[];
   static const ptGuiOptionsItem SaveFormat[];
   static const ptGuiOptionsItem SaveSampling[];

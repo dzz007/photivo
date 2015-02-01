@@ -2,7 +2,7 @@
 **
 ** Photivo
 **
-** Copyright (C) YEAR NAME <EMAIL>
+** Copyright (C) 2015 Bernd Schoeler <brjohn@brother-john.net>
 **
 ** This file is part of Photivo.
 **
@@ -20,28 +20,25 @@
 **
 *******************************************************************************/
 
-#ifndef PTFILTER_$FilterName$_H
-#define PTFILTER_$FilterName$_H
+#ifndef PTFILTER_SoftglowOrton_H
+#define PTFILTER_SoftglowOrton_H
 
 #include "ptFilterBase.h"
 
-class ptFilter_$FilterName$: public ptFilterBase {
+class ptFilter_SoftglowOrton: public ptFilterBase {
   Q_OBJECT
 
 public:
-  static ptFilterBase* create$FilterName$();
+  static ptFilterBase* createSoftglowOrton();
 
 protected:
-  /*** Uncomment following line when the filter has a .ui file. ***/
-//  QWidget*  doCreateGui() override;
-
   void      doDefineControls() override;
   bool      doCheckHasActiveCfg() override;
-  void      doRunFilter(ptImage* AImage) override;
+  void      doRunFilter(ptImage *AImage) override;
 
 private:
-  ptFilter_$FilterName$();
+  ptFilter_SoftglowOrton();
   
 };
 
-#endif // PTFILTER_$FilterName$_H
+#endif // PTFILTER_SoftglowOrton_H

@@ -1387,18 +1387,12 @@ void ptProcessor::Run(short Phase,
         //***************************************************************************
         // Softglow
 
-        if (Settings->ToolIsActive("TabSoftglow")) {
-
-          m_ReportProgress(tr("Softglow"));
-
-          m_Image_AfterEyeCandy->Softglow(Settings->GetInt("SoftglowMode"),
-            Settings->GetDouble("SoftglowRadius")*m_ScaleFactor,
-            Settings->GetDouble("SoftglowAmount"),
-            7,
-            Settings->GetDouble("SoftglowContrast"),
-            Settings->GetInt("SoftglowSaturation"));
-
+        hFilter = GFilterDM->GetFilterFromName(Fuid::SoftglowOrton_EyeCandy);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterEyeCandy);
         }
+
 
         //***************************************************************************
         // Vibrance

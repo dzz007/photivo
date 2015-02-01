@@ -435,7 +435,7 @@ public:
             const double Softness);
 
   // Softglow
-  ptImage* Softglow(const short   SoftglowMode,
+  ptImage* Softglow(const TSoftglowMode SoftglowMode,
                     const double  Radius,
                     const double  Amount,
                     const uint8_t ChannelMask = 7,

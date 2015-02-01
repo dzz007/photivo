@@ -470,16 +470,6 @@ const ptGuiOptionsItem ptGuiOptions::CrossprocessMode[] = {
   {ptCrossprocessMode_BM,    QObject::tr("Blue - magenta") },
   {-1,NULL}};
 
-const ptGuiOptionsItem ptGuiOptions::SoftglowMode[] = {
-  {ptSoftglowMode_None,              QObject::tr("Disabled") },
-  {ptSoftglowMode_Lighten,           QObject::tr("Lighten") },
-  {ptSoftglowMode_Screen,            QObject::tr("Screen") },
-  {ptSoftglowMode_SoftLight,         QObject::tr("Softlight") },
-  {ptSoftglowMode_Normal,            QObject::tr("Normal") },
-  {ptSoftglowMode_OrtonScreen,       QObject::tr("Orton screen") },
-  {ptSoftglowMode_OrtonSoftLight,    QObject::tr("Orton softlight") },
-  {-1,NULL}};
-
 const ptGuiOptionsItem ptGuiOptions::Enable[] = {
   {ptEnable_None,              QObject::tr("Disabled") },
   {ptEnable_NoPreview,         QObject::tr("Only final run") },

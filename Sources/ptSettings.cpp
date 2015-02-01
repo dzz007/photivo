@@ -167,10 +167,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"GradualOverlay2LowerLevel"     ,ptGT_InputSlider     ,2,1,1 ,0.5  ,0.0  ,3.0   ,0.1  ,2 ,tr("Lower Level")        ,tr("Lower Level")},
     {"GradualOverlay2UpperLevel"     ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,3.0   ,0.1  ,2 ,tr("Upper Level")        ,tr("Upper Level")},
     {"GradualOverlay2Softness"       ,ptGT_InputSlider     ,2,1,1 ,0.15  ,0.0  ,1.0   ,0.1  ,2 ,tr("Softness")        ,tr("Softness")},
-    {"SoftglowRadius"                ,ptGT_InputSlider     ,2,1,1 ,10.0  ,0.0  ,30.0  ,1.0 ,1 ,tr("Radius")        ,tr("Radius")},
-    {"SoftglowAmount"                ,ptGT_InputSlider     ,2,1,1 ,0.5  ,0.0  ,1.0   ,0.1  ,1  ,tr("Amount")        ,tr("Amount")},
-    {"SoftglowSaturation"            ,ptGT_InputSlider     ,2,1,1 ,-50  ,-100  ,100    ,5  ,0 ,tr("Saturation")     ,tr("Saturation")},
-    {"SoftglowContrast"              ,ptGT_InputSlider     ,2,1,1 ,5.0  ,0.0  ,20.0  ,0.5  ,1 ,tr("Contrast")           ,tr("Contrast")},
     {"OutputGamma"                   ,ptGT_InputSlider     ,1,1,1 ,0.33  ,0.1  ,1.0   ,0.01 ,3 ,tr("Gamma")              ,tr("Gamma")},
     {"OutputLinearity"               ,ptGT_InputSlider     ,1,1,1 ,0.06  ,0.0  ,1.0   ,0.01 ,3 ,tr("Linearity")          ,tr("Linearity")},
     {"WebResizeScale"                ,ptGT_Input           ,1,1,1 ,1200  ,200 ,2600  ,100  ,0 ,tr("pixels")             ,tr("Image size")},
@@ -232,7 +228,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"TextureOverlay2Mask"         ,ptGT_Choice       ,2,1,1 ,ptOverlayMaskMode_FullImage ,GuiOptions->OverlayMaskMode           ,tr("Mask for Texture Overlay")},
     {"GradualOverlay1"             ,ptGT_Choice       ,2,1,1 ,ptOverlayMode_None          ,GuiOptions->OverlayMode               ,tr("Mode for Gradual Overlay")},
     {"GradualOverlay2"             ,ptGT_Choice       ,2,1,1 ,ptOverlayMode_None          ,GuiOptions->OverlayMode               ,tr("Mode for Gradual Overlay")},
-    {"SoftglowMode"                ,ptGT_Choice       ,2,1,1 ,ptSoftglowMode_None         ,GuiOptions->SoftglowMode              ,tr("Mode for Softglow")},
     {"WebResize"                   ,ptGT_Choice       ,2,1,1 ,ptEnable_None               ,GuiOptions->Enable                    ,tr("Enable web resizing")},
     {"WebResizeDimension"          ,ptGT_Choice       ,2,1,1 ,ptResizeDimension_LongerEdge,GuiOptions->WebResizeDimension        ,tr("Image dimension the resize value applies to")},
     {"WebResizeFilter"             ,ptGT_Choice       ,1,1,1 ,ptIMFilter_Lanczos          ,GuiOptions->IMResizeFilter            ,tr("Filter to be used for resizing")},
@@ -1413,10 +1408,6 @@ sToolInfo ToolInfo (const QString GuiName) {
       Info.Name = "Gradual Overlay 2";
       Info.IsActive = (Settings->GetInt("GradualOverlay2") &&
                        Settings->GetDouble("GradualOverlay2Amount")!=0.0)!=0?1:0;
-  } else if (GuiName == "TabSoftglow") {
-      Info.Name = "Softglow / Orton";
-      Info.IsActive = (Settings->GetInt("SoftglowMode") &&
-                       Settings->GetDouble("SoftglowAmount")!=0.0)!=0?1:0;
   }
   // Tab Output
   else if (GuiName == "TabGammaCompensation") {
