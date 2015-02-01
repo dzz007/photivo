@@ -26,6 +26,9 @@
    <item>
     <widget class="QWidget" name="widget" native="true">
      <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <property name="sizeConstraint">
+       <enum>QLayout::SetFixedSize</enum>
+      </property>
       <property name="leftMargin">
        <number>0</number>
       </property>
@@ -39,7 +42,7 @@
        <number>0</number>
       </property>
       <item>
-       <widget class="ptChoice" name="ExposureMode"/>
+       <widget class="ptChoice" name="Mode"/>
       </item>
       <item>
        <widget class="ptChoice" name="ClipMode"/>
@@ -61,7 +64,7 @@
     </widget>
    </item>
    <item>
-    <widget class="ptInput" name="Exposure"/>
+    <widget class="ptInput" name="EVDelta"/>
    </item>
    <item>
     <widget class="QWidget" name="AutoCfgWidget" native="true">

@@ -650,7 +650,7 @@ void ptFilterDM::TranslatePreset(QSettings *APreset, const bool AOldToNew) {
     TranslateNormalToNew(APreset, &hKeys);
    } else {
     TranslateCurvesToOld(APreset, &hKeys);
-    TranslateSpecialToOld(APreset);
+    TranslateSpecialToOld(APreset, &hKeys);
     TranslateNormalToOld(APreset, &hKeys);
   }
 }
@@ -839,22 +839,46 @@ void ptFilterDM::TranslateSpecialToNew(QSettings *APreset, QStringList *AKeys) {
   */
   // "ChannelMixer" holds the combobox index. 0=None, 1=Manual, >1=File
   // If >1 read the filename list to fill the new-style mixer name entry.
-  int chmixerMode = APreset->value("ChannelMixer").toInt();
-  if (chmixerMode > 1) {
-    const QStringList chmixerFiles = APreset->value("ChannelMixerFileNames").toStringList();
-    const int chmixerIdx = chmixerMode - 2;
+  if (AKeys->contains("ChannelMixer")) {
+    int chmixerMode = APreset->value("ChannelMixer").toInt();
+    if (chmixerMode > 1) {
+      const QStringList chmixerFiles = APreset->value("ChannelMixerFileNames").toStringList();
+      const int chmixerIdx = chmixerMode - 2;
 
-    if (chmixerIdx < chmixerFiles.size()) {
-      APreset->setValue(
-          "ChannelMixer/"+Fuid::ChannelMixer_RGB+"/MixerName/MixerName",
-          QFileInfo(chmixerFiles[chmixerIdx]).baseName());
+      if (chmixerIdx < chmixerFiles.size()) {
+        APreset->setValue(
+              "ChannelMixer/"+Fuid::ChannelMixer_RGB+"/MixerName/MixerName",
+              QFileInfo(chmixerFiles[chmixerIdx]).baseName());
+      }
     }
+
+    APreset->remove("ChannelMixer");
+    APreset->remove("ChannelMixerFileNames");
+    AKeys->removeAll("ChannelMixer");
+    AKeys->removeAll("ChannelMixerFileNames");
   }
 
-  APreset->remove("ChannelMixer");
-  APreset->remove("ChannelMixerFileNames");
-  AKeys->removeAll("ChannelMixer");
-  AKeys->removeAll("ChannelMixerFileNames");
+
+  /***** Exposure *****
+    Integer values of the "Exposure mode" combobox have changed. Here’s the mapping:
+    old name                    old value  new value  new name
+    ptAutoExposureMode_Auto     0          1          TMode::Auto
+    ptAutoExposureMode_Ufraw    1          2          TMode::LikeUfraw
+    ptAutoExposureMode_Manual   2          0          TMode::Manual
+    ptAutoExposureMode_Zero     3          -          removed, corresponds to "Manual, EV == 0"
+  */
+  if (AKeys->contains("AutoExposure")) {
+    const QString newExpModeKey = FNameMap.value("AutoExposure");
+    switch (APreset->value("AutoExposure").toInt()) {
+      case 0:  APreset->setValue(newExpModeKey, 1); break;
+      case 1:  APreset->setValue(newExpModeKey, 2); break;
+      case 2:  // fall through
+      case 3:  // fall through
+      default: APreset->setValue(newExpModeKey, 0); break;
+    }
+    APreset->remove("AutoExposure");
+    AKeys->removeAll("AutoExposure");
+  }
 
 
   /***** Tone adjustment *****
@@ -884,21 +908,37 @@ void ptFilterDM::TranslateSpecialToNew(QSettings *APreset, QStringList *AKeys) {
 
 //==============================================================================
 
-void ptFilterDM::TranslateSpecialToOld(QSettings *APreset) {
+void ptFilterDM::TranslateSpecialToOld(QSettings *APreset, QStringList *AKeys) {
   /***** Channel mixer *****
     Write old-style active state and (empty) file name list. Corresponding new-style
-    keys do not exist anymore.
+    keys do not exist anymore. Note that the invalid QVariant is intentional. Older
+    Photivo versions expect exactly that to represent an empty file name list.
   */
-  APreset->setValue(
-      "ChannelMixer",
-      static_cast<int>(GFilterDM->GetFilterFromName(Fuid::ChannelMixer_RGB)->isActive()));
-  APreset->setValue("ChannelMixerFileNames", QVariant());
+  if (AKeys->contains("ChannelMixerR2R")) {
+    APreset->setValue(
+          "ChannelMixer",
+          static_cast<int>(GFilterDM->GetFilterFromName(Fuid::ChannelMixer_RGB)->isActive()));
+    APreset->setValue("ChannelMixerFileNames", QVariant());
+  }
 
-//  const short ptAutoExposureMode_Auto     = 0;
-//  const short ptAutoExposureMode_Ufraw    = 1;
-//  const short ptAutoExposureMode_Manual   = 2;
-//  const short ptAutoExposureMode_Zero     = 3;
 
+  /***** Exposure *****
+    Integer values of the "Exposure mode" combobox have changed. Here’s the mapping:
+    old name                    old value  new value  new name
+    ptAutoExposureMode_Auto     0          1          TMode::Auto
+    ptAutoExposureMode_Ufraw    1          2          TMode::LikeUfraw
+    ptAutoExposureMode_Manual   2          0          TMode::Manual
+    ptAutoExposureMode_Zero     3          -          removed, corresponds to "Manual, EV == 0"
+  */
+  const QString expModeNewKey = FNameMap.value("AutoExposure");
+  if (AKeys->contains(expModeNewKey)) {
+    switch (APreset->value(expModeNewKey).toInt()) {
+      case 1:  APreset->setValue(expModeNewKey, 0); break;
+      case 2:  APreset->setValue(expModeNewKey, 1); break;
+      case 0:  // fall through
+      default: APreset->setValue(expModeNewKey, 2); break;
+    }
+  }
 }
 
 //==============================================================================
@@ -1060,9 +1100,9 @@ void ptFilterDM::FillNameMap() {
   FNameMap.insert("HighlightsR",                     "Highlights/"+Fuid::Highlights_RGB+"/HighlightsR");
   FNameMap.insert("HighlightsG",                     "Highlights/"+Fuid::Highlights_RGB+"/HighlightsG");
   FNameMap.insert("HighlightsB",                     "Highlights/"+Fuid::Highlights_RGB+"/HighlightsB");
-  FNameMap.insert("WhiteFraction",                   "Exposure/"+Fuid::Exposure_RGB+"/WhiteFraction");
-  FNameMap.insert("WhiteLevel",                      "Exposure/"+Fuid::Exposure_RGB+"/WhiteLevel");
-  FNameMap.insert("Exposure",                        "Exposure/"+Fuid::Exposure_RGB+"/Exposure");
+  FNameMap.insert("WhiteFraction",                   "ExposureCorrection/"+Fuid::Exposure_RGB+"/WhiteFraction");
+  FNameMap.insert("WhiteLevel",                      "ExposureCorrection/"+Fuid::Exposure_RGB+"/WhiteLevel");
+  FNameMap.insert("Exposure",                        "ExposureCorrection/"+Fuid::Exposure_RGB+"/EVDelta");
   FNameMap.insert("Reinhard05Brightness",            "ReinhardBrighten/"+Fuid::ReinhardBrighten_RGB+"/Brightness");
   FNameMap.insert("Reinhard05Chroma",                "ReinhardBrighten/"+Fuid::ReinhardBrighten_RGB+"/Chroma");
   FNameMap.insert("Reinhard05Light",                 "ReinhardBrighten/"+Fuid::ReinhardBrighten_RGB+"/LightTweak");
@@ -1418,8 +1458,8 @@ void ptFilterDM::FillNameMap() {
 //  FNameMap.insert("FlipMode",                        "");
 //  FNameMap.insert("AspectRatioW",                    "");
 //  FNameMap.insert("AspectRatioH",                    "");
-  FNameMap.insert("ExposureClipMode",                "Exposure/"+Fuid::Exposure_RGB+"/ClipMode");
-  FNameMap.insert("AutoExposure",                    "Exposure/"+Fuid::Exposure_RGB+"/ExposureMode");
+  FNameMap.insert("ExposureClipMode",                "ExposureCorrection/"+Fuid::Exposure_RGB+"/ClipMode");
+  FNameMap.insert("AutoExposure",                    "ExposureCorrection/"+Fuid::Exposure_RGB+"/Mode");
   FNameMap.insert("LABTransform",                    "LabTransform/"+Fuid::LabTransform_LabCC+"/Mode");
   FNameMap.insert("LMHLightRecovery1MaskType",       "LMHRecoveryRgb/"+Fuid::LMHRecovery_RGB+"/MaskType1");
   FNameMap.insert("LMHLightRecovery2MaskType",       "LMHRecoveryRgb/"+Fuid::LMHRecovery_RGB+"/MaskType2");

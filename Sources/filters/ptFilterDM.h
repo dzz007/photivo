@@ -174,7 +174,7 @@ private:
   void TranslateNormalToNew   (QSettings *APreset, QStringList *AKeys);
   void TranslateNormalToOld   (QSettings *APreset, QStringList *AKeys);
   void TranslateSpecialToNew  (QSettings *APreset, QStringList *AKeys);
-  void TranslateSpecialToOld  (QSettings *APreset);
+  void TranslateSpecialToOld  (QSettings *APreset, QStringList *AKeys);
   ///@}
 
   bool PerformWritePreset(const QString       &AFileName,

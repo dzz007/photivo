@@ -33,11 +33,11 @@ extern ptProcessor* TheProcessor;
 
 // -----------------------------------------------------------------------------
 
-const QString CExposureId = "Exposure";
+const QString CExposureId = "ExposureCorrection";
 
-const QString CExposureMode  = "ExposureMode";
+const QString CExposureMode  = "Mode";
 const QString CClipMode      = "ClipMode";
-const QString CExposure      = "Exposure";
+const QString CExposure      = "EVDelta";
 const QString CWhiteFraction = "WhiteFraction";
 const QString CWhiteLevel    = "WhiteLevel";
 
@@ -191,14 +191,23 @@ double ptFilter_Exposure::calcAutoExposure() const {
 
 // -----------------------------------------------------------------------------
 
+void ptFilter_Exposure::doUpdateGui() {
+  auto exposureMode = static_cast<TMode>(FConfig.value(CExposureMode).toInt());
+  FForm.EVDelta->setEnabled(exposureMode == TMode::Manual);
+  FForm.AutoCfgWidget->setVisible(exposureMode == TMode::Auto);
+}
+
+// -----------------------------------------------------------------------------
+
 QWidget *ptFilter_Exposure::doCreateGui() {
   auto guiBody = new QWidget;
 
   FForm.setupUi(guiBody);
+  this->doUpdateGui();
   this->initDesignerGui(guiBody);
 
   connect(
-      FForm.ExposureMode,
+      FForm.Mode,
       SIGNAL(valueChanged(QString,QVariant)),
       SLOT(onExposureModeChanged(QString,QVariant)));
 
@@ -208,11 +217,6 @@ QWidget *ptFilter_Exposure::doCreateGui() {
 // -----------------------------------------------------------------------------
 
 void ptFilter_Exposure::onExposureModeChanged(QString AId, QVariant ANewValue) {
-  auto newValue = static_cast<TMode>(ANewValue.toInt());
-
-  FForm.Exposure->setEnabled(newValue == TMode::Manual);
-  FForm.AutoCfgWidget->setVisible(newValue == TMode::Auto);
-
   FConfig.setValue(AId, ANewValue);
   this->updateGui();
 }

@@ -315,7 +315,7 @@ void CreateAllFilters() {
   GFilterDM->NewFilter("Highlights",            Fuid::Highlights_RGB);
   GFilterDM->NewFilter("ColorIntensity",        Fuid::ColorIntensity_RGB);
   GFilterDM->NewFilter("Brightness",            Fuid::Brightness_RGB);
-  GFilterDM->NewFilter("Exposure",              Fuid::Exposure_RGB);
+  GFilterDM->NewFilter("ExposureCorrection",    Fuid::Exposure_RGB);
   GFilterDM->NewFilter("ReinhardBrighten",      Fuid::ReinhardBrighten_RGB);
   GFilterDM->NewFilter("GammaTool",             Fuid::GammaTool_RGB);
   GFilterDM->NewFilter("Normalization",         Fuid::Normalization_RGB);
