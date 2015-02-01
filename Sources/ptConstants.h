@@ -526,15 +526,15 @@ enum class TVignetteShape: int {
   Rect8   = 10
 };
 
-// SoftglowMode
-
-const short ptSoftglowMode_None           = 0;
-const short ptSoftglowMode_Lighten        = 1;
-const short ptSoftglowMode_Screen         = 2;
-const short ptSoftglowMode_SoftLight      = 3;
-const short ptSoftglowMode_Normal         = 4;
-const short ptSoftglowMode_OrtonScreen    = 5;
-const short ptSoftglowMode_OrtonSoftLight = 6;
+enum class TSoftglowMode {
+  Disabled,
+  Lighten,
+  Screen,
+  Softlight,
+  Normal,
+  OrtonScreen,
+  OrtonSoftlight
+};
 
 // Output formats.
 

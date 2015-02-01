@@ -309,7 +309,8 @@ HEADERS += \
     ../Sources/filters/ptFilter_SimpleTone.h \
     ../Sources/filters/ptFilter_Vignette.h \
     ../Sources/filters/ptFilter_GradualBlur.h \
-    ../Sources/filters/ptFilter_Exposure.h
+    ../Sources/filters/ptFilter_Exposure.h \
+    ../Sources/filters/ptFilter_SoftglowOrton.h
 
 SOURCES += \
     ../Sources/batch/ptBatchWindow.cpp \
@@ -465,7 +466,8 @@ SOURCES += \
     ../Sources/filters/ptFilter_SimpleTone.cpp \
     ../Sources/filters/ptFilter_Vignette.cpp \
     ../Sources/filters/ptFilter_GradualBlur.cpp \
-    ../Sources/filters/ptFilter_Exposure.cpp
+    ../Sources/filters/ptFilter_Exposure.cpp \
+    ../Sources/filters/ptFilter_SoftglowOrton.cpp
 
 FORMS += \
     ../Sources/batch/ptBatchWindow.ui \

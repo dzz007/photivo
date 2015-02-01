@@ -382,6 +382,7 @@ void CreateAllFilters() {
   GFilterDM->NewFilter("VignetteRgb",           Fuid::Vignette_EyeCandy);
   GFilterDM->NewFilter("GradualBlur",           Fuid::GradualBlur1_EyeCandy,        " I");
   GFilterDM->NewFilter("GradualBlur",           Fuid::GradualBlur2_EyeCandy,        " II");
+  GFilterDM->NewFilter("SoftglowOrton",         Fuid::SoftglowOrton_EyeCandy);
   GFilterDM->NewFilter("ColorIntensity",        Fuid::ColorIntensity_EyeCandy);
   GFilterDM->NewFilter("RToneCurve",            Fuid::RTone_EyeCandy);
   GFilterDM->NewFilter("GToneCurve",            Fuid::GTone_EyeCandy);
@@ -5670,12 +5671,6 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(GradualOverlay2LowerLevelInput)
   M_Dispatch(GradualOverlay2UpperLevelInput)
   M_SetAndRunDispatch(GradualOverlay2SoftnessInput)
-
-  M_SetAndRunDispatch(SoftglowModeChoice)
-  M_SetAndRunDispatch(SoftglowRadiusInput)
-  M_SetAndRunDispatch(SoftglowAmountInput)
-  M_SetAndRunDispatch(SoftglowContrastInput)
-  M_SetAndRunDispatch(SoftglowSaturationInput)
 
   M_SetAndRunDispatch(OutputGammaCompensationCheck)
   M_SetAndRunDispatch(OutputGammaInput)

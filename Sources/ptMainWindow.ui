@@ -372,7 +372,7 @@
                           <enum>QTabWidget::West</enum>
                          </property>
                          <property name="currentIndex">
-                          <number>3</number>
+                          <number>7</number>
                          </property>
                          <property name="iconSize">
                           <size>
@@ -3127,7 +3127,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>358</width>
+                                <width>426</width>
                                 <height>586</height>
                                </rect>
                               </property>
@@ -3201,7 +3201,7 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>340</width>
+                                    <width>408</width>
                                     <height>136</height>
                                    </rect>
                                   </property>
@@ -4161,7 +4161,7 @@
                                <rect>
                                 <x>0</x>
                                 <y>0</y>
-                                <width>358</width>
+                                <width>426</width>
                                 <height>586</height>
                                </rect>
                               </property>
@@ -4169,14 +4169,14 @@
                                <item>
                                 <widget class="QToolBox" name="ToolBoxEyeCandy">
                                  <property name="currentIndex">
-                                  <number>0</number>
+                                  <number>13</number>
                                  </property>
                                  <widget class="QWidget" name="TabBW">
                                   <property name="geometry">
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>323</width>
+                                    <width>391</width>
                                     <height>126</height>
                                    </rect>
                                   </property>
@@ -5195,49 +5195,14 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>98</width>
-                                    <height>116</height>
+                                    <width>408</width>
+                                    <height>82</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
-                                   <string>Softglow / Orton</string>
+                                   <string notr="true">77ac5ce7-e1ab-4677-b6da-907c9f70e001</string>
                                   </attribute>
-                                  <layout class="QVBoxLayout" name="verticalLayout_114">
-                                   <item>
-                                    <widget class="QWidget" name="widget_38" native="true">
-                                     <layout class="QVBoxLayout" name="verticalLayout_117">
-                                      <item>
-                                       <widget class="QWidget" name="SoftglowModeWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="SoftglowAmountWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="SoftglowRadiusWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="SoftglowContrastWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="SoftglowSaturationWidget" native="true"/>
-                                      </item>
-                                     </layout>
-                                    </widget>
-                                   </item>
-                                   <item>
-                                    <spacer name="verticalSpacer_58">
-                                     <property name="orientation">
-                                      <enum>Qt::Vertical</enum>
-                                     </property>
-                                     <property name="sizeHint" stdset="0">
-                                      <size>
-                                       <width>20</width>
-                                       <height>40</height>
-                                      </size>
-                                     </property>
-                                    </spacer>
-                                   </item>
-                                  </layout>
+                                  <layout class="QVBoxLayout" name="verticalLayout_114"/>
                                  </widget>
                                  <widget class="QWidget" name="TabECColorIntensity">
                                   <property name="geometry">
@@ -9043,7 +9008,7 @@
                      <rect>
                       <x>0</x>
                       <y>0</y>
-                      <width>618</width>
+                      <width>550</width>
                       <height>854</height>
                      </rect>
                     </property>

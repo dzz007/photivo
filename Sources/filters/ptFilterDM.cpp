@@ -1399,10 +1399,10 @@ void ptFilterDM::FillNameMap() {
   FNameMap.insert("GradBlur2Roundness",              "GradualBlur/"+Fuid::GradualBlur2_EyeCandy+"/Roundness");
   FNameMap.insert("GradBlur2CenterX",                "GradualBlur/"+Fuid::GradualBlur2_EyeCandy+"/CenterX");
   FNameMap.insert("GradBlur2CenterY",                "GradualBlur/"+Fuid::GradualBlur2_EyeCandy+"/CenterY");
-//  FNameMap.insert("SoftglowRadius",                  "");
-//  FNameMap.insert("SoftglowAmount",                  "");
-//  FNameMap.insert("SoftglowSaturation",              "");
-//  FNameMap.insert("SoftglowContrast",                "");
+  FNameMap.insert("SoftglowAmount",                  "SoftglowOrton/"+Fuid::SoftglowOrton_EyeCandy+"/Strength");
+  FNameMap.insert("SoftglowRadius",                  "SoftglowOrton/"+Fuid::SoftglowOrton_EyeCandy+"/Radius");
+  FNameMap.insert("SoftglowContrast",                "SoftglowOrton/"+Fuid::SoftglowOrton_EyeCandy+"/Contrast");
+  FNameMap.insert("SoftglowSaturation",              "SoftglowOrton/"+Fuid::SoftglowOrton_EyeCandy+"/Saturation");
   FNameMap.insert("Vibrance2",                       "ColorIntensity/"+Fuid::ColorIntensity_EyeCandy+"/Vibrance");
   FNameMap.insert("Intensity2Red",                   "ColorIntensity/"+Fuid::ColorIntensity_EyeCandy+"/Red");
   FNameMap.insert("Intensity2Green",                 "ColorIntensity/"+Fuid::ColorIntensity_EyeCandy+"/Green");
@@ -1498,7 +1498,7 @@ void ptFilterDM::FillNameMap() {
   FNameMap.insert("VignetteMode",                    "VignetteRgb/"+Fuid::Vignette_EyeCandy+"/MaskType");
   FNameMap.insert("GradBlur1",                       "GradualBlur/"+Fuid::GradualBlur1_EyeCandy+"/Mode");
   FNameMap.insert("GradBlur2",                       "GradualBlur/"+Fuid::GradualBlur2_EyeCandy+"/Mode");
-//  FNameMap.insert("SoftglowMode",                    "");
+  FNameMap.insert("SoftglowMode",                    "SoftglowOrton/"+Fuid::SoftglowOrton_EyeCandy+"/Mode");
 //  FNameMap.insert("WebResize",                       "");
 //  FNameMap.insert("WebResizeDimension",              "");
 //  FNameMap.insert("WebResizeFilter",                 "");

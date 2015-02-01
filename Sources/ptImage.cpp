@@ -4822,21 +4822,22 @@ ptImage* ptImage::Vignette(const TVignetteMask VignetteMode,
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-ptImage* ptImage::Softglow(const short SoftglowMode,
-         const double  Radius,
-         const double  Amount,
-         const uint8_t ChannelMask,
-         const double  Contrast, /* 5 */
-         const int     Saturation /* -50 */) {
-
+ptImage* ptImage::Softglow(
+    const TSoftglowMode SoftglowMode,
+    const double  Radius,
+    const double  Amount,
+    const uint8_t ChannelMask,
+    const double  Contrast, /* 5 */
+    const int     Saturation /* -50 */)
+{
   // Workflow for Orton from
   // http://www.flickr.com/groups/gimpusers/discuss/72157621381832321/
   ptImage *BlurLayer = new ptImage;
   BlurLayer->Set(this);
   // for Orton
-  if (SoftglowMode==ptSoftglowMode_OrtonScreen ||
-      SoftglowMode==ptSoftglowMode_OrtonSoftLight)
-    BlurLayer->Overlay(BlurLayer->m_Image,1.0, NULL, ptOverlayMode_Screen);
+  if (SoftglowMode==TSoftglowMode::OrtonScreen || SoftglowMode==TSoftglowMode::OrtonSoftlight) {
+    BlurLayer->Overlay(BlurLayer->m_Image,1.0, nullptr, ptOverlayMode_Screen);
+  }
 
   // Blur
   if (Radius != 0)
@@ -4865,25 +4866,27 @@ ptImage* ptImage::Softglow(const short SoftglowMode,
   }
   // Overlay
   switch (SoftglowMode) {
-  case ptSoftglowMode_Lighten:
-    Overlay(BlurLayer->m_Image,Amount,NULL,ptOverlayMode_Lighten);
-    break;
-  case ptSoftglowMode_Screen:
-    Overlay(BlurLayer->m_Image,Amount,NULL,ptOverlayMode_Screen);
-    break;
-  case ptSoftglowMode_SoftLight:
-    Overlay(BlurLayer->m_Image,Amount,NULL,ptOverlayMode_SoftLight);
-    break;
-  case ptSoftglowMode_Normal:
-    if (Amount != 0)
-      Overlay(BlurLayer->m_Image,Amount,NULL,ptOverlayMode_Normal);
-    break;
-  case ptSoftglowMode_OrtonScreen:
-    Overlay(BlurLayer->m_Image,Amount,NULL,ptOverlayMode_Screen);
-    break;
-  case ptSoftglowMode_OrtonSoftLight:
-    Overlay(BlurLayer->m_Image,Amount,NULL,ptOverlayMode_SoftLight);
-    break;
+    case TSoftglowMode::Lighten:
+      Overlay(BlurLayer->m_Image,Amount,nullptr,ptOverlayMode_Lighten);
+      break;
+    case TSoftglowMode::Screen:
+      Overlay(BlurLayer->m_Image,Amount,nullptr,ptOverlayMode_Screen);
+      break;
+    case TSoftglowMode::Softlight:
+      Overlay(BlurLayer->m_Image,Amount,nullptr,ptOverlayMode_SoftLight);
+      break;
+    case TSoftglowMode::Normal:
+      if (Amount != 0)
+        Overlay(BlurLayer->m_Image,Amount,nullptr,ptOverlayMode_Normal);
+      break;
+    case TSoftglowMode::OrtonScreen:
+      Overlay(BlurLayer->m_Image,Amount,nullptr,ptOverlayMode_Screen);
+      break;
+    case TSoftglowMode::OrtonSoftlight:
+      Overlay(BlurLayer->m_Image,Amount,nullptr,ptOverlayMode_SoftLight);
+      break;
+    default:
+      break;
   }
   delete BlurLayer;
   return this;
