@@ -374,30 +374,6 @@ const ptGuiOptionsItem ptGuiOptions::LABTransformMode[] = {
   {ptLABTransform_B,             QObject::tr("B -> L*") },
   {-1,NULL}};
 
-const ptGuiOptionsItem ptGuiOptions::FilmType[] = {
-  {ptFilmType_LowSensitivity,    QObject::tr("Low sensitivity") },
-  {ptFilmType_HighSensitivity,   QObject::tr("High sensitivity") },
-  {ptFilmType_Hyperpanchromatic, QObject::tr("Hyperpanchromatic") },
-  {ptFilmType_Orthochromatic,    QObject::tr("Orthochromatic") },
-  {ptFilmType_NormalContrast,    QObject::tr("Normal contrast") },
-  {ptFilmType_HighContrast,      QObject::tr("High contrast") },
-  {ptFilmType_Luminance,         QObject::tr("Luminance") },
-  {ptFilmType_Landscape,         QObject::tr("Landscape") },
-  {ptFilmType_FaceInterior,      QObject::tr("Face in interior") },
-  {ptFilmType_ChannelMixer,      QObject::tr("Channelmixer") },
-  {-1,NULL}};
-
-const ptGuiOptionsItem ptGuiOptions::ColorFilterType[] = {
-  {ptColorFilterType_None,       QObject::tr("None") },
-  {ptColorFilterType_Red,        QObject::tr("Red") },
-  {ptColorFilterType_Orange,     QObject::tr("Orange") },
-  {ptColorFilterType_Yellow,     QObject::tr("Yellow") },
-  {ptColorFilterType_YellowGreen,QObject::tr("Lime") },
-  {ptColorFilterType_Green,      QObject::tr("Green") },
-  {ptColorFilterType_Blue,       QObject::tr("Blue") },
-//  {ptColorFilterType_fakeIR,     QObject::tr("fake IR") },
-  {-1,NULL}};
-
 const ptGuiOptionsItem ptGuiOptions::FlipMode[] = {
   {ptFlipMode_None,              QObject::tr("No flip") },
   {ptFlipMode_Horizontal,        QObject::tr("Horizontal flip") },

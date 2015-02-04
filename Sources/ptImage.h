@@ -362,8 +362,8 @@ public:
   // the behaviour of a film, because the camera records to little spectral information.
   // Further discussion welcome! Mike.
   // Black&White Styler
-  ptImage* BWStyler(const short FilmType,
-                    const short ColorFilterType,
+  ptImage* BWStyler(const TBWFilmType FilmType,
+                    const TBWColorFilter ColorFilterType,
                     const double MultR,
                     const double MultG,
                     const double MultB,

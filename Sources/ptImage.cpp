@@ -4127,72 +4127,74 @@ ptImage* ptImage::Grain(const double Sigma, // 0-1
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-ptImage* ptImage::BWStyler(const short FilmType,
-         const short ColorFilterType,
-         const double MultR,
-         const double MultG,
-         const double MultB,
-         const double Opacity) {
-
-  TChannelMatrix Mixer;
+ptImage* ptImage::BWStyler(
+    const TBWFilmType FilmType,
+    const TBWColorFilter ColorFilterType,
+    const double MultR,
+    const double MultG,
+    const double MultB,
+    const double Opacity)
+{
   double R = 0,G = 0,B = 0;
   double FR = 0, FG = 0, FB = 0;
+
   switch (FilmType) {
-  case ptFilmType_LowSensitivity:
+  case TBWFilmType::LowSensitivity:
     R = 0.27;
     G = 0.27;
     B = 0.46;
     break;
 
-  case ptFilmType_HighSensitivity:
+  case TBWFilmType::HighSensitivity:
     R = 0.3;
     G = 0.28;
     B = 0.42;
     break;
 
-  case ptFilmType_Hyperpanchromatic:
+  case TBWFilmType::Hyperpanchromatic:
     R = 0.41;
     G = 0.25;
     B = 0.34;
     break;
 
-  case ptFilmType_Orthochromatic:
+  case TBWFilmType::Orthochromatic:
     R = 0.0;
     G = 0.42;
     B = 0.58;
     break;
+
 //Following values corresponding to http://photographynotes.pbworks.com/bwrecipe
-  case ptFilmType_NormalContrast:
+  case TBWFilmType::NormalContrast:
     R = 0.43;
     G = 0.33;
     B = 0.3;
     break;
 
-  case ptFilmType_HighContrast:
+  case TBWFilmType::HighContrast:
     R = 0.4;
     G = 0.34;
     B = 0.60;
     break;
 
-  case ptFilmType_Luminance:
+  case TBWFilmType::Luminance:
     R = 0.3;
     G = 0.59;
     B = 0.11;
     break;
 
-  case ptFilmType_Landscape:
+  case TBWFilmType::Landscape:
     R = 0.66;
     G = 0.24;
     B = 0.10;
     break;
 
-  case ptFilmType_FaceInterior:
+  case TBWFilmType::FaceInterior:
     R = 0.54;
     G = 0.44;
     B = 0.12;
     break;
 
-  case ptFilmType_ChannelMixer:
+  case TBWFilmType::ChannelMixer:
     R = MultR/(MultR+MultG+MultB);
     G = MultG/(MultR+MultG+MultB);
     B = MultB/(MultR+MultG+MultB);
@@ -4201,49 +4203,49 @@ ptImage* ptImage::BWStyler(const short FilmType,
 
   switch (ColorFilterType) {
   //Dr. Herbert Kribben and http://epaperpress.com/psphoto/bawFilters.html
-  case ptColorFilterType_None:
+  case TBWColorFilter::None:
     FR = 1.0;
     FG = 1.0;
     FB = 1.0;
     break;
 
-  case ptColorFilterType_Red:
+  case TBWColorFilter::Red:
     FR = 1.0;
     FG = 0.2;
     FB = 0.0;
     break;
 
-  case ptColorFilterType_Orange:
+  case TBWColorFilter::Orange:
     FR = 1.0;
     FG = 0.6;
     FB = 0.0;
     break;
 
-  case ptColorFilterType_Yellow:
+  case TBWColorFilter::Yellow:
     FR = 1.0;
     FG = 1.0;
     FB = 0.1;
     break;
 
-  case ptColorFilterType_YellowGreen:
+  case TBWColorFilter::Lime:
     FR = 0.6;
     FG = 1.0;
     FB = 0.3;
     break;
 
-  case ptColorFilterType_Green:
+  case TBWColorFilter::Green:
     FR = 0.2;
     FG = 1.0;
     FB = 0.3;
     break;
 
-  case ptColorFilterType_Blue:
+  case TBWColorFilter::Blue:
     FR = 0.0;
     FG = 0.2;
     FB = 1.0;
     break;
 
-  case ptColorFilterType_fakeIR:
+  case TBWColorFilter::FakeIR:
     FR = 0.4;
     FG = 1.4;
     FB = -0.8;
@@ -4257,10 +4259,7 @@ ptImage* ptImage::BWStyler(const short FilmType,
   G = G / (R+G+B);
   B = B / (R+G+B);
 
-  ptImage *BWLayer = new ptImage;
-  if (Opacity != 1.0)
-    BWLayer->Set(this);
-
+  TChannelMatrix Mixer;
   Mixer[0][0] = R;
   Mixer[1][0] = R;
   Mixer[2][0] = R;
@@ -4271,12 +4270,13 @@ ptImage* ptImage::BWStyler(const short FilmType,
   Mixer[1][2] = B;
   Mixer[2][2] = B;
 
-  if (Opacity == 1)
+  if (qFuzzyCompare(Opacity, 1.0)) {
     mixChannels(Mixer);
-  else {
+  } else {
+    auto BWLayer = make_unique<ptImage>();
+    BWLayer->Set(this);
     BWLayer->mixChannels(Mixer);
-    Overlay(BWLayer->m_Image,Opacity,NULL,ptOverlayMode_Normal);
-    delete BWLayer;
+    Overlay(BWLayer->m_Image, Opacity, nullptr, ptOverlayMode_Normal);
   }
 
   return this;

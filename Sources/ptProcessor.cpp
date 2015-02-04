@@ -1043,16 +1043,10 @@ void ptProcessor::Run(short Phase,
         //***************************************************************************
         // Black & White Styler
 
-        if (Settings->ToolIsActive("TabBW")) {
-
-          m_ReportProgress(tr("Black and White"));
-
-          m_Image_AfterEyeCandy->BWStyler(Settings->GetInt("BWStylerFilmType"),
-            Settings->GetInt("BWStylerColorFilterType"),
-            Settings->GetDouble("BWStylerMultR"),
-            Settings->GetDouble("BWStylerMultG"),
-            Settings->GetDouble("BWStylerMultB"),
-            Settings->GetDouble("BWStylerOpacity"));
+        hFilter = GFilterDM->GetFilterFromName(Fuid::BlackWhite_EyeCandy);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterEyeCandy);
         }
 
 

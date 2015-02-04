@@ -445,30 +445,32 @@ enum class TFilterMode: int {
   ShowMask
 };
 
-// FilmType
+enum class TBWFilmType: int {
+  // There used to be an unused "none" value. Integer representation needs to start at
+  // 1 for settings compatibility.
+  LowSensitivity    = 1,
+  HighSensitivity   = 2,
+  Hyperpanchromatic = 3,
+  Orthochromatic    = 4,
+  NormalContrast    = 5,
+  HighContrast      = 6,
+  Luminance         = 7,
+  Landscape         = 8,
+  FaceInterior      = 9,
+  ChannelMixer      = 10
 
-const short ptFilmType_None              = 0;
-const short ptFilmType_LowSensitivity    = 1;
-const short ptFilmType_HighSensitivity   = 2;
-const short ptFilmType_Hyperpanchromatic = 3;
-const short ptFilmType_Orthochromatic    = 4;
-const short ptFilmType_NormalContrast    = 5;
-const short ptFilmType_HighContrast      = 6;
-const short ptFilmType_Luminance         = 7;
-const short ptFilmType_Landscape         = 8;
-const short ptFilmType_FaceInterior      = 9;
-const short ptFilmType_ChannelMixer      = 10;
+};
 
-// ColorFilterType
-
-const short ptColorFilterType_None        = 0;
-const short ptColorFilterType_Red         = 1;
-const short ptColorFilterType_Orange      = 2;
-const short ptColorFilterType_Yellow      = 3;
-const short ptColorFilterType_YellowGreen = 4;
-const short ptColorFilterType_Green       = 5;
-const short ptColorFilterType_Blue        = 6;
-const short ptColorFilterType_fakeIR      = 7;
+enum class TBWColorFilter: int {
+  None,
+  Red,
+  Orange,
+  Yellow,
+  Lime,
+  Green,
+  Blue,
+  FakeIR
+};
 
 // CrossprocessMode
 
