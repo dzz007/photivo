@@ -489,9 +489,6 @@ ptMainWindow::ptMainWindow(const QString Title)
   dynamic_cast<ptGroupBox*>(m_GroupBox->value("TabBlock"))->
     SetHelpUri("http://photivo.org/photivo/manual/tabs/geometry#block");
 
-  dynamic_cast<ptGroupBox*>(m_GroupBox->value("TabBW"))->
-    SetHelpUri("http://photivo.org/photivo/manual/tabs/eyecandy#black_and_white");
-
   m_ActiveTabs.append(LocalTab);
   m_ActiveTabs.append(GeometryTab);
   m_ActiveTabs.append(RGBTab);
@@ -2214,17 +2211,6 @@ void ptMainWindow::UpdateSettings() {
 
   // Geometry
   ResizeHeightWidget->setVisible(Settings->GetInt("ResizeDimension") == ptResizeDimension_WidthHeight);
-
-  // Black and White
-  if (Settings->GetInt("BWStylerFilmType") == ptFilmType_ChannelMixer) {
-    Settings->SetEnabled("BWStylerMultR", 1);
-    Settings->SetEnabled("BWStylerMultG", 1);
-    Settings->SetEnabled("BWStylerMultB", 1);
-  } else {
-    Settings->SetEnabled("BWStylerMultR", 0);
-    Settings->SetEnabled("BWStylerMultG", 0);
-    Settings->SetEnabled("BWStylerMultB", 0);
-  }
 
   // Texture Overlay
   PathInfo.setFile(Settings->GetString("TextureOverlayFile"));

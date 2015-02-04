@@ -1326,10 +1326,10 @@ void ptFilterDM::FillNameMap() {
   FNameMap.insert("LabVignetteCenterX",              "VignetteLab/"+Fuid::Vignette_LabEyeCandy+"/CenterX");
   FNameMap.insert("LabVignetteCenterY",              "VignetteLab/"+Fuid::Vignette_LabEyeCandy+"/CenterY");
   FNameMap.insert("LabVignetteSoftness",             "VignetteLab/"+Fuid::Vignette_LabEyeCandy+"/Softness");
-//  FNameMap.insert("BWStylerOpacity",                 "");
-//  FNameMap.insert("BWStylerMultR",                   "");
-//  FNameMap.insert("BWStylerMultG",                   "");
-//  FNameMap.insert("BWStylerMultB",                   "");
+  FNameMap.insert("BWStylerOpacity",                 "BlackWhite/"+Fuid::BlackWhite_EyeCandy+"/Opacity");
+  FNameMap.insert("BWStylerMultR",                   "BlackWhite/"+Fuid::BlackWhite_EyeCandy+"/MultRed");
+  FNameMap.insert("BWStylerMultG",                   "BlackWhite/"+Fuid::BlackWhite_EyeCandy+"/MultGreen");
+  FNameMap.insert("BWStylerMultB",                   "BlackWhite/"+Fuid::BlackWhite_EyeCandy+"/MultBlue");
   FNameMap.insert("SimpleToneR",                     "SimpleTone/"+Fuid::SimpleTone_EyeCandy+"/ChannelR");
   FNameMap.insert("SimpleToneG",                     "SimpleTone/"+Fuid::SimpleTone_EyeCandy+"/ChannelG");
   FNameMap.insert("SimpleToneB",                     "SimpleTone/"+Fuid::SimpleTone_EyeCandy+"/ChannelB");
@@ -1484,8 +1484,8 @@ void ptFilterDM::FillNameMap() {
   FNameMap.insert("OutlineGradientMode",             "Outline/"+Fuid::Outline_LabEyeCandy+"/GradientMode");
   FNameMap.insert("LABToneAdjust1MaskType",          "ToneAdjust/"+Fuid::ToneAdjust1_LabEyeCandy+"/MaskMode");
   FNameMap.insert("LABToneAdjust2MaskType",          "ToneAdjust/"+Fuid::ToneAdjust2_LabEyeCandy+"/MaskMode");
-//  FNameMap.insert("BWStylerFilmType",                "");
-//  FNameMap.insert("BWStylerColorFilterType",         "");
+  FNameMap.insert("BWStylerFilmType",                "BlackWhite/"+Fuid::BlackWhite_EyeCandy+"/FilmType");
+  FNameMap.insert("BWStylerColorFilterType",         "BlackWhite/"+Fuid::BlackWhite_EyeCandy+"/ColorFilterType");
 //  FNameMap.insert("Tone1MaskType",                   "");
 //  FNameMap.insert("Tone2MaskType",                   "");
 //  FNameMap.insert("CrossprocessingMode",             "");

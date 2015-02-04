@@ -101,8 +101,6 @@ public:
   static const ptGuiOptionsItem AspectRatio[];
   static const ptGuiOptionsItem LABTransformMode[];
   static const ptGuiOptionsItem SpecialPreview[];
-  static const ptGuiOptionsItem FilmType[];
-  static const ptGuiOptionsItem ColorFilterType[];
   static const ptGuiOptionsItem FlipMode[];
   static const ptGuiOptionsItem MaskType[];
   static const ptGuiOptionsItem GrainMaskType[];

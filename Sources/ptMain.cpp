@@ -377,6 +377,7 @@ void CreateAllFilters() {
   GFilterDM->NewFilter("Tone",                  Fuid::Tone_LabEyeCandy);
   GFilterDM->NewFilter("VignetteLab",           Fuid::Vignette_LabEyeCandy);
   // Eyecandy tab
+  GFilterDM->NewFilter("BlackWhite",            Fuid::BlackWhite_EyeCandy);
   GFilterDM->NewFilter("SimpleTone",            Fuid::SimpleTone_EyeCandy);
   GFilterDM->NewFilter("SigContrastRgb",        Fuid::SigContrastRgb_EyeCandy);
   GFilterDM->NewFilter("VignetteRgb",           Fuid::Vignette_EyeCandy);
@@ -4922,23 +4923,6 @@ void CB_AutomaticPipeSizeCheck(const QVariant Check) {
   }
 }
 
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the EyeCandy Tab
-// Partim Black & White Styler
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_BWStylerFilmTypeChoice(const QVariant Choice) {
-  Settings->SetValue("BWStylerFilmType",Choice);
-  if (Settings->ToolIsActive("TabBW")) {
-    Update(ptProcessorPhase_EyeCandy);
-  } else {
-    MainWindow->UpdateSettings();
-  }
-}
-
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Callbacks pertaining to the EyeCandy Tab
@@ -5611,13 +5595,6 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(FlipModeChoice)
 
   M_Dispatch(GeometryBlockCheck)
-
-  M_Dispatch(BWStylerFilmTypeChoice)
-  M_SetAndRunDispatch(BWStylerColorFilterTypeChoice)
-  M_SetAndRunDispatch(BWStylerMultRInput)
-  M_SetAndRunDispatch(BWStylerMultGInput)
-  M_SetAndRunDispatch(BWStylerMultBInput)
-  M_SetAndRunDispatch(BWStylerOpacityInput)
 
   M_SetAndRunDispatch(Tone1MaskTypeChoice)
   M_SetAndRunDispatch(Tone1AmountInput)

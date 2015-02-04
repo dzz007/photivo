@@ -125,10 +125,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"LqrHeight"                     ,ptGT_Input           ,1,1,1 ,800   ,200 ,6000  ,100  ,0 ,tr("Height")             ,tr("Height")},
     {"ResizeScale"                   ,ptGT_Input           ,1,1,1 ,1200  ,200 ,6000  ,100  ,0 ,tr("Pixels")             ,tr("Image size")},
     {"ResizeHeight"                  ,ptGT_Input           ,1,1,1 ,800   ,200 ,6000  ,100  ,0 ,tr("Height")             ,tr("Image height")},
-    {"BWStylerOpacity"               ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0   ,1.0   ,0.05 ,2 ,tr("Opacity")            ,tr("Opacity")},
-    {"BWStylerMultR"                 ,ptGT_InputSlider     ,2,1,1 ,0.5  ,-1.0  ,1.0   ,0.1 ,2 ,tr("Red")                ,tr("Red multiplicity")},
-    {"BWStylerMultG"                 ,ptGT_InputSlider     ,2,1,1 ,0.5  ,-1.0  ,1.0   ,0.1 ,2 ,tr("Green")              ,tr("Green multiplicity")},
-    {"BWStylerMultB"                 ,ptGT_InputSlider     ,2,1,1 ,0.5  ,-1.0  ,1.0   ,0.1 ,2 ,tr("Blue")               ,tr("Blue multiplicity")},
     {"Tone1Amount"                   ,ptGT_InputSlider     ,2,1,1 ,0.5  ,0.0  ,1.0   ,0.1  ,2 ,tr("Amount")             ,tr("Amount of toning")},
     {"Tone1LowerLimit"               ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,1.0   ,0.1  ,2 ,tr("Lower Limit")        ,tr("Lower Limit")},
     {"Tone1UpperLimit"               ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,1.0   ,0.1  ,2 ,tr("Upper Limit")        ,tr("Upper Limit")},
@@ -217,8 +213,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"FlipMode"                    ,ptGT_Choice       ,2,1,1 ,ptFlipMode_None             ,GuiOptions->FlipMode                  ,tr("Flip mode")},
     {"AspectRatioW"                ,ptGT_Choice       ,2,0,0 ,3                           ,GuiOptions->AspectRatio               ,tr("Aspect width")},
     {"AspectRatioH"                ,ptGT_Choice       ,2,0,0 ,2                           ,GuiOptions->AspectRatio               ,tr("Aspect height")},
-    {"BWStylerFilmType"            ,ptGT_Choice       ,2,1,1 ,ptFilmType_Luminance        ,GuiOptions->FilmType                  ,tr("Film emulation")},
-    {"BWStylerColorFilterType"     ,ptGT_Choice       ,2,1,1 ,ptColorFilterType_None      ,GuiOptions->ColorFilterType           ,tr("Color filter emulation")},
     {"Tone1MaskType"               ,ptGT_Choice       ,2,1,1 ,ptMaskType_None             ,GuiOptions->MaskType                  ,tr("Values for Toning")},
     {"Tone2MaskType"               ,ptGT_Choice       ,2,1,1 ,ptMaskType_None             ,GuiOptions->MaskType                  ,tr("Values for Toning")},
     {"CrossprocessingMode"         ,ptGT_Choice       ,2,1,1 ,ptCrossprocessMode_None     ,GuiOptions->CrossprocessMode          ,tr("Colors for cross processing")},
@@ -1380,10 +1374,7 @@ sToolInfo ToolInfo (const QString GuiName) {
                       Settings->GetInt("GeometryBlock");
   }
   // Tab EyeCandy
-  else if (GuiName == "TabBW") {
-      Info.Name = "Black and White";
-      Info.IsActive = Settings->GetDouble("BWStylerOpacity")!=0.0?1:0;
-  } else if (GuiName == "TabRGBTone1") {
+  else if (GuiName == "TabRGBTone1") {
       Info.Name = "RGB Toning 1";
       Info.IsActive = Settings->GetInt("Tone1MaskType")!=0?1:0;
   } else if (GuiName == "TabRGBTone2") {
