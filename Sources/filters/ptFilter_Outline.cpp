@@ -83,7 +83,7 @@ void ptFilter_Outline::doDefineControls() {
                                                                          //--- Check: not available                 ---//
     //            Id               Type                      Default     Min           Max           Step        Decimals, commonConnect, storeable, caption, tooltip
     << ptCfgItem({COverlayMode,    ptCfgItem::Combo,         ptOverlayMode_None, hOverlayModes,                            true, true, tr("Overlay mode"),   tr("")})
-    << ptCfgItem({CImageOnTop,     ptCfgItem::Check,         0,                                                            true, true, tr("Image on top"), tr("Overlay the image on top of the outlines instead of vice versa")})
+    << ptCfgItem({CImageOnTop,     ptCfgItem::Check,         false,                                                        true, true, tr("Image on top"), tr("Overlay the image on top of the outlines instead of vice versa")})
     << ptCfgItem({CGradientMode,   ptCfgItem::Combo,         ptGradientMode_Backward, hGradientModes,                      true, true, tr("Outlines mode"),   tr("Method for calculating the outline gradients")})
     << ptCfgItem({CColorWeight,    ptCfgItem::Slider,        1.0,        0.0,          5.0,          0.5,        2,        true, true, tr("Color weight"), tr("Weight of the A/B channels in the outlines calculation")})
     << ptCfgItem({CBlurRadius,     ptCfgItem::Slider,        0.0,        0.0,         20.0,          0.2,        2,        true, true, tr("Blur radius"), tr("")})
