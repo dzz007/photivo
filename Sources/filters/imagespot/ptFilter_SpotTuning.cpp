@@ -81,12 +81,12 @@ void ptFilter_SpotTuning::doDefineControls() {
                                                                          //--- Check: not available                 ---//
     //            Id                     Type                      Default     Min           Max           Step        Decimals, commonConnect, storeable, caption, tooltip
     << ptCfgItem(hSpotsCfgItem)
-    << ptCfgItem({CSpotHasMaxRadiusId,   ptCfgItem::Check,         0,                                                            false, false, tr("Use maximum radius"), tr("")})
+    << ptCfgItem({CSpotHasMaxRadiusId,   ptCfgItem::Check,         false,                                                        false, false, tr("Use maximum radius"), tr("")})
     << ptCfgItem({CSpotMaxRadiusId,      ptCfgItem::Slider,        500,        1,            7000,         10,         0,        false, false, tr("Maximum radius"), tr("Pixels outside this radius will never be included in the mask.")})
     << ptCfgItem({CSpotChromaWeightId,   ptCfgItem::Slider,        0.5,        0.0,          1.0,          0.1,        2,        false, false, tr("Brightness/color ratio"), tr("Defines how brightness and color affect the threshold.\n0.0: ignore color, 1.0: ignore brightness, 0.5: equal weight for both")})
     << ptCfgItem({CSpotThresholdId,      ptCfgItem::Slider,        0.25,       0.0,          1.0,          0.05,       3,        false, false, tr("Threshold"), tr("Maximum amount a pixel may differ from the spot's source pixel to get included in the mask.")})
     << ptCfgItem({CSpotSaturationId,     ptCfgItem::Slider,        0.0,       -1.0,          1.0,          0.05,       2,        false, false, tr("Saturation"), tr("")})
-    << ptCfgItem({CSpotIsAdaptiveSatId,  ptCfgItem::Check,         0,                                                            false, false, tr("Adaptive saturation"), tr("Prevent clipping when adjusting saturation")})
+    << ptCfgItem({CSpotIsAdaptiveSatId,  ptCfgItem::Check,         false,                                                        false, false, tr("Adaptive saturation"), tr("Prevent clipping when adjusting saturation")})
     << ptCfgItem({CSpotColorShiftId,     ptCfgItem::Slider,        0.0,        0.0,          1.0,          0.001,      3,        false, false, tr("Color shift"), tr("")})
   ;
   FConfig.initStores(hCfgItems);

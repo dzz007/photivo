@@ -311,7 +311,8 @@ HEADERS += \
     ../Sources/filters/ptFilter_GradualBlur.h \
     ../Sources/filters/ptFilter_Exposure.h \
     ../Sources/filters/ptFilter_SoftglowOrton.h \
-    ../Sources/filters/ptFilter_BlackWhite.h
+    ../Sources/filters/ptFilter_BlackWhite.h \
+    ../Sources/ptColorSelectButton.h
 
 SOURCES += \
     ../Sources/batch/ptBatchWindow.cpp \
@@ -469,7 +470,8 @@ SOURCES += \
     ../Sources/filters/ptFilter_GradualBlur.cpp \
     ../Sources/filters/ptFilter_Exposure.cpp \
     ../Sources/filters/ptFilter_SoftglowOrton.cpp \
-    ../Sources/filters/ptFilter_BlackWhite.cpp
+    ../Sources/filters/ptFilter_BlackWhite.cpp \
+    ../Sources/ptColorSelectButton.cpp
 
 FORMS += \
     ../Sources/batch/ptBatchWindow.ui \

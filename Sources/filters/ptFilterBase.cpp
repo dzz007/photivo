@@ -24,6 +24,7 @@
 #include "ptCfgItem.h"
 #include "ptFilterFactory.h"
 #include "ptFilterDM.h"
+#include "../ptColorSelectButton.h"
 #include "../ptUtils_Storage.h"
 #include "../ptInfo.h"
 #include "../ptCheck.h"
@@ -441,17 +442,13 @@ void ptFilterBase::initDesignerGui(QWidget *AGuiBody) {
  */
 ptWidget* ptFilterBase::createWidgetByType(const ptCfgItem &ACfgItem, QWidget *AParent) {
   switch (ACfgItem.Type) {
-  // NOTE: Buttons will probably be removed
-//      case ptCfgItem::Button: {
-//        hGuiWidget = new QToolButton(FGuiContainer);
-//        break;
-//      }
-  case ptCfgItem::Check:      return new ptCheck(ACfgItem, AParent);
-  case ptCfgItem::Combo:      return new ptChoice(ACfgItem, AParent);
-  case ptCfgItem::SpinEdit:   // fall through
-  case ptCfgItem::Slider:     // fall through
-  case ptCfgItem::HueSlider:  return new ptInput(ACfgItem, AParent);
-  case ptCfgItem::CurveWin:   return new ptCurveWindow(ACfgItem, AParent);
+  case ptCfgItem::ColorSelectButton: return new ptColorSelectButton(ACfgItem, AParent);
+  case ptCfgItem::Check:             return new ptCheck(ACfgItem, AParent);
+  case ptCfgItem::Combo:             return new ptChoice(ACfgItem, AParent);
+  case ptCfgItem::SpinEdit:          // fall through
+  case ptCfgItem::Slider:            // fall through
+  case ptCfgItem::HueSlider:         return new ptInput(ACfgItem, AParent);
+  case ptCfgItem::CurveWin:          return new ptCurveWindow(ACfgItem, AParent);
 
   default:
     GInfo->Raise(QString("Unhandled ptCfgItem::TType value: %1.").arg(ACfgItem.Type), AT);

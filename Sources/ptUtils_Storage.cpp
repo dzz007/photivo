@@ -20,16 +20,31 @@
 **
 *******************************************************************************/
 #include "ptUtils_Storage.h"
+#include <QColor>
 #include <QSettings>
 #include <QStringList>
 
-/*! Checks and possibly converts a *QVariant* to avoid problems in *QSettings* storage. */
+/*!
+ * Checks and possibly converts a *QVariant* to make it more robust and/or human readable
+ * in *QSettings* storage. E.g. booleans are converted to integers because those can be
+ * converted back to bool much more unambiguously than a string representation.
+ */
 QVariant makeStorageFriendly(const QVariant &AVariant) {
   auto hVariant = AVariant;
 
-  // Convert bool to int because that is more robust in a preset file
-  if (hVariant.type() == QVariant::Bool)
-    hVariant.convert(QVariant::Int);
+  switch (static_cast<QMetaType::Type>(hVariant.type())) {
+    case QMetaType::Bool:
+      hVariant.convert(QMetaType::Int);
+      break;
+
+    case QMetaType::QColor:
+      // #RRGGBB string representation of an RGB color
+      return hVariant.value<QColor>().name();
+
+    default:
+      // by default nothing is changed
+      break;
+  }
 
   return hVariant;
 }

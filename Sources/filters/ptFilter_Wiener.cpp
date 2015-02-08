@@ -60,8 +60,8 @@ ptFilterBase *ptFilter_Wiener::CreateWiener() {
 void ptFilter_Wiener::doDefineControls() {
   FConfig.initStores(TCfgItemList()
     //            Id                       Type                      Default     Min           Max           Step        Decimals, commonConnect, storeable, caption, tooltip
-    << ptCfgItem({CEnabled,                ptCfgItem::Check,         0,                                                            true, true, tr("Enable"), tr("Switch filter on and off")})
-    << ptCfgItem({COnlyEdges,              ptCfgItem::Check,         1,                                                            true, true, tr("Only edges"), tr("Sharpen only edges")})
+    << ptCfgItem({CEnabled,                ptCfgItem::Check,         false,                                                        true, true, tr("Enable"), tr("Switch filter on and off")})
+    << ptCfgItem({COnlyEdges,              ptCfgItem::Check,         true,                                                         true, true, tr("Only edges"), tr("Sharpen only edges")})
     << ptCfgItem({CStrength,               ptCfgItem::Slider,        0.2,        0.0,          1.0,          0.05,       2,        true, true, tr("Strength") ,tr("")})
     << ptCfgItem({CGaussian,               ptCfgItem::Slider,        0.6,        0.0,          5.0,          0.05,       2,        true, true, tr("Gaussian") ,tr("")})
     << ptCfgItem({CBox,                    ptCfgItem::Slider,        0.0,        0.0,          5.0,          0.05,       2,        true, true, tr("Box"), tr("")})
