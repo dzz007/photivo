@@ -436,16 +436,6 @@ const ptGuiOptionsItem ptGuiOptions::OverlayMaskMode[] = {
   {ptOverlayMaskMode_InvVignette,   QObject::tr("Inv vignette") },
   {-1,NULL}};
 
-const ptGuiOptionsItem ptGuiOptions::CrossprocessMode[] = {
-  {ptCrossprocessMode_None,  QObject::tr("Disabled") },
-  {ptCrossprocessMode_GY,    QObject::tr("Green - yellow") },
-  {ptCrossprocessMode_GC,    QObject::tr("Green - cyan") },
-  {ptCrossprocessMode_RY,    QObject::tr("Red - yellow") },
-  {ptCrossprocessMode_RM,    QObject::tr("Red - magenta") },
-  {ptCrossprocessMode_BC,    QObject::tr("Blue - cyan") },
-  {ptCrossprocessMode_BM,    QObject::tr("Blue - magenta") },
-  {-1,NULL}};
-
 const ptGuiOptionsItem ptGuiOptions::Enable[] = {
   {ptEnable_None,              QObject::tr("Disabled") },
   {ptEnable_NoPreview,         QObject::tr("Only final run") },

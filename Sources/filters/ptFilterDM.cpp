@@ -1341,8 +1341,8 @@ void ptFilterDM::FillNameMap() {
 //  FNameMap.insert("Tone2LowerLimit",                 "");
 //  FNameMap.insert("Tone2UpperLimit",                 "");
 //  FNameMap.insert("Tone2Softness",                   "");
-//  FNameMap.insert("CrossprocessingColor1",           "");
-//  FNameMap.insert("CrossprocessingColor2",           "");
+  FNameMap.insert("CrossprocessingColor1",           "CrossProcessing/"+Fuid::CrossProcessing_EyeCandy+"/MainColor");
+  FNameMap.insert("CrossprocessingColor2",           "CrossProcessing/"+Fuid::CrossProcessing_EyeCandy+"/SecondColor");
   FNameMap.insert("RGBContrast2Amount",              "SigContrastRgb/"+Fuid::SigContrastRgb_EyeCandy+"/Strength");
   FNameMap.insert("RGBContrast2Threshold",           "SigContrastRgb/"+Fuid::SigContrastRgb_EyeCandy+"/Threshold");
 //  FNameMap.insert("TextureOverlayOpacity",           "");
@@ -1488,7 +1488,7 @@ void ptFilterDM::FillNameMap() {
   FNameMap.insert("BWStylerColorFilterType",         "BlackWhite/"+Fuid::BlackWhite_EyeCandy+"/ColorFilterType");
 //  FNameMap.insert("Tone1MaskType",                   "");
 //  FNameMap.insert("Tone2MaskType",                   "");
-//  FNameMap.insert("CrossprocessingMode",             "");
+  FNameMap.insert("CrossprocessingMode",             "CrossProcessing/"+Fuid::CrossProcessing_EyeCandy+"/Mode");
 //  FNameMap.insert("TextureOverlayMode",              "");
 //  FNameMap.insert("TextureOverlayMask",              "");
 //  FNameMap.insert("TextureOverlay2Mode",             "");

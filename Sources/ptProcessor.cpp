@@ -1112,13 +1112,10 @@ void ptProcessor::Run(short Phase,
         //***************************************************************************
         // Crossprocessing
 
-        if (Settings->ToolIsActive("TabCrossProcessing")) {
-
-          m_ReportProgress(tr("Crossprocessing"));
-
-          m_Image_AfterEyeCandy->Crossprocess(Settings->GetInt("CrossprocessingMode"),
-                                              Settings->GetDouble("CrossprocessingColor1"),
-                                              Settings->GetDouble("CrossprocessingColor2"));
+        hFilter = GFilterDM->GetFilterFromName(Fuid::CrossProcessing_EyeCandy);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterEyeCandy);
         }
 
 

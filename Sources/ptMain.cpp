@@ -378,6 +378,7 @@ void CreateAllFilters() {
   GFilterDM->NewFilter("VignetteLab",           Fuid::Vignette_LabEyeCandy);
   // Eyecandy tab
   GFilterDM->NewFilter("BlackWhite",            Fuid::BlackWhite_EyeCandy);
+  GFilterDM->NewFilter("CrossProcessing",       Fuid::CrossProcessing_EyeCandy);
   GFilterDM->NewFilter("SimpleTone",            Fuid::SimpleTone_EyeCandy);
   GFilterDM->NewFilter("SigContrastRgb",        Fuid::SigContrastRgb_EyeCandy);
   GFilterDM->NewFilter("VignetteRgb",           Fuid::Vignette_EyeCandy);
@@ -5607,10 +5608,6 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(Tone2LowerLimitInput)
   M_Dispatch(Tone2UpperLimitInput)
   M_SetAndRunDispatch(Tone2SoftnessInput)
-
-  M_SetAndRunDispatch(CrossprocessingModeChoice)
-  M_SetAndRunDispatch(CrossprocessingColor1Input)
-  M_SetAndRunDispatch(CrossprocessingColor2Input)
 
   M_SetAndRunDispatch(TextureOverlayModeChoice)
   M_Dispatch(TextureOverlayMaskChoice)
