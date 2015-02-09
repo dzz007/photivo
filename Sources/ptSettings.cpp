@@ -133,8 +133,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"Tone2LowerLimit"               ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,1.0   ,0.1  ,2 ,tr("Lower Limit")        ,tr("Lower Limit")},
     {"Tone2UpperLimit"               ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,1.0   ,0.1  ,2 ,tr("Upper Limit")        ,tr("Upper Limit")},
     {"Tone2Softness"                 ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-2.0 ,2.0   ,0.1  ,1 ,tr("Softness")           ,tr("Softness")},
-    {"CrossprocessingColor1"         ,ptGT_InputSlider     ,2,1,1 ,0.5  ,0.0  ,1.0   ,0.1  ,2 ,tr("Main color")         ,tr("Intensity of the main color")},
-    {"CrossprocessingColor2"         ,ptGT_InputSlider     ,2,1,1 ,0.4  ,0.0  ,1.0   ,0.1  ,2 ,tr("Second color")       ,tr("Intensity of the second color")},
     {"TextureOverlayOpacity"         ,ptGT_InputSlider     ,2,1,1 ,0.5  ,0.0  ,1.0   ,0.1  ,2 ,tr("Opacity")            ,tr("Opacity")},
     {"TextureOverlaySaturation"      ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,2.0   ,0.1  ,2 ,tr("Saturation")         ,tr("Saturation")},
     {"TextureOverlayExponent"        ,ptGT_Input           ,2,1,1 ,2    ,1    ,6     ,1    ,0 ,tr("Shape")              ,tr("Shape of the mask")},
@@ -215,7 +213,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"AspectRatioH"                ,ptGT_Choice       ,2,0,0 ,2                           ,GuiOptions->AspectRatio               ,tr("Aspect height")},
     {"Tone1MaskType"               ,ptGT_Choice       ,2,1,1 ,ptMaskType_None             ,GuiOptions->MaskType                  ,tr("Values for Toning")},
     {"Tone2MaskType"               ,ptGT_Choice       ,2,1,1 ,ptMaskType_None             ,GuiOptions->MaskType                  ,tr("Values for Toning")},
-    {"CrossprocessingMode"         ,ptGT_Choice       ,2,1,1 ,ptCrossprocessMode_None     ,GuiOptions->CrossprocessMode          ,tr("Colors for cross processing")},
     {"TextureOverlayMode"          ,ptGT_Choice       ,2,1,1 ,ptOverlayMode_None          ,GuiOptions->OverlayMode               ,tr("Mode for Texture Overlay")},
     {"TextureOverlayMask"          ,ptGT_Choice       ,2,1,1 ,ptOverlayMaskMode_FullImage ,GuiOptions->OverlayMaskMode           ,tr("Mask for Texture Overlay")},
     {"TextureOverlay2Mode"         ,ptGT_Choice       ,2,1,1 ,ptOverlayMode_None          ,GuiOptions->OverlayMode               ,tr("Mode for Texture Overlay")},
@@ -1380,9 +1377,6 @@ sToolInfo ToolInfo (const QString GuiName) {
   } else if (GuiName == "TabRGBTone2") {
       Info.Name = "RGB Toning 2";
       Info.IsActive = Settings->GetInt("Tone2MaskType")!=0?1:0;
-  } else if (GuiName == "TabCrossProcessing") {
-      Info.Name = "Cross processing";
-      Info.IsActive = Settings->GetInt("CrossprocessingMode")!=0?1:0;
   } else if (GuiName == "TabTextureOverlay") {
     Info.Name = "Texture Overlay";
     Info.IsActive = (Settings->GetInt("TextureOverlayMode") &&

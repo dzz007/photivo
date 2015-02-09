@@ -312,6 +312,7 @@ HEADERS += \
     ../Sources/filters/ptFilter_Exposure.h \
     ../Sources/filters/ptFilter_SoftglowOrton.h \
     ../Sources/filters/ptFilter_BlackWhite.h \
+    ../Sources/filters/ptFilter_CrossProcessing.h \
     ../Sources/ptColorSelectButton.h
 
 SOURCES += \
@@ -471,6 +472,7 @@ SOURCES += \
     ../Sources/filters/ptFilter_Exposure.cpp \
     ../Sources/filters/ptFilter_SoftglowOrton.cpp \
     ../Sources/filters/ptFilter_BlackWhite.cpp \
+    ../Sources/filters/ptFilter_CrossProcessing.cpp \
     ../Sources/ptColorSelectButton.cpp
 
 FORMS += \

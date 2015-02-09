@@ -4530,61 +4530,63 @@ ptImage* ptImage::Tone(const uint16_t R,
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-ptImage* ptImage::Crossprocess(const short Mode,
-                               const double Color1,
-                               const double Color2) {
-
+ptImage* ptImage::Crossprocess(
+    const TCrossProcessMode mode,
+    const double color1Intensity,
+    const double color2Intensity)
+{
   assert (m_ColorSpace != ptSpace_Lab);
 
   ptCurve* RedCurve = new ptCurve({TAnchor(0.0,  0.0),
-                                   TAnchor(0.05, 0.05-0.05*Color1),
+                                   TAnchor(0.05, 0.05-0.05*color1Intensity),
                                    TAnchor(0.15, 0.15),
                                    TAnchor(1.0,  1.0)});
 
   ptCurve* GreenCurve = new ptCurve({TAnchor(0.0,  0.0),
                                      TAnchor(0.03, 0.025),
-                                     TAnchor(0.2,  0.2+0.3*Color1),
+                                     TAnchor(0.2,  0.2+0.3*color1Intensity),
                                      TAnchor(1.0,  1.0)});
 
   ptCurve* BlueCurve = new ptCurve({TAnchor(0.0,  0.0),
-                                    TAnchor(0.3,  0.3-0.2*Color2),
+                                    TAnchor(0.3,  0.3-0.2*color2Intensity),
                                     TAnchor(1.0,  1.0)});
 
   ptImage *ColorLayer = new ptImage;
   ColorLayer->Set(this);
 
-  switch (Mode) {
-    case ptCrossprocessMode_GY:
+  switch (mode) {
+    case TCrossProcessMode::GreenYellow:
       ColorLayer->ApplyCurve(RedCurve,1);
       ColorLayer->ApplyCurve(GreenCurve,2);
       ColorLayer->ApplyCurve(BlueCurve,4);
       break;
-    case ptCrossprocessMode_GC:
+    case TCrossProcessMode::GreenCyan:
       ColorLayer->ApplyCurve(RedCurve,4);
       ColorLayer->ApplyCurve(GreenCurve,2);
       ColorLayer->ApplyCurve(BlueCurve,1);
       break;
-    case ptCrossprocessMode_RY:
+    case TCrossProcessMode::RedYellow:
       ColorLayer->ApplyCurve(RedCurve,2);
       ColorLayer->ApplyCurve(GreenCurve,1);
       ColorLayer->ApplyCurve(BlueCurve,4);
       break;
-    case ptCrossprocessMode_RM:
+    case TCrossProcessMode::RedMagenta:
       ColorLayer->ApplyCurve(RedCurve,4);
       ColorLayer->ApplyCurve(GreenCurve,1);
       ColorLayer->ApplyCurve(BlueCurve,2);
       break;
-    case ptCrossprocessMode_BC:
+    case TCrossProcessMode::BlueCyan:
       ColorLayer->ApplyCurve(RedCurve,2);
       ColorLayer->ApplyCurve(GreenCurve,4);
       ColorLayer->ApplyCurve(BlueCurve,1);
       break;
-    case ptCrossprocessMode_BM:
+    case TCrossProcessMode::BlueMagenta:
       ColorLayer->ApplyCurve(RedCurve,1);
       ColorLayer->ApplyCurve(GreenCurve,4);
       ColorLayer->ApplyCurve(BlueCurve,2);
       break;
-    default: assert(0);
+    default:
+      assert("Unknown TCrossProcessMode");
   }
 
   Overlay(ColorLayer->m_Image,0.7,NULL,ptOverlayMode_Normal);

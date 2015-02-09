@@ -472,15 +472,15 @@ enum class TBWColorFilter: int {
   FakeIR
 };
 
-// CrossprocessMode
-
-const short ptCrossprocessMode_None = 0;
-const short ptCrossprocessMode_GY   = 1;
-const short ptCrossprocessMode_GC   = 2;
-const short ptCrossprocessMode_RY   = 3;
-const short ptCrossprocessMode_RM   = 4;
-const short ptCrossprocessMode_BC   = 5;
-const short ptCrossprocessMode_BM   = 6;
+enum class TCrossProcessMode {
+  Disabled,
+  GreenYellow,
+  GreenCyan,
+  RedYellow,
+  RedMagenta,
+  BlueCyan,
+  BlueMagenta
+};
 
 // OverlayMode
 

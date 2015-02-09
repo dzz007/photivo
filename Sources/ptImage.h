@@ -402,9 +402,10 @@ public:
                 const double   Softness);
 
   // Crossprocessing
-  ptImage* Crossprocess(const short Mode,
-            const double Color1,
-            const double Color2);
+  ptImage* Crossprocess(
+      const TCrossProcessMode mode,
+      const double color1Intensity,
+      const double color2Intensity);
 
   // Gradual Mask
   float *GetGradualMask(const double Angle,
