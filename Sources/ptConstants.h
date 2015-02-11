@@ -379,16 +379,6 @@ const short ptGradientMode_Sobel       = 3;
 const short ptGradientMode_RotInv      = 4;
 const short ptGradientMode_Deriche     = 5;
 
-// MaskTypes (DEPRECATED! To be replaced by TMaskType)
-
-const short ptMaskType_None       = 0;
-const short ptMaskType_Shadows    = 1;
-const short ptMaskType_Midtones   = 2;
-const short ptMaskType_Highlights = 3;
-const short ptMaskType_All        = 4;
-const short ptMaskType_Screen     = 5;
-const short ptMaskType_Multiply   = 6;
-
 enum class TMaskType: int {
   Disabled    = 0,
   Shadows     = 1,

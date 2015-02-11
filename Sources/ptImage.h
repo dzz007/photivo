@@ -392,14 +392,15 @@ public:
                    const double Softness = 0.);
 
   // Tone
-  ptImage* Tone(const uint16_t R,
-                const uint16_t G,
-                const uint16_t B,
-                const double   Amount,
-                const TMaskType MaskType,
-                const double   LowerLimit,
-                const double   UpperLimit,
-                const double   Softness);
+  ptImage* Tone(uint16_t R,
+      uint16_t G,
+      uint16_t B,
+      const double   Amount,
+      const TMaskType MaskType,
+      double LowerLimit,
+      double UpperLimit,
+      const double   Softness,
+      const double InputPowerFactor);
 
   // Crossprocessing
   ptImage* Crossprocess(

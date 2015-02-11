@@ -34,13 +34,15 @@ ptColorSelectButton::ptColorSelectButton(QWidget* AParent):
   ptWidget(AParent),
   FButton(new QToolButton(this))
 {
-  this->setBaseSize(85, 25);
-  auto layout = new QVBoxLayout(this);
-  layout->setContentsMargins(2, 2, 2, 2);
-  layout->setSpacing(0);
+  this->setBaseSize(40, 20);
+  this->setMinimumSize(40, 20);
+  this->setMaximumSize(40, 20);
+  this->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
   FButton->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+  auto layout = new QVBoxLayout(this);
+  layout->setContentsMargins(0,0,0,0);
+  layout->setSpacing(0);
   layout->addWidget(FButton);
-
   connect(FButton, SIGNAL(clicked()), SLOT(onButtonClicked()));
 }
 
@@ -56,16 +58,12 @@ ptColorSelectButton::ptColorSelectButton(const ptCfgItem& ACfgItem, QWidget* APa
 
 void ptColorSelectButton::init(const ptCfgItem& ACfgItem) {
   GInfo->Assert(
-      this->objectName().isEmpty(),
-      "Trying to initialize an already initalized color select button. Object name: " + this->objectName(),
-      AT);
-  GInfo->Assert(
       ACfgItem.Type == ptCfgItem::ColorSelectButton,
       QString("Wrong GUI type (%1). Must be ptCfgItem::ColorSelectButton.").arg(ACfgItem.Type), AT);
 
   this->setObjectName(ACfgItem.Id);
   this->updateColor(ACfgItem.Default.value<QColor>());
-  FButton->setToolTip(ACfgItem.ToolTip);
+  FTooltipText = ACfgItem.ToolTip;
 }
 
 // -----------------------------------------------------------------------------
@@ -76,12 +74,24 @@ void ptColorSelectButton::setValue(const QVariant& AValue) {
 }
 
 // -----------------------------------------------------------------------------
+// Button needs to be updated on becoming visible so the color panel will become
+// the correct size.
+void ptColorSelectButton::showEvent(QShowEvent*) {
+  this->updateColor(FCurrColor);
+}
+
+// -----------------------------------------------------------------------------
 
 void ptColorSelectButton::updateColor(const QColor& AColor) {
   FCurrColor = AColor;
-  QPixmap pix(FButton->width(), FButton->height());
-  pix.fill(FCurrColor);
-  FButton->setIcon(pix);
+  QPixmap colorPanel(FButton->width()-CMarginSize, FButton->height()-CMarginSize);
+  colorPanel.fill(FCurrColor);
+  FButton->setIconSize(colorPanel.size());
+  FButton->setIcon(colorPanel);
+  FButton->setToolTip(FTooltipText + tr("\ncurrently: red %1, green %2, blue %3")
+                      .arg(FCurrColor.red())
+                      .arg(FCurrColor.green())
+                      .arg(FCurrColor.blue()));
 }
 
 // -----------------------------------------------------------------------------

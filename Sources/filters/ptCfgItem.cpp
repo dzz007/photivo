@@ -34,7 +34,8 @@ ptCfgItem::ptCfgItem(const TColorSelectButton& AValues):
   Type(AValues.Type),
   UseCommonDispatch(AValues.UseCommonDispatch),
   Storable(AValues.Storable),
-  ToolTip(AValues.ToolTip)
+  ToolTip(AValues.ToolTip),
+  Default(QVariant::fromValue(AValues.Default))
 {
   init();
 }
