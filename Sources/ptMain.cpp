@@ -380,6 +380,8 @@ void CreateAllFilters() {
   GFilterDM->NewFilter("BlackWhite",            Fuid::BlackWhite_EyeCandy);
   GFilterDM->NewFilter("CrossProcessing",       Fuid::CrossProcessing_EyeCandy);
   GFilterDM->NewFilter("SimpleTone",            Fuid::SimpleTone_EyeCandy);
+  GFilterDM->NewFilter("ColorTone",             Fuid::ColorTone1_EyeCandy,          " I");
+  GFilterDM->NewFilter("ColorTone",             Fuid::ColorTone2_EyeCandy,          " II");
   GFilterDM->NewFilter("SigContrastRgb",        Fuid::SigContrastRgb_EyeCandy);
   GFilterDM->NewFilter("VignetteRgb",           Fuid::Vignette_EyeCandy);
   GFilterDM->NewFilter("GradualBlur",           Fuid::GradualBlur1_EyeCandy,        " I");
@@ -4927,89 +4929,6 @@ void CB_AutomaticPipeSizeCheck(const QVariant Check) {
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Callbacks pertaining to the EyeCandy Tab
-// Partim Toning
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_Tone1ColorButton() {
-  QPixmap Pix(80, 14);
-  QColor  Color;
-  Color.setRed(Settings->GetInt("Tone1ColorRed"));
-  Color.setGreen(Settings->GetInt("Tone1ColorGreen"));
-  Color.setBlue(Settings->GetInt("Tone1ColorBlue"));
-  QColorDialog Dialog(Color,NULL);
-  Dialog.setStyle(Theme->systemStyle());
-  Dialog.setPalette(Theme->systemPalette());
-  Dialog.exec();
-  QColor TestColor = Dialog.selectedColor();
-  if (TestColor.isValid()) {
-    Color = TestColor;
-    Settings->SetValue("Tone1ColorRed",Color.red());
-    Settings->SetValue("Tone1ColorGreen",Color.green());
-    Settings->SetValue("Tone1ColorBlue",Color.blue());
-    Pix.fill(Color);
-    MainWindow->Tone1ColorButton->setIcon(Pix);
-    if (Settings->ToolIsActive("TabRGBTone1")){
-      Update(ptProcessorPhase_EyeCandy);
-    }
-  }
-}
-
-void CB_Tone1LowerLimitInput(const QVariant Value) {
-  Settings->SetValue("Tone1LowerLimit",MIN(Value.toDouble(), Settings->GetDouble("Tone1UpperLimit")-0.01));
-  if (Settings->ToolIsActive("TabRGBTone1")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
-void CB_Tone1UpperLimitInput(const QVariant Value) {
-  Settings->SetValue("Tone1UpperLimit",MAX(Value.toDouble(), Settings->GetDouble("Tone1LowerLimit")+0.01));
-  if (Settings->ToolIsActive("TabRGBTone1")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
-void CB_Tone2ColorButton() {
-  QPixmap Pix(80, 14);
-  QColor  Color;
-  Color.setRed(Settings->GetInt("Tone2ColorRed"));
-  Color.setGreen(Settings->GetInt("Tone2ColorGreen"));
-  Color.setBlue(Settings->GetInt("Tone2ColorBlue"));
-  QColorDialog Dialog(Color,NULL);
-  Dialog.setStyle(Theme->systemStyle());
-  Dialog.setPalette(Theme->systemPalette());
-  Dialog.exec();
-  QColor TestColor = Dialog.selectedColor();
-  if (TestColor.isValid()) {
-    Color = TestColor;
-    Settings->SetValue("Tone2ColorRed",Color.red());
-    Settings->SetValue("Tone2ColorGreen",Color.green());
-    Settings->SetValue("Tone2ColorBlue",Color.blue());
-    Pix.fill(Color);
-    MainWindow->Tone2ColorButton->setIcon(Pix);
-    if (Settings->ToolIsActive("TabRGBTone1")){
-      Update(ptProcessorPhase_EyeCandy);
-    }
-  }
-}
-
-void CB_Tone2LowerLimitInput(const QVariant Value) {
-  Settings->SetValue("Tone2LowerLimit",MIN(Value.toDouble(), Settings->GetDouble("Tone2UpperLimit")-0.01));
-  if (Settings->ToolIsActive("TabRGBTone1")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
-void CB_Tone2UpperLimitInput(const QVariant Value) {
-  Settings->SetValue("Tone2UpperLimit",MAX(Value.toDouble(), Settings->GetDouble("Tone2LowerLimit")+0.01));
-  if (Settings->ToolIsActive("TabRGBTone1")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
-// Callbacks pertaining to the EyeCandy Tab
 // Partim Texture Overlay
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -5597,17 +5516,6 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
 
   M_Dispatch(GeometryBlockCheck)
 
-  M_SetAndRunDispatch(Tone1MaskTypeChoice)
-  M_SetAndRunDispatch(Tone1AmountInput)
-  M_Dispatch(Tone1LowerLimitInput)
-  M_Dispatch(Tone1UpperLimitInput)
-  M_SetAndRunDispatch(Tone1SoftnessInput)
-
-  M_SetAndRunDispatch(Tone2MaskTypeChoice)
-  M_SetAndRunDispatch(Tone2AmountInput)
-  M_Dispatch(Tone2LowerLimitInput)
-  M_Dispatch(Tone2UpperLimitInput)
-  M_SetAndRunDispatch(Tone2SoftnessInput)
 
   M_SetAndRunDispatch(TextureOverlayModeChoice)
   M_Dispatch(TextureOverlayMaskChoice)

@@ -120,8 +120,8 @@ namespace Fuid {
 
   const QString BlackWhite_EyeCandy             = "fa677364-4c8c-41bd-9397-94ea42bec595";
   const QString SimpleTone_EyeCandy             = "3ca8f518-398d-44f4-8e17-6303a0abcdd0";
-  const QString Tone1_EyeCandy                  = "d7e8ce45-5ccd-433f-aefd-00d226b2513e"; // not yet ported
-  const QString Tone2_EyeCandy                  = "9ec16c48-5852-4791-ac6d-66ef268e01b7"; // not yet ported
+  const QString ColorTone1_EyeCandy             = "d7e8ce45-5ccd-433f-aefd-00d226b2513e";
+  const QString ColorTone2_EyeCandy             = "9ec16c48-5852-4791-ac6d-66ef268e01b7";
   const QString CrossProcessing_EyeCandy        = "49258677-09d8-4035-9e01-15bdfef4cde5";
   const QString SigContrastRgb_EyeCandy         = "6e7db630-310f-4f04-82e0-b668babfe8c9";
   const QString TextureOverlay1_EyeCandy        = "370dca54-85fd-4bf7-a3ff-3e5657e736c2"; // not yet ported

@@ -1061,51 +1061,18 @@ void ptProcessor::Run(short Phase,
 
 
         //***************************************************************************
-        // Tone
+        // Color toning
 
-        if (Settings->ToolIsActive("TabRGBTone1")) {
-
-          m_ReportProgress(tr("Toning 1"));
-
-          m_Image_AfterEyeCandy->Tone(
-            (uint16_t)(0xffff*
-                       pow(Settings->GetInt("Tone1ColorRed")  /(double)0xff,
-                           Settings->GetDouble("InputPowerFactor"))),
-            (uint16_t)(0xffff*
-                       pow(Settings->GetInt("Tone1ColorGreen")/(double)0xff,
-                           Settings->GetDouble("InputPowerFactor"))),
-            (uint16_t)(0xffff*
-                       pow(Settings->GetInt("Tone1ColorBlue") /(double)0xff,
-                           Settings->GetDouble("InputPowerFactor"))),
-            Settings->GetDouble("Tone1Amount"),
-            static_cast<TMaskType>(Settings->GetInt("Tone1MaskType")),
-            pow(Settings->GetDouble("Tone1LowerLimit"),
-                Settings->GetDouble("InputPowerFactor")),
-            pow(Settings->GetDouble("Tone1UpperLimit"),
-                Settings->GetDouble("InputPowerFactor")),
-            Settings->GetDouble("Tone1Softness"));
+        hFilter = GFilterDM->GetFilterFromName(Fuid::ColorTone1_EyeCandy);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterEyeCandy);
         }
 
-        if (Settings->ToolIsActive("TabRGBTone2")) {
-
-          m_ReportProgress(tr("Toning 2"));
-
-          m_Image_AfterEyeCandy->Tone(
-            (uint16_t)(0xffff*
-                       pow(Settings->GetInt("Tone2ColorRed")  /(double)0xff,
-                           Settings->GetDouble("InputPowerFactor"))),
-            (uint16_t)(0xffff*
-                       pow(Settings->GetInt("Tone2ColorGreen")/(double)0xff,
-                           Settings->GetDouble("InputPowerFactor"))),
-            (uint16_t)(0xffff*
-                       pow(Settings->GetInt("Tone2ColorBlue") /(double)0xff,
-                           Settings->GetDouble("InputPowerFactor"))),
-            Settings->GetDouble("Tone2Amount"),
-            static_cast<TMaskType>(Settings->GetInt("Tone2MaskType")),
-            pow(Settings->GetDouble("Tone2LowerLimit"),Settings->GetDouble("InputPowerFactor")),
-            pow(Settings->GetDouble("Tone2UpperLimit"),Settings->GetDouble("InputPowerFactor")),
-            Settings->GetDouble("Tone2Softness"));
-
+        hFilter = GFilterDM->GetFilterFromName(Fuid::ColorTone2_EyeCandy);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterEyeCandy);
         }
 
 

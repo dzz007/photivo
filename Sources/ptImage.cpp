@@ -4481,16 +4481,26 @@ ptImage* ptImage::LABTone(const double Amount,
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-ptImage* ptImage::Tone(const uint16_t R,
-                       const uint16_t G,
-                       const uint16_t B,
-                       const double   Amount,
-                       const TMaskType MaskType,
-                       const double   LowerLimit,
-                       const double   UpperLimit,
-                       const double   Softness) {
-
+ptImage* ptImage::Tone(
+    uint16_t Red,
+    uint16_t Green,
+    uint16_t Blue,
+    const double   Amount,
+    const TMaskType MaskType,
+    double   LowerLimit,
+    double   UpperLimit,
+    const double   Softness,
+    const double   InputPowerFactor)
+{
   assert (m_ColorSpace != ptSpace_Lab);
+
+  Red   = static_cast<uint16_t>(0xffff * pow(Red/255.0,   InputPowerFactor));
+  Green = static_cast<uint16_t>(0xffff * pow(Green/255.0, InputPowerFactor));
+  Blue  = static_cast<uint16_t>(0xffff * pow(Blue/255.0,  InputPowerFactor));
+
+  LowerLimit = pow(LowerLimit, InputPowerFactor);
+  UpperLimit = pow(UpperLimit, InputPowerFactor);
+
   uint16_t (*ToneImage)[3] =
     (uint16_t (*)[3]) CALLOC(m_Width*m_Height,sizeof(*ToneImage));
   ptMemoryError(ToneImage,__FILE__,__LINE__);
@@ -4502,9 +4512,9 @@ ptImage* ptImage::Tone(const uint16_t R,
     Mask=GetMask(TMaskType::Midtones, LowerLimit, UpperLimit, Softness);
 #pragma omp parallel for
   for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
-    ToneImage[i][0] = R;
-    ToneImage[i][1] = G;
-    ToneImage[i][2] = B;
+    ToneImage[i][0] = Red;
+    ToneImage[i][1] = Green;
+    ToneImage[i][2] = Blue;
   }
 
   if (MaskType <= TMaskType::All)

@@ -390,9 +390,6 @@ ptMainWindow::ptMainWindow(const QString Title)
   // TAB : EyeCandy
   //
 
-  Macro_ConnectSomeButton(Tone1Color);
-  Macro_ConnectSomeButton(Tone2Color);
-
   Macro_ConnectSomeButton(TextureOverlay);
   Macro_ConnectSomeButton(TextureOverlayClear);
   Macro_ConnectSomeButton(TextureOverlay2);
@@ -403,16 +400,6 @@ ptMainWindow::ptMainWindow(const QString Title)
 
   QPixmap Pix(80, 14);
   QColor  Color;
-  Color.setRed(Settings->GetInt("Tone1ColorRed"));
-  Color.setGreen(Settings->GetInt("Tone1ColorGreen"));
-  Color.setBlue(Settings->GetInt("Tone1ColorBlue"));
-  Pix.fill(Color);
-  Tone1ColorButton->setIcon(Pix);
-  Color.setRed(Settings->GetInt("Tone2ColorRed"));
-  Color.setGreen(Settings->GetInt("Tone2ColorGreen"));
-  Color.setBlue(Settings->GetInt("Tone2ColorBlue"));
-  Pix.fill(Color);
-  Tone2ColorButton->setIcon(Pix);
   Color.setRed(Settings->GetInt("GradualOverlay1ColorRed"));
   Color.setGreen(Settings->GetInt("GradualOverlay1ColorGreen"));
   Color.setBlue(Settings->GetInt("GradualOverlay1ColorBlue"));
@@ -1402,17 +1389,6 @@ void ptMainWindow::OnCropCenterVertButtonClicked() {
 
 // Tab : EyeCandy
 
-void CB_Tone1ColorButton();
-void ptMainWindow::OnTone1ColorButtonClicked() {
-  ::CB_Tone1ColorButton();
-}
-
-void CB_Tone2ColorButton();
-void ptMainWindow::OnTone2ColorButtonClicked() {
-  ::CB_Tone2ColorButton();
-}
-
-
 void CB_TextureOverlayButton();
 void ptMainWindow::OnTextureOverlayButtonClicked() {
   ::CB_TextureOverlayButton();
@@ -2257,16 +2233,6 @@ void ptMainWindow::UpdateSettings() {
   // Color buttons
   QPixmap Pix(80, 14);
   QColor  Color;
-  Color.setRed(Settings->GetInt("Tone1ColorRed"));
-  Color.setGreen(Settings->GetInt("Tone1ColorGreen"));
-  Color.setBlue(Settings->GetInt("Tone1ColorBlue"));
-  Pix.fill(Color);
-  Tone1ColorButton->setIcon(Pix);
-  Color.setRed(Settings->GetInt("Tone2ColorRed"));
-  Color.setGreen(Settings->GetInt("Tone2ColorGreen"));
-  Color.setBlue(Settings->GetInt("Tone2ColorBlue"));
-  Pix.fill(Color);
-  Tone2ColorButton->setIcon(Pix);
   Color.setRed(Settings->GetInt("GradualOverlay1ColorRed"));
   Color.setGreen(Settings->GetInt("GradualOverlay1ColorGreen"));
   Color.setBlue(Settings->GetInt("GradualOverlay1ColorBlue"));

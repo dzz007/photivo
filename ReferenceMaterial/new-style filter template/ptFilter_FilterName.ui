@@ -54,6 +54,11 @@
    <header>filters/imagespot/ptSpotListWidget.h</header>
    <container>1</container>
   </customwidget>
+  <customwidget>
+   <class>ptColorSelectButton</class>
+   <extends>QToolButton</extends>
+   <header>ptColorSelectButton.h</header>
+  </customwidget>
  </customwidgets>
  <resources/>
  <connections/>

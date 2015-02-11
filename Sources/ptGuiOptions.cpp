@@ -380,26 +380,6 @@ const ptGuiOptionsItem ptGuiOptions::FlipMode[] = {
   {ptFlipMode_Vertical,          QObject::tr("Vertical flip") },
   {-1,NULL}};
 
-const ptGuiOptionsItem ptGuiOptions::MaskType[] = {
-  {ptMaskType_None,              QObject::tr("Disabled") },
-  {ptMaskType_Shadows,           QObject::tr("Shadows") },
-  {ptMaskType_Midtones,          QObject::tr("Midtones") },
-  {ptMaskType_Highlights,        QObject::tr("Highlights") },
-  {ptMaskType_All,               QObject::tr("All values") },
-  {ptMaskType_Screen,            QObject::tr("Midtones - Screen") },
-  {ptMaskType_Multiply,          QObject::tr("Midtones - Multiply") },
-  {ptOverlayMode_GammaBright,    QObject::tr("Midtones - Gamma bright") },
-  {ptOverlayMode_GammaDark,      QObject::tr("Midtones - Gamma dark") },
-  {-1,NULL}};
-
-const ptGuiOptionsItem ptGuiOptions::GrainMaskType[] = {
-  {ptMaskType_None,              QObject::tr("Disabled") },
-  {ptMaskType_Shadows,           QObject::tr("Shadows") },
-  {ptMaskType_Midtones,          QObject::tr("Midtones") },
-  {ptMaskType_Highlights,        QObject::tr("Highlights") },
-  {ptMaskType_All,               QObject::tr("All values") },
-  {-1,NULL}};
-
 const ptGuiOptionsItem ptGuiOptions::OverlayMode[] = {
   {ptOverlayMode_None,              QObject::tr("Disabled") },
   {ptOverlayMode_SoftLight,         QObject::tr("SoftLight") },

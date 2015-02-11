@@ -25,8 +25,15 @@
 
 #include "ptWidget.h"
 #include <QColor>
+#include <QString>
 #include <QToolButton>
 
+/*!
+ * A fixed size tool button widget for selecting a color. The button shows a preview
+ * of the selected color and the RGB value in the tooltip.
+ * As a ptWidget ptColorSelectButton is integrated into the filters’ config and
+ * persistence framework.
+ */
 class ptColorSelectButton: public ptWidget {
   Q_OBJECT
 
@@ -37,10 +44,17 @@ public:
   void init(const ptCfgItem& ACfgItem) override;
   void setValue(const QVariant& AValue) override;
 
+protected:
+  void showEvent(QShowEvent*) override;
+
 private:
+  static constexpr int CMarginSize = 8;
+
   void updateColor(const QColor& AColor);
+
   QToolButton* FButton;
   QColor FCurrColor;
+  QString FTooltipText;
 
 private slots:
   void onButtonClicked();

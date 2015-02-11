@@ -904,6 +904,39 @@ void ptFilterDM::TranslateSpecialToNew(QSettings *APreset, QStringList *AKeys) {
     APreset->remove(hOldMaskKey);
     AKeys->removeAll(hOldMaskKey);
   }
+
+
+  /***** Color toning *****
+    Individual R, G and B values must be transformed to new-style #RRGGBB color string.
+    And I do feel bad about the code duplication. ;)
+  */
+  if (AKeys->contains("Tone1ColorRed")) {
+    QColor tone1Color(
+        APreset->value("Tone1ColorRed").toInt(),
+        APreset->value("Tone1ColorGreen").toInt(),
+        APreset->value("Tone1ColorBlue").toInt());
+    APreset->setValue("ColorTone/"+Fuid::ColorTone1_EyeCandy+"/Color", tone1Color.name());
+    APreset->remove("Tone1ColorRed");
+    APreset->remove("Tone1ColorGreen");
+    APreset->remove("Tone1ColorBlue");
+    AKeys->removeAll("Tone1ColorRed");
+    AKeys->removeAll("Tone1ColorGreen");
+    AKeys->removeAll("Tone1ColorBlue");
+  }
+
+  if (AKeys->contains("Tone2ColorRed")) {
+    QColor tone2Color(
+        APreset->value("Tone2ColorRed").toInt(),
+        APreset->value("Tone2ColorGreen").toInt(),
+        APreset->value("Tone2ColorBlue").toInt());
+    APreset->setValue("ColorTone/"+Fuid::ColorTone2_EyeCandy+"/Color", tone2Color.name());
+    APreset->remove("Tone2ColorRed");
+    APreset->remove("Tone2ColorGreen");
+    APreset->remove("Tone2ColorBlue");
+    AKeys->removeAll("Tone2ColorRed");
+    AKeys->removeAll("Tone2ColorGreen");
+    AKeys->removeAll("Tone2ColorBlue");
+  }
 }
 
 //==============================================================================
@@ -938,6 +971,31 @@ void ptFilterDM::TranslateSpecialToOld(QSettings *APreset, QStringList *AKeys) {
       case 0:  // fall through
       default: APreset->setValue(expModeNewKey, 2); break;
     }
+  }
+
+
+  /***** Color toning *****
+    New-style #RRGGBB color string must be transformed to individual R, G and B values.
+    And I do feel bad about the code duplication. ;)
+  */
+  const QString newTone1ColorKey = "ColorTone/"+Fuid::ColorTone1_EyeCandy+"/Color";
+  if (AKeys->contains(newTone1ColorKey)) {
+    const QColor tone1Color = APreset->value(newTone1ColorKey).value<QColor>();
+    APreset->setValue("Tone1ColorRed",   tone1Color.red());
+    APreset->setValue("Tone1ColorGreen", tone1Color.green());
+    APreset->setValue("Tone1ColorBlue",  tone1Color.blue());
+    AKeys->removeAll(newTone1ColorKey);
+    APreset->remove(newTone1ColorKey);
+  }
+
+  const QString newTone2ColorKey = "ColorTone/"+Fuid::ColorTone2_EyeCandy+"/Color";
+  if (AKeys->contains(newTone2ColorKey)) {
+    const QColor tone2Color = APreset->value(newTone2ColorKey).value<QColor>();
+    APreset->setValue("Tone2ColorRed",   tone2Color.red());
+    APreset->setValue("Tone2ColorGreen", tone2Color.green());
+    APreset->setValue("Tone2ColorBlue",  tone2Color.blue());
+    AKeys->removeAll(newTone2ColorKey);
+    APreset->remove(newTone2ColorKey);
   }
 }
 
@@ -1333,14 +1391,14 @@ void ptFilterDM::FillNameMap() {
   FNameMap.insert("SimpleToneR",                     "SimpleTone/"+Fuid::SimpleTone_EyeCandy+"/ChannelR");
   FNameMap.insert("SimpleToneG",                     "SimpleTone/"+Fuid::SimpleTone_EyeCandy+"/ChannelG");
   FNameMap.insert("SimpleToneB",                     "SimpleTone/"+Fuid::SimpleTone_EyeCandy+"/ChannelB");
-//  FNameMap.insert("Tone1Amount",                     "");
-//  FNameMap.insert("Tone1LowerLimit",                 "");
-//  FNameMap.insert("Tone1UpperLimit",                 "");
-//  FNameMap.insert("Tone1Softness",                   "");
-//  FNameMap.insert("Tone2Amount",                     "");
-//  FNameMap.insert("Tone2LowerLimit",                 "");
-//  FNameMap.insert("Tone2UpperLimit",                 "");
-//  FNameMap.insert("Tone2Softness",                   "");
+  FNameMap.insert("Tone1Amount",                     "ColorTone/"+Fuid::ColorTone1_EyeCandy+"/Strength");
+  FNameMap.insert("Tone1LowerLimit",                 "ColorTone/"+Fuid::ColorTone1_EyeCandy+"/LowerLimit");
+  FNameMap.insert("Tone1UpperLimit",                 "ColorTone/"+Fuid::ColorTone1_EyeCandy+"/UpperLimit");
+  FNameMap.insert("Tone1Softness",                   "ColorTone/"+Fuid::ColorTone1_EyeCandy+"/Softness");
+  FNameMap.insert("Tone2Amount",                     "ColorTone/"+Fuid::ColorTone2_EyeCandy+"/Strength");
+  FNameMap.insert("Tone2LowerLimit",                 "ColorTone/"+Fuid::ColorTone2_EyeCandy+"/LowerLimit");
+  FNameMap.insert("Tone2UpperLimit",                 "ColorTone/"+Fuid::ColorTone2_EyeCandy+"/UpperLimit");
+  FNameMap.insert("Tone2Softness",                   "ColorTone/"+Fuid::ColorTone2_EyeCandy+"/Softness");
   FNameMap.insert("CrossprocessingColor1",           "CrossProcessing/"+Fuid::CrossProcessing_EyeCandy+"/MainColor");
   FNameMap.insert("CrossprocessingColor2",           "CrossProcessing/"+Fuid::CrossProcessing_EyeCandy+"/SecondColor");
   FNameMap.insert("RGBContrast2Amount",              "SigContrastRgb/"+Fuid::SigContrastRgb_EyeCandy+"/Strength");
@@ -1486,8 +1544,8 @@ void ptFilterDM::FillNameMap() {
   FNameMap.insert("LABToneAdjust2MaskType",          "ToneAdjust/"+Fuid::ToneAdjust2_LabEyeCandy+"/MaskMode");
   FNameMap.insert("BWStylerFilmType",                "BlackWhite/"+Fuid::BlackWhite_EyeCandy+"/FilmType");
   FNameMap.insert("BWStylerColorFilterType",         "BlackWhite/"+Fuid::BlackWhite_EyeCandy+"/ColorFilterType");
-//  FNameMap.insert("Tone1MaskType",                   "");
-//  FNameMap.insert("Tone2MaskType",                   "");
+  FNameMap.insert("Tone1MaskType",                   "ColorTone/"+Fuid::ColorTone1_EyeCandy+"/MaskType");
+  FNameMap.insert("Tone2MaskType",                   "ColorTone/"+Fuid::ColorTone2_EyeCandy+"/MaskType");
   FNameMap.insert("CrossprocessingMode",             "CrossProcessing/"+Fuid::CrossProcessing_EyeCandy+"/Mode");
 //  FNameMap.insert("TextureOverlayMode",              "");
 //  FNameMap.insert("TextureOverlayMask",              "");
@@ -1612,12 +1670,6 @@ void ptFilterDM::FillNameMap() {
 //  FNameMap.insert("OutputFileName",                  "");
 //  FNameMap.insert("JobMode",                         "");
 //  FNameMap.insert("InputFileNameList",               "");
-//  FNameMap.insert("Tone1ColorRed",                   "");
-//  FNameMap.insert("Tone1ColorGreen",                 "");
-//  FNameMap.insert("Tone1ColorBlue",                  "");
-//  FNameMap.insert("Tone2ColorRed",                   "");
-//  FNameMap.insert("Tone2ColorGreen",                 "");
-//  FNameMap.insert("Tone2ColorBlue",                  "");
 //  FNameMap.insert("GradualOverlay1ColorRed",         "");
 //  FNameMap.insert("GradualOverlay1ColorGreen",       "");
 //  FNameMap.insert("GradualOverlay1ColorBlue",        "");

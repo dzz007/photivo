@@ -125,14 +125,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"LqrHeight"                     ,ptGT_Input           ,1,1,1 ,800   ,200 ,6000  ,100  ,0 ,tr("Height")             ,tr("Height")},
     {"ResizeScale"                   ,ptGT_Input           ,1,1,1 ,1200  ,200 ,6000  ,100  ,0 ,tr("Pixels")             ,tr("Image size")},
     {"ResizeHeight"                  ,ptGT_Input           ,1,1,1 ,800   ,200 ,6000  ,100  ,0 ,tr("Height")             ,tr("Image height")},
-    {"Tone1Amount"                   ,ptGT_InputSlider     ,2,1,1 ,0.5  ,0.0  ,1.0   ,0.1  ,2 ,tr("Amount")             ,tr("Amount of toning")},
-    {"Tone1LowerLimit"               ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,1.0   ,0.1  ,2 ,tr("Lower Limit")        ,tr("Lower Limit")},
-    {"Tone1UpperLimit"               ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,1.0   ,0.1  ,2 ,tr("Upper Limit")        ,tr("Upper Limit")},
-    {"Tone1Softness"                 ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-2.0 ,2.0   ,0.1  ,1 ,tr("Softness")           ,tr("Softness")},
-    {"Tone2Amount"                   ,ptGT_InputSlider     ,2,1,1 ,0.5  ,0.0  ,1.0   ,0.1  ,2 ,tr("Amount")             ,tr("Amount of toning")},
-    {"Tone2LowerLimit"               ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,1.0   ,0.1  ,2 ,tr("Lower Limit")        ,tr("Lower Limit")},
-    {"Tone2UpperLimit"               ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,1.0   ,0.1  ,2 ,tr("Upper Limit")        ,tr("Upper Limit")},
-    {"Tone2Softness"                 ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-2.0 ,2.0   ,0.1  ,1 ,tr("Softness")           ,tr("Softness")},
     {"TextureOverlayOpacity"         ,ptGT_InputSlider     ,2,1,1 ,0.5  ,0.0  ,1.0   ,0.1  ,2 ,tr("Opacity")            ,tr("Opacity")},
     {"TextureOverlaySaturation"      ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,2.0   ,0.1  ,2 ,tr("Saturation")         ,tr("Saturation")},
     {"TextureOverlayExponent"        ,ptGT_Input           ,2,1,1 ,2    ,1    ,6     ,1    ,0 ,tr("Shape")              ,tr("Shape of the mask")},
@@ -211,8 +203,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"FlipMode"                    ,ptGT_Choice       ,2,1,1 ,ptFlipMode_None             ,GuiOptions->FlipMode                  ,tr("Flip mode")},
     {"AspectRatioW"                ,ptGT_Choice       ,2,0,0 ,3                           ,GuiOptions->AspectRatio               ,tr("Aspect width")},
     {"AspectRatioH"                ,ptGT_Choice       ,2,0,0 ,2                           ,GuiOptions->AspectRatio               ,tr("Aspect height")},
-    {"Tone1MaskType"               ,ptGT_Choice       ,2,1,1 ,ptMaskType_None             ,GuiOptions->MaskType                  ,tr("Values for Toning")},
-    {"Tone2MaskType"               ,ptGT_Choice       ,2,1,1 ,ptMaskType_None             ,GuiOptions->MaskType                  ,tr("Values for Toning")},
     {"TextureOverlayMode"          ,ptGT_Choice       ,2,1,1 ,ptOverlayMode_None          ,GuiOptions->OverlayMode               ,tr("Mode for Texture Overlay")},
     {"TextureOverlayMask"          ,ptGT_Choice       ,2,1,1 ,ptOverlayMaskMode_FullImage ,GuiOptions->OverlayMaskMode           ,tr("Mask for Texture Overlay")},
     {"TextureOverlay2Mode"         ,ptGT_Choice       ,2,1,1 ,ptOverlayMode_None          ,GuiOptions->OverlayMode               ,tr("Mode for Texture Overlay")},
@@ -347,12 +337,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"OutputFileName"                       ,9    ,""                                    ,0}, // Not in JobFile. Constructed.
     {"JobMode"                              ,9    ,0                                     ,0}, // Not in JobFile !! Overwrites else.
     {"InputFileNameList"                    ,9    ,QStringList()                         ,1},
-    {"Tone1ColorRed"                        ,2    ,0                                     ,1},
-    {"Tone1ColorGreen"                      ,2    ,200                                   ,1},
-    {"Tone1ColorBlue"                       ,2    ,255                                   ,1},
-    {"Tone2ColorRed"                        ,2    ,255                                   ,1},
-    {"Tone2ColorGreen"                      ,2    ,200                                   ,1},
-    {"Tone2ColorBlue"                       ,2    ,0                                     ,1},
     {"GradualOverlay1ColorRed"              ,2    ,0                                     ,1},
     {"GradualOverlay1ColorGreen"            ,2    ,0                                     ,1},
     {"GradualOverlay1ColorBlue"             ,2    ,0                                     ,1},
@@ -1371,12 +1355,7 @@ sToolInfo ToolInfo (const QString GuiName) {
                       Settings->GetInt("GeometryBlock");
   }
   // Tab EyeCandy
-  else if (GuiName == "TabRGBTone1") {
-      Info.Name = "RGB Toning 1";
-      Info.IsActive = Settings->GetInt("Tone1MaskType")!=0?1:0;
-  } else if (GuiName == "TabRGBTone2") {
-      Info.Name = "RGB Toning 2";
-      Info.IsActive = Settings->GetInt("Tone2MaskType")!=0?1:0;
+  else if (GuiName == "TabCrossProcessing") {
   } else if (GuiName == "TabTextureOverlay") {
     Info.Name = "Texture Overlay";
     Info.IsActive = (Settings->GetInt("TextureOverlayMode") &&

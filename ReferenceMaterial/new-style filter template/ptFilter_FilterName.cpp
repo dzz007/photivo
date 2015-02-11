@@ -86,7 +86,7 @@ void ptFilter_$FilterName$::doDefineControls() {
   FConfig.initStores(TCfgItemList()                                              //--- Combo: list of entries               ---//
                                                                                  //--- Check: not available                 ---//
     //            Id                       Type                      Default     Min           Max           Step        Decimals, commonConnect, storeable, caption, tooltip
-    << ptCfgItem({CCfgItem1,               ptCfgItem::Check,         0,                                                            true, true, tr("Name in GUI"), tr("Tooltip")})
+    << ptCfgItem({CCfgItem1,               ptCfgItem::Check,         false,                                                        true, true, tr("Name in GUI"), tr("Tooltip")})
     << ptCfgItem({CCfgItem2,               ptCfgItem::Slider,        0.2,        0.0,          1.0,          0.05,       2,        true, true, tr("Name in GUI"), tr("Tooltip")})
     << ptCfgItem({CCfgItem3,               ptCfgItem::Combo,         constant_1, comboboxConfig,                                   true, true, tr("Name in GUI"), tr("Tooltip")})
   );
