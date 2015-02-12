@@ -383,6 +383,8 @@ void CreateAllFilters() {
   GFilterDM->NewFilter("ColorTone",             Fuid::ColorTone1_EyeCandy,          " I");
   GFilterDM->NewFilter("ColorTone",             Fuid::ColorTone2_EyeCandy,          " II");
   GFilterDM->NewFilter("SigContrastRgb",        Fuid::SigContrastRgb_EyeCandy);
+  GFilterDM->NewFilter("GradualOverlay",        Fuid::GradualOverlay1_EyeCandy,     " I");
+  GFilterDM->NewFilter("GradualOverlay",        Fuid::GradualOverlay2_EyeCandy,     " II");
   GFilterDM->NewFilter("VignetteRgb",           Fuid::Vignette_EyeCandy);
   GFilterDM->NewFilter("GradualBlur",           Fuid::GradualBlur1_EyeCandy,        " I");
   GFilterDM->NewFilter("GradualBlur",           Fuid::GradualBlur2_EyeCandy,        " II");
@@ -5081,91 +5083,6 @@ void CB_TextureOverlay2OuterRadiusInput(const QVariant Value) {
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Callbacks pertaining to the EyeCandy Tab
-// Partim Gradual Overlay
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_GradualOverlay1ColorButton() {
-  QPixmap Pix(80, 14);
-  QColor  Color;
-  Color.setRed(Settings->GetInt("GradualOverlay1ColorRed"));
-  Color.setGreen(Settings->GetInt("GradualOverlay1ColorGreen"));
-  Color.setBlue(Settings->GetInt("GradualOverlay1ColorBlue"));
-  QColorDialog Dialog(Color,NULL);
-  Dialog.setStyle(Theme->systemStyle());
-  Dialog.setPalette(Theme->systemPalette());
-  Dialog.exec();
-  QColor TestColor = Dialog.selectedColor();
-  if (TestColor.isValid()) {
-    Color = TestColor;
-    Settings->SetValue("GradualOverlay1ColorRed",Color.red());
-    Settings->SetValue("GradualOverlay1ColorGreen",Color.green());
-    Settings->SetValue("GradualOverlay1ColorBlue",Color.blue());
-    Pix.fill(Color);
-    MainWindow->GradualOverlay1ColorButton->setIcon(Pix);
-    if (Settings->ToolIsActive("TabGradualOverlay1")){
-      Update(ptProcessorPhase_EyeCandy);
-    }
-  }
-}
-
-void CB_GradualOverlay1LowerLevelInput(const QVariant Value) {
-  Settings->SetValue("GradualOverlay1LowerLevel",MIN(Value.toDouble(), Settings->GetDouble("GradualOverlay1UpperLevel")));
-  if (Settings->ToolIsActive("TabGradualOverlay1")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
-
-void CB_GradualOverlay1UpperLevelInput(const QVariant Value) {
-  Settings->SetValue("GradualOverlay1UpperLevel",MAX(Value.toDouble(), Settings->GetDouble("GradualOverlay1LowerLevel")));
-  if (Settings->ToolIsActive("TabGradualOverlay1")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
-void CB_GradualOverlay2ColorButton() {
-  QPixmap Pix(80, 14);
-  QColor  Color;
-  Color.setRed(Settings->GetInt("GradualOverlay2ColorRed"));
-  Color.setGreen(Settings->GetInt("GradualOverlay2ColorGreen"));
-  Color.setBlue(Settings->GetInt("GradualOverlay2ColorBlue"));
-  QColorDialog Dialog(Color,NULL);
-  Dialog.setStyle(Theme->systemStyle());
-  Dialog.setPalette(Theme->systemPalette());
-  Dialog.exec();
-  QColor TestColor = Dialog.selectedColor();
-  if (TestColor.isValid()) {
-    Color = TestColor;
-    Settings->SetValue("GradualOverlay2ColorRed",Color.red());
-    Settings->SetValue("GradualOverlay2ColorGreen",Color.green());
-    Settings->SetValue("GradualOverlay2ColorBlue",Color.blue());
-    Pix.fill(Color);
-    MainWindow->GradualOverlay2ColorButton->setIcon(Pix);
-    if (Settings->ToolIsActive("TabGradualOverlay2")){
-      Update(ptProcessorPhase_EyeCandy);
-    }
-  }
-}
-
-void CB_GradualOverlay2LowerLevelInput(const QVariant Value) {
-  Settings->SetValue("GradualOverlay2LowerLevel",MIN(Value.toDouble(), Settings->GetDouble("GradualOverlay2UpperLevel")));
-  if (Settings->ToolIsActive("TabGradualOverlay2")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
-void CB_GradualOverlay2UpperLevelInput(const QVariant Value) {
-  Settings->SetValue("GradualOverlay2UpperLevel",MAX(Value.toDouble(), Settings->GetDouble("GradualOverlay2LowerLevel")));
-  if (Settings->ToolIsActive("TabGradualOverlay2")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-//
 // Callbacks pertaining to Out Tab
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -5539,20 +5456,6 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_SetAndRunDispatch(TextureOverlay2CenterXInput)
   M_SetAndRunDispatch(TextureOverlay2CenterYInput)
   M_SetAndRunDispatch(TextureOverlay2SoftnessInput)
-
-  M_SetAndRunDispatch(GradualOverlay1Choice)
-  M_SetAndRunDispatch(GradualOverlay1AmountInput)
-  M_SetAndRunDispatch(GradualOverlay1AngleInput)
-  M_Dispatch(GradualOverlay1LowerLevelInput)
-  M_Dispatch(GradualOverlay1UpperLevelInput)
-  M_SetAndRunDispatch(GradualOverlay1SoftnessInput)
-
-  M_SetAndRunDispatch(GradualOverlay2Choice)
-  M_SetAndRunDispatch(GradualOverlay2AmountInput)
-  M_SetAndRunDispatch(GradualOverlay2AngleInput)
-  M_Dispatch(GradualOverlay2LowerLevelInput)
-  M_Dispatch(GradualOverlay2UpperLevelInput)
-  M_SetAndRunDispatch(GradualOverlay2SoftnessInput)
 
   M_SetAndRunDispatch(OutputGammaCompensationCheck)
   M_SetAndRunDispatch(OutputGammaInput)

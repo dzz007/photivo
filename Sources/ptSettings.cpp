@@ -143,16 +143,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"TextureOverlay2CenterX"        ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0   ,0.1  ,2 ,tr("Center X")           ,tr("Center X")},
     {"TextureOverlay2CenterY"        ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-1.0 ,1.0   ,0.1  ,2 ,tr("Center Y")           ,tr("Center Y")},
     {"TextureOverlay2Softness"       ,ptGT_InputSlider     ,2,1,1 ,0.15  ,0.0 ,1.0   ,0.1  ,2 ,tr("Softness")           ,tr("Softness")},
-    {"GradualOverlay1Amount"         ,ptGT_InputSlider     ,2,1,1 ,0.5  ,0.0  ,1.0   ,0.1  ,2 ,tr("Amount")             ,tr("Amount")},
-    {"GradualOverlay1Angle"          ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-180.0,180.0  ,5.0  ,0 ,tr("Angle")            ,tr("Angle")},
-    {"GradualOverlay1LowerLevel"     ,ptGT_InputSlider     ,2,1,1 ,0.5  ,0.0  ,3.0   ,0.1  ,2 ,tr("Lower Level")        ,tr("Lower Level")},
-    {"GradualOverlay1UpperLevel"     ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,3.0   ,0.1  ,2 ,tr("Upper Level")        ,tr("Upper Level")},
-    {"GradualOverlay1Softness"       ,ptGT_InputSlider     ,2,1,1 ,0.15  ,0.0  ,1.0   ,0.1  ,2 ,tr("Softness")        ,tr("Softness")},
-    {"GradualOverlay2Amount"         ,ptGT_InputSlider     ,2,1,1 ,0.5  ,0.0  ,1.0   ,0.1  ,2 ,tr("Amount")        ,tr("Amount")},
-    {"GradualOverlay2Angle"          ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-180.0,180.0  ,5.0  ,0 ,tr("Angle")        ,tr("Angle")},
-    {"GradualOverlay2LowerLevel"     ,ptGT_InputSlider     ,2,1,1 ,0.5  ,0.0  ,3.0   ,0.1  ,2 ,tr("Lower Level")        ,tr("Lower Level")},
-    {"GradualOverlay2UpperLevel"     ,ptGT_InputSlider     ,2,1,1 ,1.0  ,0.0  ,3.0   ,0.1  ,2 ,tr("Upper Level")        ,tr("Upper Level")},
-    {"GradualOverlay2Softness"       ,ptGT_InputSlider     ,2,1,1 ,0.15  ,0.0  ,1.0   ,0.1  ,2 ,tr("Softness")        ,tr("Softness")},
     {"OutputGamma"                   ,ptGT_InputSlider     ,1,1,1 ,0.33  ,0.1  ,1.0   ,0.01 ,3 ,tr("Gamma")              ,tr("Gamma")},
     {"OutputLinearity"               ,ptGT_InputSlider     ,1,1,1 ,0.06  ,0.0  ,1.0   ,0.01 ,3 ,tr("Linearity")          ,tr("Linearity")},
     {"WebResizeScale"                ,ptGT_Input           ,1,1,1 ,1200  ,200 ,2600  ,100  ,0 ,tr("pixels")             ,tr("Image size")},
@@ -203,12 +193,10 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"FlipMode"                    ,ptGT_Choice       ,2,1,1 ,ptFlipMode_None             ,GuiOptions->FlipMode                  ,tr("Flip mode")},
     {"AspectRatioW"                ,ptGT_Choice       ,2,0,0 ,3                           ,GuiOptions->AspectRatio               ,tr("Aspect width")},
     {"AspectRatioH"                ,ptGT_Choice       ,2,0,0 ,2                           ,GuiOptions->AspectRatio               ,tr("Aspect height")},
-    {"TextureOverlayMode"          ,ptGT_Choice       ,2,1,1 ,ptOverlayMode_None          ,GuiOptions->OverlayMode               ,tr("Mode for Texture Overlay")},
+    {"TextureOverlayMode"          ,ptGT_Choice       ,2,1,1 ,TOverlayMode::Disabled      ,GuiOptions->OverlayMode               ,tr("Mode for Texture Overlay")},
     {"TextureOverlayMask"          ,ptGT_Choice       ,2,1,1 ,ptOverlayMaskMode_FullImage ,GuiOptions->OverlayMaskMode           ,tr("Mask for Texture Overlay")},
-    {"TextureOverlay2Mode"         ,ptGT_Choice       ,2,1,1 ,ptOverlayMode_None          ,GuiOptions->OverlayMode               ,tr("Mode for Texture Overlay")},
+    {"TextureOverlay2Mode"         ,ptGT_Choice       ,2,1,1 ,TOverlayMode::Disabled      ,GuiOptions->OverlayMode               ,tr("Mode for Texture Overlay")},
     {"TextureOverlay2Mask"         ,ptGT_Choice       ,2,1,1 ,ptOverlayMaskMode_FullImage ,GuiOptions->OverlayMaskMode           ,tr("Mask for Texture Overlay")},
-    {"GradualOverlay1"             ,ptGT_Choice       ,2,1,1 ,ptOverlayMode_None          ,GuiOptions->OverlayMode               ,tr("Mode for Gradual Overlay")},
-    {"GradualOverlay2"             ,ptGT_Choice       ,2,1,1 ,ptOverlayMode_None          ,GuiOptions->OverlayMode               ,tr("Mode for Gradual Overlay")},
     {"WebResize"                   ,ptGT_Choice       ,2,1,1 ,ptEnable_None               ,GuiOptions->Enable                    ,tr("Enable web resizing")},
     {"WebResizeDimension"          ,ptGT_Choice       ,2,1,1 ,ptResizeDimension_LongerEdge,GuiOptions->WebResizeDimension        ,tr("Image dimension the resize value applies to")},
     {"WebResizeFilter"             ,ptGT_Choice       ,1,1,1 ,ptIMFilter_Lanczos          ,GuiOptions->IMResizeFilter            ,tr("Filter to be used for resizing")},
@@ -337,12 +325,6 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"OutputFileName"                       ,9    ,""                                    ,0}, // Not in JobFile. Constructed.
     {"JobMode"                              ,9    ,0                                     ,0}, // Not in JobFile !! Overwrites else.
     {"InputFileNameList"                    ,9    ,QStringList()                         ,1},
-    {"GradualOverlay1ColorRed"              ,2    ,0                                     ,1},
-    {"GradualOverlay1ColorGreen"            ,2    ,0                                     ,1},
-    {"GradualOverlay1ColorBlue"             ,2    ,0                                     ,1},
-    {"GradualOverlay2ColorRed"              ,2    ,255                                   ,1},
-    {"GradualOverlay2ColorGreen"            ,2    ,200                                   ,1},
-    {"GradualOverlay2ColorBlue"             ,2    ,0                                     ,1},
     {"TextureOverlayFile"                   ,2    ,""                                    ,1},
     {"TextureOverlay2File"                  ,2    ,""                                    ,1},
     {"DigikamTagsList"                      ,9    ,QStringList()                         ,1},
@@ -1364,14 +1346,6 @@ sToolInfo ToolInfo (const QString GuiName) {
     Info.Name = "Texture Overlay 2";
     Info.IsActive = (Settings->GetInt("TextureOverlay2Mode") &&
                      Settings->GetDouble("TextureOverlay2Opacity")!=0.0)!=0?1:0;
-  } else if (GuiName == "TabGradualOverlay1") {
-      Info.Name = "Gradual Overlay 1";
-      Info.IsActive = (Settings->GetInt("GradualOverlay1") &&
-                       Settings->GetDouble("GradualOverlay1Amount")!=0.0)!=0?1:0;
-  } else if (GuiName == "TabGradualOverlay2") {
-      Info.Name = "Gradual Overlay 2";
-      Info.IsActive = (Settings->GetInt("GradualOverlay2") &&
-                       Settings->GetDouble("GradualOverlay2Amount")!=0.0)!=0?1:0;
   }
   // Tab Output
   else if (GuiName == "TabGammaCompensation") {

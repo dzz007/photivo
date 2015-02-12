@@ -102,8 +102,6 @@ public:
   static const ptGuiOptionsItem LABTransformMode[];
   static const ptGuiOptionsItem SpecialPreview[];
   static const ptGuiOptionsItem FlipMode[];
-  static const ptGuiOptionsItem OverlayMode[];
-  static const ptGuiOptionsItem OutlineMode[];
   static const ptGuiOptionsItem OverlayMaskMode[];
   static const ptGuiOptionsItem Enable[];
   static const ptGuiOptionsItem SaveFormat[];

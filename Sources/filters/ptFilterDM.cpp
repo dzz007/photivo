@@ -828,6 +828,33 @@ void ptFilterDM::TranslateCurvesToOld(QSettings *APreset, QStringList *AKeys) {
 
 //==============================================================================
 
+namespace pt {
+  namespace detail {
+    void translateColorToNew(
+        QSettings *APreset,
+        QStringList *AKeys,
+        const QString& AOldKeyBase,
+        const QString& ANewKey)
+    {
+      if (AKeys->contains(AOldKeyBase+"Red")) {
+        QColor tone1Color(
+            APreset->value(AOldKeyBase+"Red").toInt(),
+            APreset->value(AOldKeyBase+"Green").toInt(),
+            APreset->value(AOldKeyBase+"Blue").toInt());
+        APreset->setValue(ANewKey, tone1Color.name());
+        APreset->remove(AOldKeyBase+"Red");
+        APreset->remove(AOldKeyBase+"Green");
+        APreset->remove(AOldKeyBase+"Blue");
+        AKeys->removeAll(AOldKeyBase+"Red");
+        AKeys->removeAll(AOldKeyBase+"Green");
+        AKeys->removeAll(AOldKeyBase+"Blue");
+      }
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+
 void ptFilterDM::TranslateSpecialToNew(QSettings *APreset, QStringList *AKeys) {
   AKeys->removeAll("Magic");
 
@@ -908,38 +935,41 @@ void ptFilterDM::TranslateSpecialToNew(QSettings *APreset, QStringList *AKeys) {
 
   /***** Color toning *****
     Individual R, G and B values must be transformed to new-style #RRGGBB color string.
-    And I do feel bad about the code duplication. ;)
   */
-  if (AKeys->contains("Tone1ColorRed")) {
-    QColor tone1Color(
-        APreset->value("Tone1ColorRed").toInt(),
-        APreset->value("Tone1ColorGreen").toInt(),
-        APreset->value("Tone1ColorBlue").toInt());
-    APreset->setValue("ColorTone/"+Fuid::ColorTone1_EyeCandy+"/Color", tone1Color.name());
-    APreset->remove("Tone1ColorRed");
-    APreset->remove("Tone1ColorGreen");
-    APreset->remove("Tone1ColorBlue");
-    AKeys->removeAll("Tone1ColorRed");
-    AKeys->removeAll("Tone1ColorGreen");
-    AKeys->removeAll("Tone1ColorBlue");
-  }
+  pt::detail::translateColorToNew(APreset, AKeys, "Tone1Color", "ColorTone/"+Fuid::ColorTone1_EyeCandy+"/Color");
+  pt::detail::translateColorToNew(APreset, AKeys, "Tone2Color", "ColorTone/"+Fuid::ColorTone2_EyeCandy+"/Color");
 
-  if (AKeys->contains("Tone2ColorRed")) {
-    QColor tone2Color(
-        APreset->value("Tone2ColorRed").toInt(),
-        APreset->value("Tone2ColorGreen").toInt(),
-        APreset->value("Tone2ColorBlue").toInt());
-    APreset->setValue("ColorTone/"+Fuid::ColorTone2_EyeCandy+"/Color", tone2Color.name());
-    APreset->remove("Tone2ColorRed");
-    APreset->remove("Tone2ColorGreen");
-    APreset->remove("Tone2ColorBlue");
-    AKeys->removeAll("Tone2ColorRed");
-    AKeys->removeAll("Tone2ColorGreen");
-    AKeys->removeAll("Tone2ColorBlue");
-  }
+
+  /***** Gradual overlay *****
+    same as "Color toning"
+  */
+  pt::detail::translateColorToNew(APreset, AKeys, "GradualOverlay1Color", "GradualOverlay/"+Fuid::GradualOverlay1_EyeCandy+"/Color");
+  pt::detail::translateColorToNew(APreset, AKeys, "GradualOverlay2Color", "GradualOverlay/"+Fuid::GradualOverlay2_EyeCandy+"/Color");
 }
 
 //==============================================================================
+
+namespace pt {
+  namespace detail {
+    void translateColorToOld(
+        QSettings* APreset,
+        QStringList* AKeys,
+        const QString& AOldKeyBase,
+        const QString& ANewKey)
+    {
+      if (AKeys->contains(ANewKey)) {
+        const QColor tone1Color = APreset->value(ANewKey).value<QColor>();
+        APreset->setValue(AOldKeyBase+"Red",   tone1Color.red());
+        APreset->setValue(AOldKeyBase+"Green", tone1Color.green());
+        APreset->setValue(AOldKeyBase+"Blue",  tone1Color.blue());
+        AKeys->removeAll(ANewKey);
+        APreset->remove(ANewKey);
+      }
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
 
 void ptFilterDM::TranslateSpecialToOld(QSettings *APreset, QStringList *AKeys) {
   /***** Channel mixer *****
@@ -976,27 +1006,16 @@ void ptFilterDM::TranslateSpecialToOld(QSettings *APreset, QStringList *AKeys) {
 
   /***** Color toning *****
     New-style #RRGGBB color string must be transformed to individual R, G and B values.
-    And I do feel bad about the code duplication. ;)
   */
-  const QString newTone1ColorKey = "ColorTone/"+Fuid::ColorTone1_EyeCandy+"/Color";
-  if (AKeys->contains(newTone1ColorKey)) {
-    const QColor tone1Color = APreset->value(newTone1ColorKey).value<QColor>();
-    APreset->setValue("Tone1ColorRed",   tone1Color.red());
-    APreset->setValue("Tone1ColorGreen", tone1Color.green());
-    APreset->setValue("Tone1ColorBlue",  tone1Color.blue());
-    AKeys->removeAll(newTone1ColorKey);
-    APreset->remove(newTone1ColorKey);
-  }
+  pt::detail::translateColorToOld(APreset, AKeys, "Tone1Color", "ColorTone/"+Fuid::ColorTone1_EyeCandy+"/Color");
+  pt::detail::translateColorToOld(APreset, AKeys, "Tone2Color", "ColorTone/"+Fuid::ColorTone2_EyeCandy+"/Color");
 
-  const QString newTone2ColorKey = "ColorTone/"+Fuid::ColorTone2_EyeCandy+"/Color";
-  if (AKeys->contains(newTone2ColorKey)) {
-    const QColor tone2Color = APreset->value(newTone2ColorKey).value<QColor>();
-    APreset->setValue("Tone2ColorRed",   tone2Color.red());
-    APreset->setValue("Tone2ColorGreen", tone2Color.green());
-    APreset->setValue("Tone2ColorBlue",  tone2Color.blue());
-    AKeys->removeAll(newTone2ColorKey);
-    APreset->remove(newTone2ColorKey);
-  }
+
+  /***** Gradual overlay *****
+    same as "Color toning"
+  */
+  pt::detail::translateColorToOld(APreset, AKeys, "GradualOverlay1Color", "GradualOverlay/"+Fuid::GradualOverlay1_EyeCandy+"/Color");
+  pt::detail::translateColorToOld(APreset, AKeys, "GradualOverlay2Color", "GradualOverlay/"+Fuid::GradualOverlay2_EyeCandy+"/Color");
 }
 
 //==============================================================================
@@ -1421,16 +1440,16 @@ void ptFilterDM::FillNameMap() {
 //  FNameMap.insert("TextureOverlay2CenterX",          "");
 //  FNameMap.insert("TextureOverlay2CenterY",          "");
 //  FNameMap.insert("TextureOverlay2Softness",         "");
-//  FNameMap.insert("GradualOverlay1Amount",           "");
-//  FNameMap.insert("GradualOverlay1Angle",            "");
-//  FNameMap.insert("GradualOverlay1LowerLevel",       "");
-//  FNameMap.insert("GradualOverlay1UpperLevel",       "");
-//  FNameMap.insert("GradualOverlay1Softness",         "");
-//  FNameMap.insert("GradualOverlay2Amount",           "");
-//  FNameMap.insert("GradualOverlay2Angle",            "");
-//  FNameMap.insert("GradualOverlay2LowerLevel",       "");
-//  FNameMap.insert("GradualOverlay2UpperLevel",       "");
-//  FNameMap.insert("GradualOverlay2Softness",         "");
+  FNameMap.insert("GradualOverlay1Amount",           "GradualOverlay/"+Fuid::GradualOverlay1_EyeCandy+"/Strength");
+  FNameMap.insert("GradualOverlay1Angle",            "GradualOverlay/"+Fuid::GradualOverlay1_EyeCandy+"/Angle");
+  FNameMap.insert("GradualOverlay1LowerLevel",       "GradualOverlay/"+Fuid::GradualOverlay1_EyeCandy+"/LowerLevel");
+  FNameMap.insert("GradualOverlay1UpperLevel",       "GradualOverlay/"+Fuid::GradualOverlay1_EyeCandy+"/UpperLevel");
+  FNameMap.insert("GradualOverlay1Softness",         "GradualOverlay/"+Fuid::GradualOverlay1_EyeCandy+"/Softness");
+  FNameMap.insert("GradualOverlay2Amount",           "GradualOverlay/"+Fuid::GradualOverlay2_EyeCandy+"/Strength");
+  FNameMap.insert("GradualOverlay2Angle",            "GradualOverlay/"+Fuid::GradualOverlay2_EyeCandy+"/Angle");
+  FNameMap.insert("GradualOverlay2LowerLevel",       "GradualOverlay/"+Fuid::GradualOverlay2_EyeCandy+"/LowerLevel");
+  FNameMap.insert("GradualOverlay2UpperLevel",       "GradualOverlay/"+Fuid::GradualOverlay2_EyeCandy+"/UpperLevel");
+  FNameMap.insert("GradualOverlay2Softness",         "GradualOverlay/"+Fuid::GradualOverlay2_EyeCandy+"/Softness");
   FNameMap.insert("Vignette",                        "VignetteRgb/"+Fuid::Vignette_EyeCandy+"/Shape");
   FNameMap.insert("VignetteAmount",                  "VignetteRgb/"+Fuid::Vignette_EyeCandy+"/Strength");
   FNameMap.insert("VignetteInnerRadius",             "VignetteRgb/"+Fuid::Vignette_EyeCandy+"/InnerRadius");
@@ -1551,8 +1570,8 @@ void ptFilterDM::FillNameMap() {
 //  FNameMap.insert("TextureOverlayMask",              "");
 //  FNameMap.insert("TextureOverlay2Mode",             "");
 //  FNameMap.insert("TextureOverlay2Mask",             "");
-//  FNameMap.insert("GradualOverlay1",                 "");
-//  FNameMap.insert("GradualOverlay2",                 "");
+  FNameMap.insert("GradualOverlay1",                 "GradualOverlay/"+Fuid::GradualOverlay1_EyeCandy+"/Mode");
+  FNameMap.insert("GradualOverlay2",                 "GradualOverlay/"+Fuid::GradualOverlay2_EyeCandy+"/Mode");
   FNameMap.insert("VignetteMode",                    "VignetteRgb/"+Fuid::Vignette_EyeCandy+"/MaskType");
   FNameMap.insert("GradBlur1",                       "GradualBlur/"+Fuid::GradualBlur1_EyeCandy+"/Mode");
   FNameMap.insert("GradBlur2",                       "GradualBlur/"+Fuid::GradualBlur2_EyeCandy+"/Mode");
@@ -1670,12 +1689,6 @@ void ptFilterDM::FillNameMap() {
 //  FNameMap.insert("OutputFileName",                  "");
 //  FNameMap.insert("JobMode",                         "");
 //  FNameMap.insert("InputFileNameList",               "");
-//  FNameMap.insert("GradualOverlay1ColorRed",         "");
-//  FNameMap.insert("GradualOverlay1ColorGreen",       "");
-//  FNameMap.insert("GradualOverlay1ColorBlue",        "");
-//  FNameMap.insert("GradualOverlay2ColorRed",         "");
-//  FNameMap.insert("GradualOverlay2ColorGreen",       "");
-//  FNameMap.insert("GradualOverlay2ColorBlue",        "");
 //  FNameMap.insert("TextureOverlayFile",              "");
 //  FNameMap.insert("TextureOverlay2File",             "");
 //  FNameMap.insert("DigikamTagsList",                 "");

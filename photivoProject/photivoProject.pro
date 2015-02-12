@@ -314,6 +314,7 @@ HEADERS += \
     ../Sources/filters/ptFilter_BlackWhite.h \
     ../Sources/filters/ptFilter_CrossProcessing.h \
     ../Sources/filters/ptFilter_ColorTone.h \
+    ../Sources/filters/ptFilter_GradualOverlay.h \
     ../Sources/ptColorSelectButton.h
 
 SOURCES += \
@@ -475,6 +476,7 @@ SOURCES += \
     ../Sources/filters/ptFilter_BlackWhite.cpp \
     ../Sources/filters/ptFilter_CrossProcessing.cpp \
     ../Sources/filters/ptFilter_ColorTone.cpp \
+    ../Sources/filters/ptFilter_GradualOverlay.cpp \
     ../Sources/ptColorSelectButton.cpp
 
 FORMS += \
@@ -500,6 +502,7 @@ FORMS += \
     ../Sources/filters/ptFilter_Exposure.ui \
     ../Sources/filters/ptFilter_BlackWhite.ui \
     ../Sources/filters/ptFilter_ColorTone.ui \
+    ../Sources/filters/ptFilter_GradualOverlay.ui \
     ../Sources/ptMainWindow.ui
 
 win32 {

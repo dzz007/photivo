@@ -126,8 +126,8 @@ namespace Fuid {
   const QString SigContrastRgb_EyeCandy         = "6e7db630-310f-4f04-82e0-b668babfe8c9";
   const QString TextureOverlay1_EyeCandy        = "370dca54-85fd-4bf7-a3ff-3e5657e736c2"; // not yet ported
   const QString TextureOverlay2_EyeCandy        = "695cd103-9969-4331-b312-02fdeb361c9b"; // not yet ported
-  const QString GradualOverlay1_EyeCandy        = "2dac85aa-7961-4fed-aa5d-6cde71535749"; // not yet ported
-  const QString GradualOverlay2_EyeCandy        = "9b69181e-80ca-44bd-8ccf-a0bf57b0c11d"; // not yet ported
+  const QString GradualOverlay1_EyeCandy        = "2dac85aa-7961-4fed-aa5d-6cde71535749";
+  const QString GradualOverlay2_EyeCandy        = "9b69181e-80ca-44bd-8ccf-a0bf57b0c11d";
   const QString Vignette_EyeCandy               = "98128af2-9c76-4483-870c-89dce831daf1";
   const QString GradualBlur1_EyeCandy           = "0a254db6-6300-403e-b4be-8ee6ca55bd7f";
   const QString GradualBlur2_EyeCandy           = "2232911d-bac9-4eaa-a73f-d49594b07952";

@@ -2073,12 +2073,13 @@ _Pragma("omp parallel for default(shared) private(Source, Blend, Multiply, Scree
         } \
       }
 
-ptImage* ptImage::Overlay(uint16_t    (*OverlayImage)[3],
-                          const float  Amount,
-                          const float  *Mask,
-                          const short   Mode /* SoftLight */,
-                          const short   Swap /* = 0 */) {
-
+ptImage* ptImage::Overlay(
+    uint16_t    (*OverlayImage)[3],
+    const float  Amount,
+    const float  *Mask,
+    const TOverlayMode Mode,
+    const bool    Swap)
+{
   const short ChannelMask = (m_ColorSpace == ptSpace_Lab)?1:7;
   float    Multiply   = 0;
   float    Screen     = 0;
@@ -2098,10 +2099,10 @@ ptImage* ptImage::Overlay(uint16_t    (*OverlayImage)[3],
   }
 
   switch (Mode) {
-    case ptOverlayMode_None: // just for completeness
+    case TOverlayMode::Disabled: // just for completeness
       break;
 
-    case ptOverlayMode_SoftLight:
+    case TOverlayMode::Softlight:
       LoopBody({
         Multiply = (float)Source*Blend*ptInvWP;
         Screen   = ptWPf - (float)ToInvertTable[Source]*ToInvertTable[Blend]*ptInvWP;
@@ -2109,38 +2110,38 @@ ptImage* ptImage::Overlay(uint16_t    (*OverlayImage)[3],
       }, Overlay)
       break;
 
-    case ptOverlayMode_Multiply:
+    case TOverlayMode::Multiply:
       LoopBody({
         Multiply = (float)Source*Blend*ptInvWP;
       }, Multiply)
       break;
 
-    case ptOverlayMode_Screen:
+    case TOverlayMode::Screen:
       LoopBody({
         Screen = ptWPf - (float)ToInvertTable[Source]*ToInvertTable[Blend]*ptInvWP;
       }, Screen)
       break;
 
-    case ptOverlayMode_GammaDark:
+    case TOverlayMode::GammaDark:
       LoopBody({
         if (Blend == 0) Multiply = 0;
         else            Multiply = ptWPf*powf(Source*ptInvWP,ptWPf/Blend);
       }, Multiply)
       break;
 
-    case ptOverlayMode_GammaBright:
+    case TOverlayMode::GammaBright:
       LoopBody({
         if (Blend == ptWP) Multiply = ptWPf;
         else               Multiply = ptWPf-ptWPf*powf(ToInvertTable[Source]*ptInvWP,ptWPf/(float)ToInvertTable[Blend]);
       }, Multiply)
       break;
 
-    case ptOverlayMode_Normal:
+    case TOverlayMode::Normal:
       LoopBody({
       }, Blend)
       break;
 
-    case ptOverlayMode_Lighten:
+    case TOverlayMode::Lighten:
       if (!Mask) {
         for (short Ch=0; Ch<3; Ch++) {
           // Is it a channel we are supposed to handle ?
@@ -2167,7 +2168,7 @@ ptImage* ptImage::Overlay(uint16_t    (*OverlayImage)[3],
       }
       break;
 
-  case ptOverlayMode_Darken:
+  case TOverlayMode::Darken:
     if (!Mask) {
       for (short Ch=0; Ch<3; Ch++) {
         // Is it a channel we are supposed to handle ?
@@ -2194,19 +2195,19 @@ ptImage* ptImage::Overlay(uint16_t    (*OverlayImage)[3],
     }
     break;
 
-    case ptOverlayMode_Overlay:
+    case TOverlayMode::Overlay:
       LoopBody({
         if (Source <= ptWPH) Overlay = Source*Blend*ptInvWP;
         else                 Overlay = ptWPf - ToInvertTable[Source]*ToInvertTable[Blend]*ptInvWP;
       }, Overlay)
       break;
 
-    case ptOverlayMode_GrainMerge:
+    case TOverlayMode::GrainMerge:
       LoopBody({
       }, (float)Blend + Source - ptWPHf)
       break;
 
-    case ptOverlayMode_ColorDodge: // a/(1-b)
+    case TOverlayMode::ColorDodge: // a/(1-b)
       LoopBody({
         if (Source == 0)     Temp = 0;
         else {
@@ -2216,7 +2217,7 @@ ptImage* ptImage::Overlay(uint16_t    (*OverlayImage)[3],
       }, Temp)
       break;
 
-    case ptOverlayMode_ColorBurn: // 1-(1-a)/b
+    case TOverlayMode::ColorBurn: // 1-(1-a)/b
       LoopBody({
         if (Source == ptWP) Temp = ptWPf;
         else {
@@ -2226,7 +2227,7 @@ ptImage* ptImage::Overlay(uint16_t    (*OverlayImage)[3],
       }, Temp)
       break;
 
-    case ptOverlayMode_ShowMask:
+    case TOverlayMode::ShowMask:
       if (Mask) {
         for (short Ch=0; Ch<3; Ch++) {
           // Is it a channel we are supposed to handle ?
@@ -2239,7 +2240,7 @@ ptImage* ptImage::Overlay(uint16_t    (*OverlayImage)[3],
       }
       break;
 
-    case ptOverlayMode_Replace: // Replace, just for testing
+    case TOverlayMode::Replace: // Replace, just for testing
       for (short Ch=0; Ch<3; Ch++) {
         // Is it a channel we are supposed to handle ?
         if  (! (ChannelMask & (1<<Ch))) continue;
@@ -2900,16 +2901,17 @@ ptImage* ptImage::SatAdjust(const double SC1, // 8 colors for saturation
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-ptImage* ptImage::Outline(const short Mode,
-                          const short GradientMode,
-                          const ptCurve *Curve,
-                          const double Weight,
-                          const double Radius,
-                          const short SwitchLayer) {
-
+ptImage* ptImage::Outline(
+    const TOverlayMode Mode,
+    const short GradientMode,
+    const ptCurve *Curve,
+    const double Weight,
+    const double Radius,
+    const bool   SwitchLayer)
+{
   assert (m_ColorSpace == ptSpace_Lab);
 
-  if (Mode == ptOverlayMode_None) return this;
+  if (Mode == TOverlayMode::Disabled) return this;
 
   ptImage *Gradient = new ptImage;
 
@@ -2921,7 +2923,7 @@ ptImage* ptImage::Outline(const short Mode,
 
   Gradient->ApplyCurve(Curve, 1);
 
-  if (Mode != ptOverlayMode_Replace)
+  if (Mode != TOverlayMode::Replace)
     Overlay(Gradient->m_Image, 1.0f, NULL, Mode, SwitchLayer);
   else
     Overlay(Gradient->m_Image, 1.0f, NULL, Mode);
@@ -2954,8 +2956,8 @@ ptImage* ptImage::ColorEnhance(const float AShadows,
       ShadowsLayer->m_Image[i][1] = ShadowsLayer->m_Image[i][2] = ShadowsLayer->m_Image[i][0];
     }
 
-    ShadowsLayer->Overlay(m_Image, 1.0, NULL, ptOverlayMode_ColorDodge, 1 /*Swap */);
-    Overlay(ShadowsLayer->m_Image, AShadows, NULL, ptOverlayMode_ColorBurn);
+    ShadowsLayer->Overlay(m_Image, 1.0, NULL, TOverlayMode::ColorDodge, 1 /*Swap */);
+    Overlay(ShadowsLayer->m_Image, AShadows, NULL, TOverlayMode::ColorBurn);
     delete ShadowsLayer;
   }
   // I trade processing time for memory, so invert and greyscale will be
@@ -2972,8 +2974,8 @@ ptImage* ptImage::ColorEnhance(const float AShadows,
       HighlightsLayer->m_Image[i][1] = HighlightsLayer->m_Image[i][2] = HighlightsLayer->m_Image[i][0];
     }
 
-    HighlightsLayer->Overlay(m_Image, 1.0, NULL, ptOverlayMode_ColorBurn, 1 /*Swap */);
-    Overlay(HighlightsLayer->m_Image, AHighlights, NULL, ptOverlayMode_ColorDodge);
+    HighlightsLayer->Overlay(m_Image, 1.0, NULL, TOverlayMode::ColorBurn, 1 /*Swap */);
+    Overlay(HighlightsLayer->m_Image, AHighlights, NULL, TOverlayMode::ColorDodge);
     delete HighlightsLayer;
   }
   return this;
@@ -3695,11 +3697,11 @@ ptImage* ptImage::BilateralDenoise(const double Threshold,
 
     float (*Mask);
     Mask = MaskLayer->GetMask(TMaskType::Shadows, 0.0, 1.0, 0.0, 1,0,0);
-    Overlay(DenoiseLayer->m_Image,Opacity,Mask,ptOverlayMode_Normal);
+    Overlay(DenoiseLayer->m_Image,Opacity,Mask,TOverlayMode::Normal);
     FREE(Mask);
     delete MaskLayer;
   } else {
-    Overlay(DenoiseLayer->m_Image,Opacity,NULL,ptOverlayMode_Normal);
+    Overlay(DenoiseLayer->m_Image,Opacity,NULL,TOverlayMode::Normal);
   }
   delete DenoiseLayer;
   return this;
@@ -3772,7 +3774,7 @@ ptImage* ptImage::ApplyDenoiseCurve(const double Threshold,
   float (*Mask);
   Mask = MaskLayer->GetMask(TMaskType::Shadows, 0.0, 1.0, 0.0, 1,0,0);
   delete MaskLayer;
-  Overlay(DenoiseLayer->m_Image,1.0f,Mask,ptOverlayMode_Normal);
+  Overlay(DenoiseLayer->m_Image,1.0f,Mask,TOverlayMode::Normal);
   FREE(Mask);
   delete DenoiseLayer;
 
@@ -4111,9 +4113,9 @@ ptImage* ptImage::Grain(const double Sigma, // 0-1
 
   Mask = GetMask(MaskType, LowerLimit, UpperLimit, 0.0);
   if (Noise < 3) {
-    Overlay(NoiseLayer->m_Image,Opacity,Mask,ptOverlayMode_SoftLight);
+    Overlay(NoiseLayer->m_Image,Opacity,Mask,TOverlayMode::Softlight);
   } else {
-    Overlay(NoiseLayer->m_Image,Opacity,Mask,ptOverlayMode_GrainMerge);
+    Overlay(NoiseLayer->m_Image,Opacity,Mask,TOverlayMode::GrainMerge);
   }
 
   delete NoiseLayer;
@@ -4276,7 +4278,7 @@ ptImage* ptImage::BWStyler(
     auto BWLayer = make_unique<ptImage>();
     BWLayer->Set(this);
     BWLayer->mixChannels(Mixer);
-    Overlay(BWLayer->m_Image, Opacity, nullptr, ptOverlayMode_Normal);
+    Overlay(BWLayer->m_Image, Opacity, nullptr, TOverlayMode::Normal);
   }
 
   return this;
@@ -4520,13 +4522,13 @@ ptImage* ptImage::Tone(
   if (MaskType <= TMaskType::All)
     Overlay(ToneImage, Amount, Mask);
   else if (MaskType == TMaskType::Screen)
-    Overlay(ToneImage, Amount, Mask, ptOverlayMode_Screen);
+    Overlay(ToneImage, Amount, Mask, TOverlayMode::Screen);
   else if (MaskType == TMaskType::Multiply)
-    Overlay(ToneImage, Amount, Mask, ptOverlayMode_Multiply);
+    Overlay(ToneImage, Amount, Mask, TOverlayMode::Multiply);
   else if (MaskType == TMaskType::GammaDark)
-    Overlay(ToneImage, Amount, Mask, ptOverlayMode_GammaDark);
+    Overlay(ToneImage, Amount, Mask, TOverlayMode::GammaDark);
   else if (MaskType == TMaskType::GammaBright)
-    Overlay(ToneImage, Amount, Mask, ptOverlayMode_GammaBright);
+    Overlay(ToneImage, Amount, Mask, TOverlayMode::GammaBright);
 
   FREE(Mask);
   FREE(ToneImage);
@@ -4599,7 +4601,7 @@ ptImage* ptImage::Crossprocess(
       assert("Unknown TCrossProcessMode");
   }
 
-  Overlay(ColorLayer->m_Image,0.7,NULL,ptOverlayMode_Normal);
+  Overlay(ColorLayer->m_Image,0.7,NULL,TOverlayMode::Normal);
   delete ColorLayer;
 
   delete RedCurve;
@@ -4708,22 +4710,23 @@ float *ptImage::GetGradualMask(const double Angle,
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-ptImage* ptImage::GradualOverlay(const uint16_t R,
-                 const uint16_t G,
-                 const uint16_t B,
-                 const short Mode,
-                 const double Amount,
-                 const double Angle,
-                 const double LowerLevel,
-                 const double UpperLevel,
-                 const double Softness) {
-
+ptImage* ptImage::GradualOverlay(
+    const uint16_t R,
+    const uint16_t G,
+    const uint16_t B,
+    const TOverlayMode Mode,
+    const double Amount,
+    const double Angle,
+    const double LowerLevel,
+    const double UpperLevel,
+    const double Softness)
+{
   float* GradualMask = GetGradualMask(Angle, LowerLevel, UpperLevel, Softness);
 
   uint16_t (*ToneImage)[3] = (uint16_t (*)[3]) CALLOC(m_Width*m_Height,sizeof(*ToneImage));
   ptMemoryError(ToneImage,__FILE__,__LINE__);
 
-#pragma omp for schedule(static)
+# pragma omp for schedule(static)
   for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
     ToneImage[i][0] = R;
     ToneImage[i][1] = G;
@@ -4774,13 +4777,13 @@ ptImage* ptImage::Vignette(const TVignetteMask VignetteMode,
         uint16_t (*ToneImage)[3] = (uint16_t (*)[3]) CALLOC(m_Width*m_Height,sizeof(*ToneImage));
         ptMemoryError(ToneImage,__FILE__,__LINE__);
         uint16_t hColor = 0;
-        short    hMode  = ptOverlayMode_SoftLight;
+        auto hMode  = TOverlayMode::Softlight;
         if (Amount > 0) {
           hColor = 0;
-          if (VignetteMode == TVignetteMask::Hard) hMode = ptOverlayMode_Multiply;
+          if (VignetteMode == TVignetteMask::Hard) hMode = TOverlayMode::Multiply;
         } else {
           hColor = 0xffff;
-          if (VignetteMode == TVignetteMask::Hard) hMode = ptOverlayMode_Screen;
+          if (VignetteMode == TVignetteMask::Hard) hMode = TOverlayMode::Screen;
       }
 
 #pragma omp parallel for schedule(static) default(shared)
@@ -4802,7 +4805,7 @@ ptImage* ptImage::Vignette(const TVignetteMask VignetteMode,
         VignetteContrastCurve->setFromFunc(ptCurve::Sigmoidal,0.5,fabs(Amount)*10);
         VignetteLayer->ApplyCurve(VignetteContrastCurve, (m_ColorSpace == ptSpace_Lab) ? 1 : 7);
         delete VignetteContrastCurve;
-        Overlay(VignetteLayer->m_Image, 1, VignetteMask, ptOverlayMode_Normal);
+        Overlay(VignetteLayer->m_Image, 1, VignetteMask, TOverlayMode::Normal);
         delete VignetteLayer;
       }
       break;
@@ -4848,7 +4851,7 @@ ptImage* ptImage::Softglow(
   BlurLayer->Set(this);
   // for Orton
   if (SoftglowMode==TSoftglowMode::OrtonScreen || SoftglowMode==TSoftglowMode::OrtonSoftlight) {
-    BlurLayer->Overlay(BlurLayer->m_Image,1.0, nullptr, ptOverlayMode_Screen);
+    BlurLayer->Overlay(BlurLayer->m_Image,1.0, nullptr, TOverlayMode::Screen);
   }
 
   // Blur
@@ -4879,23 +4882,23 @@ ptImage* ptImage::Softglow(
   // Overlay
   switch (SoftglowMode) {
     case TSoftglowMode::Lighten:
-      Overlay(BlurLayer->m_Image,Amount,nullptr,ptOverlayMode_Lighten);
+      Overlay(BlurLayer->m_Image,Amount,nullptr,TOverlayMode::Lighten);
       break;
     case TSoftglowMode::Screen:
-      Overlay(BlurLayer->m_Image,Amount,nullptr,ptOverlayMode_Screen);
+      Overlay(BlurLayer->m_Image,Amount,nullptr,TOverlayMode::Screen);
       break;
     case TSoftglowMode::Softlight:
-      Overlay(BlurLayer->m_Image,Amount,nullptr,ptOverlayMode_SoftLight);
+      Overlay(BlurLayer->m_Image,Amount,nullptr,TOverlayMode::Softlight);
       break;
     case TSoftglowMode::Normal:
       if (Amount != 0)
-        Overlay(BlurLayer->m_Image,Amount,nullptr,ptOverlayMode_Normal);
+        Overlay(BlurLayer->m_Image,Amount,nullptr,TOverlayMode::Normal);
       break;
     case TSoftglowMode::OrtonScreen:
-      Overlay(BlurLayer->m_Image,Amount,nullptr,ptOverlayMode_Screen);
+      Overlay(BlurLayer->m_Image,Amount,nullptr,TOverlayMode::Screen);
       break;
     case TSoftglowMode::OrtonSoftlight:
-      Overlay(BlurLayer->m_Image,Amount,nullptr,ptOverlayMode_SoftLight);
+      Overlay(BlurLayer->m_Image,Amount,nullptr,TOverlayMode::Softlight);
       break;
     default:
       break;
@@ -5250,7 +5253,7 @@ ptImage* ptImage::GradualBlur(const TGradualBlurMode Mode,
   }
 
   if ((Mode == TGradualBlurMode::LinearMask) || (Mode == TGradualBlurMode::VignetteMask)) {
-    Overlay(m_Image, 1, Mask, ptOverlayMode_ShowMask);
+    Overlay(m_Image, 1, Mask, TOverlayMode::ShowMask);
   } else {
     Box((uint16_t)(ceil(MaxRadius)), Mask);
   }
