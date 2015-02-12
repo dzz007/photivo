@@ -1265,50 +1265,16 @@ void ptProcessor::Run(short Phase,
         //***************************************************************************
         // Gradual Overlay
 
-        if (Settings->ToolIsActive("TabGradualOverlay1")) {
-
-          m_ReportProgress(tr("Gradual Overlay 1"));
-
-          m_Image_AfterEyeCandy->GradualOverlay(
-            (uint16_t)(0xffff*
-                       pow(Settings->GetInt("GradualOverlay1ColorRed")  /(double)0xff,
-                           Settings->GetDouble("InputPowerFactor"))),
-            (uint16_t)(0xffff*
-                       pow(Settings->GetInt("GradualOverlay1ColorGreen")/(double)0xff,
-                           Settings->GetDouble("InputPowerFactor"))),
-            (uint16_t)(0xffff*
-                       pow(Settings->GetInt("GradualOverlay1ColorBlue") /(double)0xff,
-                           Settings->GetDouble("InputPowerFactor"))),
-              Settings->GetInt("GradualOverlay1"),
-              Settings->GetDouble("GradualOverlay1Amount"),
-              Settings->GetDouble("GradualOverlay1Angle"),
-              Settings->GetDouble("GradualOverlay1LowerLevel"),
-              Settings->GetDouble("GradualOverlay1UpperLevel"),
-              Settings->GetDouble("GradualOverlay1Softness"));
-
+        hFilter = GFilterDM->GetFilterFromName(Fuid::GradualOverlay1_EyeCandy);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterEyeCandy);
         }
 
-        if (Settings->ToolIsActive("TabGradualOverlay2")) {
-
-          m_ReportProgress(tr("Gradual Overlay 2"));
-
-          m_Image_AfterEyeCandy->GradualOverlay(
-            (uint16_t)(0xffff*
-                       pow(Settings->GetInt("GradualOverlay2ColorRed")  /(double)0xff,
-                           Settings->GetDouble("InputPowerFactor"))),
-            (uint16_t)(0xffff*
-                       pow(Settings->GetInt("GradualOverlay2ColorGreen")/(double)0xff,
-                           Settings->GetDouble("InputPowerFactor"))),
-            (uint16_t)(0xffff*
-                       pow(Settings->GetInt("GradualOverlay2ColorBlue") /(double)0xff,
-                           Settings->GetDouble("InputPowerFactor"))),
-              Settings->GetInt("GradualOverlay2"),
-              Settings->GetDouble("GradualOverlay2Amount"),
-              Settings->GetDouble("GradualOverlay2Angle"),
-              Settings->GetDouble("GradualOverlay2LowerLevel"),
-              Settings->GetDouble("GradualOverlay2UpperLevel"),
-              Settings->GetDouble("GradualOverlay2Softness"));
-
+        hFilter = GFilterDM->GetFilterFromName(Fuid::GradualOverlay2_EyeCandy);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterEyeCandy);
         }
 
 

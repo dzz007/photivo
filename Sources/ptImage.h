@@ -200,11 +200,12 @@ public:
   ptImage* GammaTool(const float AStrength, const float ALinearity);
 
   // Overlay
-  ptImage* Overlay(uint16_t (*OverlayImage)[3],
-                   const float Amount,
-                   const float *Mask = NULL,
-                   const short Mode = ptOverlayMode_SoftLight,
-                   const short Swap = 0);
+  ptImage* Overlay(
+      uint16_t (*OverlayImage)[3],
+      const float Amount,
+      const float *Mask = nullptr,
+      const TOverlayMode Mode = TOverlayMode::Softlight,
+      const bool Swap = false);
 
   // Flip
   ptImage* Flip(const short FlipMode);
@@ -257,12 +258,12 @@ public:
                      const double SC8);
 
   // Outline
-  ptImage* Outline(const short Mode,
-                   const short GradientMode,
-                   const ptCurve *Curve,
-                   const double Weight,
-                   const double Radius,
-                   const short SwitchLayer);
+  ptImage* Outline(const TOverlayMode Mode,
+      const short GradientMode,
+      const ptCurve *Curve,
+      const double Weight,
+      const double Radius,
+      const bool   SwitchLayer);
 
   // Color Enhance
   ptImage* ColorEnhance(const float AShadows,
@@ -415,15 +416,16 @@ public:
                         const double Softness);
 
   // Gradual Overlay
-  ptImage* GradualOverlay(const uint16_t R,
-              const uint16_t G,
-              const uint16_t B,
-              const short Mode,
-              const double Amount,
-              const double Angle,
-              const double LowerLevel,
-              const double UpperLevel,
-              const double Softness);
+  ptImage* GradualOverlay(
+      const uint16_t R,
+      const uint16_t G,
+      const uint16_t B,
+      const TOverlayMode Mode,
+      const double Amount,
+      const double Angle,
+      const double LowerLevel,
+      const double UpperLevel,
+      const double Softness);
 
   // Vignette
   ptImage* Vignette(const TVignetteMask VignetteMode,

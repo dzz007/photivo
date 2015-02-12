@@ -59,17 +59,17 @@ ptFilterBase *ptFilter_Outline::CreateOutline() {
 
 void ptFilter_Outline::doDefineControls() {
   QList<ptCfgItem::TComboEntry> hOverlayModes;
-  hOverlayModes.append({tr("Disabled"), ptOverlayMode_None, "none"});
-  hOverlayModes.append({tr("SoftLight"), ptOverlayMode_SoftLight, "softlight"});
-  hOverlayModes.append({tr("Multiply"), ptOverlayMode_Multiply, "multiply"});
-  hOverlayModes.append({tr("Screen"), ptOverlayMode_Screen, "screen"});
-  hOverlayModes.append({tr("Gamma dark"), ptOverlayMode_GammaDark, "gammadark"});
-  hOverlayModes.append({tr("Gamma bright"), ptOverlayMode_GammaBright, "gammabright"});
-  hOverlayModes.append({tr("Color burn"), ptOverlayMode_ColorBurn, "colorburn"});
-  hOverlayModes.append({tr("Color dodge"), ptOverlayMode_ColorDodge, "colordodge"});
-  hOverlayModes.append({tr("Darken only"), ptOverlayMode_Darken, "darken"});
-  hOverlayModes.append({tr("Lighten only"), ptOverlayMode_Lighten, "lighten"});
-  hOverlayModes.append({tr("Show outlines"), ptOverlayMode_Replace, "outlines"});
+  hOverlayModes.append({tr("Disabled"),      static_cast<int>(TOverlayMode::Disabled),    "none"});
+  hOverlayModes.append({tr("SoftLight"),     static_cast<int>(TOverlayMode::Softlight),   "softlight"});
+  hOverlayModes.append({tr("Multiply"),      static_cast<int>(TOverlayMode::Multiply),    "multiply"});
+  hOverlayModes.append({tr("Screen"),        static_cast<int>(TOverlayMode::Screen),      "screen"});
+  hOverlayModes.append({tr("Gamma dark"),    static_cast<int>(TOverlayMode::GammaDark),   "gammadark"});
+  hOverlayModes.append({tr("Gamma bright"),  static_cast<int>(TOverlayMode::GammaBright), "gammabright"});
+  hOverlayModes.append({tr("Color burn"),    static_cast<int>(TOverlayMode::ColorBurn),   "colorburn"});
+  hOverlayModes.append({tr("Color dodge"),   static_cast<int>(TOverlayMode::ColorDodge),  "colordodge"});
+  hOverlayModes.append({tr("Darken only"),   static_cast<int>(TOverlayMode::Darken),      "darken"});
+  hOverlayModes.append({tr("Lighten only"),  static_cast<int>(TOverlayMode::Lighten),     "lighten"});
+  hOverlayModes.append({tr("Show outlines"), static_cast<int>(TOverlayMode::Replace),     "outlines"});
 
   QList<ptCfgItem::TComboEntry> hGradientModes;
   hGradientModes.append({tr("Backward finite differences"), ptGradientMode_Backward, "backward"});
@@ -82,7 +82,7 @@ void ptFilter_Outline::doDefineControls() {
   FConfig.initStores(TCfgItemList()                                      //--- Combo: list of entries               ---//
                                                                          //--- Check: not available                 ---//
     //            Id               Type                      Default     Min           Max           Step        Decimals, commonConnect, storeable, caption, tooltip
-    << ptCfgItem({COverlayMode,    ptCfgItem::Combo,         ptOverlayMode_None, hOverlayModes,                            true, true, tr("Overlay mode"),   tr("")})
+    << ptCfgItem({COverlayMode,    ptCfgItem::Combo,         static_cast<int>(TOverlayMode::Disabled), hOverlayModes,      true, true, tr("Overlay mode"),   tr("")})
     << ptCfgItem({CImageOnTop,     ptCfgItem::Check,         false,                                                        true, true, tr("Image on top"), tr("Overlay the image on top of the outlines instead of vice versa")})
     << ptCfgItem({CGradientMode,   ptCfgItem::Combo,         ptGradientMode_Backward, hGradientModes,                      true, true, tr("Outlines mode"),   tr("Method for calculating the outline gradients")})
     << ptCfgItem({CColorWeight,    ptCfgItem::Slider,        1.0,        0.0,          5.0,          0.5,        2,        true, true, tr("Color weight"), tr("Weight of the A/B channels in the outlines calculation")})
@@ -109,19 +109,20 @@ QWidget *ptFilter_Outline::doCreateGui() {
 //==============================================================================
 
 bool ptFilter_Outline::doCheckHasActiveCfg() {
-  return FConfig.value(COverlayMode).toInt() != 0;
+  return static_cast<TOverlayMode>(FConfig.value(COverlayMode).toInt()) != TOverlayMode::Disabled;
 }
 
 //==============================================================================
 
 void ptFilter_Outline::doRunFilter(ptImage *AImage) {
   AImage->toLab();
-  AImage->Outline(FConfig.value(COverlayMode).toInt(),
-                  FConfig.value(CGradientMode).toInt(),
-                  FConfig.items()[cfgIdx(CCurve)].Curve.get(),
-                  FConfig.value(CColorWeight).toDouble(),
-                  FConfig.value(CBlurRadius).toDouble(),
-                  FConfig.value(CImageOnTop).toBool());
+  AImage->Outline(
+      static_cast<TOverlayMode>(FConfig.value(COverlayMode).toInt()),
+      FConfig.value(CGradientMode).toInt(),
+      FConfig.items()[cfgIdx(CCurve)].Curve.get(),
+      FConfig.value(CColorWeight).toDouble(),
+      FConfig.value(CBlurRadius).toDouble(),
+      FConfig.value(CImageOnTop).toBool());
 }
 
 //==============================================================================

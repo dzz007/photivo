@@ -27,7 +27,6 @@
 #include "ptConstants.h"
 #include "ptError.h"
 #include "ptGuiOptions.h"
-//#include "ptLensfun.h"    // TODO BJ: implement lensfun DB
 #include "ptMainWindow.h"
 #include "ptMessageBox.h"
 #include "ptSettings.h"
@@ -394,22 +393,6 @@ ptMainWindow::ptMainWindow(const QString Title)
   Macro_ConnectSomeButton(TextureOverlayClear);
   Macro_ConnectSomeButton(TextureOverlay2);
   Macro_ConnectSomeButton(TextureOverlay2Clear);
-
-  Macro_ConnectSomeButton(GradualOverlay1Color);
-  Macro_ConnectSomeButton(GradualOverlay2Color);
-
-  QPixmap Pix(80, 14);
-  QColor  Color;
-  Color.setRed(Settings->GetInt("GradualOverlay1ColorRed"));
-  Color.setGreen(Settings->GetInt("GradualOverlay1ColorGreen"));
-  Color.setBlue(Settings->GetInt("GradualOverlay1ColorBlue"));
-  Pix.fill(Color);
-  GradualOverlay1ColorButton->setIcon(Pix);
-  Color.setRed(Settings->GetInt("GradualOverlay2ColorRed"));
-  Color.setGreen(Settings->GetInt("GradualOverlay2ColorGreen"));
-  Color.setBlue(Settings->GetInt("GradualOverlay2ColorBlue"));
-  Pix.fill(Color);
-  GradualOverlay2ColorButton->setIcon(Pix);
 
   //
   // TAB : Output
@@ -1410,16 +1393,6 @@ void ptMainWindow::OnTextureOverlay2ClearButtonClicked() {
 }
 
 
-void CB_GradualOverlay1ColorButton();
-void ptMainWindow::OnGradualOverlay1ColorButtonClicked() {
-  ::CB_GradualOverlay1ColorButton();
-}
-
-void CB_GradualOverlay2ColorButton();
-void ptMainWindow::OnGradualOverlay2ColorButtonClicked() {
-  ::CB_GradualOverlay2ColorButton();
-}
-
 // Tab : Output
 
 void CB_OutputColorProfileResetButton();
@@ -2229,20 +2202,6 @@ void ptMainWindow::UpdateSettings() {
     Settings->SetEnabled("TextureOverlay2CenterY",0);
     Settings->SetEnabled("TextureOverlay2Softness",0);
   }
-
-  // Color buttons
-  QPixmap Pix(80, 14);
-  QColor  Color;
-  Color.setRed(Settings->GetInt("GradualOverlay1ColorRed"));
-  Color.setGreen(Settings->GetInt("GradualOverlay1ColorGreen"));
-  Color.setBlue(Settings->GetInt("GradualOverlay1ColorBlue"));
-  Pix.fill(Color);
-  GradualOverlay1ColorButton->setIcon(Pix);
-  Color.setRed(Settings->GetInt("GradualOverlay2ColorRed"));
-  Color.setGreen(Settings->GetInt("GradualOverlay2ColorGreen"));
-  Color.setBlue(Settings->GetInt("GradualOverlay2ColorBlue"));
-  Pix.fill(Color);
-  GradualOverlay2ColorButton->setIcon(Pix);
 
   // sRGB gamma compensation
   Settings->SetEnabled("OutputGamma",Settings->GetInt("OutputGammaCompensation"));

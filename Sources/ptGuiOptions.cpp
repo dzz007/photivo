@@ -380,36 +380,6 @@ const ptGuiOptionsItem ptGuiOptions::FlipMode[] = {
   {ptFlipMode_Vertical,          QObject::tr("Vertical flip") },
   {-1,NULL}};
 
-const ptGuiOptionsItem ptGuiOptions::OverlayMode[] = {
-  {ptOverlayMode_None,              QObject::tr("Disabled") },
-  {ptOverlayMode_SoftLight,         QObject::tr("SoftLight") },
-  {ptOverlayMode_Multiply,          QObject::tr("Multiply") },
-  {ptOverlayMode_Screen,            QObject::tr("Screen") },
-  {ptOverlayMode_GammaDark,         QObject::tr("Gamma dark") },
-  {ptOverlayMode_GammaBright,       QObject::tr("Gamma bright") },
-  {ptOverlayMode_ColorBurn,         QObject::tr("Color burn") },
-  {ptOverlayMode_ColorDodge,        QObject::tr("Color dodge") },
-  {ptOverlayMode_Normal,            QObject::tr("Normal") },
-  {ptOverlayMode_Replace,           QObject::tr("Replace") },
-//  {ptOverlayMode_Overlay,           QObject::tr("Overlay") },
-  {ptOverlayMode_ShowMask,          QObject::tr("Show Mask") },
-  {-1,NULL}};
-
-const ptGuiOptionsItem ptGuiOptions::OutlineMode[] = {
-  {ptOverlayMode_None,              QObject::tr("Disabled") },
-  {ptOverlayMode_SoftLight,         QObject::tr("SoftLight") },
-  {ptOverlayMode_Multiply,          QObject::tr("Multiply") },
-  {ptOverlayMode_Screen,            QObject::tr("Screen") },
-  {ptOverlayMode_GammaDark,         QObject::tr("Gamma dark") },
-  {ptOverlayMode_GammaBright,       QObject::tr("Gamma bright") },
-  {ptOverlayMode_ColorBurn,         QObject::tr("Color burn") },
-  {ptOverlayMode_ColorDodge,        QObject::tr("Color dodge") },
-  {ptOverlayMode_Darken,            QObject::tr("Darken only") },
-  {ptOverlayMode_Lighten,           QObject::tr("Lighten only") },
-  {ptOverlayMode_Replace,           QObject::tr("Show outlines") },
-//  {ptOverlayMode_Overlay,           QObject::tr("Overlay") },
-  {-1,NULL}};
-
 const ptGuiOptionsItem ptGuiOptions::OverlayMaskMode[] = {
   {ptOverlayMaskMode_FullImage,     QObject::tr("Full image") },
   {ptOverlayMaskMode_Vignette,      QObject::tr("Vignette") },

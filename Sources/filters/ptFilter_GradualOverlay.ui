@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>GradualOverlayForm</class>
+ <widget class="QWidget" name="GradualOverlayForm">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>109</width>
+    <height>158</height>
+   </rect>
+  </property>
+  <layout class="QVBoxLayout" name="MainLayout">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="QWidget" name="widget" native="true">
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <property name="sizeConstraint">
+       <enum>QLayout::SetFixedSize</enum>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="ptChoice" name="Mode"/>
+      </item>
+      <item>
+       <widget class="ptColorSelectButton" name="Color"/>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>2</width>
+          <height>5</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="ptInput" name="Strength"/>
+   </item>
+   <item>
+    <widget class="ptInput" name="Angle"/>
+   </item>
+   <item>
+    <widget class="ptInput" name="LowerLevel"/>
+   </item>
+   <item>
+    <widget class="ptInput" name="UpperLevel"/>
+   </item>
+   <item>
+    <widget class="ptInput" name="Softness"/>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>ptInput</class>
+   <extends>QProgressBar</extends>
+   <header>ptInput.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ptChoice</class>
+   <extends>QComboBox</extends>
+   <header>ptChoice.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ptColorSelectButton</class>
+   <extends>QToolButton</extends>
+   <header>ptColorSelectButton.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
