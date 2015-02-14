@@ -126,6 +126,15 @@ ptCfgItem::ptCfgItem(const ptCfgItem::TCustom& AValues):
   init();
 }
 
+ptCfgItem::ptCfgItem(const ptCfgItem::TGeneric& AValue):
+  Id(AValue.Id),
+  Type(Generic),
+  Storable(AValue.Storable),
+  Default(AValue.Default)
+{
+  init();
+}
+
 //==============================================================================
 
 void ptCfgItem::init() {

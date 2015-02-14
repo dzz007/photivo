@@ -49,6 +49,7 @@ public:
     SpinEdit,                       //!< ptInput: Simple input field for numbers.
     Slider,                         //!< ptInput: Input of numbers via a slider.
     HueSlider,                      //!< ptInput: Slider with an added hue bar.
+    Generic,                        //!< generic value without associated GUI element
     // Widgets stored in in the custom store
     CurveWin = CFirstCustomType,    //!< ptCurveWindow
     CustomType                      //!< any user defined type implementing ptStorable
@@ -121,6 +122,12 @@ public:
     ptStorable*               Object;
   };
 
+  struct TGeneric {
+    QString  Id;
+    QVariant Default;
+    bool     Storable;
+  };
+
 
 public:
   /* NOTE: ptCfgItem basically does same thing that ptSettings does. The class is needed for nice
@@ -136,6 +143,7 @@ public:
   ptCfgItem(const TInput&  AValues);
   ptCfgItem(const TCurve&  AValues);
   ptCfgItem(const TCustom& AValues);
+  ptCfgItem(const TGeneric& AValue);
   ///@}
 
   /*! Performs a type and range check of `AValue` according to the requirements of this `ptCfgItem`
