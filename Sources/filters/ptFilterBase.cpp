@@ -433,12 +433,15 @@ void ptFilterBase::initDesignerGui(QWidget *AGuiBody) {
 
 //==============================================================================
 
-/*! Creates a Photivo custom widget and returns a pointer to the widget.
+/*! Creates a Photivo custom widget.
     \param ACfgItem
       The config data for the new widget. ACfgItem.Type determines the concrete type of the
-      created object.
+      created object. Type must *not* be ptCfgItem::CustomType.
     \param AParent
       The new widget’s parent is set to \c AParent.
+    \returns
+      A pointer to the widget. Caller is responsible that resource. For non-GUI elements
+      nullptr is returned.
  */
 ptWidget* ptFilterBase::createWidgetByType(const ptCfgItem &ACfgItem, QWidget *AParent) {
   switch (ACfgItem.Type) {
@@ -448,6 +451,7 @@ ptWidget* ptFilterBase::createWidgetByType(const ptCfgItem &ACfgItem, QWidget *A
   case ptCfgItem::SpinEdit:          // fall through
   case ptCfgItem::Slider:            // fall through
   case ptCfgItem::HueSlider:         return new ptInput(ACfgItem, AParent);
+  case ptCfgItem::Generic:           return nullptr;
   case ptCfgItem::CurveWin:          return new ptCurveWindow(ACfgItem, AParent);
 
   default:
