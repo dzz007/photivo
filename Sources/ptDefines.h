@@ -58,6 +58,19 @@ std::unique_ptr<T> make_unique(Args&& ...args) {
 }
 
 // -----------------------------------------------------------------------------
+
+// c_unique_ptr: A unique_ptr for C-style malloc/free resources.
+namespace pt {
+  namespace detail {
+    struct c_deleter {
+      void operator()(void* ptr) { std::free(ptr); }
+    };
+  }
+  template<typename T>
+  using c_unique_ptr = std::unique_ptr<T, detail::c_deleter>;
+}
+
+// -----------------------------------------------------------------------------
 /*!
  * TMatrix ist a 2-dimensional std::array with the same declaration syntax as a
  * C-style array, i.e. first dimension for rows, second dimension for columns.
