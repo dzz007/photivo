@@ -25,6 +25,7 @@
 #include "ptCfgItem.h"
 #include "ptFilterUids.h"
 #include "../ptConstants.h"
+#include "../ptGuiOptions.h"
 #include "../ptImage.h"
 #include "../ptSettings.h"
 #include <QColor>
@@ -71,20 +72,6 @@ void ptFilter_GradualOverlay::doAfterInit() {
 //------------------------------------------------------------------------------
 
 void ptFilter_GradualOverlay::doDefineControls() {
-  const ptCfgItem::TComboEntryList modes({
-    {tr("Disabled"),     static_cast<int>(TOverlayMode::Disabled),    "Disabled"},
-    {tr("Softlight"),    static_cast<int>(TOverlayMode::Softlight),   "Softlight"},
-    {tr("Multiply"),     static_cast<int>(TOverlayMode::Multiply),    "Multiply"},
-    {tr("Screen"),       static_cast<int>(TOverlayMode::Screen),      "Screen"},
-    {tr("Gamma dark"),   static_cast<int>(TOverlayMode::GammaDark),   "GammaDark"},
-    {tr("Gamma bright"), static_cast<int>(TOverlayMode::GammaBright), "GammaBright"},
-    {tr("Color burn"),   static_cast<int>(TOverlayMode::ColorBurn),   "ColorBurn"},
-    {tr("Color dodge"),  static_cast<int>(TOverlayMode::ColorDodge),  "ColorDodge"},
-    {tr("Normal"),       static_cast<int>(TOverlayMode::Normal),      "Normal"},
-    {tr("Replace"),      static_cast<int>(TOverlayMode::Replace),     "Replace"},
-    {tr("Show Mask"),    static_cast<int>(TOverlayMode::ShowMask),    "ShowMask"},
-  });
-
   QColor defaultColor(0, 0, 0);
   if (this->uniqueName() == Fuid::GradualOverlay2_EyeCandy) {
     defaultColor.setRgb(255, 200, 0);
@@ -92,8 +79,8 @@ void ptFilter_GradualOverlay::doDefineControls() {
 
   FConfig.initStores(TCfgItemList()                                              //--- Combo: list of entries               ---//
     //            Id            Type                      Default     Min           Max           Step        Decimals, commonConnect, storeable, caption, tooltip
-    << ptCfgItem({CMode,        ptCfgItem::Combo,         static_cast<int>(TOverlayMode::Disabled), modes,              true, true, tr("Mode"), tr("overlay mode")})
-    << ptCfgItem({CColor,       ptCfgItem::ColorSelectButton, defaultColor,                                             true, true, tr("overlay color")})
+    << ptCfgItem({CMode,        ptCfgItem::Combo, static_cast<int>(TOverlayMode::Disabled), pt::ComboEntries::OverlayModes, true, true, tr("Mode"), tr("overlay mode")})
+    << ptCfgItem(ptCfgItem::TColorSelectButton{CColor, ptCfgItem::ColorSelectButton, defaultColor,                      true, true, tr("overlay color")})
     << ptCfgItem({CStrength,    ptCfgItem::Slider,        0.5,        0.0,          1.0,          0.1,        2,        true, true, tr("Strength"), tr("")})
     << ptCfgItem({CAngle,       ptCfgItem::Slider,        0,         -180,          180,          5,          0,        true, true, tr("Angle"), tr("")})
     << ptCfgItem({CLowerLevel,  ptCfgItem::Slider,        0.5,        0.0,          3.0,          0.1,        2,        true, true, tr("Lower level"), tr("")})

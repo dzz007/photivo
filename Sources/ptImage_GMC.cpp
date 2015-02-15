@@ -187,7 +187,7 @@ ptImage* ptImage::ptGMCOpenImage(const char*        FileName,
                                  short              ScaleFactor,
                                  bool               IsRAW,
                                  TImage8RawData*    ImgData,
-                                 int&               Success)
+                                 bool&              Success)
 {
   Success = 0;
 

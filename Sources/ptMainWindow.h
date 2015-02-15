@@ -270,14 +270,6 @@ private slots:
   void OnCropCenterHorButtonClicked();
   void OnCropCenterVertButtonClicked();
 
-  void OnTextureOverlayButtonClicked();
-  void OnTextureOverlayClearButtonClicked();
-  void OnTextureOverlay2ButtonClicked();
-  void OnTextureOverlay2ClearButtonClicked();
-
-  void OnGradualOverlay1ColorButtonClicked();
-  void OnGradualOverlay2ColorButtonClicked();
-
   void OnOutputColorProfileResetButtonClicked();
   void OnWritePipeButtonClicked();
 

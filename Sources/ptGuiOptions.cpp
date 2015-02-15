@@ -52,6 +52,20 @@ namespace pt {
       {QObject::tr("All values"), static_cast<int>(TMaskType::All),        "AllValues"},
     });
 
+    const ptCfgItem::TComboEntryList OverlayModes({
+      {QObject::tr("Disabled"),     static_cast<int>(TOverlayMode::Disabled),    "Disabled"},
+      {QObject::tr("Softlight"),    static_cast<int>(TOverlayMode::Softlight),   "Softlight"},
+      {QObject::tr("Multiply"),     static_cast<int>(TOverlayMode::Multiply),    "Multiply"},
+      {QObject::tr("Screen"),       static_cast<int>(TOverlayMode::Screen),      "Screen"},
+      {QObject::tr("Gamma dark"),   static_cast<int>(TOverlayMode::GammaDark),   "GammaDark"},
+      {QObject::tr("Gamma bright"), static_cast<int>(TOverlayMode::GammaBright), "GammaBright"},
+      {QObject::tr("Color burn"),   static_cast<int>(TOverlayMode::ColorBurn),   "ColorBurn"},
+      {QObject::tr("Color dodge"),  static_cast<int>(TOverlayMode::ColorDodge),  "ColorDodge"},
+      {QObject::tr("Normal"),       static_cast<int>(TOverlayMode::Normal),      "Normal"},
+      {QObject::tr("Replace"),      static_cast<int>(TOverlayMode::Replace),     "Replace"},
+      {QObject::tr("Show Mask"),    static_cast<int>(TOverlayMode::ShowMask),    "ShowMask"},
+    });
+
     const ptCfgItem::TComboEntryList VignetteShapes({
       {QObject::tr("Diamond"),               static_cast<int>(TVignetteShape::Diamond), "Diamond"},
       {QObject::tr("Circle"),                static_cast<int>(TVignetteShape::Circle),  "Circle"},
@@ -378,12 +392,6 @@ const ptGuiOptionsItem ptGuiOptions::FlipMode[] = {
   {ptFlipMode_None,              QObject::tr("No flip") },
   {ptFlipMode_Horizontal,        QObject::tr("Horizontal flip") },
   {ptFlipMode_Vertical,          QObject::tr("Vertical flip") },
-  {-1,NULL}};
-
-const ptGuiOptionsItem ptGuiOptions::OverlayMaskMode[] = {
-  {ptOverlayMaskMode_FullImage,     QObject::tr("Full image") },
-  {ptOverlayMaskMode_Vignette,      QObject::tr("Vignette") },
-  {ptOverlayMaskMode_InvVignette,   QObject::tr("Inv vignette") },
   {-1,NULL}};
 
 const ptGuiOptionsItem ptGuiOptions::Enable[] = {

@@ -36,6 +36,7 @@ namespace pt {
     extern const ptCfgItem::TComboEntryList FilterModes;
     extern const ptCfgItem::TComboEntryList MaskedFilterModes;
     extern const ptCfgItem::TComboEntryList MaskTypes;
+    extern const ptCfgItem::TComboEntryList OverlayModes;
     extern const ptCfgItem::TComboEntryList VignetteShapes;
   }
 
@@ -102,7 +103,6 @@ public:
   static const ptGuiOptionsItem LABTransformMode[];
   static const ptGuiOptionsItem SpecialPreview[];
   static const ptGuiOptionsItem FlipMode[];
-  static const ptGuiOptionsItem OverlayMaskMode[];
   static const ptGuiOptionsItem Enable[];
   static const ptGuiOptionsItem SaveFormat[];
   static const ptGuiOptionsItem SaveSampling[];

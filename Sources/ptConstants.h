@@ -490,11 +490,11 @@ enum class TOverlayMode: int {
   Darken
 };
 
-// OverlayMaskMode
-
-const short ptOverlayMaskMode_FullImage   = 0;
-const short ptOverlayMaskMode_Vignette    = 1;
-const short ptOverlayMaskMode_InvVignette = 2;
+enum class TTextureOverlayMaskMode: int {
+  Full,
+  Vignette,
+  InvVignette
+};
 
 enum class TVignetteMask: int {
   Disabled,
@@ -505,7 +505,7 @@ enum class TVignetteMask: int {
 };
 
 enum class TVignetteShape: int {
-  // ptImage::Vignette() relies on the integer values. Do not change them.
+  // ptImage::GetVignetteMask relies on the integer values. Do not change them.
   Diamond = 1,
   Circle  = 2,
   Rect1   = 3,
@@ -518,7 +518,7 @@ enum class TVignetteShape: int {
   Rect8   = 10
 };
 
-enum class TSoftglowMode {
+enum class TSoftglowMode: int {
   Disabled,
   Lighten,
   Screen,

@@ -179,6 +179,10 @@ QVariant ptCfgItem::validate(const QVariant &AValue) const {
 //==============================================================================
 
 void ptCfgItem::ensureVariantType(QVariant &AValue) const {
+  if (FIntendedType == QMetaType::User) {
+    return;
+  }
+
   if (static_cast<QMetaType::Type>(AValue.type()) != FIntendedType) {
     if (!AValue.convert(FIntendedType)) {
       GInfo->Raise(QString("Could not cast QVariant with value \"%1\" from type \"%2\" to "
@@ -192,7 +196,10 @@ void ptCfgItem::ensureVariantType(QVariant &AValue) const {
 //==============================================================================
 
 void ptCfgItem::setVariantType() {
-  if (this->Type == ColorSelectButton) {
+  if (this->Type == Generic) {
+    FIntendedType = QMetaType::User;
+
+  } else if (this->Type == ColorSelectButton) {
     FIntendedType = QMetaType::QColor;
 
   } else if (this->Type >= CFirstCustomType) {

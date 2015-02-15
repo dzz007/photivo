@@ -383,6 +383,8 @@ void CreateAllFilters() {
   GFilterDM->NewFilter("ColorTone",             Fuid::ColorTone1_EyeCandy,          " I");
   GFilterDM->NewFilter("ColorTone",             Fuid::ColorTone2_EyeCandy,          " II");
   GFilterDM->NewFilter("SigContrastRgb",        Fuid::SigContrastRgb_EyeCandy);
+  GFilterDM->NewFilter("TextureOverlay",        Fuid::TextureOverlay1_EyeCandy,     " I");
+  GFilterDM->NewFilter("TextureOverlay",        Fuid::TextureOverlay2_EyeCandy,     " II");
   GFilterDM->NewFilter("GradualOverlay",        Fuid::GradualOverlay1_EyeCandy,     " I");
   GFilterDM->NewFilter("GradualOverlay",        Fuid::GradualOverlay2_EyeCandy,     " II");
   GFilterDM->NewFilter("VignetteRgb",           Fuid::Vignette_EyeCandy);
@@ -4930,159 +4932,6 @@ void CB_AutomaticPipeSizeCheck(const QVariant Check) {
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Callbacks pertaining to the EyeCandy Tab
-// Partim Texture Overlay
-//
-////////////////////////////////////////////////////////////////////////////////
-
-void CB_TextureOverlayMaskChoice(const QVariant Choice) {
-  Settings->SetValue("TextureOverlayMask",Choice);
-  if (Settings->ToolIsActive("TabTextureOverlay")) {
-    Update(ptProcessorPhase_EyeCandy);
-  } else {
-    MainWindow->UpdateSettings();
-  }
-}
-
-void CB_TextureOverlayButton() {
-  QString Directory = "";
-  if (Settings->GetString("TextureOverlayFile")!="") {
-    QFileInfo PathInfo(Settings->GetString("TextureOverlayFile"));
-    Directory = PathInfo.absolutePath();
-  } else {
-    Directory = Settings->GetString("UserDirectory");
-  }
-
-  QString TextureOverlayString = QFileDialog::getOpenFileName(NULL,
-    QObject::tr("Get texture bitmap file"),
-    Directory,
-    BitmapPattern);
-
-  if (0 == TextureOverlayString.size() ) {
-    // Canceled just return
-    return;
-  } else {
-    QFileInfo PathInfo(TextureOverlayString);
-    Settings->SetValue("TextureOverlayFile",PathInfo.absoluteFilePath());
-  }
-
-  // Reflect in gui.
-  if (Settings->ToolIsActive("TabTextureOverlay")) {
-    // free old one
-    if (TheProcessor->m_Image_TextureOverlay) {
-      delete TheProcessor->m_Image_TextureOverlay;
-      TheProcessor->m_Image_TextureOverlay = NULL;
-    }
-    Update(ptProcessorPhase_EyeCandy);
-  } else {
-    MainWindow->UpdateSettings();
-  }
-}
-
-void CB_TextureOverlayClearButton() {
-  if (TheProcessor->m_Image_TextureOverlay) {
-    delete TheProcessor->m_Image_TextureOverlay;
-    TheProcessor->m_Image_TextureOverlay = NULL;
-  }
-  Settings->SetValue("TextureOverlayFile","");
-  if (Settings->ToolIsActive("TabTextureOverlay")) {
-    Settings->SetValue("TextureOverlayMode",0);
-    Update(ptProcessorPhase_EyeCandy);
-  } else {
-    MainWindow->UpdateSettings();
-  }
-}
-
-void CB_TextureOverlayInnerRadiusInput(const QVariant Value) {
-  Settings->SetValue("TextureOverlayInnerRadius",MIN(Value.toDouble(), Settings->GetDouble("TextureOverlayOuterRadius")));
-  if (Settings->ToolIsActive("TabTextureOverlay")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
-void CB_TextureOverlayOuterRadiusInput(const QVariant Value) {
-  Settings->SetValue("TextureOverlayOuterRadius",MAX(Value.toDouble(), Settings->GetDouble("TextureOverlayInnerRadius")));
-  if (Settings->ToolIsActive("TabTextureOverlay")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
-// Texture Overlay 2
-
-void CB_TextureOverlay2MaskChoice(const QVariant Choice) {
-  Settings->SetValue("TextureOverlay2Mask",Choice);
-  if (Settings->ToolIsActive("TabTextureOverlay2")) {
-    Update(ptProcessorPhase_EyeCandy);
-  } else {
-    MainWindow->UpdateSettings();
-  }
-}
-
-void CB_TextureOverlay2Button() {
-  QString Directory = "";
-  if (Settings->GetString("TextureOverlay2File")!="") {
-    QFileInfo PathInfo(Settings->GetString("TextureOverlay2File"));
-    Directory = PathInfo.absolutePath();
-  } else {
-    Directory = Settings->GetString("UserDirectory");
-  }
-
-  QString TextureOverlay2String = QFileDialog::getOpenFileName(NULL,
-    QObject::tr("Get texture bitmap file"),
-    Directory,
-    BitmapPattern);
-
-  if (0 == TextureOverlay2String.size() ) {
-    // Canceled just return
-    return;
-  } else {
-    QFileInfo PathInfo(TextureOverlay2String);
-    Settings->SetValue("TextureOverlay2File",PathInfo.absoluteFilePath());
-  }
-
-  // Reflect in gui.
-  if (Settings->ToolIsActive("TabTextureOverlay2")) {
-    // free old one
-    if (TheProcessor->m_Image_TextureOverlay2) {
-      delete TheProcessor->m_Image_TextureOverlay2;
-      TheProcessor->m_Image_TextureOverlay2 = NULL;
-    }
-    Update(ptProcessorPhase_EyeCandy);
-  } else {
-    MainWindow->UpdateSettings();
-  }
-}
-
-void CB_TextureOverlay2ClearButton() {
-  if (TheProcessor->m_Image_TextureOverlay2) {
-    delete TheProcessor->m_Image_TextureOverlay2;
-    TheProcessor->m_Image_TextureOverlay2 = NULL;
-  }
-  Settings->SetValue("TextureOverlay2File","");
-  if (Settings->ToolIsActive("TabTextureOverlay2")) {
-    Settings->SetValue("TextureOverlay2Mode",0);
-    Update(ptProcessorPhase_EyeCandy);
-  } else {
-    MainWindow->UpdateSettings();
-  }
-}
-
-void CB_TextureOverlay2InnerRadiusInput(const QVariant Value) {
-  Settings->SetValue("TextureOverlay2InnerRadius",MIN(Value.toDouble(), Settings->GetDouble("TextureOverlay2OuterRadius")));
-  if (Settings->ToolIsActive("TabTextureOverlay2")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
-void CB_TextureOverlay2OuterRadiusInput(const QVariant Value) {
-  Settings->SetValue("TextureOverlay2OuterRadius",MAX(Value.toDouble(), Settings->GetDouble("TextureOverlay2InnerRadius")));
-  if (Settings->ToolIsActive("TabTextureOverlay2")) {
-    Update(ptProcessorPhase_EyeCandy);
-  }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-//
 // Callbacks pertaining to Out Tab
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -5432,30 +5281,6 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(FlipModeChoice)
 
   M_Dispatch(GeometryBlockCheck)
-
-
-  M_SetAndRunDispatch(TextureOverlayModeChoice)
-  M_Dispatch(TextureOverlayMaskChoice)
-  M_SetAndRunDispatch(TextureOverlayOpacityInput)
-  M_SetAndRunDispatch(TextureOverlaySaturationInput)
-  M_SetAndRunDispatch(TextureOverlayExponentInput)
-  M_Dispatch(TextureOverlayInnerRadiusInput)
-  M_Dispatch(TextureOverlayOuterRadiusInput)
-  M_SetAndRunDispatch(TextureOverlayRoundnessInput)
-  M_SetAndRunDispatch(TextureOverlayCenterXInput)
-  M_SetAndRunDispatch(TextureOverlayCenterYInput)
-  M_SetAndRunDispatch(TextureOverlaySoftnessInput)
-  M_SetAndRunDispatch(TextureOverlay2ModeChoice)
-  M_Dispatch(TextureOverlay2MaskChoice)
-  M_SetAndRunDispatch(TextureOverlay2OpacityInput)
-  M_SetAndRunDispatch(TextureOverlay2SaturationInput)
-  M_SetAndRunDispatch(TextureOverlay2ExponentInput)
-  M_Dispatch(TextureOverlay2InnerRadiusInput)
-  M_Dispatch(TextureOverlay2OuterRadiusInput)
-  M_SetAndRunDispatch(TextureOverlay2RoundnessInput)
-  M_SetAndRunDispatch(TextureOverlay2CenterXInput)
-  M_SetAndRunDispatch(TextureOverlay2CenterYInput)
-  M_SetAndRunDispatch(TextureOverlay2SoftnessInput)
 
   M_SetAndRunDispatch(OutputGammaCompensationCheck)
   M_SetAndRunDispatch(OutputGammaInput)

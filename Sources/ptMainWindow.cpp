@@ -386,15 +386,6 @@ ptMainWindow::ptMainWindow(const QString Title)
   Macro_ConnectSomeButton(CropCenterVert);
 
   //
-  // TAB : EyeCandy
-  //
-
-  Macro_ConnectSomeButton(TextureOverlay);
-  Macro_ConnectSomeButton(TextureOverlayClear);
-  Macro_ConnectSomeButton(TextureOverlay2);
-  Macro_ConnectSomeButton(TextureOverlay2Clear);
-
-  //
   // TAB : Output
   //
 
@@ -1369,30 +1360,6 @@ void ptMainWindow::OnCropCenterVertButtonClicked() {
   ::CB_CropCenterVertButton();
 }
 
-
-// Tab : EyeCandy
-
-void CB_TextureOverlayButton();
-void ptMainWindow::OnTextureOverlayButtonClicked() {
-  ::CB_TextureOverlayButton();
-}
-
-void CB_TextureOverlayClearButton();
-void ptMainWindow::OnTextureOverlayClearButtonClicked() {
-  ::CB_TextureOverlayClearButton();
-}
-
-void CB_TextureOverlay2Button();
-void ptMainWindow::OnTextureOverlay2ButtonClicked() {
-  ::CB_TextureOverlay2Button();
-}
-
-void CB_TextureOverlay2ClearButton();
-void ptMainWindow::OnTextureOverlay2ClearButtonClicked() {
-  ::CB_TextureOverlay2ClearButton();
-}
-
-
 // Tab : Output
 
 void CB_OutputColorProfileResetButton();
@@ -2160,48 +2127,6 @@ void ptMainWindow::UpdateSettings() {
 
   // Geometry
   ResizeHeightWidget->setVisible(Settings->GetInt("ResizeDimension") == ptResizeDimension_WidthHeight);
-
-  // Texture Overlay
-  PathInfo.setFile(Settings->GetString("TextureOverlayFile"));
-  ShortFileName = PathInfo.completeBaseName();
-  TextureOverlayText->setText(ShortFileName);
-  if (Settings->GetInt("TextureOverlayMask") > 0) {
-    Settings->SetEnabled("TextureOverlayExponent",1);
-    Settings->SetEnabled("TextureOverlayInnerRadius",1);
-    Settings->SetEnabled("TextureOverlayOuterRadius",1);
-    Settings->SetEnabled("TextureOverlayRoundness",1);
-    Settings->SetEnabled("TextureOverlayCenterX",1);
-    Settings->SetEnabled("TextureOverlayCenterY",1);
-    Settings->SetEnabled("TextureOverlaySoftness",1);
-  } else {
-    Settings->SetEnabled("TextureOverlayExponent",0);
-    Settings->SetEnabled("TextureOverlayInnerRadius",0);
-    Settings->SetEnabled("TextureOverlayOuterRadius",0);
-    Settings->SetEnabled("TextureOverlayRoundness",0);
-    Settings->SetEnabled("TextureOverlayCenterX",0);
-    Settings->SetEnabled("TextureOverlayCenterY",0);
-    Settings->SetEnabled("TextureOverlaySoftness",0);
-  }
-  PathInfo.setFile(Settings->GetString("TextureOverlay2File"));
-  ShortFileName = PathInfo.completeBaseName();
-  TextureOverlay2Text->setText(ShortFileName);
-  if (Settings->GetInt("TextureOverlay2Mask") > 0) {
-    Settings->SetEnabled("TextureOverlay2Exponent",1);
-    Settings->SetEnabled("TextureOverlay2InnerRadius",1);
-    Settings->SetEnabled("TextureOverlay2OuterRadius",1);
-    Settings->SetEnabled("TextureOverlay2Roundness",1);
-    Settings->SetEnabled("TextureOverlay2CenterX",1);
-    Settings->SetEnabled("TextureOverlay2CenterY",1);
-    Settings->SetEnabled("TextureOverlay2Softness",1);
-  } else {
-    Settings->SetEnabled("TextureOverlay2Exponent",0);
-    Settings->SetEnabled("TextureOverlay2InnerRadius",0);
-    Settings->SetEnabled("TextureOverlay2OuterRadius",0);
-    Settings->SetEnabled("TextureOverlay2Roundness",0);
-    Settings->SetEnabled("TextureOverlay2CenterX",0);
-    Settings->SetEnabled("TextureOverlay2CenterY",0);
-    Settings->SetEnabled("TextureOverlay2Softness",0);
-  }
 
   // sRGB gamma compensation
   Settings->SetEnabled("OutputGamma",Settings->GetInt("OutputGammaCompensation"));
