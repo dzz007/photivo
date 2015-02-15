@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>TextureOverlayForm</class>
+ <widget class="QWidget" name="TextureOverlayForm">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>156</width>
+    <height>294</height>
+   </rect>
+  </property>
+  <layout class="QVBoxLayout" name="MainLayout">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="QWidget" name="widget" native="true">
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <property name="sizeConstraint">
+       <enum>QLayout::SetFixedSize</enum>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="ptChoice" name="OverlayMode"/>
+      </item>
+      <item>
+       <widget class="ptChoice" name="MaskMode"/>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>3</width>
+          <height>5</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <widget class="QToolButton" name="LoadImageButton">
+       <property name="toolTip">
+        <string>Load overlay image</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../../qrc/photivo.qrc">
+         <normaloff>:/dark/icons/document-open.png</normaloff>:/dark/icons/document-open.png</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="ImageFilePathEdit">
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="ptInput" name="Opacity"/>
+   </item>
+   <item>
+    <widget class="ptInput" name="Saturation"/>
+   </item>
+   <item>
+    <widget class="QWidget" name="VignetteGroup" native="true">
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="ptChoice" name="VigShape"/>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>5</width>
+            <height>5</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="ptInput" name="VigInnerRadius"/>
+      </item>
+      <item>
+       <widget class="ptInput" name="VigOuterRadius"/>
+      </item>
+      <item>
+       <widget class="ptInput" name="VigRoundness"/>
+      </item>
+      <item>
+       <widget class="ptInput" name="VigCenterX"/>
+      </item>
+      <item>
+       <widget class="ptInput" name="VigCenterY"/>
+      </item>
+      <item>
+       <widget class="ptInput" name="VigSoftness"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>ptInput</class>
+   <extends>QProgressBar</extends>
+   <header>ptInput.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ptChoice</class>
+   <extends>QComboBox</extends>
+   <header>ptChoice.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="../../qrc/photivo.qrc"/>
+ </resources>
+ <connections/>
+</ui>

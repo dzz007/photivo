@@ -114,6 +114,10 @@ public:
 
   // Allocates m_Data and sets m_Image to the buffer
   void setSize(size_t Size);
+  size_t size() const { return m_Data.size(); }
+
+  void clear();
+  bool isNull() const { return m_Data.size() == 0; }
 
   // Initialize it via dcraw (from a DcRawObject).
   // By the way , the copying is always deep (and
@@ -410,10 +414,11 @@ public:
       const double color2Intensity);
 
   // Gradual Mask
-  float *GetGradualMask(const double Angle,
-                        const double LowerLevel,
-                        const double UpperLevel,
-                        const double Softness);
+  pt::c_unique_ptr<float> GetGradualMask(
+      const double Angle,
+      const double LowerLevel,
+      const double UpperLevel,
+      const double Softness);
 
   // Gradual Overlay
   ptImage* GradualOverlay(
@@ -480,10 +485,9 @@ ptImage* MaskedColorAdjust(const int       Ax,
                            float           ASaturation,
                            const float     AHueShift);
 
-  // CAUTION! Do not forget to free the returned float*!
-  float* GetVignetteMask(
-      const short Inverted,
-      const short Exponent,
+  pt::c_unique_ptr<float> GetVignetteMask(
+      const bool Inverted,
+      const TVignetteShape Shape,
       const double InnerRadius,
       const double OuterRadius,
       const double Roundness,
@@ -654,13 +658,14 @@ ptImage* MaskedColorAdjust(const int       Ax,
 
   bool DumpImage(const char* FileName) const;
 
-  ptImage* ptGMCOpenImage(const char*        FileName,
-                          short              ColorSpace,
-                          short              Intent,
-                          short              ScaleFactor,
-                          bool               IsRAW,
-                          TImage8RawData*    ImgData,
-                          int&               Success);
+  ptImage* ptGMCOpenImage(
+      const char*        FileName,
+      short              ColorSpace,
+      short              Intent,
+      short              ScaleFactor,
+      bool               IsRAW,
+      TImage8RawData*    ImgData,
+      bool&              Success);
 
   // ptImage_Pyramid.cpp
   ptImage* dirpyrLab_denoise(const int luma,

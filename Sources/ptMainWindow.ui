@@ -4169,7 +4169,7 @@
                                <item>
                                 <widget class="QToolBox" name="ToolBoxEyeCandy">
                                  <property name="currentIndex">
-                                  <number>9</number>
+                                  <number>7</number>
                                  </property>
                                  <widget class="QWidget" name="TabBW">
                                   <property name="geometry">
@@ -4232,8 +4232,8 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>340</width>
-                                    <height>82</height>
+                                    <width>98</width>
+                                    <height>28</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
@@ -4260,378 +4260,36 @@
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>146</width>
-                                    <height>232</height>
+                                    <width>340</width>
+                                    <height>82</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
-                                   <string>Texture overlay I</string>
+                                   <string notr="true">370dca54-85fd-4bf7-a3ff-3e5657e736c2</string>
                                   </attribute>
-                                  <layout class="QVBoxLayout" name="verticalLayout_246">
-                                   <item>
-                                    <widget class="QWidget" name="widget_151" native="true">
-                                     <layout class="QVBoxLayout" name="verticalLayout_245">
-                                      <item>
-                                       <widget class="QWidget" name="widgeta10_2" native="true">
-                                        <layout class="QHBoxLayout" name="horizontalLayout_31">
-                                         <property name="sizeConstraint">
-                                          <enum>QLayout::SetFixedSize</enum>
-                                         </property>
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <item>
-                                          <widget class="QWidget" name="TextureOverlayModeWidget" native="true"/>
-                                         </item>
-                                         <item>
-                                          <widget class="QWidget" name="TextureOverlayMaskWidget" native="true"/>
-                                         </item>
-                                         <item>
-                                          <spacer name="horizontalSpacer_57">
-                                           <property name="orientation">
-                                            <enum>Qt::Horizontal</enum>
-                                           </property>
-                                           <property name="sizeHint" stdset="0">
-                                            <size>
-                                             <width>10</width>
-                                             <height>20</height>
-                                            </size>
-                                           </property>
-                                          </spacer>
-                                         </item>
-                                        </layout>
-                                       </widget>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="widget_155" native="true">
-                                        <layout class="QHBoxLayout" name="horizontalLayout_86">
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <item>
-                                          <widget class="QToolButton" name="TextureOverlayClearButton">
-                                           <property name="toolTip">
-                                            <string>Clear image</string>
-                                           </property>
-                                           <property name="text">
-                                            <string>Clear</string>
-                                           </property>
-                                           <property name="icon">
-                                            <iconset resource="../qrc/photivo.qrc">
-                                             <normaloff>:/dark/icons/reset.png</normaloff>:/dark/icons/reset.png</iconset>
-                                           </property>
-                                           <property name="iconSize">
-                                            <size>
-                                             <width>14</width>
-                                             <height>14</height>
-                                            </size>
-                                           </property>
-                                          </widget>
-                                         </item>
-                                         <item>
-                                          <widget class="QLineEdit" name="TextureOverlayText">
-                                           <property name="maximumSize">
-                                            <size>
-                                             <width>250</width>
-                                             <height>16777215</height>
-                                            </size>
-                                           </property>
-                                           <property name="readOnly">
-                                            <bool>true</bool>
-                                           </property>
-                                          </widget>
-                                         </item>
-                                         <item>
-                                          <widget class="QToolButton" name="TextureOverlayButton">
-                                           <property name="toolTip">
-                                            <string>Load image</string>
-                                           </property>
-                                           <property name="text">
-                                            <string>Load</string>
-                                           </property>
-                                           <property name="icon">
-                                            <iconset resource="../qrc/photivo.qrc">
-                                             <normaloff>:/dark/icons/document-open.png</normaloff>:/dark/icons/document-open.png</iconset>
-                                           </property>
-                                           <property name="iconSize">
-                                            <size>
-                                             <width>14</width>
-                                             <height>14</height>
-                                            </size>
-                                           </property>
-                                          </widget>
-                                         </item>
-                                         <item>
-                                          <spacer name="horizontalSpacer_62">
-                                           <property name="orientation">
-                                            <enum>Qt::Horizontal</enum>
-                                           </property>
-                                           <property name="sizeHint" stdset="0">
-                                            <size>
-                                             <width>10</width>
-                                             <height>20</height>
-                                            </size>
-                                           </property>
-                                          </spacer>
-                                         </item>
-                                        </layout>
-                                       </widget>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="TextureOverlayOpacityWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="TextureOverlaySaturationWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="TextureOverlayExponentWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="TextureOverlayInnerRadiusWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="TextureOverlayOuterRadiusWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="TextureOverlayRoundnessWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="TextureOverlayCenterXWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="TextureOverlayCenterYWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="TextureOverlaySoftnessWidget" native="true"/>
-                                      </item>
-                                     </layout>
-                                    </widget>
-                                   </item>
-                                   <item>
-                                    <spacer name="verticalSpacer_126">
-                                     <property name="orientation">
-                                      <enum>Qt::Vertical</enum>
-                                     </property>
-                                     <property name="sizeHint" stdset="0">
-                                      <size>
-                                       <width>20</width>
-                                       <height>55</height>
-                                      </size>
-                                     </property>
-                                    </spacer>
-                                   </item>
-                                  </layout>
+                                  <layout class="QVBoxLayout" name="verticalLayout_246"/>
                                  </widget>
                                  <widget class="QWidget" name="TabTextureOverlay2">
                                   <property name="geometry">
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>146</width>
-                                    <height>232</height>
+                                    <width>340</width>
+                                    <height>82</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">
-                                   <string>Texture overlay II</string>
+                                   <string notr="true">695cd103-9969-4331-b312-02fdeb361c9b</string>
                                   </attribute>
-                                  <layout class="QVBoxLayout" name="verticalLayout_246a">
-                                   <item>
-                                    <widget class="QWidget" name="widget_151a" native="true">
-                                     <layout class="QVBoxLayout" name="verticalLayout_245a">
-                                      <item>
-                                       <widget class="QWidget" name="widgeta10_2a" native="true">
-                                        <layout class="QHBoxLayout" name="horizontalLayout_31a">
-                                         <property name="sizeConstraint">
-                                          <enum>QLayout::SetFixedSize</enum>
-                                         </property>
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <item>
-                                          <widget class="QWidget" name="TextureOverlay2ModeWidget" native="true"/>
-                                         </item>
-                                         <item>
-                                          <widget class="QWidget" name="TextureOverlay2MaskWidget" native="true"/>
-                                         </item>
-                                         <item>
-                                          <spacer name="horizontalSpacer_57a">
-                                           <property name="orientation">
-                                            <enum>Qt::Horizontal</enum>
-                                           </property>
-                                           <property name="sizeHint" stdset="0">
-                                            <size>
-                                             <width>10</width>
-                                             <height>20</height>
-                                            </size>
-                                           </property>
-                                          </spacer>
-                                         </item>
-                                        </layout>
-                                       </widget>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="widget_155a" native="true">
-                                        <layout class="QHBoxLayout" name="horizontalLayout_86a">
-                                         <property name="leftMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="topMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="rightMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <property name="bottomMargin">
-                                          <number>0</number>
-                                         </property>
-                                         <item>
-                                          <widget class="QToolButton" name="TextureOverlay2ClearButton">
-                                           <property name="toolTip">
-                                            <string>Clear image</string>
-                                           </property>
-                                           <property name="text">
-                                            <string>Clear</string>
-                                           </property>
-                                           <property name="icon">
-                                            <iconset resource="../qrc/photivo.qrc">
-                                             <normaloff>:/dark/icons/reset.png</normaloff>:/dark/icons/reset.png</iconset>
-                                           </property>
-                                           <property name="iconSize">
-                                            <size>
-                                             <width>14</width>
-                                             <height>14</height>
-                                            </size>
-                                           </property>
-                                          </widget>
-                                         </item>
-                                         <item>
-                                          <widget class="QLineEdit" name="TextureOverlay2Text">
-                                           <property name="maximumSize">
-                                            <size>
-                                             <width>250</width>
-                                             <height>16777215</height>
-                                            </size>
-                                           </property>
-                                           <property name="readOnly">
-                                            <bool>true</bool>
-                                           </property>
-                                          </widget>
-                                         </item>
-                                         <item>
-                                          <widget class="QToolButton" name="TextureOverlay2Button">
-                                           <property name="toolTip">
-                                            <string>Load image</string>
-                                           </property>
-                                           <property name="text">
-                                            <string>Load</string>
-                                           </property>
-                                           <property name="icon">
-                                            <iconset resource="../qrc/photivo.qrc">
-                                             <normaloff>:/dark/icons/document-open.png</normaloff>:/dark/icons/document-open.png</iconset>
-                                           </property>
-                                           <property name="iconSize">
-                                            <size>
-                                             <width>14</width>
-                                             <height>14</height>
-                                            </size>
-                                           </property>
-                                          </widget>
-                                         </item>
-                                         <item>
-                                          <spacer name="horizontalSpacer_62a">
-                                           <property name="orientation">
-                                            <enum>Qt::Horizontal</enum>
-                                           </property>
-                                           <property name="sizeHint" stdset="0">
-                                            <size>
-                                             <width>10</width>
-                                             <height>20</height>
-                                            </size>
-                                           </property>
-                                          </spacer>
-                                         </item>
-                                        </layout>
-                                       </widget>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="TextureOverlay2OpacityWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="TextureOverlay2SaturationWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="TextureOverlay2ExponentWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="TextureOverlay2InnerRadiusWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="TextureOverlay2OuterRadiusWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="TextureOverlay2RoundnessWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="TextureOverlay2CenterXWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="TextureOverlay2CenterYWidget" native="true"/>
-                                      </item>
-                                      <item>
-                                       <widget class="QWidget" name="TextureOverlay2SoftnessWidget" native="true"/>
-                                      </item>
-                                     </layout>
-                                    </widget>
-                                   </item>
-                                   <item>
-                                    <spacer name="verticalSpacer_126a">
-                                     <property name="orientation">
-                                      <enum>Qt::Vertical</enum>
-                                     </property>
-                                     <property name="sizeHint" stdset="0">
-                                      <size>
-                                       <width>20</width>
-                                       <height>55</height>
-                                      </size>
-                                     </property>
-                                    </spacer>
-                                   </item>
-                                  </layout>
+                                  <layout class="QVBoxLayout" name="verticalLayout_246a"/>
                                  </widget>
                                  <widget class="QWidget" name="TabGradualOverlay1">
                                   <property name="geometry">
                                    <rect>
                                     <x>0</x>
                                     <y>0</y>
-                                    <width>340</width>
-                                    <height>82</height>
+                                    <width>98</width>
+                                    <height>28</height>
                                    </rect>
                                   </property>
                                   <attribute name="label">

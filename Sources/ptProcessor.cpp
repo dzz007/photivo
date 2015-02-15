@@ -187,7 +187,7 @@ void ptProcessor::Run(short Phase,
 
           if (!m_Image_AfterDcRaw) m_Image_AfterDcRaw = new ptImage();
 
-          int Success = 0;
+          bool success = false;
 
           if (Settings->GetInt("IsRAW") == 1) { // RAW image, we fetch the thumbnail
             auto ImgData = m_DcRaw->thumbnail();
@@ -199,7 +199,7 @@ void ptProcessor::Run(short Phase,
               0,
               true,
               &ImgData,
-              Success);
+              success);
           } else {
             m_Image_AfterDcRaw->ptGMCOpenImage(
               (Settings->GetStringList("InputFileNameList"))[0].toLocal8Bit().data(),
@@ -208,10 +208,10 @@ void ptProcessor::Run(short Phase,
               0,
               false,
               nullptr,
-              Success);
+              success);
           }
 
-          if (Success == 0) {
+          if (!success) {
             ptMessageBox::critical(0,"File not found","File not found!");
             return;
           }
@@ -1099,166 +1099,16 @@ void ptProcessor::Run(short Phase,
         //***************************************************************************
         // Texture Overlay
 
-        if (Settings->ToolIsActive("TabTextureOverlay")) {
-
-          m_ReportProgress(tr("Texture Overlay"));
-
-          if (!m_Image_TextureOverlay) m_Image_TextureOverlay = new ptImage();
-
-          if (!m_Image_TextureOverlay->m_Image) {
-            // No image in cache!
-            int Success = 0;
-
-            m_Image_TextureOverlay->ptGMCOpenImage(
-              (Settings->GetString("TextureOverlayFile")).toLocal8Bit().data(),
-              Settings->GetInt("WorkColor"),
-              Settings->GetInt("PreviewColorProfileIntent"),
-              0,
-              false,
-              nullptr,
-              Success);
-
-            if (Success == 0) {
-              ptMessageBox::critical(0,"File not found","Please open a valid image for texture overlay.");
-              Settings->SetValue("TextureOverlayMode",0);
-            }
-          }
-
-          // Only proceed if we have an image!
-          if (m_Image_TextureOverlay->m_Image != NULL) {
-            // work on a temporary copy
-            ptImage *TempImage = new ptImage();
-            TempImage->Set(m_Image_TextureOverlay);
-
-            // Resize, original sized image in cache
-            TempImage->ptGMResizeWH(m_Image_AfterEyeCandy->m_Width,
-                                    m_Image_AfterEyeCandy->m_Height,
-                                    ptIMFilter_Catrom);
-
-            float Value = ((Settings->GetDouble("TextureOverlaySaturation")-1.0)*100);
-            TChannelMatrix VibranceMixer;
-
-            VibranceMixer[0][0] = 1.0+(Value/150.0);
-            VibranceMixer[0][1] = -(Value/300.0);
-            VibranceMixer[0][2] = VibranceMixer[0][1];
-            VibranceMixer[1][0] = VibranceMixer[0][1];
-            VibranceMixer[1][1] = VibranceMixer[0][0];
-            VibranceMixer[1][2] = VibranceMixer[0][1];
-            VibranceMixer[2][0] = VibranceMixer[0][1];
-            VibranceMixer[2][1] = VibranceMixer[0][1];
-            VibranceMixer[2][2] = VibranceMixer[0][0];
-
-            TempImage->mixChannels(VibranceMixer);
-
-
-
-            if (Settings->GetInt("TextureOverlayMask")) {
-              float *VignetteMask;
-              VignetteMask = TempImage->GetVignetteMask(Settings->GetInt("TextureOverlayMask")-1,
-                                                        Settings->GetInt("TextureOverlayExponent"),
-                                                        Settings->GetDouble("TextureOverlayInnerRadius"),
-                                                        Settings->GetDouble("TextureOverlayOuterRadius"),
-                                                        Settings->GetDouble("TextureOverlayRoundness"),
-                                                        Settings->GetDouble("TextureOverlayCenterX"),
-                                                        Settings->GetDouble("TextureOverlayCenterY"),
-                                                        Settings->GetDouble("TextureOverlaySoftness"));
-
-              m_Image_AfterEyeCandy->Overlay(TempImage->m_Image,
-                                             Settings->GetDouble("TextureOverlayOpacity"),
-                                             VignetteMask,
-                                             Settings->GetInt("TextureOverlayMode"));
-              FREE(VignetteMask);
-            } else {
-              m_Image_AfterEyeCandy->Overlay(TempImage->m_Image,
-                                             Settings->GetDouble("TextureOverlayOpacity"),
-                                             NULL,
-                                             Settings->GetInt("TextureOverlayMode"));
-            }
-            delete TempImage;
-          }
+        hFilter = GFilterDM->GetFilterFromName(Fuid::TextureOverlay1_EyeCandy);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterEyeCandy);
         }
 
-
-        //***************************************************************************
-        // Texture Overlay 2
-
-        if (Settings->ToolIsActive("TabTextureOverlay2")) {
-
-          m_ReportProgress(tr("Texture Overlay 2"));
-
-          if (!m_Image_TextureOverlay2) m_Image_TextureOverlay2 = new ptImage();
-
-          if (!m_Image_TextureOverlay2->m_Image) {
-            // No image in cache!
-            int Success = 0;
-
-            m_Image_TextureOverlay2->ptGMCOpenImage(
-              (Settings->GetString("TextureOverlay2File")).toLocal8Bit().data(),
-              Settings->GetInt("WorkColor"),
-              Settings->GetInt("PreviewColorProfileIntent"),
-              0,
-              false,
-              nullptr,
-              Success);
-
-            if (Success == 0) {
-              ptMessageBox::critical(0,"File not found","Please open a valid image for texture overlay.");
-              Settings->SetValue("TextureOverlay2Mode",0);
-            }
-          }
-
-          // Only proceed if we have an image!
-          if (m_Image_TextureOverlay2->m_Image != NULL) {
-            // work on a temporary copy
-            ptImage *TempImage = new ptImage();
-            TempImage->Set(m_Image_TextureOverlay2);
-
-            // Resize, original sized image in cache
-            TempImage->ptGMResizeWH(m_Image_AfterEyeCandy->m_Width,
-                                    m_Image_AfterEyeCandy->m_Height,
-                                    ptIMFilter_Catrom);
-
-            float Value = ((Settings->GetDouble("TextureOverlay2Saturation")-1.0)*100);
-            TChannelMatrix VibranceMixer;
-
-            VibranceMixer[0][0] = 1.0f+(Value/150.0f);
-            VibranceMixer[0][1] = -(Value/300.0f);
-            VibranceMixer[0][2] = VibranceMixer[0][1];
-            VibranceMixer[1][0] = VibranceMixer[0][1];
-            VibranceMixer[1][1] = VibranceMixer[0][0];
-            VibranceMixer[1][2] = VibranceMixer[0][1];
-            VibranceMixer[2][0] = VibranceMixer[0][1];
-            VibranceMixer[2][1] = VibranceMixer[0][1];
-            VibranceMixer[2][2] = VibranceMixer[0][0];
-
-            TempImage->mixChannels(VibranceMixer);
-
-
-
-            if (Settings->GetInt("TextureOverlay2Mask")) {
-              float *VignetteMask;
-              VignetteMask = TempImage->GetVignetteMask(Settings->GetInt("TextureOverlay2Mask")-1,
-                                                        Settings->GetInt("TextureOverlay2Exponent"),
-                                                        Settings->GetDouble("TextureOverlay2InnerRadius"),
-                                                        Settings->GetDouble("TextureOverlay2OuterRadius"),
-                                                        Settings->GetDouble("TextureOverlay2Roundness"),
-                                                        Settings->GetDouble("TextureOverlay2CenterX"),
-                                                        Settings->GetDouble("TextureOverlay2CenterY"),
-                                                        Settings->GetDouble("TextureOverlay2Softness"));
-
-              m_Image_AfterEyeCandy->Overlay(TempImage->m_Image,
-                                             Settings->GetDouble("TextureOverlay2Opacity"),
-                                             VignetteMask,
-                                             Settings->GetInt("TextureOverlay2Mode"));
-              FREE(VignetteMask);
-            } else {
-              m_Image_AfterEyeCandy->Overlay(TempImage->m_Image,
-                                             Settings->GetDouble("TextureOverlay2Opacity"),
-                                             NULL,
-                                             Settings->GetInt("TextureOverlay2Mode"));
-            }
-            delete TempImage;
-          }
+        hFilter = GFilterDM->GetFilterFromName(Fuid::TextureOverlay2_EyeCandy);
+        if (hFilter->isActive()) {
+          m_ReportProgress(hFilter->caption());
+          hFilter->runFilter(m_Image_AfterEyeCandy);
         }
 
 

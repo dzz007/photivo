@@ -382,9 +382,12 @@ void ptFilterBase::internalInit() {
     found, raises an exception via ptInfo. */
 ptWidget *ptFilterBase::findPtWidget(const QString &AId, QWidget *AWidget) {
   ptWidget *hWidget = AWidget->findChild<ptWidget*>(AId);
-  if (!hWidget)
+
+  if (!hWidget) {
     GInfo->Raise(QString("Widget \"%1\" not found.").arg(AId),
                  QString(FFilterName+"/"+FUniqueName+": "+AT).toLocal8Bit().data());
+  }
+
   return hWidget;
 }
 
@@ -422,7 +425,7 @@ int ptFilterBase::cfgIdx(const QString &AId) const {
  */
 void ptFilterBase::initDesignerGui(QWidget *AGuiBody) {
   for (const ptCfgItem &hCfgItem: FConfig.items()) {
-    if (hCfgItem.Type != ptCfgItem::CustomType) {
+    if ((hCfgItem.Type != ptCfgItem::CustomType) && (hCfgItem.Type != ptCfgItem::Generic)) {
       ptWidget *hWidget = findPtWidget(hCfgItem.Id, AGuiBody);
       // init the widget with default values and connect signals/slots
       hWidget->init(hCfgItem);

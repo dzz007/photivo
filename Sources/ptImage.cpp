@@ -1132,6 +1132,14 @@ void ptImage::setSize(size_t Size) {
   m_Image = (uint16_t (*)[3]) m_Data.data();
 }
 
+// -----------------------------------------------------------------------------
+
+void ptImage::clear() {
+  this->setSize(0);
+  m_Width = 0;
+  m_Height = 0;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 // Set
@@ -4617,13 +4625,14 @@ ptImage* ptImage::Crossprocess(
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-float *ptImage::GetGradualMask(const double Angle,
-                               const double LowerLevel,
-                               const double UpperLevel,
-                               const double Softness) {
-
-  float (*GradualMask) = (float (*)) CALLOC(m_Width*m_Height,sizeof(*GradualMask));
-  ptMemoryError(GradualMask,__FILE__,__LINE__);
+pt::c_unique_ptr<float> ptImage::GetGradualMask(
+    const double Angle,
+    const double LowerLevel,
+    const double UpperLevel,
+    const double Softness)
+{
+  pt::c_unique_ptr<float> GradualMask((float (*)) CALLOC(m_Width*m_Height,sizeof(float)));
+  ptMemoryError(GradualMask.get(),__FILE__,__LINE__);
 
   float Length = 0;
   if (fabs(Angle) == 0 || fabs(Angle) == 180 ) {
@@ -4689,14 +4698,14 @@ float *ptImage::GetGradualMask(const double Angle,
         dist = Length-((float)Col + (float)(m_Height-Row)*Factor1)*Factor2;
 
       if (dist <= LL)
-        GradualMask[Idx+Col] = Black;
+        GradualMask.get()[Idx+Col] = Black;
       else if (dist >= UL)
-        GradualMask[Idx+Col] = White;
+        GradualMask.get()[Idx+Col] = White;
       else {
         coordinate = 1.0f - (UL-dist)*Denom;
         Value = (1.0f-powf(cosf(coordinate*ptPI/2.0f),50.0f*Softness))
                   * powf(coordinate,0.07f*Softness);
-        GradualMask[Idx+Col] = LIM(Value*White, 0.0f, 1.0f);
+        GradualMask.get()[Idx+Col] = LIM(Value*White, 0.0f, 1.0f);
       }
     }
   }
@@ -4721,7 +4730,7 @@ ptImage* ptImage::GradualOverlay(
     const double UpperLevel,
     const double Softness)
 {
-  float* GradualMask = GetGradualMask(Angle, LowerLevel, UpperLevel, Softness);
+  auto GradualMask = GetGradualMask(Angle, LowerLevel, UpperLevel, Softness);
 
   uint16_t (*ToneImage)[3] = (uint16_t (*)[3]) CALLOC(m_Width*m_Height,sizeof(*ToneImage));
   ptMemoryError(ToneImage,__FILE__,__LINE__);
@@ -4733,9 +4742,8 @@ ptImage* ptImage::GradualOverlay(
     ToneImage[i][2] = B;
   }
 
-  Overlay(ToneImage, Amount, GradualMask, Mode);
+  Overlay(ToneImage, Amount, GradualMask.get(), Mode);
 
-  FREE(GradualMask);
   FREE(ToneImage);
   return this;
 }
@@ -4756,9 +4764,9 @@ ptImage* ptImage::Vignette(const TVignetteMask VignetteMode,
                            const double CenterY,
                            const double Softness)
 {
-  float* VignetteMask = GetVignetteMask(
-      0,
-      static_cast<int>(Shape),
+  auto VignetteMask = GetVignetteMask(
+      false,
+      Shape,
       InnerRadius,
       OuterRadius,
       Roundness,
@@ -4791,7 +4799,7 @@ ptImage* ptImage::Vignette(const TVignetteMask VignetteMode,
           ToneImage[i][0] = ToneImage[i][1] = ToneImage[i][2] = hColor;
         }
 
-        Overlay(ToneImage, fabs(Amount), VignetteMask, hMode);
+        Overlay(ToneImage, fabs(Amount), VignetteMask.get(), hMode);
         FREE(ToneImage);
       }
       break;
@@ -4805,7 +4813,7 @@ ptImage* ptImage::Vignette(const TVignetteMask VignetteMode,
         VignetteContrastCurve->setFromFunc(ptCurve::Sigmoidal,0.5,fabs(Amount)*10);
         VignetteLayer->ApplyCurve(VignetteContrastCurve, (m_ColorSpace == ptSpace_Lab) ? 1 : 7);
         delete VignetteContrastCurve;
-        Overlay(VignetteLayer->m_Image, 1, VignetteMask, TOverlayMode::Normal);
+        Overlay(VignetteLayer->m_Image, 1, VignetteMask.get(), TOverlayMode::Normal);
         delete VignetteLayer;
       }
       break;
@@ -4814,20 +4822,19 @@ ptImage* ptImage::Vignette(const TVignetteMask VignetteMode,
       if (m_ColorSpace == ptSpace_Lab) {
 #       pragma omp parallel for schedule(static) default(shared)
         for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
-          m_Image[i][0] = CLIP((int32_t) (VignetteMask[i]*0xffff));
+          m_Image[i][0] = CLIP((int32_t) (VignetteMask.get()[i]*0xffff));
           m_Image[i][1] = m_Image[i][2] = 0x8080;
         }
       } else {
 #       pragma omp parallel for schedule(static) default(shared)
         for (uint32_t i=0; i<(uint32_t) m_Height*m_Width; i++) {
           m_Image[i][0] = m_Image[i][1] = m_Image[i][2] =
-            CLIP((int32_t) (VignetteMask[i]*0xffff));
+            CLIP((int32_t) (VignetteMask.get()[i]*0xffff));
         }
       }
       break;
   }
 
-  FREE(VignetteMask);
   return this;
 }
 
@@ -5168,26 +5175,28 @@ ptImage *ptImage::MaskedColorAdjust(const int       Ax,
 //
 ////////////////////////////////////////////////////////////////////////////////
 
-float *ptImage::GetVignetteMask(const short  Inverted,
-                                const short  Exponent,
-                                const double InnerRadius,
-                                const double OuterRadius,
-                                const double Roundness,
-                                const double CenterX,
-                                const double CenterY,
-                                const double Softness) {
-
-  float Radius = MIN(m_Width, m_Height)/2;
-
-  bool Switch = OuterRadius < InnerRadius;
+pt::c_unique_ptr<float> ptImage::GetVignetteMask(
+    const bool   Inverted,
+    const TVignetteShape Shape,
+    const double InnerRadius,
+    const double OuterRadius,
+    const double Roundness,
+    const double CenterX,
+    const double CenterY,
+    const double Softness)
+{
+  float Radius   = MIN(m_Width, m_Height)/2;
+  float Exponent = static_cast<int>(Shape);
+  bool  Switch   = OuterRadius < InnerRadius;
 
   float OR = Radius*(Switch?InnerRadius:OuterRadius);
   float IR = Radius*(Switch?OuterRadius:InnerRadius);
   float Black = Inverted?1.0:0.0;
   float White = Inverted?0.0:1.0;
+
   if (Switch) {
     Black = 1.0 - Black;
-    White = 1.0 - White;
+    White = 1.0 - White;  
   }
   float ColorDiff = White - Black;
 
@@ -5197,8 +5206,10 @@ float *ptImage::GetVignetteMask(const short  Inverted,
   float InversExponent = 1.0/ Exponent;
   float coordinate = 0;
   float Value = 0;
-  float (*VignetteMask) = (float (*)) CALLOC(m_Width*m_Height,sizeof(*VignetteMask));
-  ptMemoryError(VignetteMask,__FILE__,__LINE__);
+
+  pt::c_unique_ptr<float> VignetteMask(static_cast<float*>(CALLOC(m_Width*m_Height,sizeof(float))));
+  ptMemoryError(VignetteMask.get(),__FILE__,__LINE__);
+
   float dist = 0;
   float Denom = 1/MAX((OR-IR),0.0001f);
   float Factor1 = 1/powf(2,Roundness);
@@ -5207,18 +5218,20 @@ float *ptImage::GetVignetteMask(const short  Inverted,
   #pragma omp parallel for schedule(static) default(shared) firstprivate(dist, Value, coordinate)
   for (uint16_t Row=0; Row<m_Height; Row++) {
     int32_t Idx = Row*m_Width;
+
     for (uint16_t Col=0; Col<m_Width; Col++) {
       dist = powf(powf(fabsf((float)Col-CX)*Factor1,Exponent)
                   + powf(fabsf((float)Row-CY)*Factor2,Exponent),InversExponent);
-      if (dist <= IR)
-        VignetteMask[Idx+Col] = Black;
-      else if (dist >= OR)
-        VignetteMask[Idx+Col] = White;
-      else {
+
+      if (dist <= IR) {
+        VignetteMask.get()[Idx+Col] = Black;
+      } else if (dist >= OR) {
+        VignetteMask.get()[Idx+Col] = White;
+      } else {
         coordinate = 1.0f-(OR-dist)*Denom;
         Value = (1.0f-powf(cosf(coordinate*ptPI/2.0f),50.0f*Softness))
                 * powf(coordinate,0.07f*Softness);
-        VignetteMask[Idx+Col] = LIM(Value*ColorDiff+Black,0.0f,1.0f);
+        VignetteMask.get()[Idx+Col] = LIM(Value*ColorDiff+Black,0.0f,1.0f);
       }
     }
   }
@@ -5244,21 +5257,20 @@ ptImage* ptImage::GradualBlur(const TGradualBlurMode Mode,
     const double CenterY)
 {
 
-  float* Mask = nullptr;
+  pt::c_unique_ptr<float> Mask;
 
   if (Mode == TGradualBlurMode::Linear || Mode == TGradualBlurMode::LinearMask) {
     Mask = GetGradualMask(Angle, LowerLevel, UpperLevel, Softness);
   } else if (Mode == TGradualBlurMode::Vignette || Mode == TGradualBlurMode::VignetteMask) {
-    Mask = GetVignetteMask(0, static_cast<int>(Vignette), LowerLevel, UpperLevel, Roundness, CenterX, CenterY, Softness);
+    Mask = GetVignetteMask(false, Vignette, LowerLevel, UpperLevel, Roundness, CenterX, CenterY, Softness);
   }
 
   if ((Mode == TGradualBlurMode::LinearMask) || (Mode == TGradualBlurMode::VignetteMask)) {
-    Overlay(m_Image, 1, Mask, TOverlayMode::ShowMask);
+    Overlay(m_Image, 1, Mask.get(), TOverlayMode::ShowMask);
   } else {
-    Box((uint16_t)(ceil(MaxRadius)), Mask);
+    Box((uint16_t)(ceil(MaxRadius)), Mask.get());
   }
 
-  FREE(Mask);
   return this;
 }
 
