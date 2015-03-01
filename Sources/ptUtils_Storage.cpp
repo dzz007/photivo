@@ -34,7 +34,7 @@ QVariant makeStorageFriendly(const QVariant &AVariant) {
 
   switch (static_cast<QMetaType::Type>(hVariant.type())) {
     case QMetaType::Bool:
-      hVariant.convert(QMetaType::Int);
+      hVariant.convert(QVariant::Int);
       break;
 
     case QMetaType::QColor:

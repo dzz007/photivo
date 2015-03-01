@@ -69,7 +69,9 @@ void ptColorSelectButton::init(const ptCfgItem& ACfgItem) {
 // -----------------------------------------------------------------------------
 
 void ptColorSelectButton::setValue(const QVariant& AValue) {
+# if QT_VERSION >= 0x050000
   Q_ASSERT(AValue.canConvert(QMetaType::QColor));
+# endif
   this->updateColor(AValue.value<QColor>());
 }
 
