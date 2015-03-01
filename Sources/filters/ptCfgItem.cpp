@@ -184,7 +184,11 @@ void ptCfgItem::ensureVariantType(QVariant &AValue) const {
   }
 
   if (static_cast<QMetaType::Type>(AValue.type()) != FIntendedType) {
+#   if QT_VERSION >= 0x050000
     if (!AValue.convert(FIntendedType)) {
+#   else
+    if (!AValue.convert(static_cast<QVariant::Type>(FIntendedType))) {
+#   endif
       GInfo->Raise(QString("Could not cast QVariant with value \"%1\" from type \"%2\" to "
                            "type \"%3\".")
                    .arg(AValue.toString()).arg((int)AValue.type()).arg((int)FIntendedType),
