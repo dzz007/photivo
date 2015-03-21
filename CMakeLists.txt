@@ -105,11 +105,11 @@ if( EXISTS ${PROJECT_SOURCE_DIR}/.hg )
 # Determine Photivo version with mercurial. Use current date if mercurial is unavailable.
   find_program( MERCURIAL hg )
   if( MERCURIAL )
-    execute_process( COMMAND hg branch OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE BRANCH )
-    execute_process( COMMAND hg log --limit 1 --branch ${BRANCH} --template {date|shortdate}
+    execute_process( COMMAND hg -R ${PROJECT_SOURCE_DIR} branch OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE BRANCH )
+    execute_process( COMMAND hg -R ${PROJECT_SOURCE_DIR} log --limit 1 --branch ${BRANCH} --template {date|shortdate}
                      OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE REVDATE )
-    execute_process( COMMAND hg identify --id OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE REVISION )
-    execute_process( COMMAND hg identify -n OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE PACKREVISION )
+    execute_process( COMMAND hg -R ${PROJECT_SOURCE_DIR} identify --id OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE REVISION )
+    execute_process( COMMAND hg -R ${PROJECT_SOURCE_DIR} identify -n OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE PACKREVISION )
     set( APPVERSION "${REVDATE} (rev ${REVISION})" )
     string( REGEX REPLACE [+] "" REVISION ${REVISION} )
     string( REGEX REPLACE [+] "" PACKREVISION ${PACKREVISION} )
@@ -242,6 +242,31 @@ set( photivo_MOC_HDRS
      Sources/filters/ptFilter_LocalContrastStretch.h
      Sources/filters/ptFilter_LocalContrast.h
      Sources/filters/ptFilter_ImpulseNR.h
+     Sources/filters/ptFilter_ChannelMixer.h
+     Sources/filters/ptFilter_LumaDenoise.h
+     Sources/filters/ptFilter_ColorDenoise.h
+     Sources/filters/ptFilter_GradientSharpen.h
+     Sources/filters/ptFilter_PyramidDenoise.h
+     Sources/filters/ptFilter_EAWavelets.h
+     Sources/filters/ptFilter_GreyCStoration.h
+     Sources/filters/ptFilter_Defringe.h
+     Sources/filters/ptFilter_WaveletDenoise.h
+     Sources/filters/ptFilter_InvDiffSharpen.h
+     Sources/filters/ptFilter_UnsharpMask.h
+     Sources/filters/ptFilter_HighpassSharpen.h
+     Sources/filters/ptFilter_FilmGrain.h
+     Sources/filters/ptFilter_ViewLab.h
+     Sources/filters/ptFilter_SimpleTone.h
+     Sources/filters/ptFilter_Vignette.h
+     Sources/filters/ptFilter_GradualBlur.h
+     Sources/filters/ptFilter_Exposure.h
+     Sources/filters/ptFilter_SoftglowOrton.h
+     Sources/filters/ptFilter_BlackWhite.h
+     Sources/filters/ptFilter_CrossProcessing.h
+     Sources/filters/ptFilter_ColorTone.h
+     Sources/filters/ptFilter_GradualOverlay.h
+     Sources/filters/ptFilter_TextureOverlay.h
+     Sources/ptColorSelectButton.h
 )
 
 set( photivo_SRCS
@@ -303,7 +328,6 @@ set( photivo_SRCS
      Sources/filters/ptFilterFactory.cpp
      Sources/ptAbstractInteraction.cpp
      Sources/ptCalloc.cpp
-     Sources/ptChannelMixer.cpp
      Sources/ptCheck.cpp
      Sources/ptChoice.cpp
      Sources/ptCimg.cpp
@@ -312,7 +336,6 @@ set( photivo_SRCS
      Sources/ptCurveWindow.cpp
      Sources/ptDcRaw.cpp
      Sources/ptError.cpp
-     Sources/ptFastBilateral.cpp
      Sources/ptGridInteraction.cpp
      Sources/ptGroupBox.cpp
      Sources/ptGuiOptions.cpp
@@ -368,6 +391,31 @@ set( photivo_SRCS
      Sources/filters/ptFilter_LocalContrastStretch.cpp
      Sources/filters/ptFilter_LocalContrast.cpp
      Sources/filters/ptFilter_ImpulseNR.cpp
+     Sources/filters/ptFilter_ChannelMixer.cpp
+     Sources/filters/ptFilter_LumaDenoise.cpp
+     Sources/filters/ptFilter_ColorDenoise.cpp
+     Sources/filters/ptFilter_GradientSharpen.cpp
+     Sources/filters/ptFilter_PyramidDenoise.cpp
+     Sources/filters/ptFilter_EAWavelets.cpp
+     Sources/filters/ptFilter_GreyCStoration.cpp
+     Sources/filters/ptFilter_Defringe.cpp
+     Sources/filters/ptFilter_WaveletDenoise.cpp
+     Sources/filters/ptFilter_InvDiffSharpen.cpp
+     Sources/filters/ptFilter_UnsharpMask.cpp
+     Sources/filters/ptFilter_HighpassSharpen.cpp
+     Sources/filters/ptFilter_FilmGrain.cpp
+     Sources/filters/ptFilter_ViewLab.cpp
+     Sources/filters/ptFilter_SimpleTone.cpp
+     Sources/filters/ptFilter_Vignette.cpp
+     Sources/filters/ptFilter_GradualBlur.cpp
+     Sources/filters/ptFilter_Exposure.cpp
+     Sources/filters/ptFilter_SoftglowOrton.cpp
+     Sources/filters/ptFilter_BlackWhite.cpp
+     Sources/filters/ptFilter_CrossProcessing.cpp
+     Sources/filters/ptFilter_ColorTone.cpp
+     Sources/filters/ptFilter_GradualOverlay.cpp
+     Sources/filters/ptFilter_TextureOverlay.cpp
+     Sources/ptColorSelectButton.cpp
 )
  
 if( WIN32 )
@@ -388,6 +436,21 @@ set( photivo_UI_HDRS
      Sources/filters/ptFilter_Outline.ui
      Sources/filters/ptFilter_Tone.ui
      Sources/filters/ptFilter_Wiener.ui
+     Sources/filters/ptFilter_ChannelMixer.ui
+     Sources/filters/ptFilter_GradientSharpen.ui
+     Sources/filters/ptFilter_EAWavelets.ui
+     Sources/filters/ptFilter_GreyCStoration.ui
+     Sources/filters/ptFilter_Defringe.ui
+     Sources/filters/ptFilter_WaveletDenoise.ui
+     Sources/filters/ptFilter_InvDiffSharpen.ui
+     Sources/filters/ptFilter_FilmGrain.ui
+     Sources/filters/ptFilter_Vignette.ui
+     Sources/filters/ptFilter_GradualBlur.ui
+     Sources/filters/ptFilter_Exposure.ui
+     Sources/filters/ptFilter_BlackWhite.ui
+     Sources/filters/ptFilter_ColorTone.ui
+     Sources/filters/ptFilter_GradualOverlay.ui
+     Sources/filters/ptFilter_TextureOverlay.ui
      Sources/ptMainWindow.ui
 )
 

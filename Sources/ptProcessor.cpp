@@ -1390,12 +1390,14 @@ void ptProcessor::RunGeometry(ptProcessorStopBefore StopBefore) {
         DistortionData.Terms[1] = Settings->GetDouble("LfunDistPoly5K2");
         DistortionData.Terms[2] = 0.0;
         break;
+#if LF_VERSION < (3 << 16)
       case LF_DIST_MODEL_FOV1:
         modflags |= LF_MODIFY_DISTORTION;
         DistortionData.Terms[0] = Settings->GetDouble("LfunDistFov1Omega");
         DistortionData.Terms[1] = 0.0;
         DistortionData.Terms[2] = 0.0;
         break;
+#endif
       case LF_DIST_MODEL_PTLENS:
         modflags |= LF_MODIFY_DISTORTION;
         DistortionData.Terms[0] = Settings->GetDouble("LfunDistPTLensA");

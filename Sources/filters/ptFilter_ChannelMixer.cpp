@@ -333,5 +333,7 @@ TConfigStore ptFilter_ChannelMixer::ptStorableLabel::doStoreConfig(const QString
 // -----------------------------------------------------------------------------
 
 void ptFilter_ChannelMixer::ptStorableLabel::doLoadConfig(const TConfigStore &AConfig, const QString &APrefix) {
-  FAssocLabel->setText(AConfig.value(APrefix+CMixerName).toString());
+  if (FAssocLabel) {
+    FAssocLabel->setText(AConfig.value(APrefix+CMixerName).toString());
+  }
 }

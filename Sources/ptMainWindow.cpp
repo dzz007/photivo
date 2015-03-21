@@ -2842,7 +2842,9 @@ void ptMainWindow::UpdateLfunDistUI() {
   short DistModel = Settings->GetInt("LfunDistModel");
   LfunDistPoly3Container->setVisible(DistModel == ptLfunDistModel_Poly3);
   LfunDistPoly5Container->setVisible(DistModel == ptLfunDistModel_Poly5);
+#if LF_VERSION < (3 << 16)
   LfunDistFov1Container->setVisible(DistModel == ptLfunDistModel_Fov1);
+#endif
   LfunDistPTLensContainer->setVisible(DistModel == ptLfunDistModel_PTLens);
 }
 

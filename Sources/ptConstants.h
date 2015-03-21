@@ -222,7 +222,9 @@ const short ptLfunGeo_Equirectangular = LF_EQUIRECTANGULAR;
 const short ptLfunDistModel_None      = LF_DIST_MODEL_NONE;
 const short ptLfunDistModel_Poly3     = LF_DIST_MODEL_POLY3;
 const short ptLfunDistModel_Poly5     = LF_DIST_MODEL_POLY5;
+#if LF_VERSION < (3 << 16)
 const short ptLfunDistModel_Fov1      = LF_DIST_MODEL_FOV1;
+#endif
 const short ptLfunDistModel_PTLens    = LF_DIST_MODEL_PTLENS;
 
 

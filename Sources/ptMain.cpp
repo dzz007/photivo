@@ -5235,7 +5235,9 @@ void CB_InputChanged(const QString ObjectName, const QVariant Value) {
   M_Dispatch(LfunDistPoly3K1Input)
   M_Dispatch(LfunDistPoly5K1Input)
   M_Dispatch(LfunDistPoly5K2Input)
+#if LF_VERSION < (3 << 16)
   M_Dispatch(LfunDistFov1OmegaInput)
+#endif
   M_Dispatch(LfunDistPTLensAInput)
   M_Dispatch(LfunDistPTLensBInput)
   M_Dispatch(LfunDistPTLensCInput)
