@@ -105,11 +105,11 @@ if( EXISTS ${PROJECT_SOURCE_DIR}/.hg )
 # Determine Photivo version with mercurial. Use current date if mercurial is unavailable.
   find_program( MERCURIAL hg )
   if( MERCURIAL )
-    execute_process( COMMAND hg branch OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE BRANCH )
-    execute_process( COMMAND hg log --limit 1 --branch ${BRANCH} --template {date|shortdate}
+    execute_process( COMMAND hg -R ${PROJECT_SOURCE_DIR} branch OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE BRANCH )
+    execute_process( COMMAND hg -R ${PROJECT_SOURCE_DIR} log --limit 1 --branch ${BRANCH} --template {date|shortdate}
                      OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE REVDATE )
-    execute_process( COMMAND hg identify --id OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE REVISION )
-    execute_process( COMMAND hg identify -n OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE PACKREVISION )
+    execute_process( COMMAND hg -R ${PROJECT_SOURCE_DIR} identify --id OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE REVISION )
+    execute_process( COMMAND hg -R ${PROJECT_SOURCE_DIR} identify -n OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE PACKREVISION )
     set( APPVERSION "${REVDATE} (rev ${REVISION})" )
     string( REGEX REPLACE [+] "" REVISION ${REVISION} )
     string( REGEX REPLACE [+] "" PACKREVISION ${PACKREVISION} )

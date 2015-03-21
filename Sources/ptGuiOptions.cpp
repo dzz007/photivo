@@ -256,7 +256,9 @@ const ptGuiOptionsItem ptGuiOptions::LfunDistModel[] = {
   {ptLfunDistModel_None,     QObject::tr("None") },
   {ptLfunDistModel_Poly3,    QObject::tr("3rd order polynomial") },
   {ptLfunDistModel_Poly5,    QObject::tr("5th order polynomial") },
+#if LF_VERSION < (3 << 16)
   {ptLfunDistModel_Fov1,     QObject::tr("1st order field of view") },
+#endif
   {ptLfunDistModel_PTLens,   QObject::tr("Panotools lens model") },
   {-1,NULL}};
 

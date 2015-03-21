@@ -103,7 +103,9 @@ ptSettings::ptSettings(const short InitLevel, const QString Path) {
     {"LfunDistPoly3K1"               ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-0.2 ,0.2   ,0.01 ,4 ,tr("k1"),tr("")},
     {"LfunDistPoly5K1"               ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-0.2 ,0.2   ,0.01 ,4 ,tr("k1"),tr("")},
     {"LfunDistPoly5K2"               ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-0.2 ,0.2   ,0.01 ,4 ,tr("k2"),tr("")},
+#if LF_VERSION < (3 << 16)
     {"LfunDistFov1Omega"             ,ptGT_InputSlider     ,2,1,1 ,0.0  ,0.0  ,1.4   ,0.1  ,3 ,tr("omega"),tr("")},
+#endif
     {"LfunDistPTLensA"               ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-0.2 ,0.2   ,0.01 ,4 ,tr("a"),tr("")},
     {"LfunDistPTLensB"               ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-0.2 ,0.2   ,0.01 ,4 ,tr("b"),tr("")},
     {"LfunDistPTLensC"               ,ptGT_InputSlider     ,2,1,1 ,0.0  ,-0.2 ,0.2   ,0.01 ,4 ,tr("c"),tr("")},
