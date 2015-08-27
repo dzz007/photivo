@@ -1,0 +1,5 @@
+Screenshots
+• im Prinzip analog zum Encodingwissen.
+• »Fuzzy Borders« mit EW-Einstellungen.
+• »Drop Shadow« mit 5/5/15, sonst wie EW.
+• XCF aufheben nicht vergessen!
